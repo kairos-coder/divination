@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Draw — Digital Divination</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:         #c9a84c;
+  --gold-light:   #e8c96a;
+  --gold-dark:    #7a5c18;
+  --void:         #05050d;
+  --surface:      #0e0e20;
+  --surface2:     #13132e;
+  --border:       #1e1e3a;
+  --border-gold:  rgba(201,168,76,0.15);
+  --text:         #ede5d0;
+  --text-mid:     #a89880;
+  --text-dim:     #605848;
+  --fire:         #c94a2a;
+  --earth:        #6a8a3a;
+  --water:        #3a6a9a;
+  --air:          #8a8a9a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, #120828 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, #081420 0%, transparent 60%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: rgba(5,5,13,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 200;
+}
+
+.nav-brand {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+.nav-back {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-back:hover { color: var(--gold); }
+
+/* ── TABLE ── */
+.table-container {
+  padding: 100px 24px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.table-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.table-header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  color: var(--gold-light);
+}
+
+.table-subtitle {
+  font-style: italic;
+  color: var(--text-mid);
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+/* ── QUESTION INPUT ── */
+.question-area {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.question-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+  padding: 14px 20px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.question-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.question-input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+/* ── CARD SPREAD ── */
+.spread {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  min-height: 420px;
+}
+
+.card-slot {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  perspective: 1000px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* ── CARD BACK ── */
+.card-back {
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-gold);
+  cursor: default;
+}
+
+.card-back-design {
+  text-align: center;
+}
+
+.card-back-sigil {
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+.card-back-text {
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-top: 8px;
+  opacity: 0.5;
+}
+
+/* ── CARD FRONT ── */
+.card-front {
+  background: var(--surface);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-front img {
+  width: 100%;
+  height: 60%;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border-gold);
+  background: var(--surface2);
+}
+
+.card-front .card-info {
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-position {
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.card-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 14px;
+  color: var(--gold-light);
+  line-height: 1.2;
+}
+
+.card-domain {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.card-overlay {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-mid);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* ── READING ── */
+.reading-area {
+  max-width: 700px;
+  margin: 0 auto 60px;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: none;
+}
+
+.reading-area.visible {
+  display: block;
+  animation: fadeUp 0.6s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reading-header {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 18px;
+  color: var(--gold-light);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.reading-block {
+  margin-bottom: 20px;
+  padding-left: 16px;
+  border-left: 2px solid var(--border-gold);
+}
+
+.reading-position {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.reading-text {
+  font-size: 15px;
+  font-style: italic;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+.reading-synthesis {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-gold);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.8;
+  text-align: center;
+}
+
+/* ── BUTTONS ── */
+.button-row {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.btn-reveal {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--void);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  padding: 14px 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(201,168,76,0.2);
+}
+
+.btn-reveal:hover {
+  box-shadow: 0 0 50px rgba(201,168,76,0.4);
+  transform: translateY(-2px);
+}
+
+.btn-reveal:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-new {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 12px;
+}
+
+.btn-new:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ── ELEMENT COLORS ── */
+.element-fire { color: var(--fire); }
+.element-earth { color: var(--earth); }
+.element-water { color: var(--water); }
+.element-air { color: var(--air); }
+
+/* ── PLACEHOLDER IMAGE ── */
+.img-placeholder {
+  width: 100%;
+  height: 60%;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  opacity: 0.3;
+  border-bottom: 1px solid var(--border-gold);
+}
+
+/* ── DECK SELECTOR ── */
+.deck-selector {
+  text-align: center;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.deck-option {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deck-option:hover {
+  border-color: var(--border-gold);
+  color: var(--text-mid);
+}
+
+.deck-option.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .spread {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card-slot {
+    max-width: 220px;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Digital Divination</div>
+  <a href="index.html" class="nav-back">← Return to Temple</a>
+</nav>
+
+<div class="table-container">
+
+  <div class="table-header">
+    <h1>🜏 Draw Three Cards</h1>
+    <div class="table-subtitle">Past · Present · Future</div>
+  </div>
+
+  <div class="deck-selector">
+    <button class="deck-option active" data-deck="major" onclick="Divine.setDeck('major')">Major Arcana</button>
+    <button class="deck-option" data-deck="full" onclick="Divine.setDeck('full')">Full Deck (78)</button>
+  </div>
+
+  <div class="question-area">
+    <input type="text" class="question-input" id="questionInput" 
+           placeholder="What question do you bring to the cards?"
+           maxlength="200">
+  </div>
+
+  <div class="button-row">
+    <button class="btn-reveal" id="revealBtn" onclick="Divine.reveal()">▸ Reveal</button>
+    <button class="btn-new" onclick="Divine.reset()">New Reading</button>
+  </div>
+
+  <div class="spread" id="spread">
+    <div class="card-slot" id="slotPast">
+      <div class="card-inner" id="cardPast">
+        <div class="card-face card-back">
+          <div class="card-back-design">
+            <div class="card-back-sigil">🜏</div>
+            <div class="card-back-text">Past</div>
+          </div>
+        </div>
+        <div class="card-face card-front" id="frontPast"></div>
+      </div>
+    </div>
+
+    <div class="card-slot" id="slotPresent">
+      <div class="card-inner" id="cardPresent">
+        <div class="card-face card-back">
+          <div class="card-back-design">
+            <div class="card-back-sigil">🜏</div>
+            <div class="card-back-text">Present</div>
+          </div>
+        </div>
+        <div class="card-face card-front" id="frontPresent"></div>
+      </div>
+    </div>
+
+    <div class="card-slot" id="slotFuture">
+      <div class="card-inner" id="cardFuture">
+        <div class="card-face card-back">
+          <div class="card-back-design">
+            <div class="card-back-sigil">🜏</div>
+            <div class="card-back-text">Future</div>
+          </div>
+        </div>
+        <div class="card-face card-front" id="frontFuture"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reading-area" id="readingArea"></div>
+
+</div>
+
+<script src="divine.js"></script>
+</body>
+</html>
