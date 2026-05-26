@@ -6,17 +6,16 @@
 
 const Divine = (() => {
   // ─── STATE ──────────────────────────────
-  let deckMode = 'major';  // 'major' | 'full'
+  let deckMode = 'major';
   let majorDeck = [];
   let minorDeck = [];
   let currentDraw = null;
   let decksLoaded = false;
 
   // ─── IMAGE PATH MAPPING ─────────────────
-  // Maps JSON card IDs to your actual filenames
   const IMAGE_MAP = {
     'major_00': 'data/images/dionysus-card.jpg',
-    'major_01': null,  // Hermes — not yet generated
+    'major_01': 'data/images/hermes-card.jpg',
     'major_02': 'data/images/hera-card.jpg',
     'major_03': 'data/images/demeter-card.jpg',
     'major_04': 'data/images/zeus-card.jpg',
@@ -25,18 +24,18 @@ const Divine = (() => {
     'major_07': 'data/images/artemis-card.jpg',
     'major_08': 'data/images/athena-card.jpg',
     'major_09': 'data/images/hermit-card.jpg',
-    'major_10': null,  // The Fates
-    'major_11': null,  // Hephaestus
-    'major_12': null,  // Prometheus
-    'major_13': null,  // Thanatos
-    'major_14': null,  // Hestia
-    'major_15': null,  // Hades
-    'major_16': null,  // Poseidon
-    'major_17': null,  // Persephone
-    'major_18': null,  // Melinoe
-    'major_19': null,  // Apollo
-    'major_20': null,  // The Three Judges
-    'major_21': null,  // Gaia
+    'major_10': null,
+    'major_11': 'data/images/hephaestus-card.jpg',
+    'major_12': 'data/images/prometheus-card.jpg',
+    'major_13': 'data/images/thanatos-card.jpg',
+    'major_14': null,
+    'major_15': 'data/images/hades-card.jpg',
+    'major_16': 'data/images/poseidon-card.jpg',
+    'major_17': 'data/images/persephone-card.jpg',
+    'major_18': null,
+    'major_19': null,
+    'major_20': null,
+    'major_21': null,
     'major_hidden': null
   };
 
@@ -57,17 +56,21 @@ const Divine = (() => {
   // ─── LOAD DECKS ─────────────────────────
   async function loadDecks() {
     if (decksLoaded) return;
+    
     try {
       const [majorRes, minorRes] = await Promise.all([
         fetch('data/deck/major_arcana.json'),
         fetch('data/deck/minor_arcana.json')
       ]);
+      
+      if (!majorRes.ok) throw new Error(`Major deck fetch failed: ${majorRes.status}`);
+      if (!minorRes.ok) throw new Error(`Minor deck fetch failed: ${minorRes.status}`);
+      
       const majorData = await majorRes.json();
       const minorData = await minorRes.json();
       
       majorDeck = majorData.cards || [];
       
-      // Flatten minor cards
       minorDeck = [];
       if (minorData.cards) {
         Object.values(minorData.cards).forEach(suitCards => {
@@ -76,8 +79,10 @@ const Divine = (() => {
       }
       
       decksLoaded = true;
+      console.log(`Decks loaded: ${majorDeck.length} Major, ${minorDeck.length} Minor`);
     } catch (err) {
       console.error('Failed to load decks:', err);
+      throw err;
     }
   }
 
@@ -98,6 +103,14 @@ const Divine = (() => {
     return null;
   }
 
+  // ─── GET CARD MEANING ───────────────────
+  function getMeaning(card) {
+    if (card.isReversed) {
+      return card.reversed || card.upright || '';
+    }
+    return card.upright || '';
+  }
+
   // ─── DRAW ───────────────────────────────
   function drawCards() {
     let pool;
@@ -107,22 +120,35 @@ const Divine = (() => {
       pool = shuffle([...majorDeck, ...minorDeck]);
     }
     
-    // Draw 3, ensure no duplicates
+    if (pool.length === 0) {
+      throw new Error('No cards available. Check deck data.');
+    }
+    
     const drawn = [];
     const used = new Set();
+    
     for (const card of pool) {
       if (drawn.length >= 3) break;
       if (!used.has(card.id)) {
-        drawn.push(card);
+        drawn.push({
+          ...card,
+          isReversed: Math.random() < 0.3,
+          position: null
+        });
         used.add(card.id);
       }
     }
     
-    // Assign positions
+    // Handle edge case: if pool too small, fill with what we have
+    while (drawn.length < 3) {
+      const fallback = { ...pool[0], isReversed: false, position: null };
+      drawn.push(fallback);
+    }
+    
     return {
-      past: { ...drawn[0], position: 'past', reversed: Math.random() < 0.3 },
-      present: { ...drawn[1], position: 'present', reversed: Math.random() < 0.3 },
-      future: { ...drawn[2], position: 'future', reversed: Math.random() < 0.3 }
+      past: { ...drawn[0], position: 'past' },
+      present: { ...drawn[1], position: 'present' },
+      future: { ...drawn[2], position: 'future' }
     };
   }
 
@@ -130,52 +156,53 @@ const Divine = (() => {
   function buildCardFront(card) {
     const imgPath = getImagePath(card);
     const elementClass = card.element ? `element-${card.element.toLowerCase()}` : '';
-    const elementEmoji = ELEMENT_EMOJI[card.element] || '';
+    const elementEmoji = ELEMENT_EMOJI[card.element] || ELEMENT_EMOJI[null];
+    const meaning = getMeaning(card);
+    const reversedMark = card.isReversed ? ' ⥮ Reversed' : '';
     
     let imgHTML;
     if (imgPath) {
-      imgHTML = `<img src="${imgPath}" alt="${card.name}" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>${elementEmoji}</div>'">`;
+      imgHTML = `<img src="${imgPath}" alt="${card.name}" 
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="img-placeholder" style="display:none;">${elementEmoji}</div>`;
     } else {
       imgHTML = `<div class="img-placeholder">${elementEmoji}</div>`;
     }
-    
-    const meaning = card.reversed ? card.reversed : card.upright;
-    const reversedMark = card.reversed ? ' ⥮ Reversed' : '';
     
     return `
       ${imgHTML}
       <div class="card-info">
         <div class="card-position">${POSITION_LABELS[card.position]}${reversedMark}</div>
-        <div class="card-name ${elementClass}">${card.name}</div>
-        <div class="card-domain">${card.domain || ''}</div>
-        <div class="card-overlay">${meaning || ''}</div>
+        <div class="card-name ${elementClass}">${escapeHTML(card.name)}</div>
+        <div class="card-domain">${escapeHTML(card.domain || '')}</div>
+        <div class="card-overlay">${escapeHTML(meaning)}</div>
       </div>
     `;
   }
 
   // ─── BUILD READING ──────────────────────
   function buildReading(draw) {
-    const question = document.getElementById('questionInput').value || 'The unspoken question';
+    const question = document.getElementById('questionInput').value.trim() || 'The unspoken question';
     
     return `
       <div class="reading-header">✦ The Reading ✦</div>
       <div style="text-align:center;font-style:italic;color:var(--text-dim);margin-bottom:24px;font-size:14px;">
-        Asked: "${question}"
+        Asked: "${escapeHTML(question)}"
       </div>
       
       <div class="reading-block">
-        <div class="reading-position">Past · ${draw.past.name}</div>
-        <div class="reading-text">${draw.past.reversed ? draw.past.reversed : draw.past.upright}</div>
+        <div class="reading-position">Past · ${escapeHTML(draw.past.name)}</div>
+        <div class="reading-text">${escapeHTML(getMeaning(draw.past))}</div>
       </div>
       
       <div class="reading-block">
-        <div class="reading-position">Present · ${draw.present.name}</div>
-        <div class="reading-text">${draw.present.reversed ? draw.present.reversed : draw.present.upright}</div>
+        <div class="reading-position">Present · ${escapeHTML(draw.present.name)}</div>
+        <div class="reading-text">${escapeHTML(getMeaning(draw.present))}</div>
       </div>
       
       <div class="reading-block">
-        <div class="reading-position">Future · ${draw.future.name}</div>
-        <div class="reading-text">${draw.future.reversed ? draw.future.reversed : draw.future.upright}</div>
+        <div class="reading-position">Future · ${escapeHTML(draw.future.name)}</div>
+        <div class="reading-text">${escapeHTML(getMeaning(draw.future))}</div>
       </div>
       
       <div class="reading-synthesis">
@@ -190,18 +217,19 @@ const Divine = (() => {
     const present = draw.present;
     const future = draw.future;
     
-    // Elemental reading
     const elements = [past.element, present.element, future.element].filter(Boolean);
     const uniqueElements = [...new Set(elements)];
     
     let synthesis = '';
     
-    if (future.reversed) {
+    // Reversed future
+    if (future.isReversed) {
       synthesis += 'The path ahead is clouded — the card reversed suggests resistance to what comes. ';
     } else {
       synthesis += 'The cards speak clearly. ';
     }
     
+    // Elemental pattern
     if (uniqueElements.length === 1) {
       synthesis += `The reading is dominated by ${uniqueElements[0]} — this element rules all three positions. The question is singular in nature. `;
     } else if (uniqueElements.length === 3) {
@@ -210,12 +238,28 @@ const Divine = (() => {
       synthesis += `${past.element || 'The first'} flows into ${present.element || 'the second'} and toward ${future.element || 'the third'}. The elements guide the arc. `;
     }
     
+    // Domain patterns
     if (past.domain === present.domain) {
       synthesis += `The domain of ${past.domain} appears twice — this force has been with you and remains. `;
     }
-    
     if (past.domain === future.domain) {
       synthesis += `What began in the domain of ${past.domain} returns at the end. A cycle completes. `;
+    }
+    if (present.domain === future.domain && past.domain !== present.domain) {
+      synthesis += `The domain of ${present.domain} will persist from present into future. `;
+    }
+    
+    // All same domain
+    if (past.domain === present.domain && present.domain === future.domain) {
+      synthesis += `The domain of ${past.domain} rules the entire spread. This is not a question — it is an initiation. `;
+    }
+    
+    // Reversed count
+    const reversedCount = [past, present, future].filter(c => c.isReversed).length;
+    if (reversedCount === 3) {
+      synthesis += 'All three cards reversed — the querent is in resistance to something fundamental. ';
+    } else if (reversedCount === 2) {
+      synthesis += 'Two cards reversed suggest inner conflict blocking the outward path. ';
     }
     
     synthesis += 'The three cards form a triptych. Past, present, future — not separate, but a single image split across time. Read them as one.';
@@ -223,56 +267,88 @@ const Divine = (() => {
     return synthesis;
   }
 
+  // ─── ESCAPE HTML ────────────────────────
+  function escapeHTML(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
   // ─── REVEAL ─────────────────────────────
   async function reveal() {
     const btn = document.getElementById('revealBtn');
+    const originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Shuffling...';
     
-    await loadDecks();
-    
-    if (majorDeck.length === 0) {
+    try {
+      await loadDecks();
+      
+      if (majorDeck.length === 0) {
+        throw new Error('No Major Arcana cards loaded. Check data/deck/major_arcana.json');
+      }
+      
+      currentDraw = drawCards();
+      
+      // Build card fronts
+      document.getElementById('frontPast').innerHTML = buildCardFront(currentDraw.past);
+      document.getElementById('frontPresent').innerHTML = buildCardFront(currentDraw.present);
+      document.getElementById('frontFuture').innerHTML = buildCardFront(currentDraw.future);
+      
+      // Flip cards with stagger
+      const cardPast = document.getElementById('cardPast');
+      const cardPresent = document.getElementById('cardPresent');
+      const cardFuture = document.getElementById('cardFuture');
+      
+      // Remove previous flip state
+      cardPast.classList.remove('flipped');
+      cardPresent.classList.remove('flipped');
+      cardFuture.classList.remove('flipped');
+      
+      // Trigger reflow for animation restart
+      void cardPast.offsetWidth;
+      
+      setTimeout(() => cardPast.classList.add('flipped'), 100);
+      setTimeout(() => cardPresent.classList.add('flipped'), 400);
+      setTimeout(() => cardFuture.classList.add('flipped'), 700);
+      
+      // Show reading after flips
+      setTimeout(() => {
+        const readingArea = document.getElementById('readingArea');
+        readingArea.innerHTML = buildReading(currentDraw);
+        readingArea.classList.add('visible');
+        readingArea.scrollIntoView({ behavior: 'smooth' });
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 1200);
+      
+    } catch (err) {
+      console.error('Reveal failed:', err);
       btn.textContent = 'Error — Check Console';
       btn.disabled = false;
-      console.error('No cards loaded. Check data/deck/major_arcana.json');
-      return;
     }
-    
-    currentDraw = drawCards();
-    
-    // Build card fronts
-    document.getElementById('frontPast').innerHTML = buildCardFront(currentDraw.past);
-    document.getElementById('frontPresent').innerHTML = buildCardFront(currentDraw.present);
-    document.getElementById('frontFuture').innerHTML = buildCardFront(currentDraw.future);
-    
-    // Flip cards with stagger
-    setTimeout(() => document.getElementById('cardPast').classList.add('flipped'), 100);
-    setTimeout(() => document.getElementById('cardPresent').classList.add('flipped'), 400);
-    setTimeout(() => document.getElementById('cardFuture').classList.add('flipped'), 700);
-    
-    // Show reading after flips complete
-    setTimeout(() => {
-      const readingArea = document.getElementById('readingArea');
-      readingArea.innerHTML = buildReading(currentDraw);
-      readingArea.classList.add('visible');
-      readingArea.scrollIntoView({ behavior: 'smooth' });
-      btn.textContent = '▸ Reveal';
-      btn.disabled = false;
-    }, 1200);
   }
 
   // ─── RESET ──────────────────────────────
   function reset() {
     currentDraw = null;
-    document.getElementById('cardPast').classList.remove('flipped');
-    document.getElementById('cardPresent').classList.remove('flipped');
-    document.getElementById('cardFuture').classList.remove('flipped');
+    
+    const cardPast = document.getElementById('cardPast');
+    const cardPresent = document.getElementById('cardPresent');
+    const cardFuture = document.getElementById('cardFuture');
+    
+    cardPast.classList.remove('flipped');
+    cardPresent.classList.remove('flipped');
+    cardFuture.classList.remove('flipped');
+    
     document.getElementById('readingArea').classList.remove('visible');
     document.getElementById('readingArea').innerHTML = '';
     document.getElementById('questionInput').value = '';
     document.getElementById('revealBtn').disabled = false;
+    document.getElementById('revealBtn').textContent = '▸ Reveal';
     
-    // Clear fronts after flip animation
+    // Clear fronts after flip animation completes
     setTimeout(() => {
       document.getElementById('frontPast').innerHTML = '';
       document.getElementById('frontPresent').innerHTML = '';
@@ -289,44 +365,27 @@ const Divine = (() => {
     reset();
   }
 
+  // ─── PRELOAD ────────────────────────────
+  async function preloadDecks() {
+    try {
+      await loadDecks();
+      console.log('Decks preloaded successfully.');
+    } catch (err) {
+      console.warn('Deck preload failed. Will retry on reveal:', err.message);
+    }
+  }
+
   // ─── PUBLIC API ─────────────────────────
   return {
     reveal,
     reset,
     setDeck,
-    getDraw: () => currentDraw
+    getDraw: () => currentDraw,
+    preload: preloadDecks
   };
 })();
 
 // Boot
 document.addEventListener('DOMContentLoaded', () => {
-  // Preload decks
-  Divine.loadDecks = (async () => {
-    try {
-      const [majorRes, minorRes] = await Promise.all([
-        fetch('data/deck/major_arcana.json'),
-        fetch('data/deck/minor_arcana.json')
-      ]);
-      const majorData = await majorRes.json();
-      const minorData = await minorRes.json();
-      // Store in closure — we'll fix the Divine reference
-      window._majorDeck = majorData.cards || [];
-      window._minorDeck = [];
-      if (minorData.cards) {
-        Object.values(minorData.cards).forEach(suitCards => {
-          window._minorDeck.push(...suitCards);
-        });
-      }
-      // Override loadDecks to use cached
-      Divine.loadDecks = async () => {
-        if (!Divine._decksReady) {
-          Divine._majorDeck = window._majorDeck;
-          Divine._minorDeck = window._minorDeck;
-          Divine._decksReady = true;
-        }
-      };
-    } catch(e) {
-      console.error('Preload failed, will retry on reveal:', e);
-    }
-  })();
+  Divine.preload();
 });
