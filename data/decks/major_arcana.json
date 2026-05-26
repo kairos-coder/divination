@@ -1,0 +1,226 @@
+{
+  "deck_name": "Major Arcana — The Olympians & Primordials",
+  "card_count": 22,
+  "cards": [
+    {
+      "id": "major_00",
+      "name": "The Fool",
+      "domain": "Dionysus",
+      "number": 0,
+      "keywords": ["beginnings", "madness", "divine risk", "ecstasy", "leap of faith"],
+      "upright": "A new journey begins. The querent stands at the threshold, untethered and unburdened. Dionysus laughs — the only sane response to an insane world is to dance into the unknown.",
+      "reversed": "Recklessness. The leap taken without looking. The wine turned bitter. Ask yourself: is this freedom, or escape?",
+      "god_aspect": "I am Dionysus, twice-born, breaker of chains. The vine does not ask permission to grow. Neither should you."
+    },
+    {
+      "id": "major_01",
+      "name": "The Magician",
+      "domain": "Hermes",
+      "number": 1,
+      "keywords": ["skill", "messages", "trickery", "translation", "the conduit"],
+      "upright": "All tools are at your disposal. Hermes holds the caduceus — the serpents of knowledge twine around the staff of communication. Speak, and the path opens.",
+      "reversed": "Deception. The trick that tricks the trickster. Someone is not saying what they mean. Check the fine print.",
+      "god_aspect": "I am Hermes, boundary-crosser, message-bearer. Every locked door has a word that opens it. Find the word."
+    },
+    {
+      "id": "major_02",
+      "name": "The High Priestess",
+      "domain": "Hestia",
+      "number": 2,
+      "keywords": ["inner fire", "hidden knowledge", "the hearth", "silence", "intuition"],
+      "upright": "The fire burns low but never dies. Hestia tends the sacred center. What you seek is not outside — it waits in the quiet of your own hearth.",
+      "reversed": "Suppressed knowing. The fire that is denied fuel. You already know the truth. The silence is your answer.",
+      "god_aspect": "I am Hestia, first and last, keeper of the flame. Not all wisdom is spoken. Some must be felt in the stillness."
+    },
+    {
+      "id": "major_03",
+      "name": "The Empress",
+      "domain": "Demeter",
+      "number": 3,
+      "keywords": ["harvest", "abundance", "nurturing", "growth", "the earth"],
+      "upright": "The fields are ripe. Demeter opens her hands and grain spills forth. Nurture what you have planted. It is ready.",
+      "reversed": "Neglect. The harvest left to rot. Over-dependence on another's care. You must tend your own garden.",
+      "god_aspect": "I am Demeter, grain-mother, earth-keeper. What you give to the soil, the soil returns tenfold."
+    },
+    {
+      "id": "major_04",
+      "name": "The Emperor",
+      "domain": "Zeus",
+      "number": 4,
+      "keywords": ["authority", "structure", "rule", "judgment", "the throne"],
+      "upright": "Order from chaos. Zeus grips the thunderbolt and the realm bends toward law. Take your seat. Lead with clarity.",
+      "reversed": "Tyranny. The throne that crushes. Authority wielded without wisdom becomes a cage for all.",
+      "god_aspect": "I am Zeus, cloud-gatherer, oath-keeper. Power is not the thunder — it is the silence before the storm."
+    },
+    {
+      "id": "major_05",
+      "name": "The Hierophant",
+      "domain": "Hera",
+      "number": 5,
+      "keywords": ["tradition", "marriage", "covenant", "binding", "the vow"],
+      "upright": "The old ways hold. Hera blesses the binding. Seek the ritual. Honor the commitment you have made or will make.",
+      "reversed": "Dogma. Empty ceremony. The vow that became a chain. Question the tradition you inherited.",
+      "god_aspect": "I am Hera, queen of oaths, keeper of the sacred bond. A covenant is not a cage — it is a choice renewed."
+    },
+    {
+      "id": "major_06",
+      "name": "The Lovers",
+      "domain": "Aphrodite",
+      "number": 6,
+      "keywords": ["love", "choice", "union", "desire", "the pull"],
+      "upright": "The heart speaks. Aphrodite rises from the foam and nothing that was separate remains so. Choose with love. Choose as love.",
+      "reversed": "Discord. The mirror that shows only what you lack. Desire without discernment leads to the bed of thorns.",
+      "god_aspect": "I am Aphrodite, foam-born, desire-kindled. Love is not the absence of choice — it is the choice made with open eyes."
+    },
+    {
+      "id": "major_07",
+      "name": "The Chariot",
+      "domain": "Ares",
+      "number": 7,
+      "keywords": ["conquest", "war", "drive", "conflict", "the advance"],
+      "upright": "Forward. Ares drives the chariot and the ground shakes. Willpower alone can break the line. Charge.",
+      "reversed": "Reckless aggression. The war fought for its own sake. The chariot without a destination. Who are you fighting?",
+      "god_aspect": "I am Ares, spear-shaker, battle-dancer. Victory is not destruction — it is direction."
+    },
+    {
+      "id": "major_08",
+      "name": "Strength",
+      "domain": "Heracles",
+      "number": 8,
+      "keywords": ["endurance", "labor", "inner fortitude", "the trial", "patience"],
+      "upright": "The twelve labors were not won by muscle alone. Heracles endured. The strength you need is the kind that outlasts. Hold.",
+      "reversed": "Exhaustion. The labor that breaks the laborer. You have carried too much for too long. Put it down.",
+      "god_aspect": "I am Heracles, mortal-born, trial-tested. True strength is not the blow — it is the breath before the blow."
+    },
+    {
+      "id": "major_09",
+      "name": "The Hermit",
+      "domain": "Athena",
+      "number": 9,
+      "keywords": ["wisdom", "solitude", "strategy", "counsel", "the lamp"],
+      "upright": "Withdraw. Athena's owl sees best in darkness. The answer requires silence. Light your lamp and go inward.",
+      "reversed": "Isolation. Wisdom turned to loneliness. You have withdrawn too far. The council awaits your return.",
+      "god_aspect": "I am Athena, owl-eyed, clear-sighted. The battle is won before the sword is drawn — in the quiet, in the mind."
+    },
+    {
+      "id": "major_10",
+      "name": "Wheel of Fortune",
+      "domain": "Tyche",
+      "number": 10,
+      "keywords": ["cycles", "luck", "fate", "the turn", "wyrd"],
+      "upright": "The wheel turns. Tyche spins and the bottom becomes the top. Your fortune changes. Ride the arc.",
+      "reversed": "Bad luck. The wheel turns against you. This too shall pass — but first, it will sting.",
+      "god_aspect": "I am Tyche, fortune-spinner, chance-bearer. I do not choose sides. I only turn."
+    },
+    {
+      "id": "major_11",
+      "name": "Justice",
+      "domain": "Themis",
+      "number": 11,
+      "keywords": ["law", "truth", "consequence", "balance", "the scales"],
+      "upright": "The scales balance. Themis sees what was done and what is owed. Truth cuts clean. Accept the verdict.",
+      "reversed": "Injustice. The rigged scale. A judgment that serves power, not truth. Appeal to a higher court.",
+      "god_aspect": "I am Themis, law-giver, scale-holder. Justice is not revenge. It is the weight of what is true."
+    },
+    {
+      "id": "major_12",
+      "name": "The Hanged Man",
+      "domain": "Prometheus",
+      "number": 12,
+      "keywords": ["sacrifice", "suffering", "foresight", "bound fire", "surrender"],
+      "upright": "Suspended. Prometheus gave fire and paid in flesh. The sacrifice is not meaningless — it buys something precious. Wait. See from this new angle.",
+      "reversed": "Martyrdom. Unnecessary suffering. The sacrifice no one asked for. You are allowed to unbind yourself.",
+      "god_aspect": "I am Prometheus, fire-thief, bound one. Some gifts cost everything. That does not mean they were not worth giving."
+    },
+    {
+      "id": "major_13",
+      "name": "Death",
+      "domain": "Persephone",
+      "number": 13,
+      "keywords": ["descent", "transformation", "the underworld", "rebirth", "the threshold"],
+      "upright": "Something must end. Persephone descends, and the world above goes cold. But she returns. What dies now will seed the spring.",
+      "reversed": "Resistance to change. The death you refuse to accept. The ghost that lingers because you will not let it pass.",
+      "god_aspect": "I am Persephone, twice-dwelling, queen below and daughter above. Every descent is a seed. Every ending, a gate."
+    },
+    {
+      "id": "major_14",
+      "name": "Temperance",
+      "domain": "Apollo",
+      "number": 14,
+      "keywords": ["harmony", "healing", "moderation", "light", "the balance"],
+      "upright": "The middle path. Apollo's lyre tunes the discordant string. Blend what seems opposed. Healing comes through balance.",
+      "reversed": "Excess. The imbalance that sickens. Too much of one thing — even a good thing — becomes poison.",
+      "god_aspect": "I am Apollo, light-bringer, harmony-weaver. The string too tight will snap. The string too loose will not sing."
+    },
+    {
+      "id": "major_15",
+      "name": "The Devil",
+      "domain": "Hades",
+      "number": 15,
+      "keywords": ["bondage", "shadow", "wealth", "the hidden", "attachment"],
+      "upright": "You are bound — but the chain is one you chose. Hades holds the riches of the deep earth. What are you holding onto that holds you?",
+      "reversed": "Liberation. The chain recognized and broken. The shadow named and faced. You are freer than you think.",
+      "god_aspect": "I am Hades, rich-one, hidden-king. The darkness holds treasure. But it also holds chains. Know the difference."
+    },
+    {
+      "id": "major_16",
+      "name": "The Tower",
+      "domain": "Poseidon",
+      "number": 16,
+      "keywords": ["upheaval", "destruction", "revelation", "earthquake", "the fall"],
+      "upright": "The tower crumbles. Poseidon shakes the foundations. What was built on sand cannot stand. Let it fall. The truth was under the rubble.",
+      "reversed": "Averted disaster. The near-miss. The tower sways but holds. But the crack is still there. Repair it.",
+      "god_aspect": "I am Poseidon, earth-shaker, wave-bringer. I do not destroy for sport. I destroy what was already broken."
+    },
+    {
+      "id": "major_17",
+      "name": "The Star",
+      "domain": "Artemis",
+      "number": 17,
+      "keywords": ["hope", "the hunt", "guidance", "the wild", "renewal"],
+      "upright": "The star burns in the wilderness. Artemis runs with her hounds under the cold sky. Hope is not soft — it is the arrow loosed in the dark. Follow it.",
+      "reversed": "Lost faith. The star obscured by clouds. You have stopped believing the arrow will land. It will. Keep hunting.",
+      "god_aspect": "I am Artemis, far-shooter, night-runner. The dark is not your enemy. It is where the star shines brightest."
+    },
+    {
+      "id": "major_18",
+      "name": "The Moon",
+      "domain": "Hecate",
+      "number": 18,
+      "keywords": ["illusion", "crossroads", "witchcraft", "the veil", "the subconscious"],
+      "upright": "The moonlight deceives. Hecate stands at the crossroads with torches raised. Not all paths are what they seem. Trust your night-sight.",
+      "reversed": "Clarity returning. The fog lifting. The illusion breaking. What you feared in the dark was a shadow on the wall.",
+      "god_aspect": "I am Hecate, torch-bearer, crossroad-keeper. Fear is a door. Walk through it."
+    },
+    {
+      "id": "major_19",
+      "name": "The Sun",
+      "domain": "Helios",
+      "number": 19,
+      "keywords": ["vitality", "success", "clarity", "dawn", "radiance"],
+      "upright": "Full illumination. Helios drives his chariot across the sky and nothing is hidden. Joy. Clarity. The long night is over.",
+      "reversed": "Diminishment. The sun behind clouds. Success delayed or muted. The light is still there. Wait for the clouds to pass.",
+      "god_aspect": "I am Helios, all-seeing, light-driving. The sun does not doubt. It rises. So must you."
+    },
+    {
+      "id": "major_20",
+      "name": "Judgment",
+      "domain": "The Fates",
+      "number": 20,
+      "keywords": ["reckoning", "awakening", "the thread", "calling", "rebirth"],
+      "upright": "The Fates hold the thread and the shears. A reckoning has come. The calling you hear is not punishment — it is purpose. Answer it.",
+      "reversed": "Refusal. The call ignored. The reckoning postponed. The thread does not forget. It waits.",
+      "god_aspect": "I am the Moirai — Clotho, Lachesis, Atropos. We do not judge. We measure. Your thread is in your hands now."
+    },
+    {
+      "id": "major_21",
+      "name": "The World",
+      "domain": "Gaia",
+      "number": 21,
+      "keywords": ["completion", "wholeness", "the primordial earth", "integration", "the all"],
+      "upright": "The circle closes. Gaia, first-born, holds all things within her. A cycle completes. You have arrived not at an end, but at a new wholeness.",
+      "reversed": "Incompletion. The final piece missing. The circle that won't close. What remains undone?",
+      "god_aspect": "I am Gaia, deep-breasted, all-containing. Everything that was, is, and will be — it is all here. It is all you."
+    }
+  ]
+}
