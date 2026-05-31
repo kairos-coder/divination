@@ -814,6 +814,127 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    /* ── LIGHTBOX ───────────────────────────────────────────────── */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(6px);
+    }
+
+    .lightbox-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      max-width: 90vw;
+      max-height: 90vh;
+      transform: scale(0.94);
+      transition: transform 0.3s cubic-bezier(0.2,0,0.1,1);
+    }
+
+    .lightbox-overlay.open .lightbox-inner {
+      transform: scale(1);
+    }
+
+    .lightbox-img {
+      max-width: min(420px, 80vw);
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid rgba(232,168,64,0.3);
+      box-shadow:
+        0 0 60px rgba(201,74,42,0.25),
+        0 0 120px rgba(232,168,64,0.08),
+        0 24px 48px rgba(0,0,0,0.7);
+    }
+
+    .lightbox-meta {
+      text-align: center;
+    }
+
+    .lightbox-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(232,168,64,0.4);
+      margin-bottom: 0.2rem;
+    }
+
+    .lightbox-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--ember);
+      margin-bottom: 0.4rem;
+    }
+
+    .lightbox-meaning {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(240,224,208,0.75);
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -2rem;
+      right: -1rem;
+      background: none;
+      border: 1px solid rgba(232,168,64,0.3);
+      color: var(--ember);
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(232,168,64,0.1);
+      border-color: var(--gold);
+    }
+
+    .lightbox-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .lightbox-nav-btn {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(232,168,64,0.2);
+      color: var(--ember);
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .lightbox-nav-btn:hover {
+      background: rgba(232,168,64,0.1);
+      border-color: var(--ember);
+    }
+
     /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 768px) {
       .split-layout { flex-direction: column; }
@@ -933,6 +1054,23 @@
   </div>
 </div>
 
+<!-- ── LIGHTBOX ──────────────────────────────────────────────── -->
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightboxClose">✕ CLOSE</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+    <div class="lightbox-meta">
+      <div class="lightbox-name" id="lightboxName"></div>
+      <div class="lightbox-title" id="lightboxTitle"></div>
+      <div class="lightbox-meaning" id="lightboxMeaning"></div>
+    </div>
+    <div class="lightbox-nav">
+      <button class="lightbox-nav-btn" id="lightboxPrev">← PREV</button>
+      <button class="lightbox-nav-btn" id="lightboxNext">NEXT →</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -975,25 +1113,49 @@ const WATER_DECK = [
 ];
 
 // ── KITTEN TTS SCRIPT LIBRARY ─────────────────────────────────
-// These cycle during loop mode. Fire = warm/authoritative pitch, Water = cool/ethereal.
+// These cycle during loop mode. Fire = warm/authoritative, Water = cool/deep/ethereal.
 const TTS_SCRIPTS = [
-  // Card reading flavors
+  // Fire — power, myth, ambition
   { text: "The Fire deck burns tonight. Every card a myth alive.", type: 'fire' },
   { text: "Fourteen archetypes. Fourteen gods. Which one speaks to you?", type: 'fire' },
+  { text: "Maui stole fire from the gods. Tonight we make something from that flame.", type: 'fire' },
+  { text: "The Algorithm. Six of Fire. The viral moment — you do not get to choose when it comes. You only get to be ready.", type: 'fire' },
+  { text: "The King of Fire asks a question that has no easy answer: can you hold power without becoming the monster that power makes you?", type: 'fire' },
+  { text: "Achilles did not choose his heel. But he charged anyway. That is the Knight of Fire.", type: 'fire' },
+  { text: "Icarus is not a warning about flying too high. He is a warning about loving the height more than the landing.", type: 'fire' },
+  { text: "Oya does not ask permission. The Queen of Fire never has.", type: 'fire' },
+  { text: "Loki does not lie. He reveals. The Five of Fire holds up the mirror you were trying to avoid.", type: 'fire' },
+  { text: "Surtr ends the world with fire. Not out of malice. The Ten of Fire is not failure — it is spectacle.", type: 'fire' },
+  { text: "The past. The present. The future. Three cards drawn from chaos. One story the moment needed to tell.", type: 'fire' },
+  { text: "Agni is the youngest flame, but fire does not care how old you are. Page of Fire. New is its own kind of power.", type: 'fire' },
+
+  // Water — depth, grief, memory, surrender
   { text: "The Water deck takes shape, one card at a time. Witness the making.", type: 'water' },
   { text: "This is live creation — the myth is still wet.", type: 'water' },
-  { text: "Maui stole fire from the gods. Tonight we make something from that flame.", type: 'fire' },
-  { text: "Tiamat waits in the deep. The Queen of Water has not yet been drawn.", type: 'water' },
-  { text: "NightCafe daily challenge closes at eight. The deadline is the ritual.", type: 'neutral' },
-  { text: "Every stub that lights is a card born. Every missing image is a myth waiting.", type: 'water' },
-  { text: "The past. The present. The future. Three cards. One reading.", type: 'fire' },
-  { text: "This is Ealdforn number five. The suits are fire and water. Opposites that need each other.", type: 'neutral' },
+  { text: "Tiamat waits in the deep. The Queen of Water was there before any of us had names.", type: 'water' },
+  { text: "Every stub that lights is a card born. Every missing image is a myth waiting to be called into form.", type: 'water' },
   { text: "Mnemosyne holds memory in still water. What do you carry that you haven't looked at yet?", type: 'water' },
-  { text: "The Algorithm. Six of Fire. The viral moment — ride it.", type: 'fire' },
-  { text: "Sedna's fingers become seals and whales. Creation through loss.", type: 'water' },
-  { text: "The King of Fire asks: can you hold power without becoming the monster?", type: 'fire' },
-  { text: "The Flood. Ten of Water. Rebirth through destruction. Cinematic scale.", type: 'water' },
+  { text: "Sedna's fingers became seals and whales. The Four of Water teaches that creation sometimes arrives through loss.", type: 'water' },
+  { text: "The Flood. Ten of Water. Rebirth through destruction. Cinematic scale. Not every ending is a tragedy.", type: 'water' },
+  { text: "Yemanya rises when you call her name over the ocean. She has been waiting longer than you know.", type: 'water' },
+  { text: "Narcissus did not fall in love with himself. He fell in love with the version of himself that existed only in reflection.", type: 'water' },
+  { text: "Kanaloa lives in the place where light does not reach. The Seven of Water is not absence. It is depth.", type: 'water' },
+  { text: "Mazu guides ships through storms she did not start. The Nine of Water protects what is worth protecting.", type: 'water' },
+  { text: "The Current does not judge. The Eight of Water is surrender — not defeat. There is a difference.", type: 'water' },
+  { text: "The Nereids danced before Olympus had a name. The Three of Water does not need an audience.", type: 'water' },
+  { text: "Poseidon commands the water but the water was never his. The Knight rides a wave that was already moving.", type: 'water' },
+
+  // Neutral — meta, show, Ealdforn world
+  { text: "NightCafe daily challenge closes at eight. The deadline is the ritual.", type: 'neutral' },
+  { text: "This is Ealdforn number five. The suits are fire and water. Opposites that require each other to exist.", type: 'neutral' },
   { text: "Come back tomorrow. There will be more cards. There is always more myth.", type: 'neutral' },
+  { text: "We are building this live. You are watching a tarot deck become real in real time.", type: 'neutral' },
+  { text: "The Ealdforn Sagas draw from Greek, Norse, Polynesian, Yoruba, Inuit, and Abenaki sources. Every card is a crossroads.", type: 'neutral' },
+  { text: "Fire and Water. Destruction and memory. Ambition and surrender. The deck holds the full range of what it means to be alive.", type: 'neutral' },
+  { text: "Every image in this deck was generated on NightCafe and refined by hand. There is no automation in the myth-making.", type: 'neutral' },
+  { text: "If you are watching this live, you are part of the reading.", type: 'neutral' },
+  { text: "The oracle does not predict. It reflects. The cards show you what you already know but haven't said yet.", type: 'neutral' },
+  { text: "Fourteen fire cards. Fourteen water cards in progress. Twenty-eight myths for the age of the algorithm.", type: 'neutral' },
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -1054,8 +1216,8 @@ const TTS = (() => {
     const voiceIdx = selectedVoiceIndex >= 0 ? selectedVoiceIndex : 0;
     if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
 
-    utter.rate  = type === 'fire'    ? 0.92 : type === 'water' ? 0.82 : 0.87;
-    utter.pitch = type === 'fire'    ? 1.05 : type === 'water' ? 0.88 : 0.95;
+    utter.rate  = type === 'fire'    ? 0.88 : type === 'water' ? 0.78 : 0.83;
+    utter.pitch = type === 'fire'    ? 0.78 : type === 'water' ? 0.62 : 0.70;
     utter.volume = 0.95;
 
     setDisplay(text, true);
@@ -1325,16 +1487,65 @@ function updateCountdown() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// LIGHTBOX
+// ════════════════════════════════════════════════════════════════
+let lightboxIndex = 0;
+
+function openLightbox(index) {
+  const card = FIRE_DECK[index];
+  if (!card) return;
+  lightboxIndex = index;
+
+  document.getElementById('lightboxImg').src = card.image;
+  document.getElementById('lightboxImg').alt = card.name;
+  document.getElementById('lightboxName').textContent = card.name;
+  document.getElementById('lightboxTitle').textContent = card.title;
+  document.getElementById('lightboxMeaning').textContent = card.meaning;
+
+  document.getElementById('lightboxOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir) {
+  const next = (lightboxIndex + dir + FIRE_DECK.length) % FIRE_DECK.length;
+  openLightbox(next);
+}
+
+function bindLightbox() {
+  document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
+  document.getElementById('lightboxPrev')?.addEventListener('click', () => lightboxNav(-1));
+  document.getElementById('lightboxNext')?.addEventListener('click', () => lightboxNav(1));
+  document.getElementById('lightboxOverlay')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('lightboxOverlay').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
 // GALLERY
 // ════════════════════════════════════════════════════════════════
 function buildGallery() {
   const strip = document.getElementById('galleryStrip');
   if (!strip) return;
-  strip.innerHTML = FIRE_DECK.map(card => `
-    <div class="gallery-item" title="${card.name} — ${card.title}">
+  strip.innerHTML = FIRE_DECK.map((card, i) => `
+    <div class="gallery-item" title="${card.name} — ${card.title}" data-index="${i}">
       <img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.style.opacity='0.2'; this.style.background='#1a0e06'">
     </div>
   `).join('');
+
+  strip.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
+  });
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1388,6 +1599,7 @@ function bindUI() {
 // ════════════════════════════════════════════════════════════════
 function init() {
   buildGallery();
+  bindLightbox();
   loadGeneratedStatus();
   renderWaterGrid();
   startAutoDraw();
