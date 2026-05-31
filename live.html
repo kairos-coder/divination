@@ -43,105 +43,7 @@
       overflow-x: hidden;
     }
 
-    /* ── PROMO VIDEO CAROUSEL ── */
-    .promo-carousel {
-      position: relative;
-      width: 100%;
-      max-width: 500px;
-      margin: 0.5rem auto 0;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(232,96,42,0.3);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      z-index: 15;
-    }
-    .promo-video {
-      width: 100%;
-      display: block;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-    }
-    .promo-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 0.4rem;
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
-      text-align: center;
-    }
-    .promo-badge {
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      color: var(--fire-bright);
-      letter-spacing: 0.2em;
-    }
-    .promo-toggle {
-      position: absolute;
-      top: 6px;
-      right: 8px;
-      background: rgba(0,0,0,0.6);
-      border: none;
-      color: white;
-      font-size: 0.6rem;
-      cursor: pointer;
-      border-radius: 20px;
-      width: 22px;
-      height: 22px;
-      z-index: 20;
-      font-family: var(--mono);
-    }
-    .promo-toggle:hover {
-      background: rgba(201,74,42,0.8);
-    }
-
-    /* ── LOBBY OVERLAY ── */
-    .lobby-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(4,3,2,0.92);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 1.5rem;
-      transition: opacity 0.8s;
-    }
-    .lobby-overlay.hidden {
-      display: none;
-    }
-    .lobby-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.2rem;
-      color: var(--fire-bright);
-      letter-spacing: 0.2em;
-    }
-    .lobby-countdown {
-      font-family: 'Cinzel', serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--water-bright);
-      text-shadow: 0 0 20px var(--water-glow);
-    }
-    .lobby-message {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--text-dim);
-      letter-spacing: 0.2em;
-    }
-    .lobby-note {
-      font-family: var(--mono);
-      font-size: 0.45rem;
-      color: var(--ember);
-      margin-top: 1rem;
-    }
-
-    /* ── BROADCAST BAR ── */
+    /* ── BROADCAST BAR ─────────────────────────────────────────── */
     .broadcast-bar {
       position: sticky;
       top: 0;
@@ -155,6 +57,7 @@
       border-bottom: 1px solid rgba(232,96,42,0.25);
       gap: 1rem;
     }
+
     .broadcast-bar::before {
       content: '';
       position: absolute;
@@ -162,6 +65,7 @@
       background: linear-gradient(90deg, var(--fire-glow) 0%, transparent 40%, transparent 60%, var(--water-glow) 100%);
       pointer-events: none;
     }
+
     .live-badge {
       display: flex;
       align-items: center;
@@ -172,6 +76,7 @@
       color: var(--fire-bright);
       flex-shrink: 0;
     }
+
     .live-dot {
       width: 7px;
       height: 7px;
@@ -180,10 +85,12 @@
       box-shadow: 0 0 6px var(--fire-primary);
       animation: livepulse 1.4s ease-in-out infinite;
     }
+
     @keyframes livepulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(0.7); }
     }
+
     .bar-title {
       font-family: 'Cinzel Decorative', serif;
       font-size: 0.75rem;
@@ -195,18 +102,21 @@
       text-align: center;
       flex: 1;
     }
+
     .countdown-bar {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       flex-shrink: 0;
     }
+
     .countdown-label {
       font-family: var(--mono);
       font-size: 0.38rem;
       letter-spacing: 0.15em;
       color: var(--text-dim);
     }
+
     .countdown-time {
       font-family: 'Cinzel', serif;
       font-size: 1rem;
@@ -217,17 +127,19 @@
       text-shadow: 0 0 12px var(--water-glow);
       transition: color 0.5s;
     }
+
     .countdown-time.urgent {
       color: var(--fire-bright);
       text-shadow: 0 0 12px var(--fire-glow);
       animation: urgentflicker 0.5s ease-in-out infinite alternate;
     }
+
     @keyframes urgentflicker {
       from { opacity: 1; }
       to { opacity: 0.7; }
     }
 
-    /* ── TTS PANEL ── */
+    /* ── TTS PANEL ─────────────────────────────────────────────── */
     .tts-panel {
       background: linear-gradient(90deg, rgba(10,8,4,0.97) 0%, rgba(4,13,24,0.97) 100%);
       border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -239,6 +151,7 @@
       position: relative;
       z-index: 90;
     }
+
     .tts-speaking-bar {
       flex: 1;
       min-width: 200px;
@@ -256,6 +169,7 @@
       align-items: center;
       gap: 0.4rem;
     }
+
     .tts-speaking-bar::before {
       content: '';
       position: absolute;
@@ -267,12 +181,14 @@
       transition: width 0.1s linear;
       pointer-events: none;
     }
+
     .tts-wave {
       display: flex;
       gap: 2px;
       align-items: center;
       flex-shrink: 0;
     }
+
     .tts-wave span {
       display: block;
       width: 3px;
@@ -281,16 +197,19 @@
       animation: ttswave 0.6s ease-in-out infinite;
       opacity: 0;
     }
+
     .tts-speaking .tts-wave span { opacity: 1; }
     .tts-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
     .tts-wave span:nth-child(2) { height: 10px; animation-delay: 0.1s; }
     .tts-wave span:nth-child(3) { height: 7px; animation-delay: 0.2s; }
     .tts-wave span:nth-child(4) { height: 12px; animation-delay: 0.15s; }
     .tts-wave span:nth-child(5) { height: 8px; animation-delay: 0.05s; }
+
     @keyframes ttswave {
       0%, 100% { transform: scaleY(0.4); }
       50% { transform: scaleY(1); }
     }
+
     #ttsCurrentText {
       flex: 1;
       white-space: nowrap;
@@ -298,12 +217,15 @@
       text-overflow: ellipsis;
       color: var(--teal);
     }
+
+    /* Manual Injection */
     .inject-area {
       display: flex;
       gap: 0.4rem;
       align-items: center;
       flex-shrink: 0;
     }
+
     .inject-input {
       background: rgba(0,0,0,0.5);
       border: 1px solid rgba(90,184,255,0.2);
@@ -316,10 +238,16 @@
       outline: none;
       transition: border-color 0.2s;
     }
+
     .inject-input:focus {
       border-color: var(--water-primary);
       box-shadow: 0 0 8px rgba(42,138,204,0.2);
     }
+
+    .inject-input::placeholder {
+      color: var(--text-dim);
+    }
+
     .tts-btn {
       background: none;
       border: 1px solid;
@@ -332,12 +260,36 @@
       transition: all 0.15s;
       white-space: nowrap;
     }
-    .tts-btn-speak { border-color: var(--water-primary); color: var(--water-bright); }
-    .tts-btn-speak:hover { background: rgba(42,138,204,0.15); }
-    .tts-btn-loop { border-color: var(--ember); color: var(--ember); }
-    .tts-btn-loop.active { background: rgba(232,168,64,0.15); }
-    .tts-btn-stop { border-color: var(--fire-primary); color: var(--fire-bright); }
-    .tts-btn-stop:hover { background: rgba(201,74,42,0.15); }
+
+    .tts-btn-speak {
+      border-color: var(--water-primary);
+      color: var(--water-bright);
+    }
+    .tts-btn-speak:hover {
+      background: rgba(42,138,204,0.15);
+      box-shadow: 0 0 8px rgba(42,138,204,0.2);
+    }
+
+    .tts-btn-loop {
+      border-color: var(--ember);
+      color: var(--ember);
+    }
+    .tts-btn-loop.active {
+      background: rgba(232,168,64,0.15);
+      box-shadow: 0 0 8px rgba(232,168,64,0.3);
+    }
+    .tts-btn-loop:hover {
+      background: rgba(232,168,64,0.1);
+    }
+
+    .tts-btn-stop {
+      border-color: var(--fire-primary);
+      color: var(--fire-bright);
+    }
+    .tts-btn-stop:hover {
+      background: rgba(201,74,42,0.15);
+    }
+
     .voice-select {
       background: rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.1);
@@ -347,14 +299,17 @@
       color: var(--text-dim);
       padding: 0.3rem 0.4rem;
       cursor: pointer;
+      outline: none;
     }
 
-    /* ── SPLIT LAYOUT ── */
+    /* ── SPLIT LAYOUT ──────────────────────────────────────────── */
     .split-layout {
       display: flex;
       min-height: calc(100vh - 48px - 48px);
       position: relative;
     }
+
+    /* Diagonal divider glow */
     .split-layout::after {
       content: '';
       position: absolute;
@@ -362,7 +317,12 @@
       bottom: 0;
       left: 50%;
       width: 1px;
-      background: linear-gradient(180deg, transparent 0%, var(--fire-primary) 20%, var(--water-primary) 80%, transparent 100%);
+      background: linear-gradient(180deg,
+        transparent 0%,
+        var(--fire-primary) 20%,
+        var(--water-primary) 80%,
+        transparent 100%
+      );
       box-shadow: 0 0 16px rgba(201,74,42,0.3), 0 0 16px rgba(42,138,204,0.3);
       pointer-events: none;
       z-index: 5;
@@ -371,7 +331,9 @@
     /* FIRE PANEL */
     .panel-fire {
       flex: 1;
-      background: radial-gradient(ellipse at 80% 10%, rgba(201,74,42,0.08) 0%, transparent 60%), linear-gradient(160deg, #0e0804 0%, #060300 100%);
+      background:
+        radial-gradient(ellipse at 80% 10%, rgba(201,74,42,0.08) 0%, transparent 60%),
+        linear-gradient(160deg, #0e0804 0%, #060300 100%);
       padding: 1.25rem 1.25rem 1rem;
       display: flex;
       flex-direction: column;
@@ -379,6 +341,8 @@
       position: relative;
       overflow: hidden;
     }
+
+    /* Ember flicker particles */
     .panel-fire::after {
       content: '';
       position: absolute;
@@ -390,6 +354,7 @@
       pointer-events: none;
       animation: emberpulse 3s ease-in-out infinite;
     }
+
     @keyframes emberpulse {
       0%, 100% { opacity: 0.6; transform: scaleY(1); }
       50% { opacity: 1; transform: scaleY(1.15); }
@@ -398,7 +363,10 @@
     /* WATER PANEL */
     .panel-water {
       flex: 1;
-      background: radial-gradient(ellipse at 20% 90%, rgba(64,200,192,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(42,138,204,0.06) 0%, transparent 55%), linear-gradient(160deg, #040d18 0%, #0a1824 60%, #152a3a 100%);
+      background:
+        radial-gradient(ellipse at 20% 90%, rgba(64,200,192,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(42,138,204,0.06) 0%, transparent 55%),
+        linear-gradient(160deg, #040d18 0%, #0a1824 60%, #152a3a 100%);
       padding: 1.25rem 1.25rem 1rem;
       display: flex;
       flex-direction: column;
@@ -406,11 +374,7 @@
       position: relative;
       overflow: hidden;
     }
-    .panel-water.water-locked {
-      filter: blur(3px);
-      opacity: 0.6;
-      pointer-events: none;
-    }
+
     .panel-water::after {
       content: '';
       position: absolute;
@@ -422,11 +386,13 @@
       pointer-events: none;
       animation: waterpulse 4s ease-in-out infinite;
     }
+
     @keyframes waterpulse {
       0%, 100% { opacity: 0.5; }
       60% { opacity: 1; }
     }
 
+    /* Panel Headers */
     .panel-header {
       text-align: center;
       padding-bottom: 0.6rem;
@@ -434,20 +400,23 @@
       position: relative;
       z-index: 2;
     }
+
     .panel-fire .panel-header h2 {
       font-family: 'Cinzel Decorative', serif;
       font-size: 1.1rem;
       color: var(--fire-bright);
-      text-shadow: 0 0 24px rgba(232,96,42,0.5);
+      text-shadow: 0 0 24px rgba(232,96,42,0.5), 0 2px 4px rgba(0,0,0,0.8);
       letter-spacing: 0.05em;
     }
+
     .panel-water .panel-header h2 {
       font-family: 'Cinzel Decorative', serif;
       font-size: 1.1rem;
       color: var(--water-bright);
-      text-shadow: 0 0 24px rgba(90,184,255,0.5);
+      text-shadow: 0 0 24px rgba(90,184,255,0.5), 0 2px 4px rgba(0,0,0,0.8);
       letter-spacing: 0.05em;
     }
+
     .card-count {
       font-family: var(--mono);
       font-size: 0.42rem;
@@ -456,6 +425,7 @@
       margin-top: 0.2rem;
     }
 
+    /* ── FIRE CARDS ─────────────────────────────────────────────── */
     .auto-draw-container {
       display: flex;
       gap: 0.75rem;
@@ -464,6 +434,7 @@
       position: relative;
       z-index: 2;
     }
+
     .card-slot {
       width: 110px;
       aspect-ratio: 2/3;
@@ -472,6 +443,7 @@
       cursor: pointer;
       filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6));
     }
+
     .card-inner {
       width: 100%;
       height: 100%;
@@ -479,7 +451,9 @@
       transform-style: preserve-3d;
       transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     .card-inner.flipped { transform: rotateY(180deg); }
+
     .card-face {
       position: absolute;
       inset: 0;
@@ -489,43 +463,51 @@
       border: 1px solid rgba(232,168,64,0.25);
       box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
     }
+
     .card-back {
       background: radial-gradient(ellipse at center, #2a1a08, #0a0602);
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .card-back-sigil {
       font-size: 2rem;
       opacity: 0.4;
       animation: sigilflicker 2s ease-in-out infinite;
     }
+
     @keyframes sigilflicker {
       0%, 100% { opacity: 0.4; }
       50% { opacity: 0.2; }
     }
+
     .card-front {
       background: var(--fire-surface);
       transform: rotateY(180deg);
       display: flex;
       flex-direction: column;
     }
+
     .card-front img {
       width: 100%;
       height: 55%;
       object-fit: cover;
       border-bottom: 1px solid rgba(232,168,64,0.15);
     }
+
     .card-front .info {
       padding: 0.4rem 0.5rem;
       flex: 1;
     }
+
     .card-front .pos {
       font-family: 'Cinzel', serif;
       font-size: 0.38rem;
       letter-spacing: 0.2em;
       color: var(--ember);
     }
+
     .card-front .name {
       font-family: 'Cinzel Decorative', serif;
       font-size: 0.52rem;
@@ -533,6 +515,7 @@
       margin: 0.2rem 0 0.15rem;
       line-height: 1.3;
     }
+
     .card-front .meaning {
       font-size: 0.42rem;
       font-style: italic;
@@ -540,6 +523,7 @@
       line-height: 1.4;
     }
 
+    /* Reading bar */
     .reading-bar {
       text-align: center;
       padding: 0.5rem 0.75rem;
@@ -552,10 +536,12 @@
       position: relative;
       z-index: 2;
     }
+
     .reading-bar.visible {
       opacity: 1;
       transform: translateY(0);
     }
+
     .reading-synthesis {
       font-size: 0.65rem;
       font-style: italic;
@@ -563,6 +549,7 @@
       line-height: 1.5;
       margin-bottom: 0.25rem;
     }
+
     .reading-cards {
       font-family: 'Cinzel', serif;
       font-size: 0.42rem;
@@ -570,6 +557,7 @@
       color: var(--ember);
     }
 
+    /* Gallery strip */
     .gallery-strip {
       display: flex;
       gap: 3px;
@@ -581,7 +569,9 @@
       position: relative;
       z-index: 2;
     }
+
     .gallery-strip::-webkit-scrollbar { display: none; }
+
     .gallery-item {
       width: 44px;
       aspect-ratio: 2/3;
@@ -592,16 +582,19 @@
       transition: border-color 0.2s, transform 0.2s;
       cursor: pointer;
     }
+
     .gallery-item:hover {
       border-color: var(--ember);
       transform: scale(1.05) translateY(-2px);
     }
+
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
+    /* Next draw timer */
     .next-draw-row {
       font-family: var(--mono);
       font-size: 0.4rem;
@@ -610,6 +603,7 @@
       position: relative;
       z-index: 2;
     }
+
     .draw-progress {
       height: 2px;
       background: rgba(255,255,255,0.06);
@@ -617,6 +611,7 @@
       margin-top: 0.3rem;
       overflow: hidden;
     }
+
     .draw-progress-bar {
       height: 100%;
       background: linear-gradient(90deg, var(--fire-primary), var(--ember));
@@ -624,6 +619,7 @@
       border-radius: 1px;
     }
 
+    /* ── WATER GRID ─────────────────────────────────────────────── */
     .water-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
@@ -635,9 +631,16 @@
       position: relative;
       z-index: 2;
     }
+
     .water-stub {
       aspect-ratio: 2/3;
-      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 12px, rgba(255,255,255,0.015) 12px, rgba(255,255,255,0.015) 24px);
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 12px,
+        rgba(255,255,255,0.015) 12px,
+        rgba(255,255,255,0.015) 24px
+      );
       border: 1.5px dashed rgba(42,138,204,0.4);
       border-radius: 8px;
       display: flex;
@@ -650,19 +653,85 @@
       position: relative;
       overflow: hidden;
     }
+
+    .water-stub::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(42,138,204,0.06), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
     .water-stub:hover {
       transform: translateY(-2px) scale(1.02);
       border-color: var(--water-bright);
       box-shadow: 0 4px 16px rgba(42,138,204,0.15);
     }
-    .stub-icon { font-size: 1.5rem; opacity: 0.55; margin-bottom: 0.2rem; }
-    .stub-rank { font-family: 'Cinzel', serif; font-size: 0.45rem; font-weight: 700; color: var(--water-bright); letter-spacing: 0.1em; }
-    .stub-title { font-size: 0.38rem; text-align: center; color: var(--water-foam); margin: 0.15rem 0; line-height: 1.3; }
-    .stub-badge { font-family: var(--mono); font-size: 0.32rem; padding: 0.08rem 0.25rem; border-radius: 3px; margin-top: 0.1rem; }
-    .stub-badge.missing { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid rgba(255,255,255,0.07); }
-    .stub-badge.done { background: rgba(64,200,192,0.12); color: var(--teal); border: 1px solid rgba(64,200,192,0.25); }
-    .water-stub.generated { border: 1.5px solid rgba(64,200,192,0.45); background: linear-gradient(160deg, rgba(64,200,192,0.06), rgba(42,138,204,0.08)); }
 
+    .water-stub:hover::before { opacity: 1; }
+
+    .stub-icon {
+      font-size: 1.5rem;
+      opacity: 0.55;
+      margin-bottom: 0.2rem;
+      line-height: 1;
+    }
+
+    .stub-rank {
+      font-family: 'Cinzel', serif;
+      font-size: 0.45rem;
+      font-weight: 700;
+      color: var(--water-bright);
+      letter-spacing: 0.1em;
+    }
+
+    .stub-title {
+      font-size: 0.38rem;
+      text-align: center;
+      color: var(--water-foam);
+      margin: 0.15rem 0;
+      line-height: 1.3;
+    }
+
+    .stub-badge {
+      font-family: var(--mono);
+      font-size: 0.32rem;
+      padding: 0.08rem 0.25rem;
+      border-radius: 3px;
+      margin-top: 0.1rem;
+    }
+
+    .stub-badge.missing {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-dim);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .stub-badge.done {
+      background: rgba(64,200,192,0.12);
+      color: var(--teal);
+      border: 1px solid rgba(64,200,192,0.25);
+    }
+
+    .water-stub.generated {
+      border: 1.5px solid rgba(64,200,192,0.45);
+      background: linear-gradient(160deg, rgba(64,200,192,0.06), rgba(42,138,204,0.08));
+    }
+
+    .water-stub.generated .stub-icon { opacity: 0.8; }
+
+    /* Reveal animation when first generated */
+    @keyframes waterReveal {
+      from { opacity: 0; transform: scale(0.9) translateY(6px); box-shadow: 0 0 0 rgba(64,200,192,0); }
+      to { opacity: 1; transform: scale(1) translateY(0); box-shadow: 0 0 20px rgba(64,200,192,0.25); }
+    }
+
+    .water-stub.just-generated {
+      animation: waterReveal 0.6s ease-out forwards;
+    }
+
+    /* ── GENERATION CONSOLE ─────────────────────────────────────── */
     .generation-console {
       background: rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.06);
@@ -673,11 +742,32 @@
       position: relative;
       z-index: 2;
     }
-    .console-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
-    .console-title { color: var(--water-bright); letter-spacing: 0.15em; font-size: 0.38rem; }
-    .console-log { color: rgba(192,224,255,0.7); max-height: 54px; overflow-y: auto; scrollbar-width: none; line-height: 1.6; }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .console-title {
+      color: var(--water-bright);
+      letter-spacing: 0.15em;
+      font-size: 0.38rem;
+    }
+
+    .console-log {
+      color: rgba(192,224,255,0.7);
+      max-height: 54px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      line-height: 1.6;
+    }
+
     .console-log .log-success { color: var(--teal); }
     .console-log .log-error { color: #f66; }
+    .console-log .log-info { color: rgba(192,224,255,0.7); }
+
     .copy-all-btn {
       width: 100%;
       margin-top: 0.35rem;
@@ -690,9 +780,15 @@
       letter-spacing: 0.1em;
       cursor: pointer;
       border-radius: 5px;
+      transition: all 0.2s;
     }
-    .copy-all-btn:hover { background: rgba(42,138,204,0.22); border-color: var(--water-bright); }
 
+    .copy-all-btn:hover {
+      background: rgba(42,138,204,0.22);
+      border-color: var(--water-bright);
+    }
+
+    /* ── TOAST ─────────────────────────────────────────────────── */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -709,10 +805,16 @@
       opacity: 0;
       transition: opacity 0.25s, transform 0.25s;
       pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       white-space: nowrap;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── LIGHTBOX ───────────────────────────────────────────────── */
     .lightbox-overlay {
       position: fixed;
       inset: 0;
@@ -726,7 +828,12 @@
       transition: opacity 0.3s;
       backdrop-filter: blur(6px);
     }
-    .lightbox-overlay.open { opacity: 1; pointer-events: all; }
+
+    .lightbox-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     .lightbox-inner {
       position: relative;
       display: flex;
@@ -738,19 +845,51 @@
       transform: scale(0.94);
       transition: transform 0.3s cubic-bezier(0.2,0,0.1,1);
     }
-    .lightbox-overlay.open .lightbox-inner { transform: scale(1); }
+
+    .lightbox-overlay.open .lightbox-inner {
+      transform: scale(1);
+    }
+
     .lightbox-img {
       max-width: min(420px, 80vw);
       max-height: 72vh;
       object-fit: contain;
       border-radius: 10px;
       border: 1px solid rgba(232,168,64,0.3);
-      box-shadow: 0 0 60px rgba(201,74,42,0.25), 0 0 120px rgba(232,168,64,0.08), 0 24px 48px rgba(0,0,0,0.7);
+      box-shadow:
+        0 0 60px rgba(201,74,42,0.25),
+        0 0 120px rgba(232,168,64,0.08),
+        0 24px 48px rgba(0,0,0,0.7);
     }
-    .lightbox-meta { text-align: center; }
-    .lightbox-name { font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; color: var(--gold); text-shadow: 0 0 20px rgba(232,168,64,0.4); }
-    .lightbox-title { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--ember); }
-    .lightbox-meaning { font-size: 0.85rem; font-style: italic; color: rgba(240,224,208,0.75); max-width: 360px; line-height: 1.6; }
+
+    .lightbox-meta {
+      text-align: center;
+    }
+
+    .lightbox-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(232,168,64,0.4);
+      margin-bottom: 0.2rem;
+    }
+
+    .lightbox-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--ember);
+      margin-bottom: 0.4rem;
+    }
+
+    .lightbox-meaning {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(240,224,208,0.75);
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
     .lightbox-close {
       position: absolute;
       top: -2rem;
@@ -760,22 +899,43 @@
       color: var(--ember);
       font-family: var(--mono);
       font-size: 0.55rem;
+      letter-spacing: 0.15em;
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
       cursor: pointer;
+      transition: all 0.15s;
     }
-    .lightbox-nav { display: flex; gap: 0.5rem; margin-top: 0.25rem; }
+
+    .lightbox-close:hover {
+      background: rgba(232,168,64,0.1);
+      border-color: var(--gold);
+    }
+
+    .lightbox-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
     .lightbox-nav-btn {
       background: rgba(0,0,0,0.5);
       border: 1px solid rgba(232,168,64,0.2);
       color: var(--ember);
       font-family: var(--mono);
       font-size: 0.5rem;
+      letter-spacing: 0.1em;
       padding: 0.25rem 0.6rem;
       border-radius: 4px;
       cursor: pointer;
+      transition: all 0.15s;
     }
 
+    .lightbox-nav-btn:hover {
+      background: rgba(232,168,64,0.1);
+      border-color: var(--ember);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 768px) {
       .split-layout { flex-direction: column; }
       .split-layout::after { display: none; }
@@ -783,32 +943,17 @@
       .card-slot { width: 80px; }
       .bar-title { font-size: 0.6rem; }
       .inject-input { width: 160px; }
-      .promo-carousel { max-width: 90%; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── PROMO VIDEO CAROUSEL ── -->
-<div class="promo-carousel" id="promoCarousel">
-  <video id="promoVideo" class="promo-video" autoplay muted playsinline></video>
-  <div class="promo-overlay">
-    <span class="promo-badge">🔥 EALDFORN #5 · FIRE → WATER · LIVE 7:30PM EST</span>
-  </div>
-  <button class="promo-toggle" id="promoToggleBtn" title="Hide promo">✕</button>
-</div>
-
-<!-- ── LOBBY OVERLAY (7:00-7:30pm) ── -->
-<div id="lobbyOverlay" class="lobby-overlay">
-  <div class="lobby-title">⟡ THE FORGE WARMS ⟡</div>
-  <div class="lobby-countdown" id="lobbyCountdown">--:--</div>
-  <div class="lobby-message">WATER DECK OPENS AT 7:30PM EST</div>
-  <div class="lobby-note">🔥 Fire deck auto-drawing below · Promo videos looping 🔥</div>
-</div>
-
-<!-- ── BROADCAST BAR ── -->
+<!-- ── BROADCAST BAR ──────────────────────────────────────────── -->
 <div class="broadcast-bar">
-  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    LIVE
+  </div>
   <div class="bar-title">EALDFORN #5 · FIRE → WATER · DIGITAL DIVINATION</div>
   <div class="countdown-bar">
     <div class="countdown-label">NIGHTCAFE DEADLINE</div>
@@ -816,22 +961,33 @@
   </div>
 </div>
 
-<!-- ── TTS PANEL ── -->
+<!-- ── TTS / NARRATION PANEL ──────────────────────────────────── -->
 <div class="tts-panel">
   <div class="tts-speaking-bar" id="ttsSpeakingBar">
-    <div class="tts-wave" id="ttsWave"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="tts-wave" id="ttsWave">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
     <span id="ttsCurrentText">⟡ narration idle — enable loop or inject a line</span>
   </div>
+
   <div class="inject-area">
-    <input type="text" class="inject-input" id="injectInput" placeholder="Inject live narration…" maxlength="300" />
+    <input
+      type="text"
+      class="inject-input"
+      id="injectInput"
+      placeholder="Inject live narration…"
+      maxlength="300"
+    />
     <button class="tts-btn tts-btn-speak" id="speakBtn">▶ SPEAK</button>
     <button class="tts-btn tts-btn-loop" id="loopBtn">⟳ LOOP</button>
     <button class="tts-btn tts-btn-stop" id="stopBtn">■ STOP</button>
-    <select class="voice-select" id="voiceSelect" title="TTS Voice"><option value="">Loading voices…</option></select>
+    <select class="voice-select" id="voiceSelect" title="TTS Voice">
+      <option value="">Loading voices…</option>
+    </select>
   </div>
 </div>
 
-<!-- ── SPLIT LAYOUT ── -->
+<!-- ── SPLIT LAYOUT ───────────────────────────────────────────── -->
 <div class="split-layout">
 
   <!-- 🔥 LEFT: FIRE PANEL -->
@@ -840,246 +996,333 @@
       <h2>🜂 SUIT OF FIRE</h2>
       <div class="card-count">COMPLETE · 14 CARDS · 250+ VIEWS</div>
     </div>
+
     <div class="auto-draw-container" id="spreadContainer">
-      <div class="card-slot"><div class="card-inner" id="cardPast"><div class="card-face card-back"><div class="card-back-sigil">🜂</div></div><div class="card-face card-front" id="frontPast"></div></div></div>
-      <div class="card-slot"><div class="card-inner" id="cardPresent"><div class="card-face card-back"><div class="card-back-sigil">🜂</div></div><div class="card-face card-front" id="frontPresent"></div></div></div>
-      <div class="card-slot"><div class="card-inner" id="cardFuture"><div class="card-face card-back"><div class="card-back-sigil">🜂</div></div><div class="card-face card-front" id="frontFuture"></div></div></div>
+      <div class="card-slot">
+        <div class="card-inner" id="cardPast">
+          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
+          <div class="card-face card-front" id="frontPast"></div>
+        </div>
+      </div>
+      <div class="card-slot">
+        <div class="card-inner" id="cardPresent">
+          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
+          <div class="card-face card-front" id="frontPresent"></div>
+        </div>
+      </div>
+      <div class="card-slot">
+        <div class="card-inner" id="cardFuture">
+          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
+          <div class="card-face card-front" id="frontFuture"></div>
+        </div>
+      </div>
     </div>
+
     <div class="reading-bar" id="readingBar">
       <div class="reading-synthesis" id="readingSynthesis"></div>
       <div class="reading-cards" id="readingCards"></div>
     </div>
+
     <div class="gallery-strip" id="galleryStrip"></div>
-    <div class="next-draw-row">NEXT AUTO-DRAW IN <span id="nextDrawTimer">60</span>s<div class="draw-progress"><div class="draw-progress-bar" id="drawProgressBar" style="width:100%"></div></div></div>
+
+    <div class="next-draw-row">
+      NEXT AUTO-DRAW IN <span id="nextDrawTimer">60</span>s
+      <div class="draw-progress"><div class="draw-progress-bar" id="drawProgressBar" style="width:100%"></div></div>
+    </div>
   </div>
 
-  <!-- 💧 RIGHT: WATER PANEL (locked until 7:30pm) -->
-  <div class="panel-water water-locked" id="waterPanel">
+  <!-- 💧 RIGHT: WATER PANEL -->
+  <div class="panel-water">
     <div class="panel-header">
       <h2>🜄 SUIT OF WATER — LIVE BUILD</h2>
-      <div class="card-count" id="waterCount">0 / 14 GENERATED · UNLOCKS AT 7:30PM</div>
+      <div class="card-count" id="waterCount">0 / 14 GENERATED · CLICK STUB TO COPY PROMPT</div>
     </div>
+
     <div class="water-grid" id="waterGrid"></div>
+
     <div class="generation-console">
-      <div class="console-header"><div class="console-title">⟡ GENERATION LOG</div></div>
-      <div class="console-log" id="consoleLog"><span class="log-info">> Water deck locked until 7:30pm EST.</span><br><span class="log-info">> Fire deck auto-drawing below.</span></div>
-      <button class="copy-all-btn" id="copyAllMissingBtn" disabled style="opacity:0.5">📋 COPY ALL MISSING PROMPTS (LOCKED)</button>
+      <div class="console-header">
+        <div class="console-title">⟡ GENERATION LOG</div>
+      </div>
+      <div class="console-log" id="consoleLog">
+        <span class="log-info">> Fire → Water live build ready.</span><br>
+        <span class="log-info">> Click any stub → copy NightCafe prompt.</span><br>
+        <span class="log-info">> Generate → upload to GitHub → refresh → stub becomes card.</span>
+      </div>
+      <button class="copy-all-btn" id="copyAllMissingBtn">📋 COPY ALL MISSING PROMPTS</button>
     </div>
   </div>
 </div>
 
-<!-- ── LIGHTBOX ── -->
+<!-- ── LIGHTBOX ──────────────────────────────────────────────── -->
 <div class="lightbox-overlay" id="lightboxOverlay">
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lightboxClose">✕ CLOSE</button>
     <img class="lightbox-img" id="lightboxImg" src="" alt="" />
-    <div class="lightbox-meta"><div class="lightbox-name" id="lightboxName"></div><div class="lightbox-title" id="lightboxTitle"></div><div class="lightbox-meaning" id="lightboxMeaning"></div></div>
-    <div class="lightbox-nav"><button class="lightbox-nav-btn" id="lightboxPrev">← PREV</button><button class="lightbox-nav-btn" id="lightboxNext">NEXT →</button></div>
+    <div class="lightbox-meta">
+      <div class="lightbox-name" id="lightboxName"></div>
+      <div class="lightbox-title" id="lightboxTitle"></div>
+      <div class="lightbox-meaning" id="lightboxMeaning"></div>
+    </div>
+    <div class="lightbox-nav">
+      <button class="lightbox-nav-btn" id="lightboxPrev">← PREV</button>
+      <button class="lightbox-nav-btn" id="lightboxNext">NEXT →</button>
+    </div>
   </div>
 </div>
+
 <div id="toast" class="toast"></div>
 
 <script>
 // ════════════════════════════════════════════════════════════════
-// LOBBY MODE — Water deck unlocks at 7:30pm EST
+// DATA
 // ════════════════════════════════════════════════════════════════
-const LOBBY_UNLOCK_HOUR = 19;
-const LOBBY_UNLOCK_MINUTE = 30;
 
-function isLobbyMode() {
-  const now = new Date();
-  const target = new Date();
-  target.setHours(LOBBY_UNLOCK_HOUR, LOBBY_UNLOCK_MINUTE, 0, 0);
-  return now < target;
-}
-
-let lobbyInterval = null;
-let waterUnlocked = false;
-
-function unlockWaterDeck() {
-  if (waterUnlocked) return;
-  waterUnlocked = true;
-  const waterPanel = document.getElementById('waterPanel');
-  const lobbyOverlay = document.getElementById('lobbyOverlay');
-  const copyBtn = document.getElementById('copyAllMissingBtn');
-  const waterCountEl = document.getElementById('waterCount');
-  
-  if (waterPanel) waterPanel.classList.remove('water-locked');
-  if (lobbyOverlay) lobbyOverlay.classList.add('hidden');
-  if (copyBtn) { copyBtn.disabled = false; copyBtn.style.opacity = '1'; }
-  if (waterCountEl) waterCountEl.textContent = `${generatedWaterCards?.size || 0} / 14 GENERATED · CLICK STUB TO COPY PROMPT`;
-  
-  addToConsole('⟡ WATER DECK UNLOCKED — 30 minutes remaining', 'success');
-  TTS.speak("The water deck is open. 30 minutes. Begin.", { type: 'water' });
-  if (lobbyInterval) clearInterval(lobbyInterval);
-}
-
-function startLobbyCountdown() {
-  const lobbyCdEl = document.getElementById('lobbyCountdown');
-  if (!lobbyCdEl) return;
-  
-  function updateLobbyCountdown() {
-    const now = new Date();
-    const target = new Date();
-    target.setHours(LOBBY_UNLOCK_HOUR, LOBBY_UNLOCK_MINUTE, 0, 0);
-    const diff = target - now;
-    
-    if (diff <= 0) {
-      unlockWaterDeck();
-      return;
-    }
-    const mins = Math.floor(diff / 60000);
-    const secs = Math.floor((diff % 60000) / 1000);
-    lobbyCdEl.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-  }
-  updateLobbyCountdown();
-  lobbyInterval = setInterval(updateLobbyCountdown, 1000);
-}
-
-// ════════════════════════════════════════════════════════════════
-// PROMO VIDEO CAROUSEL
-// ════════════════════════════════════════════════════════════════
-const PROMO_VIDEOS = [
-  'data/videos/ealdforn1.mp4',
-  'data/videos/ealdforn2.mp4',
-  'data/videos/ealdforn3.mp4',
-  'data/videos/ealdforn4.mp4',
-  'data/videos/ealdforn5.mp4'
-];
-let currentVideoIndex = 0;
-const promoVideo = document.getElementById('promoVideo');
-
-function playNextVideo() {
-  if (!promoVideo) return;
-  currentVideoIndex = (currentVideoIndex + 1) % PROMO_VIDEOS.length;
-  promoVideo.src = PROMO_VIDEOS[currentVideoIndex];
-  promoVideo.load();
-  promoVideo.play().catch(e => console.log('Auto-play prevented:', e));
-}
-function initPromoCarousel() {
-  if (!promoVideo) return;
-  promoVideo.src = PROMO_VIDEOS[0];
-  promoVideo.load();
-  promoVideo.play().catch(e => console.log('Auto-play prevented:', e));
-  promoVideo.addEventListener('ended', playNextVideo);
-}
-document.getElementById('promoToggleBtn')?.addEventListener('click', () => {
-  const carousel = document.getElementById('promoCarousel');
-  if (carousel) carousel.style.display = 'none';
-});
-
-// ════════════════════════════════════════════════════════════════
-// DATA (same as original)
-// ════════════════════════════════════════════════════════════════
 const FIRE_DECK = [
-  {id:'fire_ace', name:'Ace of Fire', title:'Maui', meaning:'The divine spark — the idea that costs everything to bring down.', image:'data/images/minor/fire/fire_ace.png', rank:'ace', suit:'fire'},
-  {id:'fire_02', name:'Two of Fire', title:'Castor & Pollux', meaning:'Two flames burn as one — mortal and divine.', image:'data/images/minor/fire/fire_02.png', rank:'02', suit:'fire'},
-  {id:'fire_03', name:'Three of Fire', title:'Peitho', meaning:'The goddess of persuasion — the room leans in.', image:'data/images/minor/fire/fire_03.png', rank:'03', suit:'fire'},
-  {id:'fire_04', name:'Four of Fire', title:'Icarus', meaning:'The burnout — when ambition exceeds capacity.', image:'data/images/minor/fire/fire_04.png', rank:'04', suit:'fire'},
-  {id:'fire_05', name:'Five of Fire', title:'Loki', meaning:'The truth-teller who exposes every secret.', image:'data/images/minor/fire/fire_05.png', rank:'05', suit:'fire'},
-  {id:'fire_06', name:'Six of Fire', title:'The Algorithm', meaning:'The viral moment — ride it.', image:'data/images/minor/fire/fire_06.png', rank:'06', suit:'fire'},
-  {id:'fire_07', name:'Seven of Fire', title:'Talos', meaning:'The system that shapes you without consent.', image:'data/images/minor/fire/fire_07.png', rank:'07', suit:'fire'},
-  {id:'fire_08', name:'Eight of Fire', title:'Huitzilopochtli', meaning:'The ceaseless grind — push IS purpose.', image:'data/images/minor/fire/fire_08.png', rank:'08', suit:'fire'},
-  {id:'fire_09', name:'Nine of Fire', title:'Cerberus', meaning:'Prove yourself worthy of passage.', image:'data/images/minor/fire/fire_09.png', rank:'09', suit:'fire'},
-  {id:'fire_10', name:'Ten of Fire', title:'Surtr', meaning:'The spectacular exit — not all endings are graceful.', image:'data/images/minor/fire/fire_10.png', rank:'10', suit:'fire'},
-  {id:'fire_page', name:'Page of Fire', title:'Agni', meaning:'The youngest flame — new is power.', image:'data/images/minor/fire/fire_page.png', rank:'page', suit:'fire'},
-  {id:'fire_knight', name:'Knight of Fire', title:'Achilles', meaning:'Conviction as armor — charge.', image:'data/images/minor/fire/fire_knight.png', rank:'knight', suit:'fire'},
-  {id:'fire_queen', name:'Queen of Fire', title:'Oya', meaning:'The sovereign who does not ask permission.', image:'data/images/minor/fire/fire_queen.png', rank:'queen', suit:'fire'},
-  {id:'fire_king', name:'King of Fire', title:'The Founder', meaning:'Can you hold it without becoming the monster?', image:'data/images/minor/fire/fire_king.png', rank:'king', suit:'fire'}
+  {id:'fire_ace',    name:'Ace of Fire',    title:'Maui',             meaning:'The divine spark — the idea that costs everything to bring down.',       image:'data/images/minor/fire/fire_ace.png',    rank:'ace',    suit:'fire'},
+  {id:'fire_02',     name:'Two of Fire',    title:'Castor & Pollux',  meaning:'Two flames burn as one — mortal and divine.',                           image:'data/images/minor/fire/fire_02.png',     rank:'02',     suit:'fire'},
+  {id:'fire_03',     name:'Three of Fire',  title:'Peitho',           meaning:'The goddess of persuasion — the room leans in.',                        image:'data/images/minor/fire/fire_03.png',     rank:'03',     suit:'fire'},
+  {id:'fire_04',     name:'Four of Fire',   title:'Icarus',           meaning:'The burnout — when ambition exceeds capacity.',                         image:'data/images/minor/fire/fire_04.png',     rank:'04',     suit:'fire'},
+  {id:'fire_05',     name:'Five of Fire',   title:'Loki',             meaning:'The truth-teller who exposes every secret.',                            image:'data/images/minor/fire/fire_05.png',     rank:'05',     suit:'fire'},
+  {id:'fire_06',     name:'Six of Fire',    title:'The Algorithm',    meaning:'The viral moment — ride it.',                                           image:'data/images/minor/fire/fire_06.png',     rank:'06',     suit:'fire'},
+  {id:'fire_07',     name:'Seven of Fire',  title:'Talos',            meaning:'The system that shapes you without consent.',                           image:'data/images/minor/fire/fire_07.png',     rank:'07',     suit:'fire'},
+  {id:'fire_08',     name:'Eight of Fire',  title:'Huitzilopochtli',  meaning:'The ceaseless grind — push IS purpose.',                               image:'data/images/minor/fire/fire_08.png',     rank:'08',     suit:'fire'},
+  {id:'fire_09',     name:'Nine of Fire',   title:'Cerberus',         meaning:'Prove yourself worthy of passage.',                                     image:'data/images/minor/fire/fire_09.png',     rank:'09',     suit:'fire'},
+  {id:'fire_10',     name:'Ten of Fire',    title:'Surtr',            meaning:'The spectacular exit — not all endings are graceful.',                  image:'data/images/minor/fire/fire_10.png',     rank:'10',     suit:'fire'},
+  {id:'fire_page',   name:'Page of Fire',   title:'Agni',             meaning:'The youngest flame — new is power.',                                   image:'data/images/minor/fire/fire_page.png',   rank:'page',   suit:'fire'},
+  {id:'fire_knight', name:'Knight of Fire', title:'Achilles',         meaning:'Conviction as armor — charge.',                                        image:'data/images/minor/fire/fire_knight.png', rank:'knight', suit:'fire'},
+  {id:'fire_queen',  name:'Queen of Fire',  title:'Oya',              meaning:'The sovereign who does not ask permission.',                            image:'data/images/minor/fire/fire_queen.png',  rank:'queen',  suit:'fire'},
+  {id:'fire_king',   name:'King of Fire',   title:'The Founder',      meaning:'Can you hold it without becoming the monster?',                        image:'data/images/minor/fire/fire_king.png',   rank:'king',   suit:'fire'}
 ];
 
 const WATER_DECK = [
-  {rank:'ace', name:'Ace of Water', title:'Prometheus', culture:'Greek/Polynesian', nightCafePrompt:'Ace of Water tarot card — Prometheus stealing divine fire, water streaming from his chains, Polynesian voyager motifs, waves curling around his wrists, deep blue and turquoise palette, luminous watercolor style, golden light breaking through storm clouds —ar 2:3', image:'ace_of_water.png'},
-  {rank:'02', name:'Two of Water', title:'Yemanya', culture:'Yoruba/Brazilian', nightCafePrompt:'Two of Water tarot card — Yemanya rising from ocean, twin moons reflected in still water, orisha of motherhood and the sea, flowing white and blue robes, children at her feet, crescent waves, mother-of-pearl iridescence —ar 2:3', image:'two_of_water.png'},
-  {rank:'03', name:'Three of Water', title:'The Nereids', culture:'Greek', nightCafePrompt:'Three of Water tarot card — three Nereid sea nymphs dancing in a circle, foam and seafoam, dolphins circling, Mediterranean turquoise, ancient Greek vase painting meets fluid digital art —ar 2:3', image:'three_of_water.png'},
-  {rank:'04', name:'Four of Water', title:'Sedna', culture:'Inuit', nightCafePrompt:'Four of Water tarot card — Sedna, goddess of the sea and marine animals, her fingers becoming seals and whales, deep Arctic waters, bioluminescent creatures, ice above darkness below, melancholy and abundance —ar 2:3', image:'four_of_water.png'},
-  {rank:'05', name:'Five of Water', title:'The Drowned', culture:'Global Myth', nightCafePrompt:'Five of Water tarot card — figures sinking into dark water, only hands reaching up, loss and grief, reflections of what was, deep navy and silver, rain on the surface, melancholic romanticism —ar 2:3', image:'five_of_water.png'},
-  {rank:'06', name:'Six of Water', title:'Mnemosyne', culture:'Greek', nightCafePrompt:'Six of Water tarot card — Mnemosyne, Titaness of memory, water as remembering, faces in ripples, lotus flowers, still pool reflecting stars, purple and silver, dreamlike soft focus —ar 2:3', image:'six_of_water.png'},
-  {rank:'07', name:'Seven of Water', title:'Kanaloa', culture:'Polynesian', nightCafePrompt:'Seven of Water tarot card — Kanaloa, god of the underworld ocean, squid and octopus tentacles, deep sea vents, volcanic underwater landscapes, green and black, mysterious and powerful —ar 2:3', image:'seven_of_water.png'},
-  {rank:'08', name:'Eight of Water', title:'The Current', culture:'Modern', nightCafePrompt:'Eight of Water tarot card — a figure swept in ocean current, letting go, surrender to flow, abstract water shapes, cyan and coral, dynamic motion blur, digital painting —ar 2:3', image:'eight_of_water.png'},
-  {rank:'09', name:'Nine of Water', title:'Mazu', culture:'Chinese/Taoist', nightCafePrompt:'Nine of Water tarot card — Mazu, goddess of the sea and protector of sailors, standing on a wave, lanterns guiding ships, red and gold against deep blue, traditional Chinese painting style, auspicious clouds —ar 2:3', image:'nine_of_water.png'},
-  {rank:'10', name:'Ten of Water', title:'The Flood', culture:'Global', nightCafePrompt:'Ten of Water tarot card — great flood, waters rising to cover everything, ark in distance, rebirth through destruction, slate gray and silver, dramatic storm clouds, cinematic scale —ar 2:3', image:'ten_of_water.png'},
-  {rank:'page', name:'Page of Water', title:'Narcissus', culture:'Greek', nightCafePrompt:'Page of Water tarot card — Narcissus gazing at his reflection, flowers growing at water\'s edge, self-discovery through the looking glass, green and blue, pre-Raphaelite aesthetic —ar 2:3', image:'page_of_water.png'},
-  {rank:'knight', name:'Knight of Water', title:'Poseidon', culture:'Greek', nightCafePrompt:'Knight of Water tarot card — Poseidon on a hippocampus, trident raised, storm waves, seafoam white and deep teal, classical sculpture meets animation, powerful motion —ar 2:3', image:'knight_of_water.png'},
-  {rank:'queen', name:'Queen of Water', title:'Tiamat', culture:'Mesopotamian', nightCafePrompt:'Queen of Water tarot card — Tiamat, primordial dragon goddess of salt water, ocean as her body, creation from chaos, deep blue, gold scales, Babylonian mythic art style —ar 2:3', image:'queen_of_water.png'},
-  {rank:'king', name:'King of Water', title:'Neptune', culture:'Roman/Modern', nightCafePrompt:'King of Water tarot card — Neptune ruling the deep, trident and crown, abyssal plain, bioluminescent creatures, dark blue and emerald, 19th century maritime painting meets vaporwave —ar 2:3', image:'king_of_water.png'}
+  {rank:'ace',    name:'Ace of Water',    title:'Prometheus',   culture:'Greek/Polynesian',  nightCafePrompt:'Ace of Water tarot card — Prometheus stealing divine fire, water streaming from his chains, Polynesian voyager motifs, waves curling around his wrists, deep blue and turquoise palette, luminous watercolor style, golden light breaking through storm clouds —ar 2:3', image:'ace_of_water.png'},
+  {rank:'02',     name:'Two of Water',    title:'Yemanya',      culture:'Yoruba/Brazilian',  nightCafePrompt:'Two of Water tarot card — Yemanya rising from ocean, twin moons reflected in still water, orisha of motherhood and the sea, flowing white and blue robes, children at her feet, crescent waves, mother-of-pearl iridescence —ar 2:3', image:'two_of_water.png'},
+  {rank:'03',     name:'Three of Water',  title:'The Nereids',  culture:'Greek',             nightCafePrompt:'Three of Water tarot card — three Nereid sea nymphs dancing in a circle, foam and seafoam, dolphins circling, Mediterranean turquoise, ancient Greek vase painting meets fluid digital art —ar 2:3', image:'three_of_water.png'},
+  {rank:'04',     name:'Four of Water',   title:'Sedna',        culture:'Inuit',             nightCafePrompt:'Four of Water tarot card — Sedna, goddess of the sea and marine animals, her fingers becoming seals and whales, deep Arctic waters, bioluminescent creatures, ice above darkness below, melancholy and abundance —ar 2:3', image:'four_of_water.png'},
+  {rank:'05',     name:'Five of Water',   title:'The Drowned',  culture:'Global Myth',       nightCafePrompt:'Five of Water tarot card — figures sinking into dark water, only hands reaching up, loss and grief, reflections of what was, deep navy and silver, rain on the surface, melancholic romanticism —ar 2:3', image:'five_of_water.png'},
+  {rank:'06',     name:'Six of Water',    title:'Mnemosyne',    culture:'Greek',             nightCafePrompt:'Six of Water tarot card — Mnemosyne, Titaness of memory, water as remembering, faces in ripples, lotus flowers, still pool reflecting stars, purple and silver, dreamlike soft focus —ar 2:3', image:'six_of_water.png'},
+  {rank:'07',     name:'Seven of Water',  title:'Kanaloa',      culture:'Polynesian',        nightCafePrompt:'Seven of Water tarot card — Kanaloa, god of the underworld ocean, squid and octopus tentacles, deep sea vents, volcanic underwater landscapes, green and black, mysterious and powerful —ar 2:3', image:'seven_of_water.png'},
+  {rank:'08',     name:'Eight of Water',  title:'The Current',  culture:'Modern',            nightCafePrompt:'Eight of Water tarot card — a figure swept in ocean current, letting go, surrender to flow, abstract water shapes, cyan and coral, dynamic motion blur, digital painting —ar 2:3', image:'eight_of_water.png'},
+  {rank:'09',     name:'Nine of Water',   title:'Mazu',         culture:'Chinese/Taoist',    nightCafePrompt:'Nine of Water tarot card — Mazu, goddess of the sea and protector of sailors, standing on a wave, lanterns guiding ships, red and gold against deep blue, traditional Chinese painting style, auspicious clouds —ar 2:3', image:'nine_of_water.png'},
+  {rank:'10',     name:'Ten of Water',    title:'The Flood',    culture:'Global',            nightCafePrompt:'Ten of Water tarot card — great flood, waters rising to cover everything, ark in distance, rebirth through destruction, slate gray and silver, dramatic storm clouds, cinematic scale —ar 2:3', image:'ten_of_water.png'},
+  {rank:'page',   name:'Page of Water',   title:'Narcissus',    culture:'Greek',             nightCafePrompt:'Page of Water tarot card — Narcissus gazing at his reflection, flowers growing at water\'s edge, self-discovery through the looking glass, green and blue, pre-Raphaelite aesthetic —ar 2:3', image:'page_of_water.png'},
+  {rank:'knight', name:'Knight of Water', title:'Poseidon',     culture:'Greek',             nightCafePrompt:'Knight of Water tarot card — Poseidon on a hippocampus, trident raised, storm waves, seafoam white and deep teal, classical sculpture meets animation, powerful motion —ar 2:3', image:'knight_of_water.png'},
+  {rank:'queen',  name:'Queen of Water',  title:'Tiamat',       culture:'Mesopotamian',      nightCafePrompt:'Queen of Water tarot card — Tiamat, primordial dragon goddess of salt water, ocean as her body, creation from chaos, deep blue, gold scales, Babylonian mythic art style —ar 2:3', image:'queen_of_water.png'},
+  {rank:'king',   name:'King of Water',   title:'Neptune',      culture:'Roman/Modern',      nightCafePrompt:'King of Water tarot card — Neptune ruling the deep, trident and crown, abyssal plain, bioluminescent creatures, dark blue and emerald, 19th century maritime painting meets vaporwave —ar 2:3', image:'king_of_water.png'}
 ];
 
+// ── KITTEN TTS SCRIPT LIBRARY ─────────────────────────────────
+// These cycle during loop mode. Fire = warm/authoritative, Water = cool/deep/ethereal.
 const TTS_SCRIPTS = [
+  // Fire — power, myth, ambition
   { text: "The Fire deck burns tonight. Every card a myth alive.", type: 'fire' },
   { text: "Fourteen archetypes. Fourteen gods. Which one speaks to you?", type: 'fire' },
   { text: "Maui stole fire from the gods. Tonight we make something from that flame.", type: 'fire' },
+  { text: "The Algorithm. Six of Fire. The viral moment — you do not get to choose when it comes. You only get to be ready.", type: 'fire' },
+  { text: "The King of Fire asks a question that has no easy answer: can you hold power without becoming the monster that power makes you?", type: 'fire' },
+  { text: "Achilles did not choose his heel. But he charged anyway. That is the Knight of Fire.", type: 'fire' },
+  { text: "Icarus is not a warning about flying too high. He is a warning about loving the height more than the landing.", type: 'fire' },
+  { text: "Oya does not ask permission. The Queen of Fire never has.", type: 'fire' },
+  { text: "Loki does not lie. He reveals. The Five of Fire holds up the mirror you were trying to avoid.", type: 'fire' },
+  { text: "Surtr ends the world with fire. Not out of malice. The Ten of Fire is not failure — it is spectacle.", type: 'fire' },
+  { text: "The past. The present. The future. Three cards drawn from chaos. One story the moment needed to tell.", type: 'fire' },
+  { text: "Agni is the youngest flame, but fire does not care how old you are. Page of Fire. New is its own kind of power.", type: 'fire' },
+
+  // Water — depth, grief, memory, surrender
   { text: "The Water deck takes shape, one card at a time. Witness the making.", type: 'water' },
+  { text: "This is live creation — the myth is still wet.", type: 'water' },
   { text: "Tiamat waits in the deep. The Queen of Water was there before any of us had names.", type: 'water' },
+  { text: "Every stub that lights is a card born. Every missing image is a myth waiting to be called into form.", type: 'water' },
+  { text: "Mnemosyne holds memory in still water. What do you carry that you haven't looked at yet?", type: 'water' },
+  { text: "Sedna's fingers became seals and whales. The Four of Water teaches that creation sometimes arrives through loss.", type: 'water' },
+  { text: "The Flood. Ten of Water. Rebirth through destruction. Cinematic scale. Not every ending is a tragedy.", type: 'water' },
+  { text: "Yemanya rises when you call her name over the ocean. She has been waiting longer than you know.", type: 'water' },
+  { text: "Narcissus did not fall in love with himself. He fell in love with the version of himself that existed only in reflection.", type: 'water' },
+  { text: "Kanaloa lives in the place where light does not reach. The Seven of Water is not absence. It is depth.", type: 'water' },
+  { text: "Mazu guides ships through storms she did not start. The Nine of Water protects what is worth protecting.", type: 'water' },
+  { text: "The Current does not judge. The Eight of Water is surrender — not defeat. There is a difference.", type: 'water' },
+  { text: "The Nereids danced before Olympus had a name. The Three of Water does not need an audience.", type: 'water' },
+  { text: "Poseidon commands the water but the water was never his. The Knight rides a wave that was already moving.", type: 'water' },
+
+  // Neutral — meta, show, Ealdforn world
   { text: "NightCafe daily challenge closes at eight. The deadline is the ritual.", type: 'neutral' },
+  { text: "This is Ealdforn number five. The suits are fire and water. Opposites that require each other to exist.", type: 'neutral' },
+  { text: "Come back tomorrow. There will be more cards. There is always more myth.", type: 'neutral' },
   { text: "We are building this live. You are watching a tarot deck become real in real time.", type: 'neutral' },
-  { text: "Fire and Water. Destruction and memory. Ambition and surrender.", type: 'neutral' }
+  { text: "The Ealdforn Sagas draw from Greek, Norse, Polynesian, Yoruba, Inuit, and Abenaki sources. Every card is a crossroads.", type: 'neutral' },
+  { text: "Fire and Water. Destruction and memory. Ambition and surrender. The deck holds the full range of what it means to be alive.", type: 'neutral' },
+  { text: "Every image in this deck was generated on NightCafe and refined by hand. There is no automation in the myth-making.", type: 'neutral' },
+  { text: "If you are watching this live, you are part of the reading.", type: 'neutral' },
+  { text: "The oracle does not predict. It reflects. The cards show you what you already know but haven't said yet.", type: 'neutral' },
+  { text: "Fourteen fire cards. Fourteen water cards in progress. Twenty-eight myths for the age of the algorithm.", type: 'neutral' },
 ];
 
 // ════════════════════════════════════════════════════════════════
-// TTS ENGINE (same as original)
+// KITTEN TTS ENGINE
 // ════════════════════════════════════════════════════════════════
 const TTS = (() => {
-  let voices = [], selectedVoiceIndex = -1, loopActive = false, loopPointer = 0;
-  function loadVoices() { voices = window.speechSynthesis.getVoices(); populateVoiceSelect(); }
+  let voices = [];
+  let selectedVoiceIndex = -1;
+  let loopActive = false;
+  let loopPointer = 0;
+  let currentUtterance = null;
+  let isSpeaking = false;
+
+  function loadVoices() {
+    voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return;
+    populateVoiceSelect();
+  }
+
   function populateVoiceSelect() {
     const sel = document.getElementById('voiceSelect');
     if (!sel) return;
     sel.innerHTML = '';
-    voices.forEach((v, i) => { const opt = document.createElement('option'); opt.value = i; opt.textContent = `${v.name.substring(0,20)} (${v.lang})`; sel.appendChild(opt); });
-    sel.value = 0; selectedVoiceIndex = 0;
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name.substring(0, 20)} (${v.lang})`;
+      sel.appendChild(opt);
+    });
+    // Default: prefer a melodic English voice
+    const preferred = voices.findIndex(v =>
+      v.lang.startsWith('en') && (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira') || v.name.includes('Victoria') || v.name.includes('Google UK'))
+    );
+    sel.value = preferred >= 0 ? preferred : 0;
+    selectedVoiceIndex = parseInt(sel.value);
     sel.addEventListener('change', () => { selectedVoiceIndex = parseInt(sel.value); });
   }
+
   function setDisplay(text, speaking) {
+    const bar = document.getElementById('ttsSpeakingBar');
     const textEl = document.getElementById('ttsCurrentText');
     const wave = document.getElementById('ttsWave');
     if (textEl) textEl.textContent = text;
+    if (bar) bar.classList.toggle('tts-speaking', speaking);
     if (wave) wave.parentElement?.classList?.toggle('tts-speaking', speaking);
   }
+
   function speak(text, opts = {}) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
+
     const utter = new SpeechSynthesisUtterance(text);
+    currentUtterance = utter;
+    isSpeaking = true;
+
+    // Voice tuning by type
     const type = opts.type || 'neutral';
-    if (voices[selectedVoiceIndex]) utter.voice = voices[selectedVoiceIndex];
-    utter.rate = type === 'fire' ? 0.88 : type === 'water' ? 0.78 : 0.83;
-    utter.pitch = type === 'fire' ? 0.78 : type === 'water' ? 0.62 : 0.70;
+    const voiceIdx = selectedVoiceIndex >= 0 ? selectedVoiceIndex : 0;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+
+    utter.rate  = type === 'fire'    ? 0.88 : type === 'water' ? 0.78 : 0.83;
+    utter.pitch = type === 'fire'    ? 0.78 : type === 'water' ? 0.62 : 0.70;
+    utter.volume = 0.95;
+
     setDisplay(text, true);
-    utter.onend = () => { setDisplay('⟡ narration idle', false); if (loopActive) setTimeout(() => advanceLoop(), 1800); };
+
+    utter.onend = () => {
+      isSpeaking = false;
+      setDisplay('⟡ narration idle', false);
+      if (loopActive) {
+        setTimeout(() => advanceLoop(), 1800);
+      }
+    };
+
+    utter.onerror = () => {
+      isSpeaking = false;
+      setDisplay('⟡ speech error — retrying', false);
+      if (loopActive) setTimeout(() => advanceLoop(), 2500);
+    };
+
     window.speechSynthesis.speak(utter);
   }
-  function advanceLoop() { if (!loopActive) return; const s = TTS_SCRIPTS[loopPointer % TTS_SCRIPTS.length]; loopPointer++; speak(s.text, { type: s.type }); }
-  function startLoop() { loopActive = true; loopPointer = Math.floor(Math.random() * TTS_SCRIPTS.length); document.getElementById('loopBtn')?.classList.add('active'); advanceLoop(); }
-  function stopAll() { loopActive = false; window.speechSynthesis.cancel(); document.getElementById('loopBtn')?.classList.remove('active'); setDisplay('⟡ narration stopped', false); }
-  function injectLine(text) { if (!text.trim()) return; loopActive = false; document.getElementById('loopBtn')?.classList.remove('active'); speak(text.trim(), { type: 'neutral' }); }
-  function speakCardReading(draw) { const text = `${draw.past.title}, ${draw.present.title}, ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ', reversed,' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'current'} of the moment.`; speak(text, { type: 'fire' }); }
+
+  function advanceLoop() {
+    if (!loopActive) return;
+    const script = TTS_SCRIPTS[loopPointer % TTS_SCRIPTS.length];
+    loopPointer++;
+    speak(script.text, { type: script.type });
+  }
+
+  function startLoop() {
+    loopActive = true;
+    loopPointer = Math.floor(Math.random() * TTS_SCRIPTS.length);
+    document.getElementById('loopBtn')?.classList.add('active');
+    advanceLoop();
+  }
+
+  function stopAll() {
+    loopActive = false;
+    isSpeaking = false;
+    window.speechSynthesis.cancel();
+    document.getElementById('loopBtn')?.classList.remove('active');
+    setDisplay('⟡ narration stopped', false);
+  }
+
+  function injectLine(text) {
+    if (!text.trim()) return;
+    loopActive = false;
+    document.getElementById('loopBtn')?.classList.remove('active');
+    speak(text.trim(), { type: 'neutral' });
+  }
+
+  function speakCardReading(draw) {
+    const text = `${draw.past.title}, ${draw.present.title}, ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ', reversed,' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'current'} of the moment.`;
+    speak(text, { type: 'fire' });
+  }
+
   return { loadVoices, startLoop, stopAll, injectLine, speakCardReading, speak };
 })();
 
 // ════════════════════════════════════════════════════════════════
-// FIRE DECK LOGIC (same as original)
+// FIRE DECK LOGIC
 // ════════════════════════════════════════════════════════════════
-let drawTimer = 60, cycleInterval, drawCountdownInterval;
+let drawTimer = 60;
+let cycleInterval, drawCountdownInterval;
+
 function drawFireSpread() {
   const shuffled = [...FIRE_DECK];
-  for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
-  return { past: { ...shuffled[0], position: 'past', reversed: Math.random() < 0.28 }, present: { ...shuffled[1], position: 'present', reversed: Math.random() < 0.28 }, future: { ...shuffled[2], position: 'future', reversed: Math.random() < 0.28 } };
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return {
+    past:    { ...shuffled[0], position: 'past',    reversed: Math.random() < 0.28 },
+    present: { ...shuffled[1], position: 'present', reversed: Math.random() < 0.28 },
+    future:  { ...shuffled[2], position: 'future',  reversed: Math.random() < 0.28 }
+  };
 }
+
 function renderCard(card, frontId, cardId) {
   const front = document.getElementById(frontId);
   if (!front) return null;
-  front.innerHTML = `<img src="${card.image}" alt="${card.name}" onerror="this.style.background='#1a0e06'; this.style.display='flex'"><div class="info"><div class="pos">${card.position.toUpperCase()}${card.reversed ? ' ⥮ REV' : ''}</div><div class="name">${card.name}</div><div class="meaning">${card.title} — ${card.meaning.substring(0,64)}…</div></div>`;
+  front.innerHTML = `
+    <img src="${card.image}" alt="${card.name}" onerror="this.style.background='#1a0e06'; this.style.display='flex'">
+    <div class="info">
+      <div class="pos">${card.position.toUpperCase()}${card.reversed ? ' ⥮ REV' : ''}</div>
+      <div class="name">${card.name}</div>
+      <div class="meaning">${card.title} — ${card.meaning.substring(0, 64)}…</div>
+    </div>
+  `;
   const inner = document.getElementById(cardId);
   inner.classList.remove('flipped');
   return inner;
 }
+
+let lastDraw = null;
+
 function revealCards(draw) {
-  const past = renderCard(draw.past, 'frontPast', 'cardPast');
+  lastDraw = draw;
+  const past    = renderCard(draw.past,    'frontPast',    'cardPast');
   const present = renderCard(draw.present, 'frontPresent', 'cardPresent');
-  const future = renderCard(draw.future, 'frontFuture', 'cardFuture');
-  setTimeout(() => past?.classList.add('flipped'), 100);
+  const future  = renderCard(draw.future,  'frontFuture',  'cardFuture');
+
+  setTimeout(() => past?.classList.add('flipped'),    100);
   setTimeout(() => present?.classList.add('flipped'), 500);
-  setTimeout(() => future?.classList.add('flipped'), 900);
+  setTimeout(() => future?.classList.add('flipped'),  900);
+
   setTimeout(() => {
     const syn = `${draw.past.title} → ${draw.present.title} → ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ' reversed' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'flow'} of the moment.`;
     const el = document.getElementById('readingSynthesis');
@@ -1087,132 +1330,273 @@ function revealCards(draw) {
     if (el) el.textContent = syn;
     if (cards) cards.textContent = `${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
     document.getElementById('readingBar')?.classList.add('visible');
+
+    // Broadcast to other tabs
     try { new BroadcastChannel('ealdforn_narration').postMessage({ text: syn, source: 'Fire Deck', timestamp: Date.now() }); } catch(e) {}
+
+    // Speak the reading
     TTS.speakCardReading(draw);
   }, 1400);
 }
+
 function clearCards() {
-  ['cardPast','cardPresent','cardFuture'].forEach(id => document.getElementById(id)?.classList.remove('flipped'));
+  ['cardPast','cardPresent','cardFuture'].forEach(id => {
+    document.getElementById(id)?.classList.remove('flipped');
+  });
   document.getElementById('readingBar')?.classList.remove('visible');
-  setTimeout(() => { ['frontPast','frontPresent','frontFuture'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; }); }, 450);
+  setTimeout(() => {
+    ['frontPast','frontPresent','frontFuture'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    });
+  }, 450);
 }
+
 function startAutoDraw() {
   revealCards(drawFireSpread());
   drawTimer = 60;
-  const updateProgress = () => { const el = document.getElementById('nextDrawTimer'); const bar = document.getElementById('drawProgressBar'); if (el) el.textContent = drawTimer; if (bar) bar.style.width = `${(drawTimer/60)*100}%`; };
-  updateProgress();
-  cycleInterval = setInterval(() => { clearCards(); setTimeout(() => revealCards(drawFireSpread()), 500); drawTimer = 60; }, 60000);
-  drawCountdownInterval = setInterval(() => { drawTimer = Math.max(0, drawTimer - 1); updateProgress(); }, 1000);
+  updateDrawProgress();
+
+  cycleInterval = setInterval(() => {
+    clearCards();
+    setTimeout(() => revealCards(drawFireSpread()), 500);
+    drawTimer = 60;
+  }, 60000);
+
+  drawCountdownInterval = setInterval(() => {
+    drawTimer = Math.max(0, drawTimer - 1);
+    updateDrawProgress();
+  }, 1000);
+}
+
+function updateDrawProgress() {
+  const el = document.getElementById('nextDrawTimer');
+  const bar = document.getElementById('drawProgressBar');
+  if (el) el.textContent = drawTimer;
+  if (bar) bar.style.width = `${(drawTimer / 60) * 100}%`;
 }
 
 // ════════════════════════════════════════════════════════════════
-// WATER DECK LOGIC (same as original)
+// WATER DECK LOGIC
 // ════════════════════════════════════════════════════════════════
 let generatedWaterCards = new Set();
+
 function loadGeneratedStatus() {
-  try { const saved = localStorage.getItem('ealdforn_water_generated'); if (saved) generatedWaterCards = new Set(JSON.parse(saved)); } catch(e) {}
+  try {
+    const saved = localStorage.getItem('ealdforn_water_generated');
+    if (saved) generatedWaterCards = new Set(JSON.parse(saved));
+  } catch(e) {}
+
   WATER_DECK.forEach(card => {
-    fetch(`data/images/minor/water/${card.image}`, { method: 'HEAD', cache: 'no-cache' }).then(res => { if (res.ok && !generatedWaterCards.has(card.rank)) { generatedWaterCards.add(card.rank); saveGeneratedStatus(); renderWaterGrid(); } }).catch(() => {});
+    fetch(`data/images/minor/water/${card.image}`, { method: 'HEAD', cache: 'no-cache' })
+      .then(res => {
+        if (res.ok && !generatedWaterCards.has(card.rank)) {
+          generatedWaterCards.add(card.rank);
+          saveGeneratedStatus();
+          renderWaterGrid();
+        }
+      }).catch(() => {});
   });
 }
-function saveGeneratedStatus() { try { localStorage.setItem('ealdforn_water_generated', JSON.stringify([...generatedWaterCards])); } catch(e) {} }
+
+function saveGeneratedStatus() {
+  try { localStorage.setItem('ealdforn_water_generated', JSON.stringify([...generatedWaterCards])); } catch(e) {}
+}
+
 function renderWaterGrid() {
   const grid = document.getElementById('waterGrid');
   if (!grid) return;
   const count = generatedWaterCards.size;
   const countEl = document.getElementById('waterCount');
-  if (countEl && waterUnlocked) countEl.textContent = `${count} / 14 GENERATED · CLICK STUB TO COPY PROMPT`;
+  if (countEl) countEl.textContent = `${count} / 14 GENERATED · CLICK STUB TO COPY PROMPT`;
+
   grid.innerHTML = WATER_DECK.map(card => {
     const done = generatedWaterCards.has(card.rank);
-    const shortTitle = card.title.length > 18 ? card.title.substring(0,16)+'…' : card.title;
-    return `<div class="water-stub ${done ? 'generated' : ''}" data-rank="${card.rank}" data-prompt="${card.nightCafePrompt.replace(/"/g,'&quot;')}" data-image="${card.image}" title="${done ? card.name+' — GENERATED' : 'Copy prompt: '+card.name}"><div class="stub-icon">${done ? '💧' : '🕳'}</div><div class="stub-rank">${card.rank.toUpperCase()}</div><div class="stub-title">${shortTitle}</div><div class="stub-badge ${done ? 'done' : 'missing'}">${done ? 'DONE ✓' : 'MISSING'}</div></div>`;
+    const shortTitle = card.title.length > 18 ? card.title.substring(0, 16) + '…' : card.title;
+    return `
+      <div class="water-stub ${done ? 'generated' : ''}"
+           data-rank="${card.rank}"
+           data-prompt="${card.nightCafePrompt.replace(/"/g,'&quot;')}"
+           data-image="${card.image}"
+           title="${done ? card.name + ' — GENERATED' : 'Copy prompt: ' + card.name}">
+        <div class="stub-icon">${done ? '💧' : '🕳'}</div>
+        <div class="stub-rank">${card.rank.toUpperCase()}</div>
+        <div class="stub-title">${shortTitle}</div>
+        <div class="stub-badge ${done ? 'done' : 'missing'}">${done ? 'DONE ✓' : 'MISSING'}</div>
+      </div>
+    `;
   }).join('');
-  if (waterUnlocked) {
-    document.querySelectorAll('.water-stub').forEach(stub => {
-      stub.addEventListener('click', () => {
-        const rank = stub.dataset.rank;
-        const done = generatedWaterCards.has(rank);
-        if (!done) {
-          navigator.clipboard.writeText(stub.dataset.prompt).catch(()=>{});
-          showToast(`📋 Copied: ${rank.toUpperCase()} of Water`);
-          addToConsole(`📋 Copied prompt for ${rank.toUpperCase()} of Water`, 'info');
-          TTS.speak(`Copying prompt for ${rank} of water. Generate, then upload.`, { type: 'water' });
-        } else { showToast(`✓ ${rank.toUpperCase()} of Water already generated`); }
-      });
+
+  document.querySelectorAll('.water-stub').forEach(stub => {
+    stub.addEventListener('click', () => {
+      const rank = stub.dataset.rank;
+      const done = generatedWaterCards.has(rank);
+      if (!done) {
+        navigator.clipboard.writeText(stub.dataset.prompt).catch(() => {});
+        showToast(`📋 Copied: ${rank.toUpperCase()} of Water`);
+        addToConsole(`📋 Copied prompt for ${rank.toUpperCase()} of Water`, 'info');
+        TTS.speak(`Copying prompt for ${rank} of water. Generate, then upload.`, { type: 'water' });
+      } else {
+        showToast(`✓ ${rank.toUpperCase()} of Water already generated`);
+      }
     });
-  }
+  });
 }
-function addToConsole(message, type='info') {
+
+function addToConsole(message, type = 'info') {
   const el = document.getElementById('consoleLog');
   if (!el) return;
-  const cls = type==='success'?'log-success':type==='error'?'log-error':'log-info';
-  const prefix = type==='success'?'✓':type==='error'?'✗':'⟡';
+  const cls = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : 'log-info';
+  const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '⟡';
   const line = document.createElement('span');
   line.className = cls;
   line.textContent = `${prefix} ${message}`;
   el.prepend(document.createElement('br'));
   el.prepend(line);
+  // Keep max 12 lines
   while (el.childNodes.length > 24) el.removeChild(el.lastChild);
 }
+
 function copyAllMissingPrompts() {
-  if (!waterUnlocked) { showToast('Water deck unlocks at 7:30pm EST'); return; }
   const missing = WATER_DECK.filter(c => !generatedWaterCards.has(c.rank));
   if (!missing.length) { showToast('🎉 All Water cards generated!'); return; }
   const text = missing.map(c => `${c.rank.toUpperCase()} of Water — ${c.title}:\n${c.nightCafePrompt}`).join('\n\n---\n\n');
-  navigator.clipboard.writeText(text).catch(()=>{});
+  navigator.clipboard.writeText(text).catch(() => {});
   showToast(`📋 Copied ${missing.length} missing prompts`);
   addToConsole(`Copied ${missing.length} missing Water prompts to clipboard`, 'info');
 }
 
+// ════════════════════════════════════════════════════════════════
+// COUNTDOWN
+// ════════════════════════════════════════════════════════════════
 function updateCountdown() {
   const now = new Date();
   const reset = new Date();
-  reset.setHours(20,0,0,0);
-  if (now >= reset) reset.setDate(reset.getDate()+1);
-  const diff = reset-now;
-  const hours = Math.floor(diff/3600000);
-  const mins = Math.floor((diff%3600000)/60000);
-  const secs = Math.floor((diff%60000)/1000);
+  reset.setHours(20, 0, 0, 0);
+  if (now >= reset) reset.setDate(reset.getDate() + 1);
+  const diff = reset - now;
+  const hours = Math.floor(diff / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
   const display = `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
   const el = document.getElementById('countdownDisplay');
-  if (el) { el.textContent = display; el.classList.toggle('urgent', hours===0 && mins<30); }
+  if (el) {
+    el.textContent = display;
+    el.classList.toggle('urgent', hours === 0 && mins < 30);
+  }
 }
 
+// ════════════════════════════════════════════════════════════════
+// LIGHTBOX
+// ════════════════════════════════════════════════════════════════
 let lightboxIndex = 0;
-function openLightbox(idx) {
-  const card = FIRE_DECK[idx];
+
+function openLightbox(index) {
+  const card = FIRE_DECK[index];
   if (!card) return;
-  lightboxIndex = idx;
+  lightboxIndex = index;
+
   document.getElementById('lightboxImg').src = card.image;
+  document.getElementById('lightboxImg').alt = card.name;
   document.getElementById('lightboxName').textContent = card.name;
   document.getElementById('lightboxTitle').textContent = card.title;
   document.getElementById('lightboxMeaning').textContent = card.meaning;
+
   document.getElementById('lightboxOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
-function closeLightbox() { document.getElementById('lightboxOverlay').classList.remove('open'); }
-function lightboxNav(dir) { openLightbox((lightboxIndex+dir+FIRE_DECK.length)%FIRE_DECK.length); }
+
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir) {
+  const next = (lightboxIndex + dir + FIRE_DECK.length) % FIRE_DECK.length;
+  openLightbox(next);
+}
+
 function bindLightbox() {
   document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
   document.getElementById('lightboxPrev')?.addEventListener('click', () => lightboxNav(-1));
   document.getElementById('lightboxNext')?.addEventListener('click', () => lightboxNav(1));
-  document.getElementById('lightboxOverlay')?.addEventListener('click', (e) => { if (e.target === document.getElementById('lightboxOverlay')) closeLightbox(); });
-  document.addEventListener('keydown', (e) => { if (!document.getElementById('lightboxOverlay').classList.contains('open')) return; if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowLeft') lightboxNav(-1); if (e.key === 'ArrowRight') lightboxNav(1); });
+  document.getElementById('lightboxOverlay')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('lightboxOverlay').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+  });
 }
+
+// ════════════════════════════════════════════════════════════════
+// GALLERY
+// ════════════════════════════════════════════════════════════════
 function buildGallery() {
   const strip = document.getElementById('galleryStrip');
   if (!strip) return;
-  strip.innerHTML = FIRE_DECK.map((card, i) => `<div class="gallery-item" title="${card.name} — ${card.title}" data-index="${i}"><img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.style.opacity='0.2'"></div>`).join('');
-  strip.querySelectorAll('.gallery-item').forEach(item => { item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index))); });
+  strip.innerHTML = FIRE_DECK.map((card, i) => `
+    <div class="gallery-item" title="${card.name} — ${card.title}" data-index="${i}">
+      <img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.style.opacity='0.2'; this.style.background='#1a0e06'">
+    </div>
+  `).join('');
+
+  strip.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
+  });
 }
-function showToast(msg) { const t = document.getElementById('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+
+// ════════════════════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════════════════════
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ════════════════════════════════════════════════════════════════
+// UI BINDINGS
+// ════════════════════════════════════════════════════════════════
 function bindUI() {
-  document.getElementById('loopBtn')?.addEventListener('click', () => { const btn = document.getElementById('loopBtn'); if (btn?.classList.contains('active')) TTS.stopAll(); else TTS.startLoop(); });
+  // TTS buttons
+  document.getElementById('loopBtn')?.addEventListener('click', () => {
+    const btn = document.getElementById('loopBtn');
+    if (btn?.classList.contains('active')) {
+      TTS.stopAll();
+    } else {
+      TTS.startLoop();
+    }
+  });
+
   document.getElementById('stopBtn')?.addEventListener('click', () => TTS.stopAll());
-  document.getElementById('speakBtn')?.addEventListener('click', () => { const input = document.getElementById('injectInput'); const text = input?.value?.trim(); if (text) { TTS.injectLine(text); if (input) input.value = ''; } });
-  document.getElementById('injectInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { const text = e.target.value.trim(); if (text) { TTS.injectLine(text); e.target.value = ''; } } });
+
+  document.getElementById('speakBtn')?.addEventListener('click', () => {
+    const input = document.getElementById('injectInput');
+    const text = input?.value?.trim();
+    if (text) {
+      TTS.injectLine(text);
+      if (input) input.value = '';
+    }
+  });
+
+  document.getElementById('injectInput')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const text = e.target.value.trim();
+      if (text) { TTS.injectLine(text); e.target.value = ''; }
+    }
+  });
+
   document.getElementById('copyAllMissingBtn')?.addEventListener('click', copyAllMissingPrompts);
 }
 
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
 function init() {
   buildGallery();
   bindLightbox();
@@ -1222,16 +1606,23 @@ function init() {
   updateCountdown();
   setInterval(updateCountdown, 1000);
   bindUI();
-  initPromoCarousel();
+  addToConsole('Fire → Water live dashboard ready.', 'info');
+
+  // Load TTS voices (may be async on some browsers)
   TTS.loadVoices();
   window.speechSynthesis.onvoiceschanged = () => TTS.loadVoices();
-  if (isLobbyMode()) { startLobbyCountdown(); }
-  else { unlockWaterDeck(); }
-  addToConsole('Fire → Water live dashboard ready. Water deck ' + (isLobbyMode() ? 'locked until 7:30pm' : 'unlocked'), 'info');
+
   console.log('%c🜂🜄 EALDFORN #5 LIVE DASHBOARD', 'color:#e8602a; font-size:16px; font-weight:bold');
+  console.log('%c   Loop narration: click ⟳ LOOP button', 'color:#e8a840');
+  console.log('%c   Inject live line: type in box → SPEAK or Enter', 'color:#5ab8ff');
+  console.log('%c   Water stubs: click to copy NightCafe prompt', 'color:#40c8c0');
 }
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
