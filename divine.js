@@ -13,49 +13,48 @@ const Divine = (() => {
   let currentDraw = null;
   let decksLoaded = false;
 
-  // ─── IMAGE PATH MAPPING ─────────────────
-  const IMAGE_MAP = {
-    // Major Arcana
-    'major_00': 'data/images/dionysus-card.jpg',
-    'major_01': 'data/images/hermes-card.jpg',
-    'major_02': 'data/images/hera-card.jpg',
-    'major_03': 'data/images/demeter-card.jpg',
-    'major_04': 'data/images/zeus-card.jpg',
-    'major_05': 'data/images/ares-card.jpg',
-    'major_06': 'data/images/aphrodite-card.jpg',
-    'major_07': 'data/images/artemis-card.jpg',
-    'major_08': 'data/images/athena-card.jpg',
-    'major_09': 'data/images/hermit-card.jpg',
-    'major_10': null,
-    'major_11': 'data/images/hephaestus-card.jpg',
-    'major_12': 'data/images/prometheus-card.jpg',
-    'major_13': 'data/images/thanatos-card.jpg',
-    'major_14': null,
-    'major_15': 'data/images/hades-card.jpg',
-    'major_16': 'data/images/poseidon-card.jpg',
-    'major_17': 'data/images/persephone-card.jpg',
-    'major_18': null,
-    'major_19': null,
-    'major_20': null,
-    'major_21': null,
-    'major_hidden': null,
-    
-    // Fire Suit (14 cards — all rendered)
-    'fire_ace':    'data/images/minor/fire/fire_ace.png',
-    'fire_02':     'data/images/minor/fire/fire_02.png',
-    'fire_03':     'data/images/minor/fire/fire_03.png',
-    'fire_04':     'data/images/minor/fire/fire_04.png',
-    'fire_05':     'data/images/minor/fire/fire_05.png',
-    'fire_06':     'data/images/minor/fire/fire_06.png',
-    'fire_07':     'data/images/minor/fire/fire_07.png',
-    'fire_08':     'data/images/minor/fire/fire_08.png',
-    'fire_09':     'data/images/minor/fire/fire_09.png',
-    'fire_10':     'data/images/minor/fire/fire_10.png',
-    'fire_page':   'data/images/minor/fire/fire_page.png',
-    'fire_knight': 'data/images/minor/fire/fire_knight.png',
-    'fire_queen':  'data/images/minor/fire/fire_queen.png',
-    'fire_king':   'data/images/minor/fire/fire_king.png',
-  };
+ const IMAGE_MAP = {
+  // Major Arcana (22 cards — all filled)
+  'major_00': 'data/images/dionysus-card.jpg',        // The Fool
+  'major_01': 'data/images/major/magician.png',       // The Magician
+  'major_02': 'data/images/hera-card.jpg',            // The High Priestess
+  'major_03': 'data/images/demeter-card.jpg',         // The Empress
+  'major_04': 'data/images/zeus-card.jpg',            // The Emperor
+  'major_05': 'data/images/ares-card.jpg',            // The Hierophant
+  'major_06': 'data/images/aphrodite-card.jpg',       // The Lovers
+  'major_07': 'data/images/artemis-card.jpg',         // The Chariot
+  'major_08': 'data/images/athena-card.jpg',          // Justice
+  'major_09': 'data/images/hermit-card.jpg',          // The Hermit
+  'major_10': 'data/images/major/wheel_of_fortune.png', // Wheel of Fortune
+  'major_11': 'data/images/hephaestus-card.jpg',      // Strength
+  'major_12': 'data/images/prometheus-card.jpg',      // The Hanged Man
+  'major_13': 'data/images/thanatos-card.jpg',        // Death
+  'major_14': 'data/images/major/temperance.png',     // Temperance
+  'major_15': 'data/images/hades-card.jpg',           // The Devil
+  'major_16': 'data/images/poseidon-card.jpg',        // The Tower
+  'major_17': 'data/images/persephone-card.jpg',      // The Star
+  'major_18': 'data/images/major/moon.png',           // The Moon
+  'major_19': 'data/images/major/sun.png',            // The Sun
+  'major_20': 'data/images/major/judgment.png',       // Judgment
+  'major_21': 'data/images/major/world.png',          // The World
+  'major_hidden': null,                                // The Hidden (revealed when called)
+  
+  // Fire Suit (14 cards — all rendered)
+  'fire_ace':    'data/images/minor/fire/fire_ace.png',
+  'fire_02':     'data/images/minor/fire/fire_02.png',
+  'fire_03':     'data/images/minor/fire/fire_03.png',
+  'fire_04':     'data/images/minor/fire/fire_04.png',
+  'fire_05':     'data/images/minor/fire/fire_05.png',
+  'fire_06':     'data/images/minor/fire/fire_06.png',
+  'fire_07':     'data/images/minor/fire/fire_07.png',
+  'fire_08':     'data/images/minor/fire/fire_08.png',
+  'fire_09':     'data/images/minor/fire/fire_09.png',
+  'fire_10':     'data/images/minor/fire/fire_10.png',
+  'fire_page':   'data/images/minor/fire/fire_page.png',
+  'fire_knight': 'data/images/minor/fire/fire_knight.png',
+  'fire_queen':  'data/images/minor/fire/fire_queen.png',
+  'fire_king':   'data/images/minor/fire/fire_king.png',
+};
 
   const ELEMENT_EMOJI = {
     'Fire': '🔥',
