@@ -2,6 +2,7 @@
  * DIVINE.JS — Digital Divination Engine
  * Order of Olympus · kairos-coder.github.io/divination
  * Three-card spread: Past · Present · Future
+ * Suit-specific draws: Fire · Water · Earth · Air
  */
 
 const Divine = (() => {
@@ -14,6 +15,7 @@ const Divine = (() => {
 
   // ─── IMAGE PATH MAPPING ─────────────────
   const IMAGE_MAP = {
+    // Major Arcana
     'major_00': 'data/images/dionysus-card.jpg',
     'major_01': 'data/images/hermes-card.jpg',
     'major_02': 'data/images/hera-card.jpg',
@@ -36,7 +38,23 @@ const Divine = (() => {
     'major_19': null,
     'major_20': null,
     'major_21': null,
-    'major_hidden': null
+    'major_hidden': null,
+    
+    // Fire Suit (14 cards — all rendered)
+    'fire_ace':    'images/minor/fire/fire_ace.png',
+    'fire_02':     'images/minor/fire/fire_02.png',
+    'fire_03':     'images/minor/fire/fire_03.png',
+    'fire_04':     'images/minor/fire/fire_04.png',
+    'fire_05':     'images/minor/fire/fire_05.png',
+    'fire_06':     'images/minor/fire/fire_06.png',
+    'fire_07':     'images/minor/fire/fire_07.png',
+    'fire_08':     'images/minor/fire/fire_08.png',
+    'fire_09':     'images/minor/fire/fire_09.png',
+    'fire_10':     'images/minor/fire/fire_10.png',
+    'fire_page':   'images/minor/fire/fire_page.png',
+    'fire_knight': 'images/minor/fire/fire_knight.png',
+    'fire_queen':  'images/minor/fire/fire_queen.png',
+    'fire_king':   'images/minor/fire/fire_king.png',
   };
 
   const ELEMENT_EMOJI = {
@@ -114,9 +132,20 @@ const Divine = (() => {
   // ─── DRAW ───────────────────────────────
   function drawCards() {
     let pool;
-    if (deckMode === 'major') {
+    
+    // Suit-specific draws
+    if (['fire', 'water', 'air', 'earth'].includes(deckMode)) {
+      const suitCards = minorDeck.filter(card => 
+        card.element && card.element.toLowerCase() === deckMode
+      );
+      if (suitCards.length === 0) {
+        throw new Error(`No ${deckMode} suit cards available. Check minor_arcana.json.`);
+      }
+      pool = shuffle(suitCards);
+    } else if (deckMode === 'major') {
       pool = shuffle(majorDeck);
     } else {
+      // Full deck
       pool = shuffle([...majorDeck, ...minorDeck]);
     }
     
@@ -174,7 +203,7 @@ const Divine = (() => {
       <div class="card-info">
         <div class="card-position">${POSITION_LABELS[card.position]}${reversedMark}</div>
         <div class="card-name ${elementClass}">${escapeHTML(card.name)}</div>
-        <div class="card-domain">${escapeHTML(card.domain || '')}</div>
+        <div class="card-domain">${escapeHTML(card.domain || card.title || '')}</div>
         <div class="card-overlay">${escapeHTML(meaning)}</div>
       </div>
     `;
@@ -222,6 +251,12 @@ const Divine = (() => {
     
     let synthesis = '';
     
+    // Suit-specific draws
+    if (['fire', 'water', 'air', 'earth'].includes(deckMode)) {
+      const suitName = deckMode.charAt(0).toUpperCase() + deckMode.slice(1);
+      synthesis += `The ${suitName} suit speaks with a single voice. `;
+    }
+    
     // Reversed future
     if (future.isReversed) {
       synthesis += 'The path ahead is clouded — the card reversed suggests resistance to what comes. ';
@@ -234,24 +269,28 @@ const Divine = (() => {
       synthesis += `The reading is dominated by ${uniqueElements[0]} — this element rules all three positions. The question is singular in nature. `;
     } else if (uniqueElements.length === 3) {
       synthesis += `Three elements cross the spread — ${elements.join(', ')}. The question touches multiple domains. Integration is the work ahead. `;
+    } else if (uniqueElements.length === 2) {
+      synthesis += `${elements[0]} and ${elements[1]} weave through the spread. Two forces in dialogue. `;
     } else {
-      synthesis += `${past.element || 'The first'} flows into ${present.element || 'the second'} and toward ${future.element || 'the third'}. The elements guide the arc. `;
+      synthesis += 'The elements guide the arc. ';
     }
     
     // Domain patterns
-    if (past.domain === present.domain) {
-      synthesis += `The domain of ${past.domain} appears twice — this force has been with you and remains. `;
-    }
-    if (past.domain === future.domain) {
-      synthesis += `What began in the domain of ${past.domain} returns at the end. A cycle completes. `;
-    }
-    if (present.domain === future.domain && past.domain !== present.domain) {
-      synthesis += `The domain of ${present.domain} will persist from present into future. `;
-    }
+    const pastDomain = past.domain || past.title || '';
+    const presentDomain = present.domain || present.title || '';
+    const futureDomain = future.domain || future.title || '';
     
-    // All same domain
-    if (past.domain === present.domain && present.domain === future.domain) {
-      synthesis += `The domain of ${past.domain} rules the entire spread. This is not a question — it is an initiation. `;
+    if (pastDomain && pastDomain === presentDomain) {
+      synthesis += `The domain of ${pastDomain} appears twice — this force has been with you and remains. `;
+    }
+    if (pastDomain && pastDomain === futureDomain) {
+      synthesis += `What began in the domain of ${pastDomain} returns at the end. A cycle completes. `;
+    }
+    if (presentDomain && futureDomain && presentDomain === futureDomain && pastDomain !== presentDomain) {
+      synthesis += `The domain of ${presentDomain} will persist from present into future. `;
+    }
+    if (pastDomain && pastDomain === presentDomain && presentDomain === futureDomain) {
+      synthesis += `The domain of ${pastDomain} rules the entire spread. This is not a question — it is an initiation. `;
     }
     
     // Reversed count
@@ -285,7 +324,7 @@ const Divine = (() => {
     try {
       await loadDecks();
       
-      if (majorDeck.length === 0) {
+      if (majorDeck.length === 0 && deckMode !== 'fire' && deckMode !== 'water' && deckMode !== 'air' && deckMode !== 'earth') {
         throw new Error('No Major Arcana cards loaded. Check data/deck/major_arcana.json');
       }
       
@@ -301,19 +340,16 @@ const Divine = (() => {
       const cardPresent = document.getElementById('cardPresent');
       const cardFuture = document.getElementById('cardFuture');
       
-      // Remove previous flip state
       cardPast.classList.remove('flipped');
       cardPresent.classList.remove('flipped');
       cardFuture.classList.remove('flipped');
       
-      // Trigger reflow for animation restart
       void cardPast.offsetWidth;
       
       setTimeout(() => cardPast.classList.add('flipped'), 100);
       setTimeout(() => cardPresent.classList.add('flipped'), 400);
       setTimeout(() => cardFuture.classList.add('flipped'), 700);
       
-      // Show reading after flips
       setTimeout(() => {
         const readingArea = document.getElementById('readingArea');
         readingArea.innerHTML = buildReading(currentDraw);
@@ -348,7 +384,6 @@ const Divine = (() => {
     document.getElementById('revealBtn').disabled = false;
     document.getElementById('revealBtn').textContent = '▸ Reveal';
     
-    // Clear fronts after flip animation completes
     setTimeout(() => {
       document.getElementById('frontPast').innerHTML = '';
       document.getElementById('frontPresent').innerHTML = '';
