@@ -3,533 +3,481 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ealdforn · Live Card Animator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <title>Digital Divination · Live Oracle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --void: #060408;
-      --void-surface: #0e0a12;
-      --purple: #7b3fa0;
-      --purple-bright: #b06fd4;
-      --purple-dim: #3a1a52;
-      --green: #2a7a4a;
-      --green-bright: #4abf7a;
-      --green-dim: #123022;
-      --gold: #c9a85c;
-      --text: #d0c0e0;
-      --text-dim: #6a5a7a;
-      --border: rgba(123,63,160,0.25);
+      --gold: #c9a84c; --gold-light: #e8c96a; --gold-dark: #7a5c18;
+      --void: #05050d; --surface: #0e0e20; --border-gold: rgba(201,168,76,0.12);
+      --text: #ede5d0; --text-dim: #605848;
+      --fire: #c94a2a; --water: #3a6a9a;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      background: var(--void);
-      color: var(--text);
+      background: var(--void); color: var(--text);
       font-family: 'Cormorant Garamond', serif;
-      min-height: 100vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 40% at 30% 50%, rgba(123,63,160,0.1) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 60% at 70% 50%, rgba(42,122,74,0.08) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
+      min-height: 100vh; overflow: hidden;
     }
 
+    /* ── BACKGROUND CAROUSEL ── */
+    .bg-carousel {
+      position: fixed; inset: 0; z-index: 0;
+    }
+    .bg-image {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 2s ease;
+      filter: brightness(0.25) saturate(0.6);
+    }
+    .bg-image.active { opacity: 1; }
+
+    /* ── OVERLAY ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 40%, transparent 0%, rgba(5,5,13,0.7) 100%);
+      z-index: 1; pointer-events: none;
+    }
+
+    /* ── MAIN LAYOUT ── */
     .stage {
-      position: relative;
-      z-index: 5;
-      width: 100%;
-      max-width: 1000px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
+      position: relative; z-index: 10;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       padding: 2rem;
     }
 
-    /* ── SPREAD AREA ── */
-    .spread-area {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-      justify-content: center;
-      min-height: 400px;
-      perspective: 1200px;
-      flex-wrap: wrap;
+    /* ── HEADER ── */
+    .show-header {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 1rem 2rem; display: flex;
+      align-items: center; justify-content: space-between;
+      z-index: 20;
+      background: linear-gradient(to bottom, rgba(5,5,13,0.9), transparent);
     }
-
-    .card-slot {
-      width: 220px;
-      height: 340px;
-      position: relative;
-      transform-style: preserve-3d;
-    }
-
-    .card-slot.empty {
-      border: 2px dashed var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-dim);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.5rem;
+    .show-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.9rem; color: var(--gold-light);
       letter-spacing: 0.2em;
-      text-transform: uppercase;
     }
+    .show-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.45rem; color: var(--text-dim);
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .live-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.5rem; color: var(--fire);
+      border: 1px solid rgba(201,74,42,0.3); padding: 4px 10px;
+    }
+    .live-dot {
+      display: inline-block; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--fire);
+      margin-right: 5px; animation: blink 1.2s infinite; vertical-align: middle;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-    /* ── CARD ── */
-    .card {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    /* ── CARD SPREAD ── */
+    .spread-container {
+      display: flex; gap: 2rem; align-items: center;
+      justify-content: center; margin: 2rem 0;
+      perspective: 1200px;
+    }
+    .card-slot {
+      width: 200px; aspect-ratio: 2/3;
+      position: relative; transform-style: preserve-3d;
+    }
+    .card-inner {
+      width: 100%; height: 100%; position: relative;
       transform-style: preserve-3d;
-      animation: cardEntry 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
-    .card.flipping {
-      animation: cardFlip 1.2s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
-    }
-
+    .card-inner.flipped { transform: rotateY(180deg); }
     .card-face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      border: 2px solid var(--purple-dim);
-      overflow: hidden;
+      position: absolute; inset: 0;
+      backface-visibility: hidden; border-radius: 12px;
+      overflow: hidden; border: 1px solid rgba(201,168,76,0.2);
     }
-
     .card-back {
-      background: linear-gradient(135deg, var(--purple-dim) 0%, var(--void-raised) 50%, var(--green-dim) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(135deg, #1a1a3a, #0e0e20, #1a1a3a);
+      display: flex; align-items: center; justify-content: center;
     }
-    .card-back-inner {
-      width: 80%;
-      height: 80%;
-      border: 1px solid var(--purple);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cinzel', serif;
-      font-size: 2rem;
-      color: var(--purple-bright);
-      opacity: 0.6;
+    .card-back-sigil {
+      font-size: 3rem; opacity: 0.5; filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
     }
-
     .card-front {
-      transform: rotateY(180deg);
-      display: flex;
-      flex-direction: column;
+      background: var(--surface); transform: rotateY(180deg);
+      display: flex; flex-direction: column;
     }
     .card-front img {
-      width: 100%;
-      height: 70%;
-      object-fit: cover;
-      display: block;
+      width: 100%; height: 55%; object-fit: cover;
+      border-bottom: 1px solid var(--border-gold);
     }
-    .card-front .card-info {
-      flex: 1;
-      background: var(--void-surface);
-      padding: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
+    .card-front .info {
+      flex: 1; padding: 0.6rem 0.8rem;
+      display: flex; flex-direction: column; justify-content: center;
     }
-    .card-front .card-name {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--purple-bright);
-      letter-spacing: 0.05em;
+    .card-front .pos {
+      font-family: 'Cinzel', serif; font-size: 0.5rem;
+      letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;
+      opacity: 0.7; margin-bottom: 0.2rem;
     }
-    .card-front .card-meaning {
-      font-size: 0.55rem;
-      font-style: italic;
-      color: var(--text-dim);
-      margin-top: 0.2rem;
-      line-height: 1.3;
+    .card-front .name {
+      font-family: 'Cinzel Decorative', serif; font-size: 0.75rem;
+      color: var(--gold-light); line-height: 1.2;
+    }
+    .card-front .meaning {
+      font-size: 0.55rem; font-style: italic;
+      color: var(--text-dim); margin-top: 0.3rem; line-height: 1.4;
     }
 
-    /* ── REVEALED STATE ── */
-    .card.revealed .card-front {
-      box-shadow: 0 0 30px rgba(123,63,160,0.4);
-      border-color: var(--purple-bright);
+    /* ── READING DISPLAY ── */
+    .reading-bar {
+      text-align: center; max-width: 700px;
+      opacity: 0; transition: opacity 0.6s ease;
     }
-    .card.revealed {
-      animation: cardGlow 2s ease-in-out infinite;
+    .reading-bar.visible { opacity: 1; }
+    .reading-synthesis {
+      font-size: 1rem; font-style: italic; color: var(--text);
+      line-height: 1.6; margin-bottom: 0.5rem;
     }
-
-    @keyframes cardEntry {
-      0% { opacity: 0; transform: translateY(40px) scale(0.8); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes cardFlip {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(180deg); }
-    }
-    @keyframes cardGlow {
-      0%, 100% { filter: drop-shadow(0 0 8px rgba(123,63,160,0.3)); }
-      50% { filter: drop-shadow(0 0 20px rgba(176,111,212,0.6)); }
-    }
-
-    /* ── SPREAD LABEL ── */
-    .spread-labels {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .spread-label {
-      width: 220px;
-      text-align: center;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.5rem;
-      color: var(--text-dim);
-      letter-spacing: 0.2em;
+    .reading-cards {
+      font-family: 'Cinzel', serif; font-size: 0.6rem;
+      letter-spacing: 0.15em; color: var(--gold);
       text-transform: uppercase;
     }
 
-    /* ── READING PANEL ── */
-    .reading-panel {
-      text-align: center;
-      max-width: 700px;
-      opacity: 0;
-      transition: opacity 0.6s ease;
+    /* ── BOTTOM BAR ── */
+    .bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      padding: 0.8rem 2rem; display: flex;
+      align-items: center; justify-content: space-between;
+      z-index: 20;
+      background: linear-gradient(to top, rgba(5,5,13,0.95), transparent);
     }
-    .reading-panel.visible { opacity: 1; }
-    .reading-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--gold);
+    .countdown {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.55rem; color: var(--text-dim);
       letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
     }
-    .reading-text {
-      font-size: 0.9rem;
-      font-style: italic;
-      color: var(--text);
-      line-height: 1.6;
+    .countdown span { color: var(--gold); }
+    .next-draw {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.5rem; color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+    .next-draw span { color: var(--fire); }
+    .suit-badge {
+      font-family: 'Cinzel', serif; font-size: 0.55rem;
+      color: var(--fire); letter-spacing: 0.15em;
+      border: 1px solid rgba(201,74,42,0.3); padding: 3px 10px;
     }
 
-    /* ── CONTROLS ── */
-    .controls {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .ctrl-btn {
-      background: rgba(123,63,160,0.12);
-      border: 1px solid var(--purple-dim);
-      color: var(--purple-bright);
+    /* ── WEBCAM CORNER ── */
+    .webcam-corner {
+      position: fixed; bottom: 80px; right: 2rem;
+      width: 120px; height: 80px; border: 1px solid rgba(201,168,76,0.2);
+      z-index: 20; background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
       font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 0.6rem 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s;
+      font-size: 0.4rem; color: var(--text-dim);
+      letter-spacing: 0.1em;
     }
-    .ctrl-btn:hover { background: rgba(123,63,160,0.25); border-color: var(--purple); }
-    .ctrl-btn.green { border-color: var(--green-dim); color: var(--green-bright); }
-    .ctrl-btn.green:hover { border-color: var(--green); background: rgba(42,122,74,0.2); }
-    .ctrl-btn.gold { border-color: var(--gold); color: var(--gold); }
-    .ctrl-btn.gold:hover { background: rgba(201,168,92,0.15); }
 
-    .spread-select {
-      background: var(--void);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.55rem;
-      padding: 0.5rem 0.75rem;
-      outline: none;
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .spread-container { gap: 1rem; }
+      .card-slot { width: 140px; }
+      .card-front .name { font-size: 0.6rem; }
+      .card-front .meaning { font-size: 0.45rem; }
     }
-    .spread-select:focus { border-color: var(--purple-dim); }
   </style>
 </head>
 <body>
+
+<!-- BACKGROUND CAROUSEL -->
+<div class="bg-carousel" id="bgCarousel"></div>
+<div class="overlay"></div>
+
+<!-- HEADER -->
+<div class="show-header">
+  <div>
+    <div class="show-title">Digital Divination</div>
+    <div class="show-sub">Live Oracle · Fire Deck · @ealdforn</div>
+  </div>
+  <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+</div>
+
+<!-- STAGE -->
 <div class="stage">
 
-  <!-- SPREAD AREA -->
-  <div class="spread-area" id="spreadArea">
-    <div class="card-slot empty" id="slot0">PAST</div>
-    <div class="card-slot empty" id="slot1">PRESENT</div>
-    <div class="card-slot empty" id="slot2">FUTURE</div>
-  </div>
-
-  <!-- SPREAD LABELS -->
-  <div class="spread-labels" id="spreadLabels">
-    <div class="spread-label">Past</div>
-    <div class="spread-label">Present</div>
-    <div class="spread-label">Future</div>
+  <!-- CARD SPREAD -->
+  <div class="spread-container" id="spreadContainer">
+    <div class="card-slot" id="slotPast">
+      <div class="card-inner" id="cardPast">
+        <div class="card-face card-back">
+          <div class="card-back-sigil">🜏</div>
+        </div>
+        <div class="card-face card-front" id="frontPast"></div>
+      </div>
+    </div>
+    <div class="card-slot" id="slotPresent">
+      <div class="card-inner" id="cardPresent">
+        <div class="card-face card-back">
+          <div class="card-back-sigil">🜏</div>
+        </div>
+        <div class="card-face card-front" id="frontPresent"></div>
+      </div>
+    </div>
+    <div class="card-slot" id="slotFuture">
+      <div class="card-inner" id="cardFuture">
+        <div class="card-face card-back">
+          <div class="card-back-sigil">🜏</div>
+        </div>
+        <div class="card-face card-front" id="frontFuture"></div>
+      </div>
+    </div>
   </div>
 
   <!-- READING -->
-  <div class="reading-panel" id="readingPanel">
-    <div class="reading-title" id="readingTitle"></div>
-    <div class="reading-text" id="readingText"></div>
-  </div>
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <select class="spread-select" id="spreadSelect">
-      <option value="ppf">Past · Present · Future</option>
-      <option value="svo">Subject · Verb · Object</option>
-      <option value="single">Single Oracle Draw</option>
-      <option value="body">Mind · Body · Spirit</option>
-    </select>
-    <button class="ctrl-btn gold" onclick="drawSpread()">⟡ Draw Spread</button>
-    <button class="ctrl-btn" onclick="clearSpread()">Clear</button>
-    <button class="ctrl-btn green" id="narrationBtn" onclick="sendToNarration()">📢 Send to Kitten</button>
+  <div class="reading-bar" id="readingBar">
+    <div class="reading-synthesis" id="readingSynthesis"></div>
+    <div class="reading-cards" id="readingCards"></div>
   </div>
 
 </div>
 
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="countdown">Reset: <span id="countdownDisplay">--:--:--</span></div>
+  <div class="suit-badge">🔥 FIRE DECK</div>
+  <div class="next-draw">Next draw: <span id="nextDrawTimer">60</span>s</div>
+</div>
+
+<!-- WEBCAM CORNER -->
+<div class="webcam-corner">BUILDER</div>
+
 <script>
   // ═══════════════════════════════════════════
-  // EALDFORN LIVE CARD ANIMATOR
+  // DIGITAL DIVINATION · LIVE ORACLE DASHBOARD
   // ═══════════════════════════════════════════
 
-  // ── DECK ──────────────────────────────────────────────────────────
-  // Mirrors your existing Digital Divination structure
-  const DECK = [
-    // MAJOR ARCANA (22)
-    { id:'fool', name:'The Fool', arcana:'major', element:'air', meaning:'New beginnings. The leap into the unknown. The first step of the journey.', image:'images/major/fool.jpg' },
-    { id:'magician', name:'The Magician', arcana:'major', element:'air', meaning:'Willpower. Manifestation. The forge of intention made visible.', image:'images/major/magician.jpg' },
-    { id:'high_priestess', name:'The High Priestess', arcana:'major', element:'water', meaning:'Intuition. The veil between worlds. What is known but not spoken.', image:'images/major/high_priestess.jpg' },
-    { id:'empress', name:'The Empress', arcana:'major', element:'earth', meaning:'Abundance. Creation. The garden that grows without asking permission.', image:'images/major/empress.jpg' },
-    { id:'emperor', name:'The Emperor', arcana:'major', element:'fire', meaning:'Authority. Structure. The throne that holds the realm together.', image:'images/major/emperor.jpg' },
-    { id:'hierophant', name:'The Hierophant', arcana:'major', element:'earth', meaning:'Tradition. Sacred knowledge passed down. The ritual that outlasts the priest.', image:'images/major/hierophant.jpg' },
-    { id:'lovers', name:'The Lovers', arcana:'major', element:'air', meaning:'Union. Choice. The moment two paths become one — or diverge forever.', image:'images/major/lovers.jpg' },
-    { id:'chariot', name:'The Chariot', arcana:'major', element:'water', meaning:'Triumph. Will overcoming obstacle. The engine of determination.', image:'images/major/chariot.jpg' },
-    { id:'strength', name:'Strength', arcana:'major', element:'fire', meaning:'Inner power. The beast tamed not by force but by presence.', image:'images/major/strength.jpg' },
-    { id:'hermit', name:'The Hermit', arcana:'major', element:'earth', meaning:'Solitude. The lantern in the dark. Wisdom found in silence.', image:'images/major/hermit.jpg' },
-    { id:'wheel', name:'Wheel of Fortune', arcana:'major', element:'fire', meaning:'Cycles. Fate turning. What rises must fall. What falls will rise again.', image:'images/major/wheel.jpg' },
-    { id:'justice', name:'Justice', arcana:'major', element:'air', meaning:'Truth. Consequence. The scales that cannot be tipped by prayer.', image:'images/major/justice.jpg' },
-    { id:'hanged_man', name:'The Hanged Man', arcana:'major', element:'water', meaning:'Surrender. New perspective. The upside-down view that reveals everything.', image:'images/major/hanged_man.jpg' },
-    { id:'death', name:'Death', arcana:'major', element:'water', meaning:'Transformation. The end that is also a beginning. The old self shed like skin.', image:'images/major/death.jpg' },
-    { id:'temperance', name:'Temperance', arcana:'major', element:'fire', meaning:'Balance. Alchemy. The middle path where opposites find harmony.', image:'images/major/temperance.jpg' },
-    { id:'devil', name:'The Devil', arcana:'major', element:'earth', meaning:'Bondage. Shadow. The chains we forge ourselves and refuse to see.', image:'images/major/devil.jpg' },
-    { id:'tower', name:'The Tower', arcana:'major', element:'fire', meaning:'Destruction. Revelation. What was built on false ground cannot stand.', image:'images/major/tower.jpg' },
-    { id:'star', name:'The Star', arcana:'major', element:'air', meaning:'Hope. Guidance. The light that remains when all other lights go out.', image:'images/major/star.jpg' },
-    { id:'moon', name:'The Moon', arcana:'major', element:'water', meaning:'Illusion. The subconscious. The path that can only be walked in darkness.', image:'images/major/moon.jpg' },
-    { id:'sun', name:'The Sun', arcana:'major', element:'fire', meaning:'Joy. Vitality. The dawn that burns away every shadow.', image:'images/major/sun.jpg' },
-    { id:'judgment', name:'Judgment', arcana:'major', element:'fire', meaning:'Awakening. Reckoning. The call that cannot be ignored.', image:'images/major/judgment.jpg' },
-    { id:'world', name:'The World', arcana:'major', element:'earth', meaning:'Completion. Wholeness. The circle closed. The journey ends where it began.', image:'images/major/world.jpg' },
-    // MINOR ARCANA — Air / Writing (14)
-    { id:'ace_air', name:'Ace of Air', arcana:'minor', suit:'air', meaning:'A new idea. The first word. Clarity that cuts through fog.', image:'images/minor/ace_air.jpg' },
-    { id:'two_air', name:'Two of Air', arcana:'minor', suit:'air', meaning:'Choice. Crossroads. Two truths that cannot both be held.', image:'images/minor/two_air.jpg' },
-    { id:'three_air', name:'Three of Air', arcana:'minor', suit:'air', meaning:'Sorrow. The word that wounds. Truth that must be spoken anyway.', image:'images/minor/three_air.jpg' },
-    { id:'four_air', name:'Four of Air', arcana:'minor', suit:'air', meaning:'Rest. Mental stillness. The pause before the next thought.', image:'images/minor/four_air.jpg' },
-    { id:'five_air', name:'Five of Air', arcana:'minor', suit:'air', meaning:'Defeat. The argument lost. The pyrrhic victory that teaches humility.', image:'images/minor/five_air.jpg' },
-    { id:'six_air', name:'Six of Air', arcana:'minor', suit:'air', meaning:'Transition. Moving on. The boat that carries you to calmer waters.', image:'images/minor/six_air.jpg' },
-    { id:'seven_air', name:'Seven of Air', arcana:'minor', suit:'air', meaning:'Strategy. The unseen move. Cleverness that outwits brute force.', image:'images/minor/seven_air.jpg' },
-    { id:'eight_air', name:'Eight of Air', arcana:'minor', suit:'air', meaning:'Restriction. The trapped thought. The cage built of your own certainties.', image:'images/minor/eight_air.jpg' },
-    { id:'nine_air', name:'Nine of Air', arcana:'minor', suit:'air', meaning:'Anxiety. The midnight worry. The fear that grows in darkness.', image:'images/minor/nine_air.jpg' },
-    { id:'ten_air', name:'Ten of Air', arcana:'minor', suit:'air', meaning:'Ruin. The end of a belief system. The collapse that makes room for truth.', image:'images/minor/ten_air.jpg' },
-    { id:'page_air', name:'Page of Air', arcana:'minor', suit:'air', meaning:'Curiosity. The student. The question that opens every door.', image:'images/minor/page_air.jpg' },
-    { id:'knight_air', name:'Knight of Air', arcana:'minor', suit:'air', meaning:'Conviction. The warrior of ideas. Charging into battle with truth as the only weapon.', image:'images/minor/knight_air.jpg' },
-    { id:'queen_air', name:'Queen of Air', arcana:'minor', suit:'air', meaning:'Perception. The clear-seeing mind. Judgment unclouded by emotion.', image:'images/minor/queen_air.jpg' },
-    { id:'king_air', name:'King of Air', arcana:'minor', suit:'air', meaning:'Authority of thought. The master of ideas. The final word.', image:'images/minor/king_air.jpg' },
-    // MINOR ARCANA — Fire / Coding (14)
-    { id:'ace_fire', name:'Ace of Fire', arcana:'minor', suit:'fire', meaning:'Spark of creation. The first line of code. Pure creative energy.', image:'images/minor/ace_fire.jpg' },
-    { id:'two_fire', name:'Two of Fire', arcana:'minor', suit:'fire', meaning:'Planning. The blueprint. Vision that has not yet left the page.', image:'images/minor/two_fire.jpg' },
-    { id:'three_fire', name:'Three of Fire', arcana:'minor', suit:'fire', meaning:'Exploration. The first results. The thrill of seeing your work take shape.', image:'images/minor/three_fire.jpg' },
-    { id:'four_fire', name:'Four of Fire', arcana:'minor', suit:'fire', meaning:'Completion. The working prototype. Something that actually runs.', image:'images/minor/four_fire.jpg' },
-    { id:'five_fire', name:'Five of Fire', arcana:'minor', suit:'fire', meaning:'Conflict. The pull request that breaks everything. Competition that sharpens.', image:'images/minor/five_fire.jpg' },
-    { id:'six_fire', name:'Six of Fire', arcana:'minor', suit:'fire', meaning:'Victory. The successful build. Recognition for what you have made.', image:'images/minor/six_fire.jpg' },
-    { id:'seven_fire', name:'Seven of Fire', arcana:'minor', suit:'fire', meaning:'Defense. Protecting the work. Standing your ground against criticism.', image:'images/minor/seven_fire.jpg' },
-    { id:'eight_fire', name:'Eight of Fire', arcana:'minor', suit:'fire', meaning:'Speed. Rapid iteration. The sprint that outruns doubt.', image:'images/minor/eight_fire.jpg' },
-    { id:'nine_fire', name:'Nine of Fire', arcana:'minor', suit:'fire', meaning:'Resilience. The last defender. The fire that will not go out.', image:'images/minor/nine_fire.jpg' },
-    { id:'ten_fire', name:'Ten of Fire', arcana:'minor', suit:'fire', meaning:'Burden. Burnout. Carrying too much fire for too long.', image:'images/minor/ten_fire.jpg' },
-    { id:'page_fire', name:'Page of Fire', arcana:'minor', suit:'fire', meaning:'Enthusiasm. The new contributor. Energy without direction — potent and raw.', image:'images/minor/page_fire.jpg' },
-    { id:'knight_fire', name:'Knight of Fire', arcana:'minor', suit:'fire', meaning:'Boldness. The daring commit. The refactor that changes everything.', image:'images/minor/knight_fire.jpg' },
-    { id:'queen_fire', name:'Queen of Fire', arcana:'minor', suit:'fire', meaning:'Mastery. The architect who builds what others said was impossible.', image:'images/minor/queen_fire.jpg' },
-    { id:'king_fire', name:'King of Fire', arcana:'minor', suit:'fire', meaning:'Vision. The fire that lights other fires. Leadership through creation.', image:'images/minor/king_fire.jpg' },
+  // ── BACKGROUND IMAGES ──────────────────────────────────────────────
+  const BG_IMAGES = [
+    'data/images/minor/fire/fire_ace.png',
+    'data/images/minor/fire/fire_02.png',
+    'data/images/minor/fire/fire_03.png',
+    'data/images/minor/fire/fire_04.png',
+    'data/images/minor/fire/fire_05.png',
+    'data/images/minor/fire/fire_06.png',
+    'data/images/minor/fire/fire_07.png',
+    'data/images/minor/fire/fire_08.png',
+    'data/images/minor/fire/fire_09.png',
+    'data/images/minor/fire/fire_10.png',
+    'data/images/minor/fire/fire_page.png',
+    'data/images/minor/fire/fire_knight.png',
+    'data/images/minor/fire/fire_queen.png',
+    'data/images/minor/fire/fire_king.png',
+    'data/images/dionysus-card.jpg',
+    'data/images/zeus-card.jpg',
+    'data/images/athena-card.jpg',
+    'data/images/aphrodite-card.jpg',
+    'data/images/ares-card.jpg',
+    'data/images/hades-card.jpg',
+    'data/images/persephone-card.jpg',
+    'data/images/thanatos-card.jpg',
   ];
 
-  // ── STATE ─────────────────────────────────────────────────────────
-  let currentSpread = [];
-  let spreadMode = 'ppf';
-
-  const SPREAD_MODES = {
-    ppf:  { labels: ['Past', 'Present', 'Future'], cards: 3 },
-    svo:  { labels: ['Subject', 'Verb', 'Object'], cards: 3 },
-    single: { labels: ['The Oracle Speaks'], cards: 1 },
-    body: { labels: ['Mind', 'Body', 'Spirit'], cards: 3 }
-  };
-
-  // ── DRAW ──────────────────────────────────────────────────────────
-  function drawCards(count) {
-    const pool = [...DECK];
-    const drawn = [];
-    for (let i = 0; i < count; i++) {
-      if (pool.length === 0) break;
-      const idx = Math.floor(Math.random() * pool.length);
-      drawn.push(pool.splice(idx, 1)[0]);
-    }
-    return drawn;
+  let bgIndex = 0;
+  function buildCarousel() {
+    const container = document.getElementById('bgCarousel');
+    BG_IMAGES.forEach((src, i) => {
+      const div = document.createElement('div');
+      div.className = 'bg-image' + (i === 0 ? ' active' : '');
+      div.style.backgroundImage = `url(${src})`;
+      container.appendChild(div);
+    });
   }
 
-  window.drawSpread = function() {
-    clearSpread();
-    spreadMode = document.getElementById('spreadSelect').value;
-    const mode = SPREAD_MODES[spreadMode];
-    currentSpread = drawCards(mode.cards);
-    
-    // Update labels
-    document.getElementById('spreadLabels').innerHTML = mode.labels
-      .map(l => `<div class="spread-label">${l}</div>`).join('');
-    
-    // Update slots count
-    const area = document.getElementById('spreadArea');
-    area.innerHTML = mode.labels.map((label, i) => 
-      `<div class="card-slot empty" id="slot${i}">${label.toUpperCase()}</div>`
-    ).join('');
-    
-    // Animate cards one by one
-    currentSpread.forEach((card, i) => {
-      setTimeout(() => animateCard(i, card), i * 900);
-    });
-    
-    // Show reading after all cards drawn
-    const totalDelay = mode.cards * 900 + 1500;
-    setTimeout(() => showReading(), totalDelay);
-  };
+  function rotateBackground() {
+    const images = document.querySelectorAll('.bg-image');
+    if (images.length === 0) return;
+    images[bgIndex].classList.remove('active');
+    bgIndex = (bgIndex + 1) % images.length;
+    images[bgIndex].classList.add('active');
+  }
 
-  function animateCard(slotIndex, card) {
-    const slot = document.getElementById(`slot${slotIndex}`);
-    if (!slot) return;
-    
-    // Check if image exists, fallback to placeholder
-    const imgSrc = card.image || `images/placeholder.jpg`;
-    
-    slot.classList.remove('empty');
-    slot.innerHTML = `
-      <div class="card flipping" id="card${slotIndex}">
-        <div class="card-face card-back">
-          <div class="card-back-inner">⟡</div>
-        </div>
-        <div class="card-face card-front">
-          <img src="${imgSrc}" alt="${card.name}" onerror="this.style.display='none'; this.nextElementSibling.style.height='100%';" />
-          <div class="card-info">
-            <div class="card-name">${card.name}</div>
-            <div class="card-meaning">${card.meaning.substring(0, 80)}...</div>
-          </div>
-        </div>
+  // ── FIRE DECK ──────────────────────────────────────────────────────
+  const FIRE_DECK = [
+    { id:'fire_ace', name:'Ace of Fire', title:'Maui', meaning:'Maui stole fire from the underworld. The divine spark — the idea that costs everything to bring down. Create. But know the price.', image:'data/images/minor/fire/fire_ace.png', element:'Fire' },
+    { id:'fire_02', name:'Two of Fire', title:'Castor & Pollux', meaning:'Two flames burn as one — one mortal, one divine. The partnership that transcends difference. One of you will carry the other.', image:'data/images/minor/fire/fire_02.png', element:'Fire' },
+    { id:'fire_03', name:'Three of Fire', title:'Peitho', meaning:'The room leans in. Peitho, goddess of persuasion, speaks and the world bends toward her words. The pitch. Speak. They are listening.', image:'data/images/minor/fire/fire_03.png', element:'Fire' },
+    { id:'fire_04', name:'Four of Fire', title:'Icarus', meaning:'The wax melts. Icarus plummets. The burnout — when ambition exceeds capacity. The fall is not failure. It is proof you flew.', image:'data/images/minor/fire/fire_04.png', element:'Fire' },
+    { id:'fire_05', name:'Five of Fire', title:'Loki', meaning:'Loki spoke back to the gods, exposing every secret. The ugliest truth-teller in Asgard — and sometimes the only honest one. Who is criticizing you, and why?', image:'data/images/minor/fire/fire_05.png', element:'Fire' },
+    { id:'fire_06', name:'Six of Fire', title:'The Algorithm', meaning:'The Algorithm amplifies your name until it belongs to everyone but you. The viral moment. Ride it. Don\'t believe it. The Algorithm has no loyalty.', image:'data/images/minor/fire/fire_06.png', element:'Fire' },
+    { id:'fire_07', name:'Seven of Fire', title:'Talos', meaning:'Talos patrols the shores — a bronze giant, unstoppable, doing what it was built to do. The system that shapes you without consent. Learn the code.', image:'data/images/minor/fire/fire_07.png', element:'Fire' },
+    { id:'fire_08', name:'Eight of Fire', title:'Huitzilopochtli', meaning:'The hummingbird warrior demanded constant sacrifice to keep the sun moving. The ceaseless grind. The push IS the purpose. But ask: who is being sacrificed?', image:'data/images/minor/fire/fire_08.png', element:'Fire' },
+    { id:'fire_09', name:'Nine of Fire', title:'Cerberus', meaning:'Three heads. One gate. Cerberus guards the entrance — nothing passes without consent. The gatekeeper. Prove yourself worthy of passage.', image:'data/images/minor/fire/fire_09.png', element:'Fire' },
+    { id:'fire_10', name:'Ten of Fire', title:'Surtr', meaning:'Surtr rides out of Muspelheim, his sword brighter than the sun, and burns the world. The spectacular exit. Not all endings are graceful. Some are mythic.', image:'data/images/minor/fire/fire_10.png', element:'Fire' },
+    { id:'fire_page', name:'Page of Fire', title:'Agni', meaning:'Agni, the fire god, carries offerings from mortals to the gods. The youngest flame. The beginner who bridges realms. You are new here. That is your power.', image:'data/images/minor/fire/fire_page.png', element:'Fire' },
+    { id:'fire_knight', name:'Knight of Fire', title:'Achilles', meaning:'Achilles charges and the Trojans break. Conviction as armor — the warrior who cannot be stopped. Charge. But know your heel.', image:'data/images/minor/fire/fire_knight.png', element:'Fire' },
+    { id:'fire_queen', name:'Queen of Fire', title:'Oya', meaning:'Oya, orisha of fire and wind, leads warriors into battle. The sovereign who does not ask permission. She commands the storm. Take your seat.', image:'data/images/minor/fire/fire_queen.png', element:'Fire' },
+    { id:'fire_king', name:'King of Fire', title:'The Founder', meaning:'The Founder built the system and now rules from within it. The spark that scaled. The platform is yours. Can you hold it without becoming the monster at the center?', image:'data/images/minor/fire/fire_king.png', element:'Fire' },
+  ];
+
+  // ── DRAW ───────────────────────────────────────────────────────────
+  function drawFireSpread() {
+    const pool = [...FIRE_DECK];
+    const drawn = [];
+    for (let i = 0; i < 3; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      drawn.push({ ...pool.splice(idx, 1)[0], position: i === 0 ? 'past' : i === 1 ? 'present' : 'future', isReversed: Math.random() < 0.3 });
+    }
+    return { past: drawn[0], present: drawn[1], future: drawn[2] };
+  }
+
+  // ── RENDER CARDS ───────────────────────────────────────────────────
+  const POSITIONS = { past: 'Past', present: 'Present', future: 'Future' };
+
+  function renderCard(card, slotId, frontId, cardId) {
+    const front = document.getElementById(frontId);
+    const reversed = card.isReversed ? ' ⥮ Reversed' : '';
+    front.innerHTML = `
+      <img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'" />
+      <div class="info">
+        <div class="pos">${POSITIONS[card.position]}${reversed}</div>
+        <div class="name">${card.name}</div>
+        <div class="meaning">${card.title} — ${card.meaning.substring(0, 80)}...</div>
       </div>`;
     
-    // After flip animation completes, add revealed glow
+    const inner = document.getElementById(cardId);
+    inner.classList.remove('flipped');
+    void inner.offsetWidth;
+    return inner;
+  }
+
+  function revealCards(draw) {
+    const past = renderCard(draw.past, 'slotPast', 'frontPast', 'cardPast');
+    const present = renderCard(draw.present, 'slotPresent', 'frontPresent', 'cardPresent');
+    const future = renderCard(draw.future, 'slotFuture', 'frontFuture', 'cardFuture');
+
+    setTimeout(() => past.classList.add('flipped'), 100);
+    setTimeout(() => present.classList.add('flipped'), 500);
+    setTimeout(() => future.classList.add('flipped'), 900);
+
+    // Show reading
     setTimeout(() => {
-      const cardEl = document.getElementById(`card${slotIndex}`);
-      if (cardEl) {
-        cardEl.classList.remove('flipping');
-        cardEl.classList.add('revealed');
-      }
-    }, 1300);
+      const synthesis = buildSynthesis(draw);
+      document.getElementById('readingSynthesis').textContent = synthesis;
+      document.getElementById('readingCards').textContent = 
+        `${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
+      document.getElementById('readingBar').classList.add('visible');
+      
+      // Send to Kitten narration
+      sendToKitten(draw, synthesis);
+    }, 1400);
   }
 
-  window.clearSpread = function() {
-    currentSpread = [];
-    document.getElementById('readingPanel').classList.remove('visible');
-    const mode = SPREAD_MODES[spreadMode] || SPREAD_MODES['ppf'];
-    const area = document.getElementById('spreadArea');
-    area.innerHTML = mode.labels.map((label, i) => 
-      `<div class="card-slot empty" id="slot${i}">${label.toUpperCase()}</div>`
-    ).join('');
-    document.getElementById('spreadLabels').innerHTML = mode.labels
-      .map(l => `<div class="spread-label">${l}</div>`).join('');
-  };
-
-  // ── READING ────────────────────────────────────────────────────────
-  function showReading() {
-    if (currentSpread.length === 0) return;
-    
-    const mode = SPREAD_MODES[spreadMode];
-    const panel = document.getElementById('readingPanel');
-    const title = document.getElementById('readingTitle');
-    const text = document.getElementById('readingText');
-    
-    // Build reading from card meanings
-    const cardDescriptions = currentSpread.map((card, i) => 
-      `${mode.labels[i]}: ${card.name} — ${card.meaning}`
-    );
-    
-    title.textContent = `The ${mode.labels.join(' · ')} Spread`;
-    text.innerHTML = cardDescriptions.map((d, i) => 
-      `<p style="margin-bottom:0.5rem;"><span style="color:var(--purple-bright);font-family:'Cinzel',serif;font-size:0.7rem;">${mode.labels[i]}</span><br>${d.split(' — ')[1] || d}</p>`
-    ).join('');
-    
-    panel.classList.add('visible');
+  function buildSynthesis(draw) {
+    const names = `${draw.past.title}, ${draw.present.title}, ${draw.future.title}`;
+    const reversedCount = [draw.past, draw.present, draw.future].filter(c => c.isReversed).length;
+    let syn = 'The Fire suit speaks with a single voice. ';
+    if (reversedCount === 3) syn += 'All three cards reversed — resistance to something fundamental. ';
+    else if (reversedCount === 0) syn += 'The cards speak clearly. ';
+    else syn += 'Some resistance clouds the path. ';
+    syn += `${names} form a triptych. Past, present, future — not separate, but a single image split across time. Read them as one.`;
+    return syn;
   }
 
-  // ── SEND TO KITTEN ─────────────────────────────────────────────────
-  window.sendToNarration = function() {
-    if (currentSpread.length === 0) return;
-    
-    const mode = SPREAD_MODES[spreadMode];
-    const lines = currentSpread.map((card, i) => 
-      `${mode.labels[i]}: ${card.name}. ${card.meaning}`
-    );
-    const fullText = `The ${mode.labels.join(' · ')} spread. ` + lines.join(' ');
-    
-    // Send via BroadcastChannel to narration.html
+  function clearCards() {
+    ['cardPast','cardPresent','cardFuture'].forEach(id => {
+      document.getElementById(id).classList.remove('flipped');
+    });
+    document.getElementById('readingBar').classList.remove('visible');
+    setTimeout(() => {
+      ['frontPast','frontPresent','frontFuture'].forEach(id => {
+        document.getElementById(id).innerHTML = '';
+      });
+    }, 400);
+  }
+
+  // ── KITTEN INTEGRATION ─────────────────────────────────────────────
+  function sendToKitten(draw, synthesis) {
+    const text = `Fire deck reading. Past: ${draw.past.title} — ${draw.past.name}. Present: ${draw.present.title} — ${draw.present.name}. Future: ${draw.future.title} — ${draw.future.name}. ${synthesis}`;
     if (window.BroadcastChannel) {
       try {
-        const channel = new BroadcastChannel('ealdforn_narration');
-        channel.postMessage({ text: fullText, source: 'Divination Spread', timestamp: Date.now() });
-        flashButton('narrationBtn', 'Sent ✓');
-      } catch(e) {
-        flashButton('narrationBtn', 'Error');
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(fullText).then(() => {
-        flashButton('narrationBtn', 'Copied ✓');
-      });
+        new BroadcastChannel('ealdforn_narration').postMessage({ text, source: 'Divination Live', timestamp: Date.now() });
+      } catch(e) {}
     }
-  };
-
-  function flashButton(id, text) {
-    const btn = document.getElementById(id);
-    const orig = btn.textContent;
-    btn.textContent = text;
-    btn.style.borderColor = 'var(--green-bright)';
-    btn.style.color = 'var(--green-bright)';
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.style.borderColor = '';
-      btn.style.color = '';
-    }, 2000);
   }
 
-  // ── LISTEN FOR NARRATION CONSOLE ───────────────────────────────────
-  if (window.BroadcastChannel) {
-    try {
-      const channel = new BroadcastChannel('ealdforn_narration');
-      channel.onmessage = (event) => {
-        console.log('[Card Animator] Received narration:', event.data.text.substring(0, 60));
-        // Could trigger card draws based on narration cues
-      };
-    } catch(e) {}
+  // ── AUTO-DRAW CYCLE ────────────────────────────────────────────────
+  let drawTimer = 60;
+  let cycleInterval;
+  let countdownInterval;
+
+  function startAutoDraw() {
+    // Draw immediately
+    const draw = drawFireSpread();
+    revealCards(draw);
+    drawTimer = 60;
+    updateTimerDisplay();
+
+    // Cycle every 60 seconds
+    cycleInterval = setInterval(() => {
+      clearCards();
+      setTimeout(() => {
+        const newDraw = drawFireSpread();
+        revealCards(newDraw);
+        drawTimer = 60;
+        updateTimerDisplay();
+      }, 500);
+    }, 60000);
+
+    // Countdown ticker
+    countdownInterval = setInterval(() => {
+      drawTimer--;
+      updateTimerDisplay();
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    document.getElementById('nextDrawTimer').textContent = drawTimer;
+  }
+
+  // ── COUNTDOWN TO RESET ─────────────────────────────────────────────
+  function getNextReset() {
+    const now = new Date();
+    const reset = new Date();
+    reset.setHours(20, 0, 0, 0);
+    if (now >= reset) reset.setDate(reset.getDate() + 1);
+    return reset.getTime();
+  }
+
+  function updateCountdown() {
+    const diff = getNextReset() - Date.now();
+    if (diff <= 0) {
+      document.getElementById('countdownDisplay').textContent = 'RESET';
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('countdownDisplay').textContent = 
+      `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   }
 
   // ── BOOT ───────────────────────────────────────────────────────────
-  console.log('🃏 Ealdforn Live Card Animator ready.');
-  console.log(`   ${DECK.length} cards loaded.`);
-  console.log('   Spread modes: Past/Present/Future, Subject/Verb/Object, Single Oracle, Mind/Body/Spirit');
-  console.log('   Draw a spread to begin.');
+  buildCarousel();
+  setInterval(rotateBackground, 8000); // Rotate background every 8s
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  startAutoDraw();
+
+  console.log('🜏 Digital Divination · Live Oracle Dashboard ready.');
+  console.log('   Auto-draw: Every 60 seconds');
+  console.log('   Background: 22 images rotating every 8s');
+  console.log('   Deck: Fire suit (14 cards)');
+  console.log('   Kitten: BroadcastChannel → narration.html');
 </script>
 </body>
 </html>
