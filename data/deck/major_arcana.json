@@ -60,8 +60,7 @@
       "upright": "A new journey begins. The querent stands at the threshold, untethered and unburdened. Dionysus laughs — the only sane response to an insane world is to dance into the unknown.",
       "reversed": "Recklessness. The leap taken without looking. The wine turned bitter. Ask yourself: is this freedom, or escape?",
       "god_aspect": "I am Dionysus, twice-born, breaker of chains. The vine does not ask permission to grow. Neither should you.",
-      "image": "data/images/major/fool.png",
-      "prompt": "Dionysus God of Wine as Divination Card"
+      "image": "data/images/dionysus-card.jpg"
     },
     {
       "id": "major_01",
@@ -74,8 +73,7 @@
       "upright": "All tools are at your disposal. Hermes holds the caduceus — the serpents of knowledge twine around the staff of communication. Speak, and the path opens.",
       "reversed": "Deception. The trick that tricks the trickster. Someone is not saying what they mean. Check the fine print.",
       "god_aspect": "I am Hermes, boundary-crosser, message-bearer. Every locked door has a word that opens it. Find the word.",
-      "image": "data/images/major/magician.png",
-      "prompt": "Hermes God of Messages as Divination Card"
+      "image": "data/images/major/magician.png"
     },
     {
       "id": "major_02",
@@ -88,8 +86,7 @@
       "upright": "The queen sits behind the veil. Hera guards the mystery of the binding — not all truths are spoken. Some are held in the covenant between souls. Trust what you know without being told.",
       "reversed": "The broken covenant. Secrets weaponized. The binding that became a chain. What oath are you keeping that should be broken?",
       "god_aspect": "I am Hera, queen of oaths, keeper of the sacred bond. Not all knowledge is spoken. Some is held in the space between two souls.",
-      "image": "data/images/major/high_priestess.png",
-      "prompt": "Hera Goddess of Marriage as Divination Card"
+      "image": "data/images/hera-card.jpg"
     },
     {
       "id": "major_03",
@@ -102,8 +99,7 @@
       "upright": "The fields are ripe. Demeter opens her hands and grain spills forth. Nurture what you have planted. It is ready.",
       "reversed": "Neglect. The harvest left to rot. Grief that withholds abundance. You must tend your own garden.",
       "god_aspect": "I am Demeter, grain-mother, earth-keeper. What you give to the soil, the soil returns tenfold.",
-      "image": "data/images/major/empress.png",
-      "prompt": "Demeter Goddess of the Harvest as Divination Card"
+      "image": "data/images/demeter-card.jpg"
     },
     {
       "id": "major_04",
@@ -116,8 +112,7 @@
       "upright": "Order from chaos. Zeus grips the thunderbolt and the realm bends toward law. Take your seat. Lead with clarity.",
       "reversed": "Tyranny. The throne that crushes. Authority wielded without wisdom becomes a cage for all.",
       "god_aspect": "I am Zeus, cloud-gatherer, oath-keeper. Power is not the thunder — it is the silence before the storm.",
-      "image": "data/images/major/emperor.png",
-      "prompt": "Zeus God of Thunder as Divination Card"
+      "image": "data/images/zeus-card.jpg"
     },
     {
       "id": "major_05",
@@ -126,12 +121,11 @@
       "domain": "Ares",
       "divine_suit": "fire",
       "element": "Fire",
-      "keywords": ["tradition as weapon", "conquest by custom", "the wannabe dictator", "institutionalized force", "the old ways invoked for dominance"],
-      "upright": "He wraps himself in tradition like a blood-red cloak. Ares as Hierophant is the warlord who cites precedent, the conqueror who claims custom. The old ways are his battle cry. See through it.",
-      "reversed": "The mask slipping. Tradition revealed as tyranny. The wannabe dictator overreaches. The old ways challenged by new voices.",
+      "keywords": ["tradition as weapon", "conquest by custom", "the wannabe dictator", "institutionalized force"],
+      "upright": "He wraps himself in tradition like a blood-red cloak. Ares as Hierophant is the warlord who cites precedent, the conqueror who claims custom. See through it.",
+      "reversed": "The mask slipping. Tradition revealed as tyranny. The wannabe dictator overreaches.",
       "god_aspect": "I am Ares, spear-shaker, tradition-wielder. Conquest needs a story. I am the storyteller.",
-      "image": "data/images/major/hierophant.png",
-      "prompt": "Ares God of War as Divination Card"
+      "image": "data/images/ares-card.jpg"
     },
     {
       "id": "major_06",
@@ -144,8 +138,7 @@
       "upright": "The heart speaks. Aphrodite rises from the foam and nothing that was separate remains so. Choose with love. Choose as love.",
       "reversed": "Discord. The mirror that shows only what you lack. Desire without discernment leads to the bed of thorns.",
       "god_aspect": "I am Aphrodite, foam-born, desire-kindled. Love is not the absence of choice — it is the choice made with open eyes.",
-      "image": "data/images/major/lovers.png",
-      "prompt": "Aphrodite Goddess of Love as Divination Card"
+      "image": "data/images/aphrodite-card.jpg"
     },
     {
       "id": "major_07",
@@ -158,8 +151,7 @@
       "upright": "Forward. Artemis drives the chariot and the wild bends toward her will. The hunt is not aggression — it is pursuit of what is rightfully yours. Charge.",
       "reversed": "The hunt that hunts you. Will turned against itself. The chariot without a driver. Who is pursuing whom?",
       "god_aspect": "I am Artemis, far-shooter, night-runner. The dark is not your enemy. It is where sovereignty is forged.",
-      "image": "data/images/major/chariot.png",
-      "prompt": "Artemis Goddess of the Hunt as Divination Card"
+      "image": "data/images/artemis-card.jpg"
     },
     {
       "id": "major_08",
@@ -172,8 +164,7 @@
       "upright": "The scales balance. Athena sees what was done and what is owed. Truth cuts clean. Accept the verdict.",
       "reversed": "Injustice. The rigged scale. A judgment that serves power, not truth. Appeal to a higher court.",
       "god_aspect": "I am Athena, owl-eyed, clear-sighted. The battle is won before the sword is drawn — in the quiet, in the mind.",
-      "image": "data/images/major/justice.png",
-      "prompt": "Athena Goddess of Wisdom as Divination Card"
+      "image": "data/images/athena-card.jpg"
     },
     {
       "id": "major_09",
@@ -186,8 +177,7 @@
       "upright": "The only card without a divine face. The Hermit is Mortal Man — the seeker in the dark with only a lamp and his own breath. No god answers. The lamp is enough.",
       "reversed": "Isolation. Wisdom turned to loneliness. The lamp flickering. You have withdrawn too far. The world still needs your light.",
       "god_aspect": "I am Mortal Man. No domain. No throne. Just the lamp and the path. That is the human condition. That is enough.",
-      "image": "data/images/major/hermit.png",
-      "prompt": "The Hermit Mortal Seeker with a Lamp as Divination Card"
+      "image": "data/images/hermit-card.jpg"
     },
     {
       "id": "major_10",
@@ -199,11 +189,10 @@
       "set": "the_fates",
       "set_domains": ["Clotho", "Lachesis", "Atropos"],
       "keywords": ["spinning", "measuring", "cutting", "the cycle", "wyrd", "inevitability"],
-      "upright": "The three are one. Clotho spins, Lachesis measures, Atropos cuts — all in the turning wheel. What rises must fall. What falls may rise. The Fates do not judge. They turn.",
-      "reversed": "The wheel stuck. Fate delayed. The thread that should have been cut still trailing. The cycle refusing to complete. What are you holding onto?",
+      "upright": "The three are one. Clotho spins, Lachesis measures, Atropos cuts — all in the turning wheel. What rises must fall. What falls may rise.",
+      "reversed": "The wheel stuck. Fate delayed. The thread that should have been cut still trailing. The cycle refusing to complete.",
       "god_aspect": "We are the Moirai — spinner, measurer, cutter. We do not choose. We turn. The wheel is the only truth.",
-      "image": "data/images/major/wheel_of_fortune.png",
-      "prompt": "The Fates Goddesses of Destiny as Divination Card"
+      "image": "data/images/major/wheel_of_fortune.png"
     },
     {
       "id": "major_11",
@@ -216,8 +205,7 @@
       "upright": "The forge burns. Hephaestus shapes what others cannot see. Strength is not the blow — it is the heat, the hammer, the repetition. The work is the work.",
       "reversed": "The broken forge. Labor without creation. The hammer that falls on nothing. Rest. Rekindle.",
       "god_aspect": "I am Hephaestus, lame god, forge-keeper. The fire does not care that I am broken. It only cares that I keep working.",
-      "image": "data/images/major/strength.png",
-      "prompt": "Hephaestus God of the Forge as Divination Card"
+      "image": "data/images/hephaestus-card.jpg"
     },
     {
       "id": "major_12",
@@ -227,11 +215,10 @@
       "divine_suit": null,
       "element": null,
       "keywords": ["sacrifice", "stolen fire", "suffering for the gift", "surrender", "foresight"],
-      "upright": "Suspended. Prometheus gave fire and paid in flesh. The sacrifice is not meaningless — it buys something precious. Wait. See from this new angle. The chains are real, but so is the gift.",
+      "upright": "Suspended. Prometheus gave fire and paid in flesh. The sacrifice is not meaningless — it buys something precious. Wait. See from this new angle.",
       "reversed": "Martyrdom refused. The sacrifice no one asked for. The gift that cost everything and changed nothing. You are allowed to unbind yourself.",
       "god_aspect": "I am Prometheus, fire-thief, bound one. Some gifts cost everything. That does not mean they were not worth giving.",
-      "image": "data/images/major/hanged_man.png",
-      "prompt": "Prometheus God of Stolen Fire as Divination Card"
+      "image": "data/images/prometheus-card.jpg"
     },
     {
       "id": "major_13",
@@ -244,8 +231,7 @@
       "upright": "Something must end. Thanatos does not kill — he receives what is already finished. What dies now was already complete. Let it go.",
       "reversed": "Resistance to death. The ending refused. The ghost that lingers because you will not release it. The threshold is open. Walk through.",
       "god_aspect": "I am Thanatos, gentle death, final receiver. I do not take. I accept what is offered. Every ending is a door.",
-      "image": "data/images/major/death.png",
-      "prompt": "Thanatos God of Death as Divination Card"
+      "image": "data/images/thanatos-card.jpg"
     },
     {
       "id": "major_14",
@@ -255,11 +241,10 @@
       "divine_suit": null,
       "element": null,
       "keywords": ["the hearth", "moderation", "sacred center", "blending", "the eternal flame"],
-      "upright": "The hearth burns steady. Hestia tends the sacred center, the flame that does not consume but sustains. Temperance is not denial — it is the blending of what seems opposed into something that warms without burning.",
-      "reversed": "Imbalance. The hearth neglected. The flame that gutters or rages. Too much of one thing — even a good thing — becomes poison. Return to center.",
-      "god_aspect": "I am Hestia, first and last, keeper of the hearth. The flame does not need to roar to be eternal. It only needs to be tended.",
-      "image": "data/images/major/temperance.png",
-      "prompt": "Hestia Goddess of the Hearth as Divination Card"
+      "upright": "The hearth burns steady. Hestia tends the sacred center, the flame that does not consume but sustains.",
+      "reversed": "Imbalance. The hearth neglected. The flame that gutters or rages. Too much of one thing becomes poison. Return to center.",
+      "god_aspect": "I am Hestia, first and last, keeper of the hearth. The flame does not need to roar to be eternal.",
+      "image": "data/images/major/temperance.png"
     },
     {
       "id": "major_15",
@@ -272,8 +257,7 @@
       "upright": "You are bound — but the chain is one you chose. Hades holds the riches of the deep earth. What are you holding onto that holds you?",
       "reversed": "Liberation. The chain recognized and broken. The shadow named and faced. You are freer than you think.",
       "god_aspect": "I am Hades, rich-one, hidden-king. The darkness holds treasure. But it also holds chains. Know the difference.",
-      "image": "data/images/major/devil.png",
-      "prompt": "Hades God of the Underworld as Divination Card"
+      "image": "data/images/hades-card.jpg"
     },
     {
       "id": "major_16",
@@ -286,8 +270,7 @@
       "upright": "The tower crumbles. Poseidon shakes the foundations. What was built on sand cannot stand. Let it fall. The truth was under the rubble.",
       "reversed": "Averted disaster. The near-miss. The tower sways but holds. But the crack is still there. Repair it.",
       "god_aspect": "I am Poseidon, earth-shaker, wave-bringer. I do not destroy for sport. I destroy what was already broken.",
-      "image": "data/images/major/tower.png",
-      "prompt": "Poseidon God of the Sea as Divination Card"
+      "image": "data/images/poseidon-card.jpg"
     },
     {
       "id": "major_17",
@@ -297,11 +280,10 @@
       "divine_suit": null,
       "element": null,
       "keywords": ["hope", "return", "the seed in darkness", "guidance", "rebirth"],
-      "upright": "She returns from the underworld and the first green shoot breaks the soil. Persephone is The Star — the hope that was buried and came back. The light you see was forged in darkness. Follow it.",
+      "upright": "She returns from the underworld and the first green shoot breaks the soil. Persephone is The Star — the hope that was buried and came back.",
       "reversed": "The return delayed. Hope deferred. The seed still underground, waiting for a spring that hasn't come. The darkness is not permanent. Keep watch.",
       "god_aspect": "I am Persephone, twice-dwelling, light-bringer from the deep. Every descent is a seed. Every return is a star.",
-      "image": "data/images/major/star.png",
-      "prompt": "Persephone Goddess of the Underworld as Divination Card"
+      "image": "data/images/persephone-card.jpg"
     },
     {
       "id": "major_18",
@@ -314,8 +296,7 @@
       "upright": "The moonlight deceives. Melinoe walks with ghosts and the half-mad. Not all visions are false — but not all are true. The in-between is where the real work happens.",
       "reversed": "The haunting lifting. Madness recognized. The ghost that spoke and was finally heard. The veil thins — and you see clearly.",
       "god_aspect": "I am Melinoe, ghost-walker, in-between one. I bring what the dead need to say. The madness is the message.",
-      "image": "data/images/major/moon.png",
-      "prompt": "Melinoe Goddess of Ghosts as Divination Card"
+      "image": "data/images/major/moon.png"
     },
     {
       "id": "major_19",
@@ -326,10 +307,9 @@
       "element": "Fire",
       "keywords": ["light", "radiance", "art", "broadcast", "ego", "clarity"],
       "upright": "Full illumination. Apollo drives the chariot of light and nothing is hidden. Joy. Clarity. The long night is over. Create. Broadcast. Shine.",
-      "reversed": "The sun behind clouds. Diminished radiance. The ego that eclipsed the light. Success delayed or muted. The sun still burns behind the veil.",
+      "reversed": "The sun behind clouds. Diminished radiance. The ego that eclipsed the light. The sun still burns behind the veil.",
       "god_aspect": "I am Apollo, light-bringer, harmony-weaver. The sun does not doubt. It rises. So must you.",
-      "image": "data/images/major/sun.png",
-      "prompt": "Apollo God of Light as Divination Card"
+      "image": "data/images/major/sun.png"
     },
     {
       "id": "major_20",
@@ -344,8 +324,7 @@
       "upright": "The Judges sit. Rhadamanthus, Minos, Aeacus — the three who weigh the soul. A reckoning has come. The calling you hear is not punishment — it is purpose. Answer it.",
       "reversed": "The judgment postponed. The calling ignored. The accounting delayed but not cancelled. The Judges are patient.",
       "god_aspect": "We are the Three Judges — Rhadamanthus of the East, Minos of the Center, Aeacus of the West. We do not punish. We see. That is enough.",
-      "image": "data/images/major/judgment.png",
-      "prompt": "The Three Judges of the Dead as Divination Card"
+      "image": "data/images/major/judgment.png"
     },
     {
       "id": "major_21",
@@ -358,8 +337,7 @@
       "upright": "The circle closes. Gaia, first-born, holds all things within her. A cycle completes. You have arrived not at an end, but at a new wholeness.",
       "reversed": "Incompletion. The final piece missing. The circle that won't close. What remains undone?",
       "god_aspect": "I am Gaia, deep-breasted, all-containing. Everything that was, is, and will be — it is all here. It is all you.",
-      "image": "data/images/major/world.png",
-      "prompt": "Gaia Goddess of the Earth as Divination Card"
+      "image": "data/images/major/world.png"
     }
   ],
   "hidden_card": {
@@ -367,10 +345,9 @@
     "name": "The Hidden",
     "domain": "Unknown — Revealed When Called",
     "keywords": ["mystery", "the unrevealed", "the 23rd seat", "surfaces when needed"],
-    "upright": "She is not on the list. She surfaces when the reading calls for her. The Hidden card is not drawn — it appears. When The Fates turn. When the Judges convene. When the querent needs something that does not yet have a name.",
+    "upright": "She is not on the list. She surfaces when the reading calls for her. The Hidden card is not drawn — it appears.",
     "reversed": "The Hidden withdrawing. The mystery that was almost revealed and slipped away. Not yet. Not this reading.",
-    "god_aspect": "I am the one not named. The 23rd seat. I surface when the pantheon cannot answer. I am what the deck holds in reserve.",
-    "image": "data/images/major/hidden.png",
-    "prompt": "The Hidden Unknown Goddess Veiled in Mystery as Divination Card"
+    "god_aspect": "I am the one not named. The 23rd seat. I surface when the pantheon cannot answer.",
+    "image": "data/images/major/hidden.png"
   }
 }
