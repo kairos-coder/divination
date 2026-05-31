@@ -935,6 +935,134 @@
       border-color: var(--ember);
     }
 
+    /* ── VIDEO STRIP ────────────────────────────────────────────── */
+    .video-strip {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 0.4rem;
+      background: rgba(0,0,0,0.25);
+      border-radius: 6px;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    .video-strip::-webkit-scrollbar { display: none; }
+
+    .video-thumb {
+      flex-shrink: 0;
+      width: 72px;
+      height: 48px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(201,74,42,0.25);
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+      background: #0a0602;
+    }
+
+    .video-thumb:hover {
+      border-color: var(--ember);
+      transform: scale(1.05) translateY(-2px);
+    }
+
+    .video-thumb video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .video-thumb-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.65);
+      font-family: var(--mono);
+      font-size: 0.28rem;
+      letter-spacing: 0.1em;
+      color: var(--ember);
+      text-align: center;
+      padding: 0.1rem 0;
+    }
+
+    .video-play-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .video-thumb:hover .video-play-icon { opacity: 1; }
+
+    /* Video lightbox */
+    .video-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.93);
+      z-index: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .video-lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .video-lightbox video {
+      max-width: min(800px, 90vw);
+      max-height: 78vh;
+      border-radius: 10px;
+      border: 1px solid rgba(201,74,42,0.3);
+      box-shadow: 0 0 60px rgba(201,74,42,0.2), 0 24px 48px rgba(0,0,0,0.8);
+      outline: none;
+    }
+
+    .video-lightbox-meta {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--ember);
+    }
+
+    .video-lightbox-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .video-lb-btn {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(232,168,64,0.25);
+      color: var(--ember);
+      font-family: var(--mono);
+      font-size: 0.45rem;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.7rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .video-lb-btn:hover {
+      background: rgba(232,168,64,0.1);
+      border-color: var(--ember);
+    }
+
     /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 768px) {
       .split-layout { flex-direction: column; }
@@ -1025,6 +1153,9 @@
 
     <div class="gallery-strip" id="galleryStrip"></div>
 
+    <!-- VIDEO STRIP -->
+    <div class="video-strip" id="videoStrip"></div>
+
     <div class="next-draw-row">
       NEXT AUTO-DRAW IN <span id="nextDrawTimer">60</span>s
       <div class="draw-progress"><div class="draw-progress-bar" id="drawProgressBar" style="width:100%"></div></div>
@@ -1051,6 +1182,17 @@
       </div>
       <button class="copy-all-btn" id="copyAllMissingBtn">📋 COPY ALL MISSING PROMPTS</button>
     </div>
+  </div>
+</div>
+
+<!-- ── VIDEO LIGHTBOX ─────────────────────────────────────────── -->
+<div class="video-lightbox" id="videoLightbox">
+  <video id="videoLightboxPlayer" controls playsinline></video>
+  <div class="video-lightbox-meta" id="videoLightboxLabel"></div>
+  <div class="video-lightbox-controls">
+    <button class="video-lb-btn" id="videoPrev">← PREV</button>
+    <button class="video-lb-btn" id="videoNext">NEXT →</button>
+    <button class="video-lb-btn" id="videoClose">✕ CLOSE</button>
   </div>
 </div>
 
@@ -1095,21 +1237,23 @@ const FIRE_DECK = [
   {id:'fire_king',   name:'King of Fire',   title:'The Founder',      meaning:'Can you hold it without becoming the monster?',                        image:'data/images/minor/fire/fire_king.png',   rank:'king',   suit:'fire'}
 ];
 
+// Image paths match minor_arcana.json id convention: water_ace.png, water_02.png … water_page.png etc.
+// Full path: data/images/minor/water/{id}.png
 const WATER_DECK = [
-  {rank:'ace',    name:'Ace of Water',    title:'Prometheus',   culture:'Greek/Polynesian',  nightCafePrompt:'Ace of Water tarot card — Prometheus stealing divine fire, water streaming from his chains, Polynesian voyager motifs, waves curling around his wrists, deep blue and turquoise palette, luminous watercolor style, golden light breaking through storm clouds —ar 2:3', image:'ace_of_water.png'},
-  {rank:'02',     name:'Two of Water',    title:'Yemanya',      culture:'Yoruba/Brazilian',  nightCafePrompt:'Two of Water tarot card — Yemanya rising from ocean, twin moons reflected in still water, orisha of motherhood and the sea, flowing white and blue robes, children at her feet, crescent waves, mother-of-pearl iridescence —ar 2:3', image:'two_of_water.png'},
-  {rank:'03',     name:'Three of Water',  title:'The Nereids',  culture:'Greek',             nightCafePrompt:'Three of Water tarot card — three Nereid sea nymphs dancing in a circle, foam and seafoam, dolphins circling, Mediterranean turquoise, ancient Greek vase painting meets fluid digital art —ar 2:3', image:'three_of_water.png'},
-  {rank:'04',     name:'Four of Water',   title:'Sedna',        culture:'Inuit',             nightCafePrompt:'Four of Water tarot card — Sedna, goddess of the sea and marine animals, her fingers becoming seals and whales, deep Arctic waters, bioluminescent creatures, ice above darkness below, melancholy and abundance —ar 2:3', image:'four_of_water.png'},
-  {rank:'05',     name:'Five of Water',   title:'The Drowned',  culture:'Global Myth',       nightCafePrompt:'Five of Water tarot card — figures sinking into dark water, only hands reaching up, loss and grief, reflections of what was, deep navy and silver, rain on the surface, melancholic romanticism —ar 2:3', image:'five_of_water.png'},
-  {rank:'06',     name:'Six of Water',    title:'Mnemosyne',    culture:'Greek',             nightCafePrompt:'Six of Water tarot card — Mnemosyne, Titaness of memory, water as remembering, faces in ripples, lotus flowers, still pool reflecting stars, purple and silver, dreamlike soft focus —ar 2:3', image:'six_of_water.png'},
-  {rank:'07',     name:'Seven of Water',  title:'Kanaloa',      culture:'Polynesian',        nightCafePrompt:'Seven of Water tarot card — Kanaloa, god of the underworld ocean, squid and octopus tentacles, deep sea vents, volcanic underwater landscapes, green and black, mysterious and powerful —ar 2:3', image:'seven_of_water.png'},
-  {rank:'08',     name:'Eight of Water',  title:'The Current',  culture:'Modern',            nightCafePrompt:'Eight of Water tarot card — a figure swept in ocean current, letting go, surrender to flow, abstract water shapes, cyan and coral, dynamic motion blur, digital painting —ar 2:3', image:'eight_of_water.png'},
-  {rank:'09',     name:'Nine of Water',   title:'Mazu',         culture:'Chinese/Taoist',    nightCafePrompt:'Nine of Water tarot card — Mazu, goddess of the sea and protector of sailors, standing on a wave, lanterns guiding ships, red and gold against deep blue, traditional Chinese painting style, auspicious clouds —ar 2:3', image:'nine_of_water.png'},
-  {rank:'10',     name:'Ten of Water',    title:'The Flood',    culture:'Global',            nightCafePrompt:'Ten of Water tarot card — great flood, waters rising to cover everything, ark in distance, rebirth through destruction, slate gray and silver, dramatic storm clouds, cinematic scale —ar 2:3', image:'ten_of_water.png'},
-  {rank:'page',   name:'Page of Water',   title:'Narcissus',    culture:'Greek',             nightCafePrompt:'Page of Water tarot card — Narcissus gazing at his reflection, flowers growing at water\'s edge, self-discovery through the looking glass, green and blue, pre-Raphaelite aesthetic —ar 2:3', image:'page_of_water.png'},
-  {rank:'knight', name:'Knight of Water', title:'Poseidon',     culture:'Greek',             nightCafePrompt:'Knight of Water tarot card — Poseidon on a hippocampus, trident raised, storm waves, seafoam white and deep teal, classical sculpture meets animation, powerful motion —ar 2:3', image:'knight_of_water.png'},
-  {rank:'queen',  name:'Queen of Water',  title:'Tiamat',       culture:'Mesopotamian',      nightCafePrompt:'Queen of Water tarot card — Tiamat, primordial dragon goddess of salt water, ocean as her body, creation from chaos, deep blue, gold scales, Babylonian mythic art style —ar 2:3', image:'queen_of_water.png'},
-  {rank:'king',   name:'King of Water',   title:'Neptune',      culture:'Roman/Modern',      nightCafePrompt:'King of Water tarot card — Neptune ruling the deep, trident and crown, abyssal plain, bioluminescent creatures, dark blue and emerald, 19th century maritime painting meets vaporwave —ar 2:3', image:'king_of_water.png'}
+  {id:'water_ace',    rank:'ace',    name:'Ace of Water',    title:'Oshun',                  culture:'Yoruba',           meaning:'The DM slide — the vulnerable reach, the message sent into the void. Connection begins with risk.',                                              image:'data/images/minor/water/water_ace.png',    nightCafePrompt:'Oshun Yoruba orisha of love and fresh water, golden and flowing, honey and mirror, purple and green palette, tarot card 2:3'},
+  {id:'water_02',     rank:'two',    name:'Two of Water',    title:'Echo & Narcissus',       culture:'Greek',            meaning:'The talking stage — one voice dominates, the other only reflects. Who is speaking? Who is echoing?',                                            image:'data/images/minor/water/water_02.png',     nightCafePrompt:'Echo and Narcissus by the pool, one fading into voice the other gazing at reflection, purple and green, Greek mythology tarot card 2:3'},
+  {id:'water_03',     rank:'three',  name:'Three of Water',  title:'The Muses',              culture:'Greek',            meaning:'Nine voices in harmony. The group chat that holds you — the community that amplifies your song.',                                               image:'data/images/minor/water/water_03.png',     nightCafePrompt:'The Nine Muses of Greek mythology in harmony, singing together, purple and green, classical tarot card style 2:3'},
+  {id:'water_04',     rank:'four',   name:'Four of Water',   title:'Izanami',                culture:'Japanese',         meaning:'The ghost — the person who vanished without explanation. The silence is the answer.',                                                           image:'data/images/minor/water/water_04.png',     nightCafePrompt:'Izanami Japanese goddess of the underworld Yomi, spectral, purple and green, ghostly beauty tarot card 2:3'},
+  {id:'water_05',     rank:'five',   name:'Five of Water',   title:'Calypso',                culture:'Greek',            meaning:'The situationship — everything to one person, a detour to the other. Grieve what they couldn\'t feel.',                                        image:'data/images/minor/water/water_05.png',     nightCafePrompt:'Calypso on her island of Ogygia, watching the sea, purple and green, Greek mythology tarot card longing 2:3'},
+  {id:'water_06',     rank:'six',    name:'Six of Water',    title:'Ghost of Hamlet\'s Father', culture:'Norse/English', meaning:'The memory that will not stay buried. Honor the past — but don\'t let it command the present.',                                               image:'data/images/minor/water/water_06.png',     nightCafePrompt:'Ghost of Hamlet\'s father on castle battlements, ethereal, purple and green, Shakespearean tarot card haunting 2:3'},
+  {id:'water_07',     rank:'seven',  name:'Seven of Water',  title:'Peaches of Immortality', culture:'Chinese',          meaning:'The daydream — the fantasy so sweet it becomes an island. Dream the alternate life. Then choose this one.',                                      image:'data/images/minor/water/water_07.png',     nightCafePrompt:'Peaches of Immortality in celestial garden, glowing fruit, purple and green, Chinese mythology dreamlike tarot card 2:3'},
+  {id:'water_08',     rank:'eight',  name:'Eight of Water',  title:'Aeneas & Dido',          culture:'Greek/Roman',      meaning:'The necessary departure. Duty calls. The ship is in the harbor. Go.',                                                                         image:'data/images/minor/water/water_08.png',     nightCafePrompt:'Aeneas sailing from Carthage, Dido\'s pyre burning on the shore, purple and green, Roman epic tarot card 2:3'},
+  {id:'water_09',     rank:'nine',   name:'Nine of Water',   title:'Sedna',                  culture:'Inuit',            meaning:'The projected desire, the avatar of everything you want, the deep that calls you. The song is real. The sacrifice is real too.',               image:'data/images/minor/water/water_09.png',     nightCafePrompt:'Sedna Inuit sea goddess at the bottom of the ocean, fingers becoming sea creatures, purple and green, Arctic mythology tarot card 2:3'},
+  {id:'water_10',     rank:'ten',    name:'Ten of Water',    title:'Shiva & Parvati',        culture:'Hindu',            meaning:'The union earned through suffering. The cosmic marriage. This is the culmination. Live in it.',                                                  image:'data/images/minor/water/water_10.png',     nightCafePrompt:'Shiva and Parvati in cosmic union, divine marriage, purple and green, Hindu mythology tarot card sacred love 2:3'},
+  {id:'water_page',   rank:'page',   name:'Page of Water',   title:'The VTuber',             culture:'Modern',           meaning:'The crush — the flutter, the pursuit. Enjoy the stream. Respect the person behind the screen.',                                                image:'data/images/minor/water/water_page.png',   nightCafePrompt:'VTuber as modern mythic archetype, anime avatar on screen, chat flowing, purple and green, digital tarot card 2:3'},
+  {id:'water_knight', rank:'knight', name:'Knight of Water', title:'Paris',                  culture:'Greek',            meaning:'The grand gesture that changes everything. Love is a choice. Know what you\'re trading for it.',                                               image:'data/images/minor/water/water_knight.png', nightCafePrompt:'Paris choosing Aphrodite, golden apple, Helen in the distance, purple and green, Greek mythology tarot card 2:3'},
+  {id:'water_queen',  rank:'queen',  name:'Queen of Water',  title:'Mami Wata',              culture:'African (Diaspora)', meaning:'The therapist — the listener, the one who holds space for your drowning. The water holds what you cannot carry.',                             image:'data/images/minor/water/water_queen.png',  nightCafePrompt:'Mami Wata African water spirit, rising from the sea, serpent and mirror, purple and green, African diaspora tarot card 2:3'},
+  {id:'water_king',   rank:'king',   name:'King of Water',   title:'Chiron',                 culture:'Greek',            meaning:'The wounded healer — his wound is his credential. He does not pretend to be whole.',                                                          image:'data/images/minor/water/water_king.png',   nightCafePrompt:'Chiron the wise centaur, wounded healer, teaching young heroes, purple and green, Greek mythology tarot card 2:3'},
 ];
 
 // ── KITTEN TTS SCRIPT LIBRARY ─────────────────────────────────
@@ -1388,10 +1532,10 @@ function loadGeneratedStatus() {
   } catch(e) {}
 
   WATER_DECK.forEach(card => {
-    fetch(`data/images/minor/water/${card.image}`, { method: 'HEAD', cache: 'no-cache' })
+    fetch(card.image, { method: 'HEAD', cache: 'no-cache' })
       .then(res => {
-        if (res.ok && !generatedWaterCards.has(card.rank)) {
-          generatedWaterCards.add(card.rank);
+        if (res.ok && !generatedWaterCards.has(card.id)) {
+          generatedWaterCards.add(card.id);
           saveGeneratedStatus();
           renderWaterGrid();
         }
@@ -1411,14 +1555,14 @@ function renderWaterGrid() {
   if (countEl) countEl.textContent = `${count} / 14 GENERATED · CLICK STUB TO COPY PROMPT`;
 
   grid.innerHTML = WATER_DECK.map(card => {
-    const done = generatedWaterCards.has(card.rank);
+    const done = generatedWaterCards.has(card.id);
     const shortTitle = card.title.length > 18 ? card.title.substring(0, 16) + '…' : card.title;
     return `
       <div class="water-stub ${done ? 'generated' : ''}"
-           data-rank="${card.rank}"
+           data-id="${card.id}"
            data-prompt="${card.nightCafePrompt.replace(/"/g,'&quot;')}"
            data-image="${card.image}"
-           title="${done ? card.name + ' — GENERATED' : 'Copy prompt: ' + card.name}">
+           title="${done ? card.name + ' ✓' : card.name + ' — ' + card.meaning.substring(0,80)}">
         <div class="stub-icon">${done ? '💧' : '🕳'}</div>
         <div class="stub-rank">${card.rank.toUpperCase()}</div>
         <div class="stub-title">${shortTitle}</div>
@@ -1429,15 +1573,15 @@ function renderWaterGrid() {
 
   document.querySelectorAll('.water-stub').forEach(stub => {
     stub.addEventListener('click', () => {
-      const rank = stub.dataset.rank;
-      const done = generatedWaterCards.has(rank);
+      const id = stub.dataset.id;
+      const done = generatedWaterCards.has(id);
       if (!done) {
         navigator.clipboard.writeText(stub.dataset.prompt).catch(() => {});
-        showToast(`📋 Copied: ${rank.toUpperCase()} of Water`);
-        addToConsole(`📋 Copied prompt for ${rank.toUpperCase()} of Water`, 'info');
-        TTS.speak(`Copying prompt for ${rank} of water. Generate, then upload.`, { type: 'water' });
+        showToast(`📋 Copied: ${id} prompt`);
+        addToConsole(`📋 Copied prompt for ${id}`, 'info');
+        TTS.speak(`Copying prompt for ${id.replace('_',' ')}. Generate, then upload.`, { type: 'water' });
       } else {
-        showToast(`✓ ${rank.toUpperCase()} of Water already generated`);
+        showToast(`✓ ${id} already generated`);
       }
     });
   });
@@ -1487,8 +1631,88 @@ function updateCountdown() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// LIGHTBOX
+// VIDEO STRIP
 // ════════════════════════════════════════════════════════════════
+const PROMO_VIDEOS = [
+  { src: 'data/videos/ealdforn1.mp4', label: 'EALDFORN #1' },
+  { src: 'data/videos/ealdforn2.mp4', label: 'EALDFORN #2' },
+  { src: 'data/videos/ealdforn3.mp4', label: 'EALDFORN #3' },
+  { src: 'data/videos/ealdforn4.mp4', label: 'EALDFORN #4' },
+  { src: 'data/videos/ealdforn5.mp4', label: 'EALDFORN #5' },
+];
+
+let videoIndex = 0;
+
+function buildVideoStrip() {
+  const strip = document.getElementById('videoStrip');
+  if (!strip) return;
+
+  strip.innerHTML = PROMO_VIDEOS.map((v, i) => `
+    <div class="video-thumb" data-index="${i}" title="Play ${v.label}">
+      <video src="${v.src}" muted preload="metadata" tabindex="-1"></video>
+      <div class="video-play-icon">▶</div>
+      <div class="video-thumb-label">${v.label}</div>
+    </div>
+  `).join('');
+
+  strip.querySelectorAll('.video-thumb').forEach(thumb => {
+    // Seek thumbnail video to 0.5s for a preview frame
+    const tv = thumb.querySelector('video');
+    tv.addEventListener('loadedmetadata', () => { tv.currentTime = 0.5; });
+
+    thumb.addEventListener('click', () => {
+      openVideoLightbox(parseInt(thumb.dataset.index));
+    });
+  });
+}
+
+function openVideoLightbox(index) {
+  videoIndex = index;
+  const v = PROMO_VIDEOS[index];
+  const player = document.getElementById('videoLightboxPlayer');
+  const label  = document.getElementById('videoLightboxLabel');
+  const lb     = document.getElementById('videoLightbox');
+  if (!player || !lb) return;
+
+  player.src = v.src;
+  player.volume = 1;
+  player.muted = false;
+  if (label) label.textContent = v.label;
+  lb.classList.add('open');
+  player.play().catch(() => {});
+
+  // Pause TTS while video plays
+  window.speechSynthesis?.cancel();
+  document.getElementById('loopBtn')?.classList.remove('active');
+}
+
+function closeVideoLightbox() {
+  const player = document.getElementById('videoLightboxPlayer');
+  const lb     = document.getElementById('videoLightbox');
+  if (player) { player.pause(); player.src = ''; }
+  lb?.classList.remove('open');
+}
+
+function bindVideoLightbox() {
+  document.getElementById('videoClose')?.addEventListener('click', closeVideoLightbox);
+  document.getElementById('videoPrev')?.addEventListener('click', () => {
+    openVideoLightbox((videoIndex - 1 + PROMO_VIDEOS.length) % PROMO_VIDEOS.length);
+  });
+  document.getElementById('videoNext')?.addEventListener('click', () => {
+    openVideoLightbox((videoIndex + 1) % PROMO_VIDEOS.length);
+  });
+  document.getElementById('videoLightbox')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('videoLightbox')) closeVideoLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('videoLightbox')?.classList.contains('open')) return;
+    if (e.key === 'Escape') closeVideoLightbox();
+    if (e.key === 'ArrowLeft') openVideoLightbox((videoIndex - 1 + PROMO_VIDEOS.length) % PROMO_VIDEOS.length);
+    if (e.key === 'ArrowRight') openVideoLightbox((videoIndex + 1) % PROMO_VIDEOS.length);
+  });
+}
+
+
 let lightboxIndex = 0;
 
 function openLightbox(index) {
@@ -1599,7 +1823,9 @@ function bindUI() {
 // ════════════════════════════════════════════════════════════════
 function init() {
   buildGallery();
+  buildVideoStrip();
   bindLightbox();
+  bindVideoLightbox();
   loadGeneratedStatus();
   renderWaterGrid();
   startAutoDraw();
