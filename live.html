@@ -3,254 +3,294 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digital Divination · Live Oracle</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <title>Ealdforn #5 · Digital Divination Live</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gold: #c9a84c; --gold-light: #e8c96a; --gold-dark: #7a5c18;
-      --void: #05050d; --surface: #0e0e20; --border-gold: rgba(201,168,76,0.12);
-      --text: #ede5d0; --text-dim: #605848;
-      --fire: #c94a2a; --water: #3a6a9a;
+      --void: #080402;
+      --void-surface: #100a06;
+      --void-raised: #1a0e08;
+      --fire: #c94a2a;
+      --fire-bright: #e8602a;
+      --fire-dim: #5a1a0a;
+      --ember: #e8a840;
+      --ember-dim: #6b3a10;
+      --ash: #8a7a6a;
+      --ash-dim: #3a3028;
+      --text: #f0e0d0;
+      --text-dim: #7a6a58;
+      --border-fire: rgba(201,74,42,0.2);
+      --border-ember: rgba(232,168,64,0.15);
+      --gold: #e8c96a;
+      --gold-dim: #6b4a10;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: var(--void); color: var(--text);
       font-family: 'Cormorant Garamond', serif;
-      min-height: 100vh; overflow: hidden;
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background: radial-gradient(ellipse 60% 50% at 50% 20%, rgba(201,74,42,0.08) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 40% at 50% 80%, rgba(232,168,64,0.05) 0%, transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+    body::after {
+      content:''; position:fixed; inset:0;
+      background-image: linear-gradient(rgba(201,74,42,0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(232,168,64,0.02) 1px, transparent 1px);
+      background-size: 48px 48px; pointer-events:none; z-index:0;
     }
 
-    /* ── BACKGROUND CAROUSEL ── */
-    .bg-carousel {
-      position: fixed; inset: 0; z-index: 0;
-    }
+    /* ── BG CAROUSEL ── */
+    .bg-carousel { position:fixed; inset:0; z-index:0; }
     .bg-image {
-      position: absolute; inset: 0;
-      background-size: cover; background-position: center;
-      opacity: 0; transition: opacity 2s ease;
-      filter: brightness(0.25) saturate(0.6);
+      position:absolute; inset:0; background-size:cover; background-position:center;
+      opacity:0; transition:opacity 2s ease; filter:brightness(0.15) saturate(0.5);
     }
-    .bg-image.active { opacity: 1; }
-
-    /* ── OVERLAY ── */
-    .overlay {
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse 60% 40% at 50% 40%, transparent 0%, rgba(5,5,13,0.7) 100%);
-      z-index: 1; pointer-events: none;
+    .bg-image.active { opacity:1; }
+    .bg-overlay {
+      position:fixed; inset:0;
+      background: radial-gradient(ellipse 60% 40% at 50% 40%, transparent 0%, rgba(8,4,2,0.85) 100%);
+      z-index:1; pointer-events:none;
     }
 
-    /* ── MAIN LAYOUT ── */
-    .stage {
-      position: relative; z-index: 10;
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 2rem;
-    }
+    .shell { position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
-    .show-header {
-      position: fixed; top: 0; left: 0; right: 0;
-      padding: 1rem 2rem; display: flex;
-      align-items: center; justify-content: space-between;
-      z-index: 20;
-      background: linear-gradient(to bottom, rgba(5,5,13,0.9), transparent);
+    header {
+      padding:1rem 1.5rem; display:flex; align-items:baseline; justify-content:space-between;
+      border-bottom:1px solid var(--border-fire); background:rgba(8,4,2,0.9);
+      position:sticky; top:0; z-index:50;
     }
     .show-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.9rem; color: var(--gold-light);
-      letter-spacing: 0.2em;
+      font-family:'Cinzel Decorative',serif; font-weight:900; font-size:1rem;
+      letter-spacing:0.2em; color:var(--fire-bright); text-transform:uppercase;
     }
     .show-sub {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.45rem; color: var(--text-dim);
-      letter-spacing: 0.15em; text-transform: uppercase;
+      font-family:'Share Tech Mono',monospace; font-size:0.45rem; color:var(--ash);
+      letter-spacing:0.15em; text-transform:uppercase;
     }
     .live-badge {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.5rem; color: var(--fire);
-      border: 1px solid rgba(201,74,42,0.3); padding: 4px 10px;
+      font-family:'Share Tech Mono',monospace; font-size:0.5rem; color:var(--fire-bright);
+      border:1px solid var(--border-fire); padding:4px 10px;
     }
-    .live-dot {
-      display: inline-block; width: 6px; height: 6px;
-      border-radius: 50%; background: var(--fire);
-      margin-right: 5px; animation: blink 1.2s infinite; vertical-align: middle;
-    }
+    .live-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--fire-bright); margin-right:5px; animation:blink 1.2s infinite; vertical-align:middle; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-    /* ── CARD SPREAD ── */
+    /* ── HERO: CARD SPREAD ── */
+    .hero-spread {
+      flex:1; display:flex; flex-direction:column; align-items:center;
+      justify-content:center; padding:1.5rem; position:relative; z-index:5;
+    }
     .spread-container {
-      display: flex; gap: 2rem; align-items: center;
-      justify-content: center; margin: 2rem 0;
-      perspective: 1200px;
+      display:flex; gap:2rem; align-items:center; justify-content:center;
+      perspective:1200px; margin-bottom:1.5rem;
     }
-    .card-slot {
-      width: 200px; aspect-ratio: 2/3;
-      position: relative; transform-style: preserve-3d;
-    }
+    .card-slot { width:200px; aspect-ratio:2/3; position:relative; transform-style:preserve-3d; }
     .card-inner {
-      width: 100%; height: 100%; position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      width:100%; height:100%; position:relative; transform-style:preserve-3d;
+      transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);
     }
-    .card-inner.flipped { transform: rotateY(180deg); }
-    .card-face {
-      position: absolute; inset: 0;
-      backface-visibility: hidden; border-radius: 12px;
-      overflow: hidden; border: 1px solid rgba(201,168,76,0.2);
-    }
+    .card-inner.flipped { transform:rotateY(180deg); }
+    .card-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:12px; overflow:hidden; border:1px solid var(--border-ember); }
     .card-back {
-      background: linear-gradient(135deg, #1a1a3a, #0e0e20, #1a1a3a);
-      display: flex; align-items: center; justify-content: center;
+      background:linear-gradient(135deg, #2a1a0a, #100a06, #2a1a0a);
+      display:flex; align-items:center; justify-content:center;
     }
-    .card-back-sigil {
-      font-size: 3rem; opacity: 0.5; filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
-    }
-    .card-front {
-      background: var(--surface); transform: rotateY(180deg);
-      display: flex; flex-direction: column;
-    }
-    .card-front img {
-      width: 100%; height: 55%; object-fit: cover;
-      border-bottom: 1px solid var(--border-gold);
-    }
-    .card-front .info {
-      flex: 1; padding: 0.6rem 0.8rem;
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .card-front .pos {
-      font-family: 'Cinzel', serif; font-size: 0.5rem;
-      letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;
-      opacity: 0.7; margin-bottom: 0.2rem;
-    }
-    .card-front .name {
-      font-family: 'Cinzel Decorative', serif; font-size: 0.75rem;
-      color: var(--gold-light); line-height: 1.2;
-    }
-    .card-front .meaning {
-      font-size: 0.55rem; font-style: italic;
-      color: var(--text-dim); margin-top: 0.3rem; line-height: 1.4;
-    }
+    .card-back-sigil { font-size:3rem; opacity:0.5; filter:drop-shadow(0 0 20px rgba(232,168,64,0.3)); }
+    .card-front { background:var(--void-surface); transform:rotateY(180deg); display:flex; flex-direction:column; }
+    .card-front img { width:100%; height:55%; object-fit:cover; border-bottom:1px solid var(--border-ember); }
+    .card-front .info { flex:1; padding:0.6rem 0.8rem; display:flex; flex-direction:column; justify-content:center; }
+    .card-front .pos { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.2em; color:var(--ember); text-transform:uppercase; opacity:0.7; margin-bottom:0.2rem; }
+    .card-front .name { font-family:'Cinzel Decorative',serif; font-size:0.75rem; color:var(--gold); line-height:1.2; }
+    .card-front .meaning { font-size:0.55rem; font-style:italic; color:var(--ash); margin-top:0.3rem; line-height:1.4; }
 
-    /* ── READING DISPLAY ── */
-    .reading-bar {
-      text-align: center; max-width: 700px;
-      opacity: 0; transition: opacity 0.6s ease;
-    }
-    .reading-bar.visible { opacity: 1; }
-    .reading-synthesis {
-      font-size: 1rem; font-style: italic; color: var(--text);
-      line-height: 1.6; margin-bottom: 0.5rem;
-    }
-    .reading-cards {
-      font-family: 'Cinzel', serif; font-size: 0.6rem;
-      letter-spacing: 0.15em; color: var(--gold);
-      text-transform: uppercase;
-    }
+    /* ── READING ── */
+    .reading-bar { text-align:center; max-width:700px; opacity:0; transition:opacity 0.6s ease; margin-bottom:1rem; }
+    .reading-bar.visible { opacity:1; }
+    .reading-synthesis { font-size:1rem; font-style:italic; color:var(--text); line-height:1.6; margin-bottom:0.3rem; }
+    .reading-cards { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.15em; color:var(--ember); text-transform:uppercase; }
 
-    /* ── BOTTOM BAR ── */
-    .bottom-bar {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      padding: 0.8rem 2rem; display: flex;
-      align-items: center; justify-content: space-between;
-      z-index: 20;
-      background: linear-gradient(to top, rgba(5,5,13,0.95), transparent);
+    /* ── COUNTDOWN ── */
+    .countdown-block { text-align:center; margin-bottom:1rem; }
+    .countdown-display {
+      font-family:'Cinzel',serif; font-size:3rem; font-weight:900;
+      letter-spacing:0.05em; line-height:1; color:var(--ember);
     }
-    .countdown {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.55rem; color: var(--text-dim);
-      letter-spacing: 0.1em;
+    .countdown-display .sep { color:var(--ash-dim); margin:0 0.05em; }
+    .countdown-display .secs { font-size:1.8rem; color:var(--ash); vertical-align:middle; }
+    .countdown-label {
+      font-family:'Share Tech Mono',monospace; font-size:0.5rem; letter-spacing:0.3em;
+      color:var(--ash); text-transform:uppercase; margin-top:0.5rem;
     }
-    .countdown span { color: var(--gold); }
     .next-draw {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.5rem; color: var(--text-dim);
-      letter-spacing: 0.1em;
+      font-family:'Share Tech Mono',monospace; font-size:0.5rem; color:var(--ash-dim);
+      letter-spacing:0.1em; margin-top:0.3rem;
     }
-    .next-draw span { color: var(--fire); }
-    .suit-badge {
-      font-family: 'Cinzel', serif; font-size: 0.55rem;
-      color: var(--fire); letter-spacing: 0.15em;
-      border: 1px solid rgba(201,74,42,0.3); padding: 3px 10px;
+    .next-draw span { color:var(--fire-bright); }
+
+    /* ── NARRATION BAR ── */
+    .narration-bar {
+      background:var(--void-raised); border:1px solid var(--border-fire);
+      border-left:3px solid var(--fire-bright); padding:0.6rem 1.5rem;
+      display:flex; align-items:center; gap:1rem; margin:0 1.5rem;
+    }
+    .narration-tag {
+      font-family:'Share Tech Mono',monospace; font-size:0.45rem;
+      color:var(--fire-bright); letter-spacing:0.2em; text-transform:uppercase; white-space:nowrap;
+    }
+    .narration-text {
+      font-family:'Cormorant Garamond',serif; font-size:0.9rem; font-style:italic;
+      color:var(--text); line-height:1.4; flex:1;
     }
 
-    /* ── WEBCAM CORNER ── */
+    /* ── GALLERY STRIP ── */
+    .gallery-strip {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));
+      gap:2px; background:var(--void); border-top:1px solid var(--border-fire);
+      border-bottom:1px solid var(--border-fire); margin:0 1.5rem 1rem;
+    }
+    .gallery-item {
+      aspect-ratio:2/3; overflow:hidden; cursor:pointer; position:relative;
+      border:1px solid transparent; transition:border-color 0.2s;
+    }
+    .gallery-item:hover { border-color:var(--fire-dim); }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; filter:brightness(0.5) saturate(0.8); transition:all 0.3s; }
+    .gallery-item:hover img { filter:brightness(0.85) saturate(1.1); transform:scale(1.05); }
+    .gallery-item .label {
+      position:absolute; bottom:0; left:0; right:0; padding:0.2rem 0.3rem;
+      font-size:0.4rem; font-style:italic; color:var(--text);
+      background:linear-gradient(to top, rgba(8,4,2,0.9), transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    .gallery-item:hover .label { opacity:1; }
+
+    /* ── SHOW STRUCTURE ── */
+    .structure-bar {
+      display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;
+      padding:0.5rem 1.5rem; font-family:'Share Tech Mono',monospace;
+      font-size:0.45rem; color:var(--ash); letter-spacing:0.1em;
+      border-top:1px solid var(--border-fire);
+    }
+    .structure-step { display:flex; align-items:center; gap:0.4rem; }
+    .structure-dot { width:5px; height:5px; border-radius:50%; }
+    .structure-dot.fire { background:var(--fire-bright); }
+    .structure-dot.ember { background:var(--ember); }
+    .structure-dot.gold { background:var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top:1px solid var(--border-fire); padding:0.6rem 1.5rem;
+      display:flex; justify-content:space-between; align-items:center;
+      font-family:'Share Tech Mono',monospace; font-size:0.42rem; color:var(--ash-dim); letter-spacing:0.1em;
+    }
     .webcam-corner {
-      position: fixed; bottom: 80px; right: 2rem;
-      width: 120px; height: 80px; border: 1px solid rgba(201,168,76,0.2);
-      z-index: 20; background: var(--surface);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.4rem; color: var(--text-dim);
-      letter-spacing: 0.1em;
+      position:fixed; bottom:50px; right:1.5rem; width:100px; height:65px;
+      border:1px solid var(--border-fire); z-index:20; background:var(--void-surface);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Share Tech Mono',monospace; font-size:0.4rem; color:var(--ash-dim);
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
-      .spread-container { gap: 1rem; }
-      .card-slot { width: 140px; }
-      .card-front .name { font-size: 0.6rem; }
-      .card-front .meaning { font-size: 0.45rem; }
+    @media(max-width:750px){
+      .spread-container { gap:1rem; }
+      .card-slot { width:140px; }
+      .card-front .name { font-size:0.6rem; }
+      .card-front .meaning { font-size:0.45rem; }
+      .countdown-display { font-size:2rem; }
+      .gallery-strip { grid-template-columns:repeat(5, 1fr); }
+    }
+    @media(max-width:450px){
+      .card-slot { width:100px; }
+      .gallery-strip { grid-template-columns:repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
 
-<!-- BACKGROUND CAROUSEL -->
+<!-- BG CAROUSEL -->
 <div class="bg-carousel" id="bgCarousel"></div>
-<div class="overlay"></div>
+<div class="bg-overlay"></div>
 
-<!-- HEADER -->
-<div class="show-header">
-  <div>
-    <div class="show-title">Digital Divination</div>
-    <div class="show-sub">Live Oracle · Fire Deck · @ealdforn</div>
-  </div>
-  <div class="live-badge"><span class="live-dot"></span>LIVE</div>
-</div>
+<div class="shell">
 
-<!-- STAGE -->
-<div class="stage">
+  <!-- HEADER -->
+  <header>
+    <div>
+      <div class="show-title">Ealdforn · Episode V</div>
+      <div class="show-sub">Digital Divination Live · Fire Deck · @ealdforn</div>
+    </div>
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+  </header>
 
-  <!-- CARD SPREAD -->
-  <div class="spread-container" id="spreadContainer">
-    <div class="card-slot" id="slotPast">
-      <div class="card-inner" id="cardPast">
-        <div class="card-face card-back">
-          <div class="card-back-sigil">🜏</div>
+  <!-- HERO: AUTO-DRAWING SPREAD -->
+  <div class="hero-spread">
+    <div class="spread-container" id="spreadContainer">
+      <div class="card-slot">
+        <div class="card-inner" id="cardPast">
+          <div class="card-face card-back"><div class="card-back-sigil">🜏</div></div>
+          <div class="card-face card-front" id="frontPast"></div>
         </div>
-        <div class="card-face card-front" id="frontPast"></div>
+      </div>
+      <div class="card-slot">
+        <div class="card-inner" id="cardPresent">
+          <div class="card-face card-back"><div class="card-back-sigil">🜏</div></div>
+          <div class="card-face card-front" id="frontPresent"></div>
+        </div>
+      </div>
+      <div class="card-slot">
+        <div class="card-inner" id="cardFuture">
+          <div class="card-face card-back"><div class="card-back-sigil">🜏</div></div>
+          <div class="card-face card-front" id="frontFuture"></div>
+        </div>
       </div>
     </div>
-    <div class="card-slot" id="slotPresent">
-      <div class="card-inner" id="cardPresent">
-        <div class="card-face card-back">
-          <div class="card-back-sigil">🜏</div>
-        </div>
-        <div class="card-face card-front" id="frontPresent"></div>
-      </div>
+
+    <div class="reading-bar" id="readingBar">
+      <div class="reading-synthesis" id="readingSynthesis"></div>
+      <div class="reading-cards" id="readingCards"></div>
     </div>
-    <div class="card-slot" id="slotFuture">
-      <div class="card-inner" id="cardFuture">
-        <div class="card-face card-back">
-          <div class="card-back-sigil">🜏</div>
-        </div>
-        <div class="card-face card-front" id="frontFuture"></div>
+
+    <div class="countdown-block">
+      <div class="countdown-display">
+        <span id="cdHrs">00</span><span class="sep">:</span><span id="cdMins">00</span><span class="sep">:</span><span class="secs" id="cdSecs">00</span>
       </div>
+      <div class="countdown-label">Until NightCafe Reset</div>
+      <div class="next-draw">Next draw: <span id="nextDrawTimer">60</span>s</div>
     </div>
   </div>
 
-  <!-- READING -->
-  <div class="reading-bar" id="readingBar">
-    <div class="reading-synthesis" id="readingSynthesis"></div>
-    <div class="reading-cards" id="readingCards"></div>
+  <!-- NARRATION -->
+  <div class="narration-bar">
+    <div class="narration-tag">⟡ Kitten</div>
+    <div class="narration-text" id="narrationText">
+      The fire holds. Tonight the forge burns in ember and ash — the colors of creation and destruction. The Fire deck speaks. We begin.
+    </div>
   </div>
 
-</div>
+  <!-- GALLERY STRIP -->
+  <div class="gallery-strip" id="galleryStrip"></div>
 
-<!-- BOTTOM BAR -->
-<div class="bottom-bar">
-  <div class="countdown">Reset: <span id="countdownDisplay">--:--:--</span></div>
-  <div class="suit-badge">🔥 FIRE DECK</div>
-  <div class="next-draw">Next draw: <span id="nextDrawTimer">60</span>s</div>
+  <!-- SHOW STRUCTURE -->
+  <div class="structure-bar">
+    <div class="structure-step"><span class="structure-dot fire"></span> Fire Deck Promo</div>
+    <span style="color:var(--ash-dim)">→</span>
+    <div class="structure-step"><span class="structure-dot ember"></span> Water Deck Prompts</div>
+    <span style="color:var(--ash-dim)">→</span>
+    <div class="structure-step"><span class="structure-dot gold"></span> Live Generation</div>
+    <span style="color:var(--ash-dim)">→</span>
+    <div class="structure-step"><span class="structure-dot fire"></span> Upload & Wire</div>
+    <span style="color:var(--ash-dim)">→</span>
+    <div class="structure-step"><span class="structure-dot ember"></span> First Water Draw</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>kairos-coder.github.io/divination · live.html</span>
+    <span>The Fire suit speaks with a single voice.</span>
+  </footer>
+
 </div>
 
 <!-- WEBCAM CORNER -->
@@ -258,226 +298,145 @@
 
 <script>
   // ═══════════════════════════════════════════
-  // DIGITAL DIVINATION · LIVE ORACLE DASHBOARD
+  // EALDFORN #5 · DIGITAL DIVINATION LIVE
+  // Fire Deck Auto-Drawing Oracle
   // ═══════════════════════════════════════════
 
-  // ── BACKGROUND IMAGES ──────────────────────────────────────────────
+  // ── BACKGROUND CAROUSEL ──────────────────────────────────────────
   const BG_IMAGES = [
-    'data/images/minor/fire/fire_ace.png',
-    'data/images/minor/fire/fire_02.png',
-    'data/images/minor/fire/fire_03.png',
-    'data/images/minor/fire/fire_04.png',
-    'data/images/minor/fire/fire_05.png',
-    'data/images/minor/fire/fire_06.png',
-    'data/images/minor/fire/fire_07.png',
-    'data/images/minor/fire/fire_08.png',
-    'data/images/minor/fire/fire_09.png',
-    'data/images/minor/fire/fire_10.png',
-    'data/images/minor/fire/fire_page.png',
-    'data/images/minor/fire/fire_knight.png',
-    'data/images/minor/fire/fire_queen.png',
-    'data/images/minor/fire/fire_king.png',
-    'data/images/dionysus-card.jpg',
-    'data/images/zeus-card.jpg',
-    'data/images/athena-card.jpg',
-    'data/images/aphrodite-card.jpg',
-    'data/images/ares-card.jpg',
-    'data/images/hades-card.jpg',
-    'data/images/persephone-card.jpg',
-    'data/images/thanatos-card.jpg',
+    'data/images/minor/fire/fire_ace.png','data/images/minor/fire/fire_02.png',
+    'data/images/minor/fire/fire_03.png','data/images/minor/fire/fire_04.png',
+    'data/images/minor/fire/fire_05.png','data/images/minor/fire/fire_06.png',
+    'data/images/minor/fire/fire_07.png','data/images/minor/fire/fire_08.png',
+    'data/images/minor/fire/fire_09.png','data/images/minor/fire/fire_10.png',
+    'data/images/minor/fire/fire_page.png','data/images/minor/fire/fire_knight.png',
+    'data/images/minor/fire/fire_queen.png','data/images/minor/fire/fire_king.png',
+    'data/images/dionysus-card.jpg','data/images/zeus-card.jpg',
+    'data/images/athena-card.jpg','data/images/aphrodite-card.jpg',
+    'data/images/ares-card.jpg','data/images/hades-card.jpg',
+    'data/images/persephone-card.jpg','data/images/thanatos-card.jpg',
+    'data/images/hephaestus-card.jpg','data/images/poseidon-card.jpg',
+  ];
+  let bgIdx=0;
+  function buildCarousel(){
+    const c=document.getElementById('bgCarousel');
+    BG_IMAGES.forEach((s,i)=>{const d=document.createElement('div');d.className='bg-image'+(i===0?' active':'');d.style.backgroundImage=`url(${s})`;c.appendChild(d);});
+  }
+  function rotateBg(){
+    const imgs=document.querySelectorAll('.bg-image');if(!imgs.length)return;
+    imgs[bgIdx].classList.remove('active');bgIdx=(bgIdx+1)%imgs.length;imgs[bgIdx].classList.add('active');
+  }
+
+  // ── FIRE DECK ────────────────────────────────────────────────────
+  const FIRE_DECK=[
+    {id:'fire_ace',name:'Ace of Fire',title:'Maui',meaning:'Maui stole fire from the underworld. The divine spark — the idea that costs everything to bring down. Create. But know the price.',image:'data/images/minor/fire/fire_ace.png',element:'Fire'},
+    {id:'fire_02',name:'Two of Fire',title:'Castor & Pollux',meaning:'Two flames burn as one — one mortal, one divine. The partnership that transcends difference. One of you will carry the other.',image:'data/images/minor/fire/fire_02.png',element:'Fire'},
+    {id:'fire_03',name:'Three of Fire',title:'Peitho',meaning:'The room leans in. Peitho, goddess of persuasion, speaks and the world bends toward her words. The pitch. Speak. They are listening.',image:'data/images/minor/fire/fire_03.png',element:'Fire'},
+    {id:'fire_04',name:'Four of Fire',title:'Icarus',meaning:'The wax melts. Icarus plummets. The burnout — when ambition exceeds capacity. The fall is not failure. It is proof you flew.',image:'data/images/minor/fire/fire_04.png',element:'Fire'},
+    {id:'fire_05',name:'Five of Fire',title:'Loki',meaning:'Loki spoke back to the gods, exposing every secret. The ugliest truth-teller in Asgard — and sometimes the only honest one.',image:'data/images/minor/fire/fire_05.png',element:'Fire'},
+    {id:'fire_06',name:'Six of Fire',title:'The Algorithm',meaning:'The Algorithm amplifies your name until it belongs to everyone but you. The viral moment. Ride it. The Algorithm has no loyalty.',image:'data/images/minor/fire/fire_06.png',element:'Fire'},
+    {id:'fire_07',name:'Seven of Fire',title:'Talos',meaning:'Talos patrols the shores — a bronze giant, unstoppable, doing what it was built to do. The system that shapes you without consent. Learn the code.',image:'data/images/minor/fire/fire_07.png',element:'Fire'},
+    {id:'fire_08',name:'Eight of Fire',title:'Huitzilopochtli',meaning:'The hummingbird warrior demanded constant sacrifice to keep the sun moving. The ceaseless grind. The push IS the purpose.',image:'data/images/minor/fire/fire_08.png',element:'Fire'},
+    {id:'fire_09',name:'Nine of Fire',title:'Cerberus',meaning:'Three heads. One gate. Cerberus guards the entrance — nothing passes without consent. Prove yourself worthy of passage.',image:'data/images/minor/fire/fire_09.png',element:'Fire'},
+    {id:'fire_10',name:'Ten of Fire',title:'Surtr',meaning:'Surtr rides out of Muspelheim, his sword brighter than the sun, and burns the world. The spectacular exit. Not all endings are graceful.',image:'data/images/minor/fire/fire_10.png',element:'Fire'},
+    {id:'fire_page',name:'Page of Fire',title:'Agni',meaning:'Agni carries offerings from mortals to the gods. The youngest flame. You are new here. That is your power.',image:'data/images/minor/fire/fire_page.png',element:'Fire'},
+    {id:'fire_knight',name:'Knight of Fire',title:'Achilles',meaning:'Achilles charges and the Trojans break. Conviction as armor. Charge. But know your heel.',image:'data/images/minor/fire/fire_knight.png',element:'Fire'},
+    {id:'fire_queen',name:'Queen of Fire',title:'Oya',meaning:'Oya, orisha of fire and wind, leads warriors into battle. The sovereign who does not ask permission. Take your seat.',image:'data/images/minor/fire/fire_queen.png',element:'Fire'},
+    {id:'fire_king',name:'King of Fire',title:'The Founder',meaning:'The Founder built the system and now rules from within it. The platform is yours. Can you hold it without becoming the monster at the center?',image:'data/images/minor/fire/fire_king.png',element:'Fire'},
   ];
 
-  let bgIndex = 0;
-  function buildCarousel() {
-    const container = document.getElementById('bgCarousel');
-    BG_IMAGES.forEach((src, i) => {
-      const div = document.createElement('div');
-      div.className = 'bg-image' + (i === 0 ? ' active' : '');
-      div.style.backgroundImage = `url(${src})`;
-      container.appendChild(div);
-    });
+  // ── GALLERY ──────────────────────────────────────────────────────
+  function buildGallery(){
+    document.getElementById('galleryStrip').innerHTML=FIRE_DECK.map(c=>`
+      <div class="gallery-item"><img src="${c.image}" alt="${c.name}" loading="lazy" onerror="this.parentElement.style.display='none'" /><div class="label">${c.title}</div></div>`).join('');
   }
 
-  function rotateBackground() {
-    const images = document.querySelectorAll('.bg-image');
-    if (images.length === 0) return;
-    images[bgIndex].classList.remove('active');
-    bgIndex = (bgIndex + 1) % images.length;
-    images[bgIndex].classList.add('active');
+  // ── DRAW ─────────────────────────────────────────────────────────
+  function drawFireSpread(){
+    const p=[...FIRE_DECK],d=[];
+    for(let i=0;i<3;i++){const idx=Math.floor(Math.random()*p.length);d.push({...p.splice(idx,1)[0],position:i===0?'past':i===1?'present':'future',isReversed:Math.random()<0.3});}
+    return {past:d[0],present:d[1],future:d[2]};
   }
 
-  // ── FIRE DECK ──────────────────────────────────────────────────────
-  const FIRE_DECK = [
-    { id:'fire_ace', name:'Ace of Fire', title:'Maui', meaning:'Maui stole fire from the underworld. The divine spark — the idea that costs everything to bring down. Create. But know the price.', image:'data/images/minor/fire/fire_ace.png', element:'Fire' },
-    { id:'fire_02', name:'Two of Fire', title:'Castor & Pollux', meaning:'Two flames burn as one — one mortal, one divine. The partnership that transcends difference. One of you will carry the other.', image:'data/images/minor/fire/fire_02.png', element:'Fire' },
-    { id:'fire_03', name:'Three of Fire', title:'Peitho', meaning:'The room leans in. Peitho, goddess of persuasion, speaks and the world bends toward her words. The pitch. Speak. They are listening.', image:'data/images/minor/fire/fire_03.png', element:'Fire' },
-    { id:'fire_04', name:'Four of Fire', title:'Icarus', meaning:'The wax melts. Icarus plummets. The burnout — when ambition exceeds capacity. The fall is not failure. It is proof you flew.', image:'data/images/minor/fire/fire_04.png', element:'Fire' },
-    { id:'fire_05', name:'Five of Fire', title:'Loki', meaning:'Loki spoke back to the gods, exposing every secret. The ugliest truth-teller in Asgard — and sometimes the only honest one. Who is criticizing you, and why?', image:'data/images/minor/fire/fire_05.png', element:'Fire' },
-    { id:'fire_06', name:'Six of Fire', title:'The Algorithm', meaning:'The Algorithm amplifies your name until it belongs to everyone but you. The viral moment. Ride it. Don\'t believe it. The Algorithm has no loyalty.', image:'data/images/minor/fire/fire_06.png', element:'Fire' },
-    { id:'fire_07', name:'Seven of Fire', title:'Talos', meaning:'Talos patrols the shores — a bronze giant, unstoppable, doing what it was built to do. The system that shapes you without consent. Learn the code.', image:'data/images/minor/fire/fire_07.png', element:'Fire' },
-    { id:'fire_08', name:'Eight of Fire', title:'Huitzilopochtli', meaning:'The hummingbird warrior demanded constant sacrifice to keep the sun moving. The ceaseless grind. The push IS the purpose. But ask: who is being sacrificed?', image:'data/images/minor/fire/fire_08.png', element:'Fire' },
-    { id:'fire_09', name:'Nine of Fire', title:'Cerberus', meaning:'Three heads. One gate. Cerberus guards the entrance — nothing passes without consent. The gatekeeper. Prove yourself worthy of passage.', image:'data/images/minor/fire/fire_09.png', element:'Fire' },
-    { id:'fire_10', name:'Ten of Fire', title:'Surtr', meaning:'Surtr rides out of Muspelheim, his sword brighter than the sun, and burns the world. The spectacular exit. Not all endings are graceful. Some are mythic.', image:'data/images/minor/fire/fire_10.png', element:'Fire' },
-    { id:'fire_page', name:'Page of Fire', title:'Agni', meaning:'Agni, the fire god, carries offerings from mortals to the gods. The youngest flame. The beginner who bridges realms. You are new here. That is your power.', image:'data/images/minor/fire/fire_page.png', element:'Fire' },
-    { id:'fire_knight', name:'Knight of Fire', title:'Achilles', meaning:'Achilles charges and the Trojans break. Conviction as armor — the warrior who cannot be stopped. Charge. But know your heel.', image:'data/images/minor/fire/fire_knight.png', element:'Fire' },
-    { id:'fire_queen', name:'Queen of Fire', title:'Oya', meaning:'Oya, orisha of fire and wind, leads warriors into battle. The sovereign who does not ask permission. She commands the storm. Take your seat.', image:'data/images/minor/fire/fire_queen.png', element:'Fire' },
-    { id:'fire_king', name:'King of Fire', title:'The Founder', meaning:'The Founder built the system and now rules from within it. The spark that scaled. The platform is yours. Can you hold it without becoming the monster at the center?', image:'data/images/minor/fire/fire_king.png', element:'Fire' },
-  ];
-
-  // ── DRAW ───────────────────────────────────────────────────────────
-  function drawFireSpread() {
-    const pool = [...FIRE_DECK];
-    const drawn = [];
-    for (let i = 0; i < 3; i++) {
-      const idx = Math.floor(Math.random() * pool.length);
-      drawn.push({ ...pool.splice(idx, 1)[0], position: i === 0 ? 'past' : i === 1 ? 'present' : 'future', isReversed: Math.random() < 0.3 });
-    }
-    return { past: drawn[0], present: drawn[1], future: drawn[2] };
+  const POS={past:'Past',present:'Present',future:'Future'};
+  function renderCard(card,frontId,cardId){
+    const f=document.getElementById(frontId);
+    f.innerHTML=`<img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'" /><div class="info"><div class="pos">${POS[card.position]}${card.isReversed?' ⥮ Reversed':''}</div><div class="name">${card.name}</div><div class="meaning">${card.title} — ${card.meaning.substring(0,70)}...</div></div>`;
+    const inner=document.getElementById(cardId);inner.classList.remove('flipped');void inner.offsetWidth;return inner;
   }
 
-  // ── RENDER CARDS ───────────────────────────────────────────────────
-  const POSITIONS = { past: 'Past', present: 'Present', future: 'Future' };
-
-  function renderCard(card, slotId, frontId, cardId) {
-    const front = document.getElementById(frontId);
-    const reversed = card.isReversed ? ' ⥮ Reversed' : '';
-    front.innerHTML = `
-      <img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'" />
-      <div class="info">
-        <div class="pos">${POSITIONS[card.position]}${reversed}</div>
-        <div class="name">${card.name}</div>
-        <div class="meaning">${card.title} — ${card.meaning.substring(0, 80)}...</div>
-      </div>`;
-    
-    const inner = document.getElementById(cardId);
-    inner.classList.remove('flipped');
-    void inner.offsetWidth;
-    return inner;
-  }
-
-  function revealCards(draw) {
-    const past = renderCard(draw.past, 'slotPast', 'frontPast', 'cardPast');
-    const present = renderCard(draw.present, 'slotPresent', 'frontPresent', 'cardPresent');
-    const future = renderCard(draw.future, 'slotFuture', 'frontFuture', 'cardFuture');
-
-    setTimeout(() => past.classList.add('flipped'), 100);
-    setTimeout(() => present.classList.add('flipped'), 500);
-    setTimeout(() => future.classList.add('flipped'), 900);
-
-    // Show reading
-    setTimeout(() => {
-      const synthesis = buildSynthesis(draw);
-      document.getElementById('readingSynthesis').textContent = synthesis;
-      document.getElementById('readingCards').textContent = 
-        `${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
+  function revealCards(draw){
+    const past=renderCard(draw.past,'frontPast','cardPast');
+    const present=renderCard(draw.present,'frontPresent','cardPresent');
+    const future=renderCard(draw.future,'frontFuture','cardFuture');
+    setTimeout(()=>past.classList.add('flipped'),100);
+    setTimeout(()=>present.classList.add('flipped'),500);
+    setTimeout(()=>future.classList.add('flipped'),900);
+    setTimeout(()=>{
+      const syn=buildSynthesis(draw);
+      document.getElementById('readingSynthesis').textContent=syn;
+      document.getElementById('readingCards').textContent=`${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
       document.getElementById('readingBar').classList.add('visible');
-      
-      // Send to Kitten narration
-      sendToKitten(draw, synthesis);
-    }, 1400);
+      sendToKitten(draw,syn);
+    },1400);
   }
 
-  function buildSynthesis(draw) {
-    const names = `${draw.past.title}, ${draw.present.title}, ${draw.future.title}`;
-    const reversedCount = [draw.past, draw.present, draw.future].filter(c => c.isReversed).length;
-    let syn = 'The Fire suit speaks with a single voice. ';
-    if (reversedCount === 3) syn += 'All three cards reversed — resistance to something fundamental. ';
-    else if (reversedCount === 0) syn += 'The cards speak clearly. ';
-    else syn += 'Some resistance clouds the path. ';
-    syn += `${names} form a triptych. Past, present, future — not separate, but a single image split across time. Read them as one.`;
-    return syn;
+  function buildSynthesis(draw){
+    const names=`${draw.past.title}, ${draw.present.title}, ${draw.future.title}`;
+    const rc=[draw.past,draw.present,draw.future].filter(c=>c.isReversed).length;
+    let s='The Fire suit speaks with a single voice. ';
+    if(rc===3)s+='All three cards reversed — resistance to something fundamental. ';
+    else if(rc===0)s+='The cards speak clearly. ';
+    else s+='Some resistance clouds the path. ';
+    s+=`${names} form a triptych. Past, present, future — not separate, but a single image split across time. Read them as one.`;
+    return s;
   }
 
-  function clearCards() {
-    ['cardPast','cardPresent','cardFuture'].forEach(id => {
-      document.getElementById(id).classList.remove('flipped');
-    });
+  function clearCards(){
+    ['cardPast','cardPresent','cardFuture'].forEach(id=>document.getElementById(id).classList.remove('flipped'));
     document.getElementById('readingBar').classList.remove('visible');
-    setTimeout(() => {
-      ['frontPast','frontPresent','frontFuture'].forEach(id => {
-        document.getElementById(id).innerHTML = '';
-      });
-    }, 400);
+    setTimeout(()=>['frontPast','frontPresent','frontFuture'].forEach(id=>document.getElementById(id).innerHTML=''),400);
   }
 
-  // ── KITTEN INTEGRATION ─────────────────────────────────────────────
-  function sendToKitten(draw, synthesis) {
-    const text = `Fire deck reading. Past: ${draw.past.title} — ${draw.past.name}. Present: ${draw.present.title} — ${draw.present.name}. Future: ${draw.future.title} — ${draw.future.name}. ${synthesis}`;
-    if (window.BroadcastChannel) {
-      try {
-        new BroadcastChannel('ealdforn_narration').postMessage({ text, source: 'Divination Live', timestamp: Date.now() });
-      } catch(e) {}
+  // ── KITTEN ───────────────────────────────────────────────────────
+  function sendToKitten(draw,synthesis){
+    const text=`Fire deck reading. Past: ${draw.past.title} — ${draw.past.name}. Present: ${draw.present.title} — ${draw.present.name}. Future: ${draw.future.title} — ${draw.future.name}. ${synthesis}`;
+    try{new BroadcastChannel('ealdforn_narration').postMessage({text,source:'Divination Live',timestamp:Date.now()});}catch(e){}
+    // Also update on-screen narration bar occasionally
+    if(Math.random()<0.3){
+      const el=document.getElementById('narrationText');
+      el.style.opacity='0';
+      setTimeout(()=>{el.textContent=`${draw.past.title} — ${draw.past.name}. ${draw.present.title} — ${draw.present.name}. ${draw.future.title} — ${draw.future.name}. ${synthesis.substring(0,100)}...`;el.style.opacity='1';},400);
     }
   }
 
-  // ── AUTO-DRAW CYCLE ────────────────────────────────────────────────
-  let drawTimer = 60;
-  let cycleInterval;
-  let countdownInterval;
+  // ── AUTO-DRAW CYCLE ──────────────────────────────────────────────
+  let drawTimer=60,cycleInterval,countdownInterval;
+  function startAutoDraw(){
+    revealCards(drawFireSpread());drawTimer=60;updateTimer();
+    cycleInterval=setInterval(()=>{clearCards();setTimeout(()=>{revealCards(drawFireSpread());drawTimer=60;updateTimer();},500);},60000);
+    countdownInterval=setInterval(()=>{drawTimer--;updateTimer();},1000);
+  }
+  function updateTimer(){document.getElementById('nextDrawTimer').textContent=drawTimer;}
 
-  function startAutoDraw() {
-    // Draw immediately
-    const draw = drawFireSpread();
-    revealCards(draw);
-    drawTimer = 60;
-    updateTimerDisplay();
-
-    // Cycle every 60 seconds
-    cycleInterval = setInterval(() => {
-      clearCards();
-      setTimeout(() => {
-        const newDraw = drawFireSpread();
-        revealCards(newDraw);
-        drawTimer = 60;
-        updateTimerDisplay();
-      }, 500);
-    }, 60000);
-
-    // Countdown ticker
-    countdownInterval = setInterval(() => {
-      drawTimer--;
-      updateTimerDisplay();
-    }, 1000);
+  // ── COUNTDOWN ────────────────────────────────────────────────────
+  function getNextReset(){const n=new Date(),r=new Date();r.setHours(20,0,0,0);if(n>=r)r.setDate(r.getDate()+1);return r.getTime();}
+  function updateCountdown(){
+    const diff=getNextReset()-Date.now();
+    if(diff<=0){document.getElementById('cdHrs').textContent='00';document.getElementById('cdMins').textContent='00';document.getElementById('cdSecs').textContent='00';return;}
+    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+    document.getElementById('cdHrs').textContent=String(h).padStart(2,'0');
+    document.getElementById('cdMins').textContent=String(m).padStart(2,'0');
+    document.getElementById('cdSecs').textContent=String(s).padStart(2,'0');
   }
 
-  function updateTimerDisplay() {
-    document.getElementById('nextDrawTimer').textContent = drawTimer;
-  }
-
-  // ── COUNTDOWN TO RESET ─────────────────────────────────────────────
-  function getNextReset() {
-    const now = new Date();
-    const reset = new Date();
-    reset.setHours(20, 0, 0, 0);
-    if (now >= reset) reset.setDate(reset.getDate() + 1);
-    return reset.getTime();
-  }
-
-  function updateCountdown() {
-    const diff = getNextReset() - Date.now();
-    if (diff <= 0) {
-      document.getElementById('countdownDisplay').textContent = 'RESET';
-      return;
-    }
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('countdownDisplay').textContent = 
-      `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  }
-
-  // ── BOOT ───────────────────────────────────────────────────────────
-  buildCarousel();
-  setInterval(rotateBackground, 8000); // Rotate background every 8s
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  // ── BOOT ─────────────────────────────────────────────────────────
+  buildCarousel();setInterval(rotateBg,8000);
+  buildGallery();
+  updateCountdown();setInterval(updateCountdown,1000);
   startAutoDraw();
-
-  console.log('🜏 Digital Divination · Live Oracle Dashboard ready.');
-  console.log('   Auto-draw: Every 60 seconds');
-  console.log('   Background: 22 images rotating every 8s');
-  console.log('   Deck: Fire suit (14 cards)');
-  console.log('   Kitten: BroadcastChannel → narration.html');
+  console.log('🔥 Ealdforn #5 · Digital Divination Live ready.');
+  console.log('   Auto-draw: Every 60s · Background: 24 images · Deck: Fire (14 cards)');
 </script>
 </body>
 </html>
