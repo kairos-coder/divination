@@ -50,7 +50,6 @@ body::before {
   z-index: 0;
 }
 
-/* ── NAV ── */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -84,7 +83,6 @@ nav {
 
 .nav-back:hover { color: var(--gold); }
 
-/* ── TABLE ── */
 .table-container {
   padding: 100px 24px 40px;
   max-width: 1100px;
@@ -95,7 +93,7 @@ nav {
 
 .table-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .table-header h1 {
@@ -111,10 +109,9 @@ nav {
   font-size: 16px;
 }
 
-/* ── QUESTION INPUT ── */
 .question-area {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .question-input {
@@ -142,7 +139,6 @@ nav {
   opacity: 0.5;
 }
 
-/* ── CARD SPREAD ── */
 .spread {
   display: flex;
   gap: 24px;
@@ -181,7 +177,6 @@ nav {
   border: 1px solid var(--border);
 }
 
-/* ── CARD BACK ── */
 .card-back {
   background: var(--surface2);
   display: flex;
@@ -210,7 +205,6 @@ nav {
   opacity: 0.5;
 }
 
-/* ── CARD FRONT ── */
 .card-front {
   background: var(--surface);
   transform: rotateY(180deg);
@@ -268,7 +262,6 @@ nav {
   line-height: 1.4;
 }
 
-/* ── READING ── */
 .reading-area {
   max-width: 700px;
   margin: 0 auto 60px;
@@ -330,7 +323,6 @@ nav {
   text-align: center;
 }
 
-/* ── BUTTONS ── */
 .button-row {
   text-align: center;
   margin-bottom: 40px;
@@ -382,13 +374,11 @@ nav {
   color: var(--gold);
 }
 
-/* ── ELEMENT COLORS ── */
 .element-fire { color: var(--fire); }
 .element-earth { color: var(--earth); }
 .element-water { color: var(--water); }
 .element-air { color: var(--air); }
 
-/* ── PLACEHOLDER IMAGE ── */
 .img-placeholder {
   width: 100%;
   height: 60%;
@@ -406,23 +396,24 @@ nav {
   text-align: center;
   margin-bottom: 24px;
   display: flex;
-  gap: 16px;
+  gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .deck-option {
   font-family: 'Cinzel', serif;
-  font-size: 9px;
+  font-size: 8px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 8px 20px;
+  padding: 8px 16px;
   border-radius: 20px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-dim);
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .deck-option:hover {
@@ -436,7 +427,17 @@ nav {
   background: rgba(201,168,76,0.08);
 }
 
-/* ── RESPONSIVE ── */
+.deck-option.suit-fire.active { border-color: var(--fire); color: var(--fire); background: rgba(201,74,42,0.08); }
+.deck-option.suit-water.active { border-color: var(--water); color: var(--water); background: rgba(58,106,154,0.08); }
+.deck-option.suit-earth.active { border-color: var(--earth); color: var(--earth); background: rgba(106,138,58,0.08); }
+.deck-option.suit-air.active { border-color: var(--air); color: var(--air); background: rgba(138,138,154,0.08); }
+
+.deck-divider {
+  width: 1px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
 @media (max-width: 720px) {
   .spread {
     flex-direction: column;
@@ -444,6 +445,9 @@ nav {
   }
   .card-slot {
     max-width: 220px;
+  }
+  .deck-divider {
+    display: none;
   }
 }
 </style>
@@ -464,6 +468,12 @@ nav {
 
   <div class="deck-selector">
     <button class="deck-option active" data-deck="major" onclick="Divine.setDeck('major')">Major Arcana</button>
+    <span class="deck-divider"></span>
+    <button class="deck-option suit-fire" data-deck="fire" onclick="Divine.setDeck('fire')">🔥 Fire</button>
+    <button class="deck-option suit-water" data-deck="water" onclick="Divine.setDeck('water')">🌊 Water</button>
+    <button class="deck-option suit-earth" data-deck="earth" onclick="Divine.setDeck('earth')">🜃 Earth</button>
+    <button class="deck-option suit-air" data-deck="air" onclick="Divine.setDeck('air')">💨 Air</button>
+    <span class="deck-divider"></span>
     <button class="deck-option" data-deck="full" onclick="Divine.setDeck('full')">Full Deck (78)</button>
   </div>
 
