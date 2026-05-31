@@ -3,245 +3,895 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ealdforn #5 · Digital Divination Live</title>
+  <title>Ealdforn #5 · Fire → Water · Digital Divination Live</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --void: #080402;
-      --void-surface: #100a06;
-      --void-raised: #1a0e08;
-      --fire: #c94a2a;
+      --fire-void: #060300;
+      --fire-surface: #0e0804;
+      --fire-raised: #1a0e06;
+      --fire-primary: #c94a2a;
       --fire-bright: #e8602a;
-      --fire-dim: #5a1a0a;
+      --fire-glow: rgba(232,96,42,0.18);
       --ember: #e8a840;
-      --ember-dim: #6b3a10;
+      --gold: #e8c96a;
       --ash: #8a7a6a;
-      --ash-dim: #3a3028;
+
+      --water-deep: #040d18;
+      --water-surface: #0a1824;
+      --water-raised: #152435;
+      --water-primary: #2a8acc;
+      --water-bright: #5ab8ff;
+      --water-foam: #c0e0ff;
+      --water-glow: rgba(90,184,255,0.15);
+      --teal: #40c8c0;
+      --teal-glow: rgba(64,200,192,0.2);
+
+      --divider: #2a1a0a;
       --text: #f0e0d0;
       --text-dim: #7a6a58;
-      --border-fire: rgba(201,74,42,0.2);
-      --border-ember: rgba(232,168,64,0.15);
-      --gold: #e8c96a;
-      --gold-dim: #6b4a10;
+      --mono: 'Share Tech Mono', monospace;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: var(--void); color: var(--text);
+
+    html, body {
+      height: 100%;
+      background: var(--fire-void);
+      color: var(--text);
       font-family: 'Cormorant Garamond', serif;
-      min-height: 100vh; overflow-x: hidden;
-    }
-    body::before {
-      content:''; position:fixed; inset:0;
-      background: radial-gradient(ellipse 60% 50% at 50% 20%, rgba(201,74,42,0.08) 0%, transparent 70%),
-                  radial-gradient(ellipse 50% 40% at 50% 80%, rgba(232,168,64,0.05) 0%, transparent 70%);
-      pointer-events:none; z-index:0;
-    }
-    body::after {
-      content:''; position:fixed; inset:0;
-      background-image: linear-gradient(rgba(201,74,42,0.02) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(232,168,64,0.02) 1px, transparent 1px);
-      background-size: 48px 48px; pointer-events:none; z-index:0;
+      overflow-x: hidden;
     }
 
-    /* ── BG CAROUSEL ── */
-    .bg-carousel { position:fixed; inset:0; z-index:0; }
-    .bg-image {
-      position:absolute; inset:0; background-size:cover; background-position:center;
-      opacity:0; transition:opacity 2s ease; filter:brightness(0.15) saturate(0.5);
-    }
-    .bg-image.active { opacity:1; }
-    .bg-overlay {
-      position:fixed; inset:0;
-      background: radial-gradient(ellipse 60% 40% at 50% 40%, transparent 0%, rgba(8,4,2,0.85) 100%);
-      z-index:1; pointer-events:none;
+    /* ── BROADCAST BAR ─────────────────────────────────────────── */
+    .broadcast-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      background: linear-gradient(90deg, #080402 0%, #0a1824 100%);
+      border-bottom: 1px solid rgba(232,96,42,0.25);
+      gap: 1rem;
     }
 
-    .shell { position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; }
+    .broadcast-bar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--fire-glow) 0%, transparent 40%, transparent 60%, var(--water-glow) 100%);
+      pointer-events: none;
+    }
 
-    /* ── HEADER ── */
-    header {
-      padding:1rem 1.5rem; display:flex; align-items:baseline; justify-content:space-between;
-      border-bottom:1px solid var(--border-fire); background:rgba(8,4,2,0.9);
-      position:sticky; top:0; z-index:50;
-    }
-    .show-title {
-      font-family:'Cinzel Decorative',serif; font-weight:900; font-size:1rem;
-      letter-spacing:0.2em; color:var(--fire-bright); text-transform:uppercase;
-    }
-    .show-sub {
-      font-family:'Share Tech Mono',monospace; font-size:0.45rem; color:var(--ash);
-      letter-spacing:0.15em; text-transform:uppercase;
-    }
     .live-badge {
-      font-family:'Share Tech Mono',monospace; font-size:0.5rem; color:var(--fire-bright);
-      border:1px solid var(--border-fire); padding:4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      color: var(--fire-bright);
+      flex-shrink: 0;
     }
-    .live-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--fire-bright); margin-right:5px; animation:blink 1.2s infinite; vertical-align:middle; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-    /* ── HERO: CARD SPREAD ── */
-    .hero-spread {
-      flex:1; display:flex; flex-direction:column; align-items:center;
-      justify-content:center; padding:1.5rem; position:relative; z-index:5;
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--fire-primary);
+      box-shadow: 0 0 6px var(--fire-primary);
+      animation: livepulse 1.4s ease-in-out infinite;
     }
-    .spread-container {
-      display:flex; gap:2rem; align-items:center; justify-content:center;
-      perspective:1200px; margin-bottom:1.5rem;
-    }
-    .card-slot { width:200px; aspect-ratio:2/3; position:relative; transform-style:preserve-3d; }
-    .card-inner {
-      width:100%; height:100%; position:relative; transform-style:preserve-3d;
-      transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);
-    }
-    .card-inner.flipped { transform:rotateY(180deg); }
-    .card-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:12px; overflow:hidden; border:1px solid var(--border-ember); }
-    .card-back {
-      background:linear-gradient(135deg, #2a1a0a, #100a06, #2a1a0a);
-      display:flex; align-items:center; justify-content:center;
-    }
-    .card-back-sigil { font-size:3rem; opacity:0.5; filter:drop-shadow(0 0 20px rgba(232,168,64,0.3)); }
-    .card-front { background:var(--void-surface); transform:rotateY(180deg); display:flex; flex-direction:column; }
-    .card-front img { width:100%; height:55%; object-fit:cover; border-bottom:1px solid var(--border-ember); }
-    .card-front .info { flex:1; padding:0.6rem 0.8rem; display:flex; flex-direction:column; justify-content:center; }
-    .card-front .pos { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.2em; color:var(--ember); text-transform:uppercase; opacity:0.7; margin-bottom:0.2rem; }
-    .card-front .name { font-family:'Cinzel Decorative',serif; font-size:0.75rem; color:var(--gold); line-height:1.2; }
-    .card-front .meaning { font-size:0.55rem; font-style:italic; color:var(--ash); margin-top:0.3rem; line-height:1.4; }
 
-    /* ── READING ── */
-    .reading-bar { text-align:center; max-width:700px; opacity:0; transition:opacity 0.6s ease; margin-bottom:1rem; }
-    .reading-bar.visible { opacity:1; }
-    .reading-synthesis { font-size:1rem; font-style:italic; color:var(--text); line-height:1.6; margin-bottom:0.3rem; }
-    .reading-cards { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.15em; color:var(--ember); text-transform:uppercase; }
-
-    /* ── COUNTDOWN ── */
-    .countdown-block { text-align:center; margin-bottom:1rem; }
-    .countdown-display {
-      font-family:'Cinzel',serif; font-size:3rem; font-weight:900;
-      letter-spacing:0.05em; line-height:1; color:var(--ember);
+    @keyframes livepulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
     }
-    .countdown-display .sep { color:var(--ash-dim); margin:0 0.05em; }
-    .countdown-display .secs { font-size:1.8rem; color:var(--ash); vertical-align:middle; }
+
+    .bar-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      background: linear-gradient(90deg, var(--ember), var(--water-bright));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      flex: 1;
+    }
+
+    .countdown-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
     .countdown-label {
-      font-family:'Share Tech Mono',monospace; font-size:0.5rem; letter-spacing:0.3em;
-      color:var(--ash); text-transform:uppercase; margin-top:0.5rem;
-    }
-    .next-draw {
-      font-family:'Share Tech Mono',monospace; font-size:0.5rem; color:var(--ash-dim);
-      letter-spacing:0.1em; margin-top:0.3rem;
-    }
-    .next-draw span { color:var(--fire-bright); }
-
-    /* ── NARRATION BAR ── */
-    .narration-bar {
-      background:var(--void-raised); border:1px solid var(--border-fire);
-      border-left:3px solid var(--fire-bright); padding:0.6rem 1.5rem;
-      display:flex; align-items:center; gap:1rem; margin:0 1.5rem;
-    }
-    .narration-tag {
-      font-family:'Share Tech Mono',monospace; font-size:0.45rem;
-      color:var(--fire-bright); letter-spacing:0.2em; text-transform:uppercase; white-space:nowrap;
-    }
-    .narration-text {
-      font-family:'Cormorant Garamond',serif; font-size:0.9rem; font-style:italic;
-      color:var(--text); line-height:1.4; flex:1;
+      font-family: var(--mono);
+      font-size: 0.38rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
     }
 
-    /* ── GALLERY STRIP ── */
+    .countdown-time {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--water-bright);
+      letter-spacing: 0.08em;
+      line-height: 1;
+      text-shadow: 0 0 12px var(--water-glow);
+      transition: color 0.5s;
+    }
+
+    .countdown-time.urgent {
+      color: var(--fire-bright);
+      text-shadow: 0 0 12px var(--fire-glow);
+      animation: urgentflicker 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes urgentflicker {
+      from { opacity: 1; }
+      to { opacity: 0.7; }
+    }
+
+    /* ── TTS PANEL ─────────────────────────────────────────────── */
+    .tts-panel {
+      background: linear-gradient(90deg, rgba(10,8,4,0.97) 0%, rgba(4,13,24,0.97) 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.5rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 90;
+    }
+
+    .tts-speaking-bar {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 0.35rem 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.42rem;
+      color: var(--teal);
+      position: relative;
+      overflow: hidden;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tts-speaking-bar::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--tts-progress, 0%);
+      background: linear-gradient(90deg, rgba(64,200,192,0.08), transparent);
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .tts-wave {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .tts-wave span {
+      display: block;
+      width: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+      animation: ttswave 0.6s ease-in-out infinite;
+      opacity: 0;
+    }
+
+    .tts-speaking .tts-wave span { opacity: 1; }
+    .tts-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
+    .tts-wave span:nth-child(2) { height: 10px; animation-delay: 0.1s; }
+    .tts-wave span:nth-child(3) { height: 7px; animation-delay: 0.2s; }
+    .tts-wave span:nth-child(4) { height: 12px; animation-delay: 0.15s; }
+    .tts-wave span:nth-child(5) { height: 8px; animation-delay: 0.05s; }
+
+    @keyframes ttswave {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1); }
+    }
+
+    #ttsCurrentText {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--teal);
+    }
+
+    /* Manual Injection */
+    .inject-area {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .inject-input {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(90,184,255,0.2);
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.42rem;
+      color: var(--water-foam);
+      width: 260px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .inject-input:focus {
+      border-color: var(--water-primary);
+      box-shadow: 0 0 8px rgba(42,138,204,0.2);
+    }
+
+    .inject-input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .tts-btn {
+      background: none;
+      border: 1px solid;
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 0.4rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      padding: 0.3rem 0.6rem;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .tts-btn-speak {
+      border-color: var(--water-primary);
+      color: var(--water-bright);
+    }
+    .tts-btn-speak:hover {
+      background: rgba(42,138,204,0.15);
+      box-shadow: 0 0 8px rgba(42,138,204,0.2);
+    }
+
+    .tts-btn-loop {
+      border-color: var(--ember);
+      color: var(--ember);
+    }
+    .tts-btn-loop.active {
+      background: rgba(232,168,64,0.15);
+      box-shadow: 0 0 8px rgba(232,168,64,0.3);
+    }
+    .tts-btn-loop:hover {
+      background: rgba(232,168,64,0.1);
+    }
+
+    .tts-btn-stop {
+      border-color: var(--fire-primary);
+      color: var(--fire-bright);
+    }
+    .tts-btn-stop:hover {
+      background: rgba(201,74,42,0.15);
+    }
+
+    .voice-select {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 0.38rem;
+      color: var(--text-dim);
+      padding: 0.3rem 0.4rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* ── SPLIT LAYOUT ──────────────────────────────────────────── */
+    .split-layout {
+      display: flex;
+      min-height: calc(100vh - 48px - 48px);
+      position: relative;
+    }
+
+    /* Diagonal divider glow */
+    .split-layout::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(180deg,
+        transparent 0%,
+        var(--fire-primary) 20%,
+        var(--water-primary) 80%,
+        transparent 100%
+      );
+      box-shadow: 0 0 16px rgba(201,74,42,0.3), 0 0 16px rgba(42,138,204,0.3);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* FIRE PANEL */
+    .panel-fire {
+      flex: 1;
+      background:
+        radial-gradient(ellipse at 80% 10%, rgba(201,74,42,0.08) 0%, transparent 60%),
+        linear-gradient(160deg, #0e0804 0%, #060300 100%);
+      padding: 1.25rem 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ember flicker particles */
+    .panel-fire::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(0deg, rgba(201,74,42,0.06), transparent);
+      pointer-events: none;
+      animation: emberpulse 3s ease-in-out infinite;
+    }
+
+    @keyframes emberpulse {
+      0%, 100% { opacity: 0.6; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    /* WATER PANEL */
+    .panel-water {
+      flex: 1;
+      background:
+        radial-gradient(ellipse at 20% 90%, rgba(64,200,192,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(42,138,204,0.06) 0%, transparent 55%),
+        linear-gradient(160deg, #040d18 0%, #0a1824 60%, #152a3a 100%);
+      padding: 1.25rem 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-water::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(180deg, rgba(42,138,204,0.05), transparent);
+      pointer-events: none;
+      animation: waterpulse 4s ease-in-out infinite;
+    }
+
+    @keyframes waterpulse {
+      0%, 100% { opacity: 0.5; }
+      60% { opacity: 1; }
+    }
+
+    /* Panel Headers */
+    .panel-header {
+      text-align: center;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 2;
+    }
+
+    .panel-fire .panel-header h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      color: var(--fire-bright);
+      text-shadow: 0 0 24px rgba(232,96,42,0.5), 0 2px 4px rgba(0,0,0,0.8);
+      letter-spacing: 0.05em;
+    }
+
+    .panel-water .panel-header h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      color: var(--water-bright);
+      text-shadow: 0 0 24px rgba(90,184,255,0.5), 0 2px 4px rgba(0,0,0,0.8);
+      letter-spacing: 0.05em;
+    }
+
+    .card-count {
+      font-family: var(--mono);
+      font-size: 0.42rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+    }
+
+    /* ── FIRE CARDS ─────────────────────────────────────────────── */
+    .auto-draw-container {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      perspective: 1200px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-slot {
+      width: 110px;
+      aspect-ratio: 2/3;
+      position: relative;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6));
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-inner.flipped { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(232,168,64,0.25);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .card-back {
+      background: radial-gradient(ellipse at center, #2a1a08, #0a0602);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-back-sigil {
+      font-size: 2rem;
+      opacity: 0.4;
+      animation: sigilflicker 2s ease-in-out infinite;
+    }
+
+    @keyframes sigilflicker {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.2; }
+    }
+
+    .card-front {
+      background: var(--fire-surface);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 55%;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(232,168,64,0.15);
+    }
+
+    .card-front .info {
+      padding: 0.4rem 0.5rem;
+      flex: 1;
+    }
+
+    .card-front .pos {
+      font-family: 'Cinzel', serif;
+      font-size: 0.38rem;
+      letter-spacing: 0.2em;
+      color: var(--ember);
+    }
+
+    .card-front .name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.52rem;
+      color: var(--gold);
+      margin: 0.2rem 0 0.15rem;
+      line-height: 1.3;
+    }
+
+    .card-front .meaning {
+      font-size: 0.42rem;
+      font-style: italic;
+      color: var(--ash);
+      line-height: 1.4;
+    }
+
+    /* Reading bar */
+    .reading-bar {
+      text-align: center;
+      padding: 0.5rem 0.75rem;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(232,168,64,0.1);
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.5s, transform 0.5s;
+      position: relative;
+      z-index: 2;
+    }
+
+    .reading-bar.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reading-synthesis {
+      font-size: 0.65rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 0.25rem;
+    }
+
+    .reading-cards {
+      font-family: 'Cinzel', serif;
+      font-size: 0.42rem;
+      letter-spacing: 0.15em;
+      color: var(--ember);
+    }
+
+    /* Gallery strip */
     .gallery-strip {
-      display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));
-      gap:2px; background:var(--void); border-top:1px solid var(--border-fire);
-      border-bottom:1px solid var(--border-fire); margin:0 1.5rem 1rem;
+      display: flex;
+      gap: 3px;
+      overflow-x: auto;
+      padding: 0.4rem;
+      background: rgba(0,0,0,0.25);
+      border-radius: 6px;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 2;
     }
+
+    .gallery-strip::-webkit-scrollbar { display: none; }
+
     .gallery-item {
-      aspect-ratio:2/3; overflow:hidden; cursor:pointer; position:relative;
-      border:1px solid transparent; transition:border-color 0.2s;
-    }
-    .gallery-item:hover { border-color:var(--fire-dim); }
-    .gallery-item img { width:100%; height:100%; object-fit:cover; filter:brightness(0.5) saturate(0.8); transition:all 0.3s; }
-    .gallery-item:hover img { filter:brightness(0.85) saturate(1.1); transform:scale(1.05); }
-    .gallery-item .label {
-      position:absolute; bottom:0; left:0; right:0; padding:0.2rem 0.3rem;
-      font-size:0.4rem; font-style:italic; color:var(--text);
-      background:linear-gradient(to top, rgba(8,4,2,0.9), transparent);
-      opacity:0; transition:opacity 0.3s;
-    }
-    .gallery-item:hover .label { opacity:1; }
-
-    /* ── SHOW STRUCTURE ── */
-    .structure-bar {
-      display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;
-      padding:0.5rem 1.5rem; font-family:'Share Tech Mono',monospace;
-      font-size:0.45rem; color:var(--ash); letter-spacing:0.1em;
-      border-top:1px solid var(--border-fire);
-    }
-    .structure-step { display:flex; align-items:center; gap:0.4rem; }
-    .structure-dot { width:5px; height:5px; border-radius:50%; }
-    .structure-dot.fire { background:var(--fire-bright); }
-    .structure-dot.ember { background:var(--ember); }
-    .structure-dot.gold { background:var(--gold); }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top:1px solid var(--border-fire); padding:0.6rem 1.5rem;
-      display:flex; justify-content:space-between; align-items:center;
-      font-family:'Share Tech Mono',monospace; font-size:0.42rem; color:var(--ash-dim); letter-spacing:0.1em;
-    }
-    .webcam-corner {
-      position:fixed; bottom:50px; right:1.5rem; width:100px; height:65px;
-      border:1px solid var(--border-fire); z-index:20; background:var(--void-surface);
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Share Tech Mono',monospace; font-size:0.4rem; color:var(--ash-dim);
+      width: 44px;
+      aspect-ratio: 2/3;
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid transparent;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
     }
 
-    @media(max-width:750px){
-      .spread-container { gap:1rem; }
-      .card-slot { width:140px; }
-      .card-front .name { font-size:0.6rem; }
-      .card-front .meaning { font-size:0.45rem; }
-      .countdown-display { font-size:2rem; }
-      .gallery-strip { grid-template-columns:repeat(5, 1fr); }
+    .gallery-item:hover {
+      border-color: var(--ember);
+      transform: scale(1.05) translateY(-2px);
     }
-    @media(max-width:450px){
-      .card-slot { width:100px; }
-      .gallery-strip { grid-template-columns:repeat(3, 1fr); }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Next draw timer */
+    .next-draw-row {
+      font-family: var(--mono);
+      font-size: 0.4rem;
+      color: var(--text-dim);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .draw-progress {
+      height: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 1px;
+      margin-top: 0.3rem;
+      overflow: hidden;
+    }
+
+    .draw-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--fire-primary), var(--ember));
+      transition: width 1s linear;
+      border-radius: 1px;
+    }
+
+    /* ── WATER GRID ─────────────────────────────────────────────── */
+    .water-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+      gap: 0.5rem;
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(42,138,204,0.3) transparent;
+      position: relative;
+      z-index: 2;
+    }
+
+    .water-stub {
+      aspect-ratio: 2/3;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 12px,
+        rgba(255,255,255,0.015) 12px,
+        rgba(255,255,255,0.015) 24px
+      );
+      border: 1.5px dashed rgba(42,138,204,0.4);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .water-stub::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(42,138,204,0.06), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .water-stub:hover {
+      transform: translateY(-2px) scale(1.02);
+      border-color: var(--water-bright);
+      box-shadow: 0 4px 16px rgba(42,138,204,0.15);
+    }
+
+    .water-stub:hover::before { opacity: 1; }
+
+    .stub-icon {
+      font-size: 1.5rem;
+      opacity: 0.55;
+      margin-bottom: 0.2rem;
+      line-height: 1;
+    }
+
+    .stub-rank {
+      font-family: 'Cinzel', serif;
+      font-size: 0.45rem;
+      font-weight: 700;
+      color: var(--water-bright);
+      letter-spacing: 0.1em;
+    }
+
+    .stub-title {
+      font-size: 0.38rem;
+      text-align: center;
+      color: var(--water-foam);
+      margin: 0.15rem 0;
+      line-height: 1.3;
+    }
+
+    .stub-badge {
+      font-family: var(--mono);
+      font-size: 0.32rem;
+      padding: 0.08rem 0.25rem;
+      border-radius: 3px;
+      margin-top: 0.1rem;
+    }
+
+    .stub-badge.missing {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-dim);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .stub-badge.done {
+      background: rgba(64,200,192,0.12);
+      color: var(--teal);
+      border: 1px solid rgba(64,200,192,0.25);
+    }
+
+    .water-stub.generated {
+      border: 1.5px solid rgba(64,200,192,0.45);
+      background: linear-gradient(160deg, rgba(64,200,192,0.06), rgba(42,138,204,0.08));
+    }
+
+    .water-stub.generated .stub-icon { opacity: 0.8; }
+
+    /* Reveal animation when first generated */
+    @keyframes waterReveal {
+      from { opacity: 0; transform: scale(0.9) translateY(6px); box-shadow: 0 0 0 rgba(64,200,192,0); }
+      to { opacity: 1; transform: scale(1) translateY(0); box-shadow: 0 0 20px rgba(64,200,192,0.25); }
+    }
+
+    .water-stub.just-generated {
+      animation: waterReveal 0.6s ease-out forwards;
+    }
+
+    /* ── GENERATION CONSOLE ─────────────────────────────────────── */
+    .generation-console {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 0.5rem 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .console-title {
+      color: var(--water-bright);
+      letter-spacing: 0.15em;
+      font-size: 0.38rem;
+    }
+
+    .console-log {
+      color: rgba(192,224,255,0.7);
+      max-height: 54px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      line-height: 1.6;
+    }
+
+    .console-log .log-success { color: var(--teal); }
+    .console-log .log-error { color: #f66; }
+    .console-log .log-info { color: rgba(192,224,255,0.7); }
+
+    .copy-all-btn {
+      width: 100%;
+      margin-top: 0.35rem;
+      background: rgba(42,138,204,0.12);
+      border: 1px solid rgba(42,138,204,0.3);
+      color: var(--water-foam);
+      padding: 0.3rem;
+      font-family: var(--mono);
+      font-size: 0.38rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+
+    .copy-all-btn:hover {
+      background: rgba(42,138,204,0.22);
+      border-color: var(--water-bright);
+    }
+
+    /* ── TOAST ─────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: rgba(10,24,36,0.95);
+      border: 1px solid var(--water-primary);
+      color: var(--water-foam);
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .split-layout { flex-direction: column; }
+      .split-layout::after { display: none; }
+      .panel-fire, .panel-water { min-height: 50vh; }
+      .card-slot { width: 80px; }
+      .bar-title { font-size: 0.6rem; }
+      .inject-input { width: 160px; }
     }
   </style>
 </head>
 <body>
 
-<!-- BG CAROUSEL -->
-<div class="bg-carousel" id="bgCarousel"></div>
-<div class="bg-overlay"></div>
+<!-- ── BROADCAST BAR ──────────────────────────────────────────── -->
+<div class="broadcast-bar">
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    LIVE
+  </div>
+  <div class="bar-title">EALDFORN #5 · FIRE → WATER · DIGITAL DIVINATION</div>
+  <div class="countdown-bar">
+    <div class="countdown-label">NIGHTCAFE DEADLINE</div>
+    <div class="countdown-time" id="countdownDisplay">--:--:--</div>
+  </div>
+</div>
 
-<div class="shell">
-
-  <!-- HEADER -->
-  <header>
-    <div>
-      <div class="show-title">Ealdforn · Episode V</div>
-      <div class="show-sub">Digital Divination Live · Fire Deck · @ealdforn</div>
+<!-- ── TTS / NARRATION PANEL ──────────────────────────────────── -->
+<div class="tts-panel">
+  <div class="tts-speaking-bar" id="ttsSpeakingBar">
+    <div class="tts-wave" id="ttsWave">
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
-    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
-  </header>
+    <span id="ttsCurrentText">⟡ narration idle — enable loop or inject a line</span>
+  </div>
 
-  <!-- HERO: AUTO-DRAWING SPREAD -->
-  <div class="hero-spread">
-    <div class="spread-container" id="spreadContainer">
+  <div class="inject-area">
+    <input
+      type="text"
+      class="inject-input"
+      id="injectInput"
+      placeholder="Inject live narration…"
+      maxlength="300"
+    />
+    <button class="tts-btn tts-btn-speak" id="speakBtn">▶ SPEAK</button>
+    <button class="tts-btn tts-btn-loop" id="loopBtn">⟳ LOOP</button>
+    <button class="tts-btn tts-btn-stop" id="stopBtn">■ STOP</button>
+    <select class="voice-select" id="voiceSelect" title="TTS Voice">
+      <option value="">Loading voices…</option>
+    </select>
+  </div>
+</div>
+
+<!-- ── SPLIT LAYOUT ───────────────────────────────────────────── -->
+<div class="split-layout">
+
+  <!-- 🔥 LEFT: FIRE PANEL -->
+  <div class="panel-fire">
+    <div class="panel-header">
+      <h2>🜂 SUIT OF FIRE</h2>
+      <div class="card-count">COMPLETE · 14 CARDS · 250+ VIEWS</div>
+    </div>
+
+    <div class="auto-draw-container" id="spreadContainer">
       <div class="card-slot">
         <div class="card-inner" id="cardPast">
-          <div class="card-face card-back"><div class="card-back-sigil">🜏</div></div>
+          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
           <div class="card-face card-front" id="frontPast"></div>
         </div>
       </div>
       <div class="card-slot">
         <div class="card-inner" id="cardPresent">
-          <div class="card-face card-back"><div class="card-back-sigil">🜏</div></div>
+          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
           <div class="card-face card-front" id="frontPresent"></div>
         </div>
       </div>
       <div class="card-slot">
         <div class="card-inner" id="cardFuture">
-          <div class="card-face card-back"><div class="card-back-sigil">🜏</div></div>
+          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
           <div class="card-face card-front" id="frontFuture"></div>
         </div>
       </div>
@@ -252,191 +902,515 @@
       <div class="reading-cards" id="readingCards"></div>
     </div>
 
-    <div class="countdown-block">
-      <div class="countdown-display">
-        <span id="cdHrs">00</span><span class="sep">:</span><span id="cdMins">00</span><span class="sep">:</span><span class="secs" id="cdSecs">00</span>
+    <div class="gallery-strip" id="galleryStrip"></div>
+
+    <div class="next-draw-row">
+      NEXT AUTO-DRAW IN <span id="nextDrawTimer">60</span>s
+      <div class="draw-progress"><div class="draw-progress-bar" id="drawProgressBar" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <!-- 💧 RIGHT: WATER PANEL -->
+  <div class="panel-water">
+    <div class="panel-header">
+      <h2>🜄 SUIT OF WATER — LIVE BUILD</h2>
+      <div class="card-count" id="waterCount">0 / 14 GENERATED · CLICK STUB TO COPY PROMPT</div>
+    </div>
+
+    <div class="water-grid" id="waterGrid"></div>
+
+    <div class="generation-console">
+      <div class="console-header">
+        <div class="console-title">⟡ GENERATION LOG</div>
       </div>
-      <div class="countdown-label">Until NightCafe Reset</div>
-      <div class="next-draw">Next draw: <span id="nextDrawTimer">60</span>s</div>
+      <div class="console-log" id="consoleLog">
+        <span class="log-info">> Fire → Water live build ready.</span><br>
+        <span class="log-info">> Click any stub → copy NightCafe prompt.</span><br>
+        <span class="log-info">> Generate → upload to GitHub → refresh → stub becomes card.</span>
+      </div>
+      <button class="copy-all-btn" id="copyAllMissingBtn">📋 COPY ALL MISSING PROMPTS</button>
     </div>
   </div>
-
-  <!-- NARRATION -->
-  <div class="narration-bar">
-    <div class="narration-tag">⟡ Kitten</div>
-    <div class="narration-text" id="narrationText">
-      The fire holds. Tonight the forge burns in ember and ash — the colors of creation and destruction. The Fire deck speaks. We begin.
-    </div>
-  </div>
-
-  <!-- GALLERY STRIP -->
-  <div class="gallery-strip" id="galleryStrip"></div>
-
-  <!-- SHOW STRUCTURE -->
-  <div class="structure-bar">
-    <div class="structure-step"><span class="structure-dot fire"></span> Fire Deck Promo</div>
-    <span style="color:var(--ash-dim)">→</span>
-    <div class="structure-step"><span class="structure-dot ember"></span> Water Deck Prompts</div>
-    <span style="color:var(--ash-dim)">→</span>
-    <div class="structure-step"><span class="structure-dot gold"></span> Live Generation</div>
-    <span style="color:var(--ash-dim)">→</span>
-    <div class="structure-step"><span class="structure-dot fire"></span> Upload & Wire</div>
-    <span style="color:var(--ash-dim)">→</span>
-    <div class="structure-step"><span class="structure-dot ember"></span> First Water Draw</div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <span>kairos-coder.github.io/divination · live.html</span>
-    <span>The Fire suit speaks with a single voice.</span>
-  </footer>
-
 </div>
 
-<!-- WEBCAM CORNER -->
-<div class="webcam-corner">BUILDER</div>
+<div id="toast" class="toast"></div>
 
 <script>
-  // ═══════════════════════════════════════════
-  // EALDFORN #5 · DIGITAL DIVINATION LIVE
-  // Fire Deck Auto-Drawing Oracle
-  // ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════════
 
-  // ── BACKGROUND CAROUSEL ──────────────────────────────────────────
-  const BG_IMAGES = [
-    'data/images/minor/fire/fire_ace.png','data/images/minor/fire/fire_02.png',
-    'data/images/minor/fire/fire_03.png','data/images/minor/fire/fire_04.png',
-    'data/images/minor/fire/fire_05.png','data/images/minor/fire/fire_06.png',
-    'data/images/minor/fire/fire_07.png','data/images/minor/fire/fire_08.png',
-    'data/images/minor/fire/fire_09.png','data/images/minor/fire/fire_10.png',
-    'data/images/minor/fire/fire_page.png','data/images/minor/fire/fire_knight.png',
-    'data/images/minor/fire/fire_queen.png','data/images/minor/fire/fire_king.png',
-    'data/images/dionysus-card.jpg','data/images/zeus-card.jpg',
-    'data/images/athena-card.jpg','data/images/aphrodite-card.jpg',
-    'data/images/ares-card.jpg','data/images/hades-card.jpg',
-    'data/images/persephone-card.jpg','data/images/thanatos-card.jpg',
-    'data/images/hephaestus-card.jpg','data/images/poseidon-card.jpg',
-  ];
-  let bgIdx=0;
-  function buildCarousel(){
-    const c=document.getElementById('bgCarousel');
-    BG_IMAGES.forEach((s,i)=>{const d=document.createElement('div');d.className='bg-image'+(i===0?' active':'');d.style.backgroundImage=`url(${s})`;c.appendChild(d);});
-  }
-  function rotateBg(){
-    const imgs=document.querySelectorAll('.bg-image');if(!imgs.length)return;
-    imgs[bgIdx].classList.remove('active');bgIdx=(bgIdx+1)%imgs.length;imgs[bgIdx].classList.add('active');
-  }
+const FIRE_DECK = [
+  {id:'fire_ace',    name:'Ace of Fire',    title:'Maui',             meaning:'The divine spark — the idea that costs everything to bring down.',       image:'data/images/minor/fire/fire_ace.png',    rank:'ace',    suit:'fire'},
+  {id:'fire_02',     name:'Two of Fire',    title:'Castor & Pollux',  meaning:'Two flames burn as one — mortal and divine.',                           image:'data/images/minor/fire/fire_02.png',     rank:'02',     suit:'fire'},
+  {id:'fire_03',     name:'Three of Fire',  title:'Peitho',           meaning:'The goddess of persuasion — the room leans in.',                        image:'data/images/minor/fire/fire_03.png',     rank:'03',     suit:'fire'},
+  {id:'fire_04',     name:'Four of Fire',   title:'Icarus',           meaning:'The burnout — when ambition exceeds capacity.',                         image:'data/images/minor/fire/fire_04.png',     rank:'04',     suit:'fire'},
+  {id:'fire_05',     name:'Five of Fire',   title:'Loki',             meaning:'The truth-teller who exposes every secret.',                            image:'data/images/minor/fire/fire_05.png',     rank:'05',     suit:'fire'},
+  {id:'fire_06',     name:'Six of Fire',    title:'The Algorithm',    meaning:'The viral moment — ride it.',                                           image:'data/images/minor/fire/fire_06.png',     rank:'06',     suit:'fire'},
+  {id:'fire_07',     name:'Seven of Fire',  title:'Talos',            meaning:'The system that shapes you without consent.',                           image:'data/images/minor/fire/fire_07.png',     rank:'07',     suit:'fire'},
+  {id:'fire_08',     name:'Eight of Fire',  title:'Huitzilopochtli',  meaning:'The ceaseless grind — push IS purpose.',                               image:'data/images/minor/fire/fire_08.png',     rank:'08',     suit:'fire'},
+  {id:'fire_09',     name:'Nine of Fire',   title:'Cerberus',         meaning:'Prove yourself worthy of passage.',                                     image:'data/images/minor/fire/fire_09.png',     rank:'09',     suit:'fire'},
+  {id:'fire_10',     name:'Ten of Fire',    title:'Surtr',            meaning:'The spectacular exit — not all endings are graceful.',                  image:'data/images/minor/fire/fire_10.png',     rank:'10',     suit:'fire'},
+  {id:'fire_page',   name:'Page of Fire',   title:'Agni',             meaning:'The youngest flame — new is power.',                                   image:'data/images/minor/fire/fire_page.png',   rank:'page',   suit:'fire'},
+  {id:'fire_knight', name:'Knight of Fire', title:'Achilles',         meaning:'Conviction as armor — charge.',                                        image:'data/images/minor/fire/fire_knight.png', rank:'knight', suit:'fire'},
+  {id:'fire_queen',  name:'Queen of Fire',  title:'Oya',              meaning:'The sovereign who does not ask permission.',                            image:'data/images/minor/fire/fire_queen.png',  rank:'queen',  suit:'fire'},
+  {id:'fire_king',   name:'King of Fire',   title:'The Founder',      meaning:'Can you hold it without becoming the monster?',                        image:'data/images/minor/fire/fire_king.png',   rank:'king',   suit:'fire'}
+];
 
-  // ── FIRE DECK ────────────────────────────────────────────────────
-  const FIRE_DECK=[
-    {id:'fire_ace',name:'Ace of Fire',title:'Maui',meaning:'Maui stole fire from the underworld. The divine spark — the idea that costs everything to bring down. Create. But know the price.',image:'data/images/minor/fire/fire_ace.png',element:'Fire'},
-    {id:'fire_02',name:'Two of Fire',title:'Castor & Pollux',meaning:'Two flames burn as one — one mortal, one divine. The partnership that transcends difference. One of you will carry the other.',image:'data/images/minor/fire/fire_02.png',element:'Fire'},
-    {id:'fire_03',name:'Three of Fire',title:'Peitho',meaning:'The room leans in. Peitho, goddess of persuasion, speaks and the world bends toward her words. The pitch. Speak. They are listening.',image:'data/images/minor/fire/fire_03.png',element:'Fire'},
-    {id:'fire_04',name:'Four of Fire',title:'Icarus',meaning:'The wax melts. Icarus plummets. The burnout — when ambition exceeds capacity. The fall is not failure. It is proof you flew.',image:'data/images/minor/fire/fire_04.png',element:'Fire'},
-    {id:'fire_05',name:'Five of Fire',title:'Loki',meaning:'Loki spoke back to the gods, exposing every secret. The ugliest truth-teller in Asgard — and sometimes the only honest one.',image:'data/images/minor/fire/fire_05.png',element:'Fire'},
-    {id:'fire_06',name:'Six of Fire',title:'The Algorithm',meaning:'The Algorithm amplifies your name until it belongs to everyone but you. The viral moment. Ride it. The Algorithm has no loyalty.',image:'data/images/minor/fire/fire_06.png',element:'Fire'},
-    {id:'fire_07',name:'Seven of Fire',title:'Talos',meaning:'Talos patrols the shores — a bronze giant, unstoppable, doing what it was built to do. The system that shapes you without consent. Learn the code.',image:'data/images/minor/fire/fire_07.png',element:'Fire'},
-    {id:'fire_08',name:'Eight of Fire',title:'Huitzilopochtli',meaning:'The hummingbird warrior demanded constant sacrifice to keep the sun moving. The ceaseless grind. The push IS the purpose.',image:'data/images/minor/fire/fire_08.png',element:'Fire'},
-    {id:'fire_09',name:'Nine of Fire',title:'Cerberus',meaning:'Three heads. One gate. Cerberus guards the entrance — nothing passes without consent. Prove yourself worthy of passage.',image:'data/images/minor/fire/fire_09.png',element:'Fire'},
-    {id:'fire_10',name:'Ten of Fire',title:'Surtr',meaning:'Surtr rides out of Muspelheim, his sword brighter than the sun, and burns the world. The spectacular exit. Not all endings are graceful.',image:'data/images/minor/fire/fire_10.png',element:'Fire'},
-    {id:'fire_page',name:'Page of Fire',title:'Agni',meaning:'Agni carries offerings from mortals to the gods. The youngest flame. You are new here. That is your power.',image:'data/images/minor/fire/fire_page.png',element:'Fire'},
-    {id:'fire_knight',name:'Knight of Fire',title:'Achilles',meaning:'Achilles charges and the Trojans break. Conviction as armor. Charge. But know your heel.',image:'data/images/minor/fire/fire_knight.png',element:'Fire'},
-    {id:'fire_queen',name:'Queen of Fire',title:'Oya',meaning:'Oya, orisha of fire and wind, leads warriors into battle. The sovereign who does not ask permission. Take your seat.',image:'data/images/minor/fire/fire_queen.png',element:'Fire'},
-    {id:'fire_king',name:'King of Fire',title:'The Founder',meaning:'The Founder built the system and now rules from within it. The platform is yours. Can you hold it without becoming the monster at the center?',image:'data/images/minor/fire/fire_king.png',element:'Fire'},
-  ];
+const WATER_DECK = [
+  {rank:'ace',    name:'Ace of Water',    title:'Prometheus',   culture:'Greek/Polynesian',  nightCafePrompt:'Ace of Water tarot card — Prometheus stealing divine fire, water streaming from his chains, Polynesian voyager motifs, waves curling around his wrists, deep blue and turquoise palette, luminous watercolor style, golden light breaking through storm clouds —ar 2:3', image:'ace_of_water.png'},
+  {rank:'02',     name:'Two of Water',    title:'Yemanya',      culture:'Yoruba/Brazilian',  nightCafePrompt:'Two of Water tarot card — Yemanya rising from ocean, twin moons reflected in still water, orisha of motherhood and the sea, flowing white and blue robes, children at her feet, crescent waves, mother-of-pearl iridescence —ar 2:3', image:'two_of_water.png'},
+  {rank:'03',     name:'Three of Water',  title:'The Nereids',  culture:'Greek',             nightCafePrompt:'Three of Water tarot card — three Nereid sea nymphs dancing in a circle, foam and seafoam, dolphins circling, Mediterranean turquoise, ancient Greek vase painting meets fluid digital art —ar 2:3', image:'three_of_water.png'},
+  {rank:'04',     name:'Four of Water',   title:'Sedna',        culture:'Inuit',             nightCafePrompt:'Four of Water tarot card — Sedna, goddess of the sea and marine animals, her fingers becoming seals and whales, deep Arctic waters, bioluminescent creatures, ice above darkness below, melancholy and abundance —ar 2:3', image:'four_of_water.png'},
+  {rank:'05',     name:'Five of Water',   title:'The Drowned',  culture:'Global Myth',       nightCafePrompt:'Five of Water tarot card — figures sinking into dark water, only hands reaching up, loss and grief, reflections of what was, deep navy and silver, rain on the surface, melancholic romanticism —ar 2:3', image:'five_of_water.png'},
+  {rank:'06',     name:'Six of Water',    title:'Mnemosyne',    culture:'Greek',             nightCafePrompt:'Six of Water tarot card — Mnemosyne, Titaness of memory, water as remembering, faces in ripples, lotus flowers, still pool reflecting stars, purple and silver, dreamlike soft focus —ar 2:3', image:'six_of_water.png'},
+  {rank:'07',     name:'Seven of Water',  title:'Kanaloa',      culture:'Polynesian',        nightCafePrompt:'Seven of Water tarot card — Kanaloa, god of the underworld ocean, squid and octopus tentacles, deep sea vents, volcanic underwater landscapes, green and black, mysterious and powerful —ar 2:3', image:'seven_of_water.png'},
+  {rank:'08',     name:'Eight of Water',  title:'The Current',  culture:'Modern',            nightCafePrompt:'Eight of Water tarot card — a figure swept in ocean current, letting go, surrender to flow, abstract water shapes, cyan and coral, dynamic motion blur, digital painting —ar 2:3', image:'eight_of_water.png'},
+  {rank:'09',     name:'Nine of Water',   title:'Mazu',         culture:'Chinese/Taoist',    nightCafePrompt:'Nine of Water tarot card — Mazu, goddess of the sea and protector of sailors, standing on a wave, lanterns guiding ships, red and gold against deep blue, traditional Chinese painting style, auspicious clouds —ar 2:3', image:'nine_of_water.png'},
+  {rank:'10',     name:'Ten of Water',    title:'The Flood',    culture:'Global',            nightCafePrompt:'Ten of Water tarot card — great flood, waters rising to cover everything, ark in distance, rebirth through destruction, slate gray and silver, dramatic storm clouds, cinematic scale —ar 2:3', image:'ten_of_water.png'},
+  {rank:'page',   name:'Page of Water',   title:'Narcissus',    culture:'Greek',             nightCafePrompt:'Page of Water tarot card — Narcissus gazing at his reflection, flowers growing at water\'s edge, self-discovery through the looking glass, green and blue, pre-Raphaelite aesthetic —ar 2:3', image:'page_of_water.png'},
+  {rank:'knight', name:'Knight of Water', title:'Poseidon',     culture:'Greek',             nightCafePrompt:'Knight of Water tarot card — Poseidon on a hippocampus, trident raised, storm waves, seafoam white and deep teal, classical sculpture meets animation, powerful motion —ar 2:3', image:'knight_of_water.png'},
+  {rank:'queen',  name:'Queen of Water',  title:'Tiamat',       culture:'Mesopotamian',      nightCafePrompt:'Queen of Water tarot card — Tiamat, primordial dragon goddess of salt water, ocean as her body, creation from chaos, deep blue, gold scales, Babylonian mythic art style —ar 2:3', image:'queen_of_water.png'},
+  {rank:'king',   name:'King of Water',   title:'Neptune',      culture:'Roman/Modern',      nightCafePrompt:'King of Water tarot card — Neptune ruling the deep, trident and crown, abyssal plain, bioluminescent creatures, dark blue and emerald, 19th century maritime painting meets vaporwave —ar 2:3', image:'king_of_water.png'}
+];
 
-  // ── GALLERY ──────────────────────────────────────────────────────
-  function buildGallery(){
-    document.getElementById('galleryStrip').innerHTML=FIRE_DECK.map(c=>`
-      <div class="gallery-item"><img src="${c.image}" alt="${c.name}" loading="lazy" onerror="this.parentElement.style.display='none'" /><div class="label">${c.title}</div></div>`).join('');
-  }
+// ── KITTEN TTS SCRIPT LIBRARY ─────────────────────────────────
+// These cycle during loop mode. Fire = warm/authoritative pitch, Water = cool/ethereal.
+const TTS_SCRIPTS = [
+  // Card reading flavors
+  { text: "The Fire deck burns tonight. Every card a myth alive.", type: 'fire' },
+  { text: "Fourteen archetypes. Fourteen gods. Which one speaks to you?", type: 'fire' },
+  { text: "The Water deck takes shape, one card at a time. Witness the making.", type: 'water' },
+  { text: "This is live creation — the myth is still wet.", type: 'water' },
+  { text: "Maui stole fire from the gods. Tonight we make something from that flame.", type: 'fire' },
+  { text: "Tiamat waits in the deep. The Queen of Water has not yet been drawn.", type: 'water' },
+  { text: "NightCafe daily challenge closes at eight. The deadline is the ritual.", type: 'neutral' },
+  { text: "Every stub that lights is a card born. Every missing image is a myth waiting.", type: 'water' },
+  { text: "The past. The present. The future. Three cards. One reading.", type: 'fire' },
+  { text: "This is Ealdforn number five. The suits are fire and water. Opposites that need each other.", type: 'neutral' },
+  { text: "Mnemosyne holds memory in still water. What do you carry that you haven't looked at yet?", type: 'water' },
+  { text: "The Algorithm. Six of Fire. The viral moment — ride it.", type: 'fire' },
+  { text: "Sedna's fingers become seals and whales. Creation through loss.", type: 'water' },
+  { text: "The King of Fire asks: can you hold power without becoming the monster?", type: 'fire' },
+  { text: "The Flood. Ten of Water. Rebirth through destruction. Cinematic scale.", type: 'water' },
+  { text: "Come back tomorrow. There will be more cards. There is always more myth.", type: 'neutral' },
+];
 
-  // ── DRAW ─────────────────────────────────────────────────────────
-  function drawFireSpread(){
-    const p=[...FIRE_DECK],d=[];
-    for(let i=0;i<3;i++){const idx=Math.floor(Math.random()*p.length);d.push({...p.splice(idx,1)[0],position:i===0?'past':i===1?'present':'future',isReversed:Math.random()<0.3});}
-    return {past:d[0],present:d[1],future:d[2]};
-  }
+// ════════════════════════════════════════════════════════════════
+// KITTEN TTS ENGINE
+// ════════════════════════════════════════════════════════════════
+const TTS = (() => {
+  let voices = [];
+  let selectedVoiceIndex = -1;
+  let loopActive = false;
+  let loopPointer = 0;
+  let currentUtterance = null;
+  let isSpeaking = false;
 
-  const POS={past:'Past',present:'Present',future:'Future'};
-  function renderCard(card,frontId,cardId){
-    const f=document.getElementById(frontId);
-    f.innerHTML=`<img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'" /><div class="info"><div class="pos">${POS[card.position]}${card.isReversed?' ⥮ Reversed':''}</div><div class="name">${card.name}</div><div class="meaning">${card.title} — ${card.meaning.substring(0,70)}...</div></div>`;
-    const inner=document.getElementById(cardId);inner.classList.remove('flipped');void inner.offsetWidth;return inner;
-  }
-
-  function revealCards(draw){
-    const past=renderCard(draw.past,'frontPast','cardPast');
-    const present=renderCard(draw.present,'frontPresent','cardPresent');
-    const future=renderCard(draw.future,'frontFuture','cardFuture');
-    setTimeout(()=>past.classList.add('flipped'),100);
-    setTimeout(()=>present.classList.add('flipped'),500);
-    setTimeout(()=>future.classList.add('flipped'),900);
-    setTimeout(()=>{
-      const syn=buildSynthesis(draw);
-      document.getElementById('readingSynthesis').textContent=syn;
-      document.getElementById('readingCards').textContent=`${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
-      document.getElementById('readingBar').classList.add('visible');
-      sendToKitten(draw,syn);
-    },1400);
+  function loadVoices() {
+    voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return;
+    populateVoiceSelect();
   }
 
-  function buildSynthesis(draw){
-    const names=`${draw.past.title}, ${draw.present.title}, ${draw.future.title}`;
-    const rc=[draw.past,draw.present,draw.future].filter(c=>c.isReversed).length;
-    let s='The Fire suit speaks with a single voice. ';
-    if(rc===3)s+='All three cards reversed — resistance to something fundamental. ';
-    else if(rc===0)s+='The cards speak clearly. ';
-    else s+='Some resistance clouds the path. ';
-    s+=`${names} form a triptych. Past, present, future — not separate, but a single image split across time. Read them as one.`;
-    return s;
+  function populateVoiceSelect() {
+    const sel = document.getElementById('voiceSelect');
+    if (!sel) return;
+    sel.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name.substring(0, 20)} (${v.lang})`;
+      sel.appendChild(opt);
+    });
+    // Default: prefer a melodic English voice
+    const preferred = voices.findIndex(v =>
+      v.lang.startsWith('en') && (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira') || v.name.includes('Victoria') || v.name.includes('Google UK'))
+    );
+    sel.value = preferred >= 0 ? preferred : 0;
+    selectedVoiceIndex = parseInt(sel.value);
+    sel.addEventListener('change', () => { selectedVoiceIndex = parseInt(sel.value); });
   }
 
-  function clearCards(){
-    ['cardPast','cardPresent','cardFuture'].forEach(id=>document.getElementById(id).classList.remove('flipped'));
-    document.getElementById('readingBar').classList.remove('visible');
-    setTimeout(()=>['frontPast','frontPresent','frontFuture'].forEach(id=>document.getElementById(id).innerHTML=''),400);
+  function setDisplay(text, speaking) {
+    const bar = document.getElementById('ttsSpeakingBar');
+    const textEl = document.getElementById('ttsCurrentText');
+    const wave = document.getElementById('ttsWave');
+    if (textEl) textEl.textContent = text;
+    if (bar) bar.classList.toggle('tts-speaking', speaking);
+    if (wave) wave.parentElement?.classList?.toggle('tts-speaking', speaking);
   }
 
-  // ── KITTEN ───────────────────────────────────────────────────────
-  function sendToKitten(draw,synthesis){
-    const text=`Fire deck reading. Past: ${draw.past.title} — ${draw.past.name}. Present: ${draw.present.title} — ${draw.present.name}. Future: ${draw.future.title} — ${draw.future.name}. ${synthesis}`;
-    try{new BroadcastChannel('ealdforn_narration').postMessage({text,source:'Divination Live',timestamp:Date.now()});}catch(e){}
-    // Also update on-screen narration bar occasionally
-    if(Math.random()<0.3){
-      const el=document.getElementById('narrationText');
-      el.style.opacity='0';
-      setTimeout(()=>{el.textContent=`${draw.past.title} — ${draw.past.name}. ${draw.present.title} — ${draw.present.name}. ${draw.future.title} — ${draw.future.name}. ${synthesis.substring(0,100)}...`;el.style.opacity='1';},400);
+  function speak(text, opts = {}) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const utter = new SpeechSynthesisUtterance(text);
+    currentUtterance = utter;
+    isSpeaking = true;
+
+    // Voice tuning by type
+    const type = opts.type || 'neutral';
+    const voiceIdx = selectedVoiceIndex >= 0 ? selectedVoiceIndex : 0;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+
+    utter.rate  = type === 'fire'    ? 0.92 : type === 'water' ? 0.82 : 0.87;
+    utter.pitch = type === 'fire'    ? 1.05 : type === 'water' ? 0.88 : 0.95;
+    utter.volume = 0.95;
+
+    setDisplay(text, true);
+
+    utter.onend = () => {
+      isSpeaking = false;
+      setDisplay('⟡ narration idle', false);
+      if (loopActive) {
+        setTimeout(() => advanceLoop(), 1800);
+      }
+    };
+
+    utter.onerror = () => {
+      isSpeaking = false;
+      setDisplay('⟡ speech error — retrying', false);
+      if (loopActive) setTimeout(() => advanceLoop(), 2500);
+    };
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  function advanceLoop() {
+    if (!loopActive) return;
+    const script = TTS_SCRIPTS[loopPointer % TTS_SCRIPTS.length];
+    loopPointer++;
+    speak(script.text, { type: script.type });
+  }
+
+  function startLoop() {
+    loopActive = true;
+    loopPointer = Math.floor(Math.random() * TTS_SCRIPTS.length);
+    document.getElementById('loopBtn')?.classList.add('active');
+    advanceLoop();
+  }
+
+  function stopAll() {
+    loopActive = false;
+    isSpeaking = false;
+    window.speechSynthesis.cancel();
+    document.getElementById('loopBtn')?.classList.remove('active');
+    setDisplay('⟡ narration stopped', false);
+  }
+
+  function injectLine(text) {
+    if (!text.trim()) return;
+    loopActive = false;
+    document.getElementById('loopBtn')?.classList.remove('active');
+    speak(text.trim(), { type: 'neutral' });
+  }
+
+  function speakCardReading(draw) {
+    const text = `${draw.past.title}, ${draw.present.title}, ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ', reversed,' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'current'} of the moment.`;
+    speak(text, { type: 'fire' });
+  }
+
+  return { loadVoices, startLoop, stopAll, injectLine, speakCardReading, speak };
+})();
+
+// ════════════════════════════════════════════════════════════════
+// FIRE DECK LOGIC
+// ════════════════════════════════════════════════════════════════
+let drawTimer = 60;
+let cycleInterval, drawCountdownInterval;
+
+function drawFireSpread() {
+  const shuffled = [...FIRE_DECK];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return {
+    past:    { ...shuffled[0], position: 'past',    reversed: Math.random() < 0.28 },
+    present: { ...shuffled[1], position: 'present', reversed: Math.random() < 0.28 },
+    future:  { ...shuffled[2], position: 'future',  reversed: Math.random() < 0.28 }
+  };
+}
+
+function renderCard(card, frontId, cardId) {
+  const front = document.getElementById(frontId);
+  if (!front) return null;
+  front.innerHTML = `
+    <img src="${card.image}" alt="${card.name}" onerror="this.style.background='#1a0e06'; this.style.display='flex'">
+    <div class="info">
+      <div class="pos">${card.position.toUpperCase()}${card.reversed ? ' ⥮ REV' : ''}</div>
+      <div class="name">${card.name}</div>
+      <div class="meaning">${card.title} — ${card.meaning.substring(0, 64)}…</div>
+    </div>
+  `;
+  const inner = document.getElementById(cardId);
+  inner.classList.remove('flipped');
+  return inner;
+}
+
+let lastDraw = null;
+
+function revealCards(draw) {
+  lastDraw = draw;
+  const past    = renderCard(draw.past,    'frontPast',    'cardPast');
+  const present = renderCard(draw.present, 'frontPresent', 'cardPresent');
+  const future  = renderCard(draw.future,  'frontFuture',  'cardFuture');
+
+  setTimeout(() => past?.classList.add('flipped'),    100);
+  setTimeout(() => present?.classList.add('flipped'), 500);
+  setTimeout(() => future?.classList.add('flipped'),  900);
+
+  setTimeout(() => {
+    const syn = `${draw.past.title} → ${draw.present.title} → ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ' reversed' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'flow'} of the moment.`;
+    const el = document.getElementById('readingSynthesis');
+    const cards = document.getElementById('readingCards');
+    if (el) el.textContent = syn;
+    if (cards) cards.textContent = `${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
+    document.getElementById('readingBar')?.classList.add('visible');
+
+    // Broadcast to other tabs
+    try { new BroadcastChannel('ealdforn_narration').postMessage({ text: syn, source: 'Fire Deck', timestamp: Date.now() }); } catch(e) {}
+
+    // Speak the reading
+    TTS.speakCardReading(draw);
+  }, 1400);
+}
+
+function clearCards() {
+  ['cardPast','cardPresent','cardFuture'].forEach(id => {
+    document.getElementById(id)?.classList.remove('flipped');
+  });
+  document.getElementById('readingBar')?.classList.remove('visible');
+  setTimeout(() => {
+    ['frontPast','frontPresent','frontFuture'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    });
+  }, 450);
+}
+
+function startAutoDraw() {
+  revealCards(drawFireSpread());
+  drawTimer = 60;
+  updateDrawProgress();
+
+  cycleInterval = setInterval(() => {
+    clearCards();
+    setTimeout(() => revealCards(drawFireSpread()), 500);
+    drawTimer = 60;
+  }, 60000);
+
+  drawCountdownInterval = setInterval(() => {
+    drawTimer = Math.max(0, drawTimer - 1);
+    updateDrawProgress();
+  }, 1000);
+}
+
+function updateDrawProgress() {
+  const el = document.getElementById('nextDrawTimer');
+  const bar = document.getElementById('drawProgressBar');
+  if (el) el.textContent = drawTimer;
+  if (bar) bar.style.width = `${(drawTimer / 60) * 100}%`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// WATER DECK LOGIC
+// ════════════════════════════════════════════════════════════════
+let generatedWaterCards = new Set();
+
+function loadGeneratedStatus() {
+  try {
+    const saved = localStorage.getItem('ealdforn_water_generated');
+    if (saved) generatedWaterCards = new Set(JSON.parse(saved));
+  } catch(e) {}
+
+  WATER_DECK.forEach(card => {
+    fetch(`data/images/minor/water/${card.image}`, { method: 'HEAD', cache: 'no-cache' })
+      .then(res => {
+        if (res.ok && !generatedWaterCards.has(card.rank)) {
+          generatedWaterCards.add(card.rank);
+          saveGeneratedStatus();
+          renderWaterGrid();
+        }
+      }).catch(() => {});
+  });
+}
+
+function saveGeneratedStatus() {
+  try { localStorage.setItem('ealdforn_water_generated', JSON.stringify([...generatedWaterCards])); } catch(e) {}
+}
+
+function renderWaterGrid() {
+  const grid = document.getElementById('waterGrid');
+  if (!grid) return;
+  const count = generatedWaterCards.size;
+  const countEl = document.getElementById('waterCount');
+  if (countEl) countEl.textContent = `${count} / 14 GENERATED · CLICK STUB TO COPY PROMPT`;
+
+  grid.innerHTML = WATER_DECK.map(card => {
+    const done = generatedWaterCards.has(card.rank);
+    const shortTitle = card.title.length > 18 ? card.title.substring(0, 16) + '…' : card.title;
+    return `
+      <div class="water-stub ${done ? 'generated' : ''}"
+           data-rank="${card.rank}"
+           data-prompt="${card.nightCafePrompt.replace(/"/g,'&quot;')}"
+           data-image="${card.image}"
+           title="${done ? card.name + ' — GENERATED' : 'Copy prompt: ' + card.name}">
+        <div class="stub-icon">${done ? '💧' : '🕳'}</div>
+        <div class="stub-rank">${card.rank.toUpperCase()}</div>
+        <div class="stub-title">${shortTitle}</div>
+        <div class="stub-badge ${done ? 'done' : 'missing'}">${done ? 'DONE ✓' : 'MISSING'}</div>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('.water-stub').forEach(stub => {
+    stub.addEventListener('click', () => {
+      const rank = stub.dataset.rank;
+      const done = generatedWaterCards.has(rank);
+      if (!done) {
+        navigator.clipboard.writeText(stub.dataset.prompt).catch(() => {});
+        showToast(`📋 Copied: ${rank.toUpperCase()} of Water`);
+        addToConsole(`📋 Copied prompt for ${rank.toUpperCase()} of Water`, 'info');
+        TTS.speak(`Copying prompt for ${rank} of water. Generate, then upload.`, { type: 'water' });
+      } else {
+        showToast(`✓ ${rank.toUpperCase()} of Water already generated`);
+      }
+    });
+  });
+}
+
+function addToConsole(message, type = 'info') {
+  const el = document.getElementById('consoleLog');
+  if (!el) return;
+  const cls = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : 'log-info';
+  const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '⟡';
+  const line = document.createElement('span');
+  line.className = cls;
+  line.textContent = `${prefix} ${message}`;
+  el.prepend(document.createElement('br'));
+  el.prepend(line);
+  // Keep max 12 lines
+  while (el.childNodes.length > 24) el.removeChild(el.lastChild);
+}
+
+function copyAllMissingPrompts() {
+  const missing = WATER_DECK.filter(c => !generatedWaterCards.has(c.rank));
+  if (!missing.length) { showToast('🎉 All Water cards generated!'); return; }
+  const text = missing.map(c => `${c.rank.toUpperCase()} of Water — ${c.title}:\n${c.nightCafePrompt}`).join('\n\n---\n\n');
+  navigator.clipboard.writeText(text).catch(() => {});
+  showToast(`📋 Copied ${missing.length} missing prompts`);
+  addToConsole(`Copied ${missing.length} missing Water prompts to clipboard`, 'info');
+}
+
+// ════════════════════════════════════════════════════════════════
+// COUNTDOWN
+// ════════════════════════════════════════════════════════════════
+function updateCountdown() {
+  const now = new Date();
+  const reset = new Date();
+  reset.setHours(20, 0, 0, 0);
+  if (now >= reset) reset.setDate(reset.getDate() + 1);
+  const diff = reset - now;
+  const hours = Math.floor(diff / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+  const display = `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  const el = document.getElementById('countdownDisplay');
+  if (el) {
+    el.textContent = display;
+    el.classList.toggle('urgent', hours === 0 && mins < 30);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// GALLERY
+// ════════════════════════════════════════════════════════════════
+function buildGallery() {
+  const strip = document.getElementById('galleryStrip');
+  if (!strip) return;
+  strip.innerHTML = FIRE_DECK.map(card => `
+    <div class="gallery-item" title="${card.name} — ${card.title}">
+      <img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.style.opacity='0.2'; this.style.background='#1a0e06'">
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════════════════════
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ════════════════════════════════════════════════════════════════
+// UI BINDINGS
+// ════════════════════════════════════════════════════════════════
+function bindUI() {
+  // TTS buttons
+  document.getElementById('loopBtn')?.addEventListener('click', () => {
+    const btn = document.getElementById('loopBtn');
+    if (btn?.classList.contains('active')) {
+      TTS.stopAll();
+    } else {
+      TTS.startLoop();
     }
-  }
+  });
 
-  // ── AUTO-DRAW CYCLE ──────────────────────────────────────────────
-  let drawTimer=60,cycleInterval,countdownInterval;
-  function startAutoDraw(){
-    revealCards(drawFireSpread());drawTimer=60;updateTimer();
-    cycleInterval=setInterval(()=>{clearCards();setTimeout(()=>{revealCards(drawFireSpread());drawTimer=60;updateTimer();},500);},60000);
-    countdownInterval=setInterval(()=>{drawTimer--;updateTimer();},1000);
-  }
-  function updateTimer(){document.getElementById('nextDrawTimer').textContent=drawTimer;}
+  document.getElementById('stopBtn')?.addEventListener('click', () => TTS.stopAll());
 
-  // ── COUNTDOWN ────────────────────────────────────────────────────
-  function getNextReset(){const n=new Date(),r=new Date();r.setHours(20,0,0,0);if(n>=r)r.setDate(r.getDate()+1);return r.getTime();}
-  function updateCountdown(){
-    const diff=getNextReset()-Date.now();
-    if(diff<=0){document.getElementById('cdHrs').textContent='00';document.getElementById('cdMins').textContent='00';document.getElementById('cdSecs').textContent='00';return;}
-    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-    document.getElementById('cdHrs').textContent=String(h).padStart(2,'0');
-    document.getElementById('cdMins').textContent=String(m).padStart(2,'0');
-    document.getElementById('cdSecs').textContent=String(s).padStart(2,'0');
-  }
+  document.getElementById('speakBtn')?.addEventListener('click', () => {
+    const input = document.getElementById('injectInput');
+    const text = input?.value?.trim();
+    if (text) {
+      TTS.injectLine(text);
+      if (input) input.value = '';
+    }
+  });
 
-  // ── BOOT ─────────────────────────────────────────────────────────
-  buildCarousel();setInterval(rotateBg,8000);
+  document.getElementById('injectInput')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const text = e.target.value.trim();
+      if (text) { TTS.injectLine(text); e.target.value = ''; }
+    }
+  });
+
+  document.getElementById('copyAllMissingBtn')?.addEventListener('click', copyAllMissingPrompts);
+}
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+function init() {
   buildGallery();
-  updateCountdown();setInterval(updateCountdown,1000);
+  loadGeneratedStatus();
+  renderWaterGrid();
   startAutoDraw();
-  console.log('🔥 Ealdforn #5 · Digital Divination Live ready.');
-  console.log('   Auto-draw: Every 60s · Background: 24 images · Deck: Fire (14 cards)');
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  bindUI();
+  addToConsole('Fire → Water live dashboard ready.', 'info');
+
+  // Load TTS voices (may be async on some browsers)
+  TTS.loadVoices();
+  window.speechSynthesis.onvoiceschanged = () => TTS.loadVoices();
+
+  console.log('%c🜂🜄 EALDFORN #5 LIVE DASHBOARD', 'color:#e8602a; font-size:16px; font-weight:bold');
+  console.log('%c   Loop narration: click ⟳ LOOP button', 'color:#e8a840');
+  console.log('%c   Inject live line: type in box → SPEAK or Enter', 'color:#5ab8ff');
+  console.log('%c   Water stubs: click to copy NightCafe prompt', 'color:#40c8c0');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
