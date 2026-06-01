@@ -456,16 +456,16 @@
       {
         "id": "water_03",
         "name": "Three of Water",
-        "title": "The Muses",
-        "culture": "Greek",
-        "rank": "three",
+        "title": "Sedna",
+        "culture": "Inuit",
+        "rank": "nine",
         "element": "Water",
-        "ruling_god": "Apollo",
-        "keywords": ["inspiration", "community", "sacred circle", "the group chat", "harmony"],
-        "upright": "Nine voices in harmony. The Muses sing together and the world becomes more beautiful. The Three of Water is the group chat — the circle that holds you, the friends who inspire, the community that amplifies your song. Find your chorus.",
-        "reversed": "The Muses divided. The chorus that became competition. The group chat that turned toxic. Discord where there should be harmony. Find a new circle.",
-        "image": "data/images/minor/water/water_03.png",
-        "prompt": "The Nine Muses of Greek mythology in harmony, singing together, purple and green, classical tarot card style, artistic inspiration"
+        "ruling_god": "Aphrodite",
+        "keywords": ["the call from below", "projected desire", "the deep", "sacrifice", "the avatar"],
+        "upright": "Sedna's fingers were cut off and became the creatures of the sea. She dwells at the bottom of the ocean, and shamans dive down to comb her hair and ask for good hunting. The Nine of Water is the eGirl — the projected desire, the avatar of everything you want, the deep that calls you. The song is real. The sacrifice is real too. Who is diving? Who is being dived for?",
+        "reversed": "Sedna's hair combed. The shaman returning to the surface. The desire recognized, the projection named. You can love the deep without drowning in it.",
+        "image": "data/images/minor/water/water_09.png",
+        "prompt": "Sedna Inuit sea goddess at the bottom of the ocean, fingers becoming sea creatures, purple and green, Arctic mythology tarot card style"
       },
       {
         "id": "water_04",
@@ -540,17 +540,18 @@
       {
         "id": "water_09",
         "name": "Nine of Water",
-        "title": "Sedna",
-        "culture": "Inuit",
-        "rank": "nine",
+        "title": "The Muses",
+        "culture": "Greek",
+        "rank": "three",
         "element": "Water",
-        "ruling_god": "Aphrodite",
-        "keywords": ["the call from below", "projected desire", "the deep", "sacrifice", "the avatar"],
-        "upright": "Sedna's fingers were cut off and became the creatures of the sea. She dwells at the bottom of the ocean, and shamans dive down to comb her hair and ask for good hunting. The Nine of Water is the eGirl — the projected desire, the avatar of everything you want, the deep that calls you. The song is real. The sacrifice is real too. Who is diving? Who is being dived for?",
-        "reversed": "Sedna's hair combed. The shaman returning to the surface. The desire recognized, the projection named. You can love the deep without drowning in it.",
-        "image": "data/images/minor/water/water_09.png",
-        "prompt": "Sedna Inuit sea goddess at the bottom of the ocean, fingers becoming sea creatures, purple and green, Arctic mythology tarot card style"
+        "ruling_god": "Apollo",
+        "keywords": ["inspiration", "community", "sacred circle", "the group chat", "harmony"],
+        "upright": "Nine voices in harmony. The Muses sing together and the world becomes more beautiful. The Three of Water is the group chat — the circle that holds you, the friends who inspire, the community that amplifies your song. Find your chorus.",
+        "reversed": "The Muses divided. The chorus that became competition. The group chat that turned toxic. Discord where there should be harmony. Find a new circle.",
+        "image": "data/images/minor/water/water_03.png",
+        "prompt": "The Nine Muses of Greek mythology in harmony, singing together, purple and green, classical tarot card style, artistic inspiration"
       },
+        
       {
         "id": "water_10",
         "name": "Ten of Water",
