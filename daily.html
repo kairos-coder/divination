@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ealdforn · NightCafe Challenge · Mythology Iceberg</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
+      /* Shared with live.html */
       --fire-void: #060300;
       --fire-surface: #0e0804;
       --fire-primary: #c94a2a;
@@ -26,6 +27,7 @@
       --water-glow: rgba(90,184,255,0.15);
       --teal: #40c8c0;
 
+      /* Quest accent — deep gold/ochre */
       --myth-gold: #c8a84a;
       --myth-deep: #1a1206;
       --myth-glow: rgba(200,168,74,0.2);
@@ -35,19 +37,12 @@
       --mono: 'Share Tech Mono', monospace;
     }
 
-    html {
-      font-size: 18px;
-    }
-
-    body {
+    html, body {
+      min-height: 100%;
       background: var(--fire-void);
       color: var(--text);
       font-family: 'Cormorant Garamond', serif;
       overflow-x: hidden;
-    }
-
-    @media (max-width: 768px) {
-      html { font-size: 16px; }
     }
 
     /* ── BROADCAST BAR ─────────────────────────────────────────── */
@@ -55,13 +50,13 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 64px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1.5rem;
+      padding: 0 1.25rem;
       background: linear-gradient(90deg, #080402 0%, #0a1412 100%);
-      border-bottom: 1px solid rgba(200,168,74,0.25);
+      border-bottom: 1px solid rgba(200,168,74,0.2);
       gap: 1rem;
     }
 
@@ -76,32 +71,31 @@
     .live-badge {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.4rem;
       font-family: var(--mono);
-      font-size: 0.75rem;
+      font-size: 0.55rem;
       letter-spacing: 0.18em;
       color: var(--myth-gold);
       flex-shrink: 0;
     }
 
     .live-dot {
-      width: 10px;
-      height: 10px;
+      width: 7px; height: 7px;
       border-radius: 50%;
       background: var(--myth-gold);
-      box-shadow: 0 0 8px var(--myth-gold);
+      box-shadow: 0 0 6px var(--myth-gold);
       animation: livepulse 1.4s ease-in-out infinite;
     }
 
     @keyframes livepulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.65); }
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.35; transform:scale(0.65); }
     }
 
     .bar-title {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
       background: linear-gradient(90deg, var(--ember), var(--myth-gold), var(--water-bright));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -119,14 +113,14 @@
 
     .countdown-label {
       font-family: var(--mono);
-      font-size: 0.5rem;
+      font-size: 0.36rem;
       letter-spacing: 0.15em;
       color: var(--text-dim);
     }
 
     .countdown-time {
       font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--myth-gold);
       letter-spacing: 0.08em;
@@ -134,16 +128,16 @@
       text-shadow: 0 0 12px var(--myth-glow);
     }
 
-    /* ── MAIN GRID ── */
+    /* ── MAIN GRID ─────────────────────────────────────────────── */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto auto;
       gap: 0;
-      min-height: calc(100vh - 64px);
+      min-height: calc(100vh - 48px);
     }
 
-    /* ── QUEST PANEL ── */
+    /* ── QUEST PANEL (top-left, large) ─────────────────────────── */
     .quest-panel {
       grid-column: 1;
       grid-row: 1 / 3;
@@ -152,14 +146,30 @@
         radial-gradient(ellipse at 10% 85%, rgba(201,74,42,0.06) 0%, transparent 50%),
         linear-gradient(160deg, #0a0804 0%, #060300 100%);
       border-right: 1px solid rgba(200,168,74,0.12);
-      padding: 1.8rem 1.5rem;
+      padding: 1.5rem 1.25rem;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1rem;
       position: relative;
-      overflow-y: auto;
+      overflow: hidden;
     }
 
+    .quest-panel::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 100px;
+      background: linear-gradient(0deg, rgba(200,168,74,0.04), transparent);
+      pointer-events: none;
+      animation: mythpulse 4s ease-in-out infinite;
+    }
+
+    @keyframes mythpulse {
+      0%,100% { opacity:0.5; }
+      50% { opacity:1; }
+    }
+
+    /* Quest header */
     .quest-header {
       position: relative;
       z-index: 2;
@@ -167,33 +177,35 @@
 
     .quest-eyebrow {
       font-family: var(--mono);
-      font-size: 0.6rem;
+      font-size: 0.4rem;
       letter-spacing: 0.25em;
       color: var(--myth-gold);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
     }
 
     .quest-name {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       color: var(--gold);
       text-shadow: 0 0 30px rgba(232,201,106,0.3);
       line-height: 1.2;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
     }
 
     .quest-tagline {
-      font-size: 1rem;
+      font-size: 0.75rem;
       font-style: italic;
-      color: rgba(240,224,208,0.7);
+      color: rgba(240,224,208,0.6);
       line-height: 1.5;
-      max-width: 480px;
+      max-width: 420px;
     }
 
     /* Day timeline */
     .day-timeline {
       display: flex;
-      gap: 0.6rem;
+      gap: 0.35rem;
+      position: relative;
+      z-index: 2;
       flex-wrap: wrap;
     }
 
@@ -201,22 +213,23 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.2rem;
       cursor: default;
     }
 
     .day-pip-circle {
-      width: 48px;
-      height: 48px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      border: 2px solid rgba(200,168,74,0.25);
+      border: 1.5px solid rgba(200,168,74,0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
+      font-size: 0.5rem;
       font-weight: 700;
       color: var(--text-dim);
+      position: relative;
       transition: all 0.2s;
     }
 
@@ -230,67 +243,69 @@
       background: rgba(200,168,74,0.2);
       border-color: var(--gold);
       color: var(--gold);
-      box-shadow: 0 0 16px rgba(200,168,74,0.4);
+      box-shadow: 0 0 12px rgba(200,168,74,0.3);
       animation: todaypulse 2s ease-in-out infinite;
     }
 
     @keyframes todaypulse {
       0%,100% { box-shadow: 0 0 8px rgba(200,168,74,0.3); }
-      50% { box-shadow: 0 0 20px rgba(200,168,74,0.6); }
+      50% { box-shadow: 0 0 18px rgba(200,168,74,0.5); }
     }
 
     .day-pip-label {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.3rem;
       letter-spacing: 0.1em;
       color: var(--text-dim);
       text-align: center;
-      max-width: 65px;
-      line-height: 1.3;
+      max-width: 48px;
+      line-height: 1.2;
     }
 
     .day-pip.today .day-pip-label { color: var(--myth-gold); }
     .day-pip.completed .day-pip-label { color: rgba(200,168,74,0.6); }
 
-    /* Today's theme */
+    /* Today's theme block */
     .today-theme {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(200,168,74,0.2);
-      border-radius: 12px;
-      padding: 1.1rem 1.2rem;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(200,168,74,0.15);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      position: relative;
+      z-index: 2;
     }
 
     .theme-eyebrow {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.38rem;
       letter-spacing: 0.2em;
       color: var(--myth-gold);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     .theme-name {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       color: var(--gold);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
     }
 
     .theme-desc {
-      font-size: 0.95rem;
+      font-size: 0.72rem;
       font-style: italic;
-      color: rgba(240,224,208,0.7);
-      line-height: 1.5;
+      color: rgba(240,224,208,0.65);
+      line-height: 1.55;
     }
 
     .theme-stats {
       display: flex;
-      gap: 1.2rem;
-      margin-top: 0.7rem;
+      gap: 1rem;
+      margin-top: 0.5rem;
     }
 
     .theme-stat {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.38rem;
       color: var(--text-dim);
     }
 
@@ -298,61 +313,63 @@
       color: var(--water-bright);
     }
 
-    /* Entries section */
+    /* ── YOUR ENTRIES ───────────────────────────────────────────── */
     .entries-section {
+      position: relative;
+      z-index: 2;
       flex: 1;
     }
 
     .section-title {
       font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
+      font-size: 0.5rem;
       letter-spacing: 0.2em;
       color: var(--ember);
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
 
     .section-title::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(232,168,64,0.2);
+      background: rgba(232,168,64,0.15);
     }
 
     .entries-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 0.9rem;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.6rem;
     }
 
     .entry-card {
       aspect-ratio: 2/3;
-      border-radius: 10px;
+      border-radius: 8px;
       overflow: hidden;
-      border: 1px solid rgba(200,168,74,0.25);
+      border: 1px solid rgba(200,168,74,0.2);
       background: var(--fire-surface);
+      position: relative;
       cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
     }
 
     .entry-card:hover {
-      transform: translateY(-4px) scale(1.02);
+      transform: translateY(-3px) scale(1.02);
       border-color: var(--myth-gold);
-      box-shadow: 0 8px 28px rgba(200,168,74,0.2);
+      box-shadow: 0 6px 24px rgba(200,168,74,0.15);
     }
 
     .entry-card img {
-      width: 100%;
-      height: 65%;
+      width: 100%; height: 65%;
       object-fit: cover;
     }
 
     .entry-card-body {
-      padding: 0.5rem 0.6rem;
+      padding: 0.35rem 0.4rem;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -360,10 +377,9 @@
     }
 
     .entry-card-title {
-      font-size: 0.7rem;
-      font-weight: 600;
+      font-size: 0.38rem;
       color: var(--text);
-      line-height: 1.35;
+      line-height: 1.3;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -372,30 +388,30 @@
 
     .entry-reactions {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.3rem;
       flex-wrap: wrap;
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
     }
 
     .reaction {
       font-family: var(--mono);
-      font-size: 0.5rem;
+      font-size: 0.3rem;
       color: var(--text-dim);
-      background: rgba(255,255,255,0.05);
-      padding: 0.1rem 0.35rem;
-      border-radius: 4px;
+      background: rgba(255,255,255,0.04);
+      padding: 0.08rem 0.2rem;
+      border-radius: 3px;
     }
 
     /* Upload slot */
     .upload-slot {
       aspect-ratio: 2/3;
-      border-radius: 10px;
-      border: 2px dashed rgba(200,168,74,0.35);
+      border-radius: 8px;
+      border: 1.5px dashed rgba(200,168,74,0.35);
       background: repeating-linear-gradient(
         45deg,
         rgba(255,255,255,0.02) 0px,
-        rgba(255,255,255,0.02) 12px,
-        transparent 12px, transparent 24px
+        rgba(255,255,255,0.02) 10px,
+        transparent 10px, transparent 20px
       );
       display: flex;
       flex-direction: column;
@@ -403,24 +419,28 @@
       justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
-      gap: 0.4rem;
+      gap: 0.3rem;
+      padding: 0.5rem;
     }
 
-    .upload-slot:hover {
+    .upload-slot:hover, .upload-slot.dragover {
       border-color: var(--myth-gold);
-      background: rgba(200,168,74,0.08);
+      background: rgba(200,168,74,0.06);
+      box-shadow: 0 0 16px rgba(200,168,74,0.1);
     }
 
-    .upload-icon { font-size: 2rem; opacity: 0.5; }
+    .upload-icon { font-size: 1.4rem; opacity: 0.5; }
+
     .upload-label {
       font-family: var(--mono);
-      font-size: 0.5rem;
+      font-size: 0.32rem;
       letter-spacing: 0.1em;
       color: var(--text-dim);
       text-align: center;
     }
 
-    /* ── PREV PANEL ── */
+    /* ── RIGHT COLUMN ──────────────────────────────────────────── */
+    /* Top-right: Previous days summary */
     .prev-panel {
       grid-column: 2;
       grid-row: 1;
@@ -428,39 +448,45 @@
         radial-gradient(ellipse at 30% 20%, rgba(42,138,204,0.06) 0%, transparent 55%),
         linear-gradient(160deg, #040d18 0%, #060300 100%);
       border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding: 1.5rem;
-      overflow-y: auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
     }
 
     .prev-days {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      flex: 1;
     }
 
     .prev-day-row {
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       align-items: flex-start;
+      position: relative;
     }
 
     .prev-day-row.active-day {
-      border-color: rgba(200,168,74,0.3);
-      background: rgba(200,168,74,0.06);
+      border-color: rgba(200,168,74,0.2);
+      background: rgba(200,168,74,0.04);
     }
 
     .prev-day-number {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.3rem;
+      font-size: 1rem;
       color: var(--myth-gold);
-      opacity: 0.5;
+      opacity: 0.4;
       line-height: 1;
       flex-shrink: 0;
-      width: 32px;
+      width: 24px;
       text-align: center;
     }
 
@@ -470,33 +496,34 @@
 
     .prev-day-theme {
       font-family: 'Cinzel', serif;
-      font-size: 0.75rem;
+      font-size: 0.5rem;
       letter-spacing: 0.1em;
       color: var(--gold);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
 
     .prev-day-desc {
-      font-size: 0.7rem;
+      font-size: 0.5rem;
       font-style: italic;
-      color: rgba(240,224,208,0.55);
-      line-height: 1.45;
+      color: rgba(240,224,208,0.5);
+      line-height: 1.4;
     }
 
     .prev-day-count {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.35rem;
       color: var(--text-dim);
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
     }
 
     .prev-day-count span { color: var(--teal); }
 
     .prev-day-badge {
       font-family: var(--mono);
-      font-size: 0.45rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
+      font-size: 0.3rem;
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+      align-self: flex-start;
       flex-shrink: 0;
     }
 
@@ -518,117 +545,82 @@
       border: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* Dreamscapes prompt card */
-    .prompt-card {
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(90,184,255,0.15);
-      border-radius: 10px;
-      padding: 0.9rem 1rem;
-      margin-top: 0.75rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .prompt-card:hover {
-      border-color: var(--water-bright);
-      background: rgba(90,184,255,0.08);
-    }
-
-    .prompt-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .prompt-icon { font-size: 1.2rem; }
-    .prompt-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      color: var(--water-foam);
-    }
-
-    .prompt-preview {
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      font-style: italic;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    /* ── SUBMIT PANEL ── */
+    /* ── BOTTOM-RIGHT: Upload / Submit panel ───────────────────── */
     .submit-panel {
       grid-column: 2;
       grid-row: 2;
       background:
         radial-gradient(ellipse at 80% 80%, rgba(201,74,42,0.05) 0%, transparent 55%),
         linear-gradient(160deg, #060300 0%, #040d18 100%);
-      padding: 1.5rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       border-top: 1px solid rgba(255,255,255,0.04);
     }
 
     .submit-form {
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.5rem;
     }
 
     .form-row {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
       align-items: center;
     }
 
     .form-label {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.38rem;
       letter-spacing: 0.12em;
       color: var(--text-dim);
       flex-shrink: 0;
-      width: 70px;
+      width: 52px;
     }
 
     .form-input {
       flex: 1;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.45);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 0.5rem 0.8rem;
+      border-radius: 5px;
+      padding: 0.3rem 0.55rem;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 0.85rem;
+      font-size: 0.6rem;
       color: var(--text);
       outline: none;
+      transition: border-color 0.2s;
     }
 
     .form-input:focus {
       border-color: rgba(200,168,74,0.4);
-      box-shadow: 0 0 10px rgba(200,168,74,0.1);
+      box-shadow: 0 0 8px rgba(200,168,74,0.1);
     }
+
+    .form-input::placeholder { color: var(--text-dim); font-style: italic; }
 
     .form-textarea {
       resize: none;
-      height: 70px;
+      height: 52px;
       line-height: 1.5;
     }
 
+    /* Drop zone */
     .drop-zone {
-      border: 2px dashed rgba(200,168,74,0.3);
-      border-radius: 10px;
-      padding: 1rem;
+      border: 1.5px dashed rgba(200,168,74,0.3);
+      border-radius: 8px;
+      padding: 0.75rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
-      background: rgba(0,0,0,0.25);
+      background: rgba(0,0,0,0.2);
       position: relative;
     }
 
     .drop-zone:hover, .drop-zone.dragover {
       border-color: var(--myth-gold);
-      background: rgba(200,168,74,0.06);
+      background: rgba(200,168,74,0.05);
     }
 
     .drop-zone input[type=file] {
@@ -642,17 +634,17 @@
 
     .drop-zone-text {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.4rem;
       letter-spacing: 0.1em;
       color: var(--text-dim);
       pointer-events: none;
     }
 
     .drop-preview {
-      max-height: 100px;
+      max-height: 90px;
       max-width: 100%;
       object-fit: contain;
-      border-radius: 6px;
+      border-radius: 5px;
       display: none;
       margin: 0 auto;
     }
@@ -664,25 +656,63 @@
       border: 1px solid rgba(200,168,74,0.4);
       color: var(--gold);
       font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
+      font-size: 0.5rem;
       letter-spacing: 0.2em;
-      padding: 0.6rem;
-      border-radius: 8px;
+      padding: 0.45rem;
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
+      width: 100%;
     }
 
     .submit-btn:hover {
       background: linear-gradient(135deg, rgba(200,168,74,0.25), rgba(200,168,74,0.15));
-      box-shadow: 0 0 20px rgba(200,168,74,0.15);
+      box-shadow: 0 0 16px rgba(200,168,74,0.15);
     }
 
+    /* Previous challenge card (Childhood Dreamscapes) */
+    .prev-challenge-card {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(90,184,255,0.1);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .prev-challenge-icon { font-size: 1.4rem; opacity: 0.6; flex-shrink: 0; }
+
+    .prev-challenge-info { flex: 1; }
+
+    .prev-challenge-label {
+      font-family: var(--mono);
+      font-size: 0.34rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      margin-bottom: 0.15rem;
+    }
+
+    .prev-challenge-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      color: var(--water-foam);
+      letter-spacing: 0.08em;
+    }
+
+    .prev-challenge-status {
+      font-family: var(--mono);
+      font-size: 0.32rem;
+      color: var(--teal);
+      margin-top: 0.1rem;
+    }
+
+    /* Saved entries from localStorage */
     .saved-count {
       font-family: var(--mono);
-      font-size: 0.55rem;
+      font-size: 0.38rem;
       color: var(--text-dim);
       text-align: center;
-      margin-top: 0.25rem;
     }
 
     .saved-count span { color: var(--myth-gold); }
@@ -690,16 +720,16 @@
     /* Toast */
     .toast {
       position: fixed;
-      bottom: 30px;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(8px);
-      background: rgba(10,8,4,0.96);
+      background: rgba(10,8,4,0.95);
       border: 1px solid var(--myth-gold);
       color: var(--gold);
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
       font-family: var(--mono);
-      font-size: 0.65rem;
+      font-size: 0.5rem;
       z-index: 1000;
       opacity: 0;
       transition: opacity 0.25s, transform 0.25s;
@@ -713,7 +743,7 @@
     .lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
+      background: rgba(0,0,0,0.9);
       z-index: 500;
       display: flex;
       align-items: center;
@@ -727,12 +757,12 @@
     .lightbox.open { opacity: 1; pointer-events: all; }
 
     .lightbox img {
-      max-width: min(500px, 85vw);
-      max-height: 80vh;
+      max-width: 80vw;
+      max-height: 82vh;
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 10px;
       border: 1px solid rgba(200,168,74,0.3);
-      box-shadow: 0 0 80px rgba(200,168,74,0.2);
+      box-shadow: 0 0 60px rgba(200,168,74,0.15), 0 24px 48px rgba(0,0,0,0.7);
     }
 
     .lightbox-close-btn {
@@ -742,25 +772,29 @@
       border: 1px solid rgba(200,168,74,0.3);
       color: var(--myth-gold);
       font-family: var(--mono);
-      font-size: 0.65rem;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
+      font-size: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
       cursor: pointer;
     }
 
     /* Responsive */
     @media (max-width: 900px) {
-      .main-grid { grid-template-columns: 1fr; }
-      .quest-panel { grid-row: 1; }
-      .prev-panel { grid-row: 2; }
-      .submit-panel { grid-row: 3; }
+      .main-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .quest-panel { grid-column: 1; grid-row: 1; }
+      .prev-panel  { grid-column: 1; grid-row: 2; }
+      .submit-panel { grid-column: 1; grid-row: 3; }
     }
   </style>
 </head>
 <body>
 
+<!-- ── BROADCAST BAR ──────────────────────────────────────────── -->
 <div class="broadcast-bar">
-  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    LIVE
+  </div>
   <div class="bar-title">EALDFORN · NIGHTCAFE CHALLENGE · MYTHOLOGY ICEBERG</div>
   <div class="countdown-bar">
     <div class="countdown-label">UNTIL MIDNIGHT RESET</div>
@@ -768,93 +802,194 @@
   </div>
 </div>
 
+<!-- ── MAIN GRID ──────────────────────────────────────────────── -->
 <div class="main-grid">
 
-  <!-- LEFT: QUEST PANEL -->
+  <!-- ══ LEFT: QUEST PANEL ══════════════════════════════════════ -->
   <div class="quest-panel">
+
     <div class="quest-header">
       <div class="quest-eyebrow">⟡ 7-DAY QUEST · ACTIVE</div>
       <div class="quest-name">The Mythology Iceberg</div>
       <div class="quest-tagline">A 7-day descent into myth and legend. Start with the stories everyone knows, then go deeper into the forgotten gods and folklore of civilisations rarely explored.</div>
     </div>
 
+    <!-- Day timeline -->
     <div class="day-timeline" id="dayTimeline"></div>
 
+    <!-- Today's theme -->
     <div class="today-theme">
-      <div class="theme-eyebrow">TODAY · DAY 3 OF 7</div>
-      <div class="theme-name">🏺 Egyptian Mythology</div>
-      <div class="theme-desc">Pharaohs, the afterlife, and animal-headed gods. A world where death was just another journey.</div>
+      <div class="theme-eyebrow">TODAY · DAY 4 OF 7</div>
+      <div class="theme-name">🐍 Mesoamerican Mythology</div>
+      <div class="theme-desc">Aztec and Maya cosmology. Feathered serpents, sun gods, and creation stories written in sacrifice.</div>
       <div class="theme-stats">
-        <div class="theme-stat">ENTRIES <span id="entryCount">9.6K+</span></div>
-        <div class="theme-stat">REACTIONS <span>49K+</span></div>
-        <div class="theme-stat">YOUR SUBMISSIONS <span id="submissionCount">4</span></div>
+        <div class="theme-stat">ENTRIES <span id="entryCount">376</span></div>
+        <div class="theme-stat">REACTIONS <span>844</span></div>
+        <div class="theme-stat">YOUR SUBMISSIONS <span id="submissionCount">0</span></div>
       </div>
     </div>
 
+    <!-- Your entries -->
     <div class="entries-section">
       <div class="section-title">YOUR ENTRIES TODAY</div>
       <div class="entries-grid" id="entriesGrid">
-        <!-- Thoth -->
-        <div class="entry-card" data-img="data/images/thoth-card.jpg" data-title="Thoth — Scribe of the Gods" onclick="openLightbox(this)">
-          <img src="data/images/thoth-card.jpg" alt="Thoth tarot card" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
+        <!-- Canon cards from minor_arcana — already in the Ealdforn deck -->
+        <div class="entry-card" data-img="data/images/minor/fire/fire_08.png" data-title="Huitzilopochtli — Eight of Fire" onclick="openLightbox(this)">
+          <img src="data/images/minor/fire/fire_08.png" alt="Huitzilopochtli" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
           <div class="entry-card-body">
-            <div class="entry-card-title">Thoth — Scribe of the Gods</div>
-            <div class="entry-reactions"><span class="reaction">❤️ 4</span><span class="reaction">👏 3</span><span class="reaction">✨ 2</span></div>
+            <div class="entry-card-title">Huitzilopochtli — Eight of Fire</div>
+            <div class="entry-reactions">
+              <span class="reaction">🜂 CANON</span>
+            </div>
           </div>
         </div>
-        <!-- Ra -->
-        <div class="entry-card" data-img="data/images/ra-card.jpg" data-title="Ra — Sun God, Art Nouveau" onclick="openLightbox(this)">
-          <img src="data/images/ra-card.jpg" alt="Ra tarot card" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
+        <div class="entry-card" data-img="data/images/minor/earth/earth_07.png" data-title="Chicomecoatl — Seven of Earth" onclick="openLightbox(this)">
+          <img src="data/images/minor/earth/earth_07.png" alt="Chicomecoatl" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
           <div class="entry-card-body">
-            <div class="entry-card-title">Ra — Art Nouveau Style</div>
-            <div class="entry-reactions"><span class="reaction">🔥 2</span><span class="reaction">👏 2</span><span class="reaction">😎 1</span></div>
+            <div class="entry-card-title">Chicomecoatl — Seven of Earth</div>
+            <div class="entry-reactions">
+              <span class="reaction">🜃 CANON</span>
+            </div>
           </div>
         </div>
-        <!-- Isis -->
-        <div class="entry-card" data-img="data/images/isis-card.jpg" data-title="Isis — Goddess of Magic" onclick="openLightbox(this)">
-          <img src="data/images/isis-card.jpg" alt="Isis tarot card" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
-          <div class="entry-card-body">
-            <div class="entry-card-title">Isis — Goddess of Magic</div>
-            <div class="entry-reactions"><span class="reaction">😎 2</span><span class="reaction">👏 2</span><span class="reaction">❤️ 1</span></div>
-          </div>
+        <!-- Upload slot x2 — Quetzalcoatl and Tlaloc targets -->
+        <div class="upload-slot" id="uploadSlot" title="Generate: Quetzalcoatl — feathered serpent, creation, wind">
+          <div class="upload-icon">🐍</div>
+          <div class="upload-label">QUETZALCOATL</div>
         </div>
-        <!-- Anubis -->
-        <div class="entry-card" data-img="data/images/anubis-card.jpg" data-title="Anubis — God of the Afterlife" onclick="openLightbox(this)">
-          <img src="data/images/anubis-card.jpg" alt="Anubis tarot card" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
-          <div class="entry-card-body">
-            <div class="entry-card-title">Anubis — God of the Afterlife</div>
-            <div class="entry-reactions"><span class="reaction">✨ 3</span><span class="reaction">🔥 1</span></div>
-          </div>
+        <div class="upload-slot" id="uploadSlot2" title="Generate: Tlaloc — rain god, goggle eyes, sacrifice">
+          <div class="upload-icon">🌧</div>
+          <div class="upload-label">TLALOC</div>
         </div>
-        <div class="upload-slot" id="uploadSlot"><div class="upload-icon">＋</div><div class="upload-label">ADD ENTRY</div></div>
       </div>
     </div>
-  </div>
 
-  <!-- TOP-RIGHT: PREV DAYS -->
+  </div><!-- /quest-panel -->
+
+  <!-- ══ TOP-RIGHT: PREV DAYS ════════════════════════════════════ -->
   <div class="prev-panel">
+
     <div class="section-title">QUEST PROGRESS</div>
-    <div class="prev-days" id="prevDaysContainer"></div>
 
-    <!-- Dreamscapes Prompt Card -->
-    <div class="prompt-card" id="dreamscapesCard">
-      <div class="prompt-header">
-        <div class="prompt-icon">🌙</div>
-        <div class="prompt-title">CHILDHOOD DREAMSCAPES · 12 PROMPTS</div>
+    <div class="prev-days">
+      <div class="prev-day-row">
+        <div class="prev-day-number">1</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Greek Mythology</div>
+          <div class="prev-day-desc">Gods, heroes, monsters. Olympus, the underworld, epic quests — the myths that shaped Western storytelling.</div>
+          <div class="prev-day-count">ENTRIES <span>10K+</span> · REACTIONS <span>57K+</span> · YOUR ENTRIES <span>0</span></div>
+        </div>
+        <div class="prev-day-badge badge-done">DONE</div>
       </div>
-      <div class="prompt-preview" id="dreamscapesPreview">Click to copy a random dreamscape prompt →</div>
-    </div>
-  </div>
 
-  <!-- BOTTOM-RIGHT: SUBMIT -->
+      <div class="prev-day-row">
+        <div class="prev-day-number">2</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Norse Mythology</div>
+          <div class="prev-day-desc">Vikings, Valhalla, and the world tree. Odin, Thor, Loki, and the inevitable twilight of the gods.</div>
+          <div class="prev-day-count">ENTRIES <span>10K+</span> · REACTIONS <span>56K+</span> · YOUR ENTRIES <span>4</span></div>
+          <div style="margin-top:0.3rem; display:flex; gap:0.3rem; flex-wrap:wrap;">
+            <span class="reaction" style="font-size:0.32rem;">Baldr · 4 reactions</span>
+            <span class="reaction" style="font-size:0.32rem;">Bragi · 1</span>
+            <span class="reaction" style="font-size:0.32rem;">Skadi · 1</span>
+            <span class="reaction" style="font-size:0.32rem;">Hel · 1</span>
+          </div>
+        </div>
+        <div class="prev-day-badge badge-done">DONE</div>
+      </div>
+
+      <div class="prev-day-row active-day">
+        <div class="prev-day-number">3</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Egyptian Mythology</div>
+          <div class="prev-day-desc">Pharaohs, the afterlife, and animal-headed gods.</div>
+          <div class="prev-day-count">ENTRIES <span>9.6K+</span> · REACTIONS <span>49K+</span> · YOUR ENTRIES <span>4</span></div>
+          <div style="margin-top:0.3rem; display:flex; gap:0.3rem; flex-wrap:wrap;">
+            <span class="reaction" style="font-size:0.32rem;">Thoth · ❤️4 👏3 ✨2</span>
+            <span class="reaction" style="font-size:0.32rem;">Ra · 🔥2 👏2 😎1</span>
+            <span class="reaction" style="font-size:0.32rem;">Isis · 😎2 👏2 ❤️1</span>
+            <span class="reaction" style="font-size:0.32rem;">Anubis · —</span>
+          </div>
+        </div>
+        <div class="prev-day-badge badge-done">DONE</div>
+      </div>
+
+      <div class="prev-day-row active-day" style="border-color:rgba(200,168,74,0.3)">
+        <div class="prev-day-number">4</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Mesoamerican Mythology</div>
+          <div class="prev-day-desc">Feathered serpents, sun gods, and creation stories written in sacrifice.</div>
+          <div class="prev-day-count">ENTRIES <span>376</span> · REACTIONS <span>844</span> · YOUR ENTRIES <span id="todayEntryCountBadge">2</span></div>
+          <div style="margin-top:0.3rem; display:flex; gap:0.3rem; flex-wrap:wrap;">
+            <span class="reaction" style="font-size:0.32rem;">Huitzilopochtli · 🜂 canon</span>
+            <span class="reaction" style="font-size:0.32rem;">Chicomecoatl · 🜃 canon</span>
+          </div>
+        </div>
+        <div class="prev-day-badge badge-today">TODAY</div>
+      </div>
+
+      <div class="prev-day-row">
+        <div class="prev-day-number">5</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Day 5 — Unknown</div>
+          <div class="prev-day-desc">Further still…</div>
+        </div>
+        <div class="prev-day-badge badge-upcoming">UPCOMING</div>
+      </div>
+
+      <div class="prev-day-row">
+        <div class="prev-day-number">6</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Day 6 — Unknown</div>
+          <div class="prev-day-desc">The forgotten layers…</div>
+        </div>
+        <div class="prev-day-badge badge-upcoming">UPCOMING</div>
+      </div>
+
+      <div class="prev-day-row">
+        <div class="prev-day-number">7</div>
+        <div class="prev-day-info">
+          <div class="prev-day-theme">Day 7 — Unknown</div>
+          <div class="prev-day-desc">The bottom of the iceberg.</div>
+        </div>
+        <div class="prev-day-badge badge-upcoming">UPCOMING</div>
+      </div>
+    </div>
+
+    <!-- Previous daily challenge -->
+    <div class="prev-challenge-card">
+      <div class="prev-challenge-icon">🌙</div>
+      <div class="prev-challenge-info">
+        <div class="prev-challenge-label">PREVIOUS DAILY CHALLENGE</div>
+        <div class="prev-challenge-name">Childhood Dreamscapes</div>
+        <div class="prev-challenge-status">✓ COMPLETED</div>
+      </div>
+    </div>
+
+  </div><!-- /prev-panel -->
+
+  <!-- ══ BOTTOM-RIGHT: SUBMIT NEW ENTRY ════════════════════════ -->
   <div class="submit-panel">
+
     <div class="section-title">LOG NEW ENTRY</div>
+
     <div class="drop-zone" id="dropZone">
       <input type="file" id="fileInput" accept="image/*" />
       <img class="drop-preview" id="dropPreview" alt="preview" />
       <div class="drop-zone-text" id="dropZoneText">🜂 DROP IMAGE OR CLICK TO UPLOAD</div>
     </div>
+
     <div class="submit-form">
+      <div class="form-row">
+        <div class="form-label">CARD</div>
+        <select class="form-input" id="deckPromptSelect" style="font-family:var(--mono); font-size:0.42rem; cursor:pointer;">
+          <option value="">— pick a card to copy prompt —</option>
+        </select>
+      </div>
+      <div class="form-row" id="promptPreviewRow" style="display:none">
+        <div class="form-label" style="color:var(--myth-gold)">PROMPT</div>
+        <div class="form-input" id="promptPreview" style="font-size:0.38rem; color:var(--text-dim); font-style:italic; line-height:1.4; cursor:pointer; user-select:all;" title="Click to copy"></div>
+      </div>
       <div class="form-row">
         <div class="form-label">TITLE</div>
         <input type="text" class="form-input" id="entryTitle" placeholder="e.g. Horus, falcon-headed god, tarot card…" />
@@ -868,41 +1003,101 @@
         <input type="text" class="form-input" id="entryUrl" placeholder="NightCafe share URL (optional)" />
       </div>
     </div>
+
     <button class="submit-btn" id="submitBtn">⟡ ADD TO TODAY'S ENTRIES</button>
-    <div class="saved-count"><span id="localEntryCount">4</span> entries logged today</div>
-  </div>
-</div>
+
+    <div class="saved-count" id="savedCount">
+      <span id="localEntryCount">4</span> entries logged today
+    </div>
+
+  </div><!-- /submit-panel -->
+
+</div><!-- /main-grid -->
 
 <div class="toast" id="toast"></div>
-<div class="lightbox" id="lightbox"><img id="lightboxImg" src="" alt="" /><button class="lightbox-close-btn" id="lightboxCloseBtn">✕ CLOSE</button></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" src="" alt="" />
+  <button class="lightbox-close-btn" id="lightboxCloseBtn">✕ CLOSE</button>
+</div>
 
 <script>
 // ════════════════════════════════════════════════════════════════
-// QUEST DAY DATA
+// QUEST DAY TIMELINE DATA
 // ════════════════════════════════════════════════════════════════
-const QUEST_DAYS = [
-  { day: 1, theme: 'Greek',    label: 'GREEK',    state: 'completed' },
-  { day: 2, theme: 'Norse',    label: 'NORSE',    state: 'completed' },
-  { day: 3, theme: 'Egyptian', label: 'EGYPT',    state: 'today'     },
-  { day: 4, theme: 'Hindu',    label: 'HINDU',    state: 'upcoming'  },
-  { day: 5, theme: 'Celtic',   label: 'CELTIC',   state: 'upcoming'  },
-  { day: 6, theme: 'Slavic',   label: 'SLAVIC',   state: 'upcoming'  },
-  { day: 7, theme: 'Abenaki',  label: 'ABENAKI',  state: 'upcoming'  },
+// ════════════════════════════════════════════════════════════════
+// AZTEC DECK — 14 cards, image convention: aztec_ace.png etc.
+// All images: data/images/minor/aztec/{id}.png
+// ════════════════════════════════════════════════════════════════
+const AZTEC_DECK = [
+  { id:'aztec_ace',    rank:'ace',    name:'Ace of the Sun',      title:'Tonatiuh',        culture:'Aztec',
+    meaning:'The sun demands blood to rise. The first card is the first sacrifice — the cost of beginning.',
+    prompt:'Tonatiuh Aztec sun god, blazing disc face, sacrificial light, feathers and obsidian, purple and green palette, tarot card 2:3 aspect ratio' },
+
+  { id:'aztec_02',     rank:'two',    name:'Two of the Sun',      title:'Cipactli',        culture:'Aztec',
+    meaning:'The crocodilian earth monster slain to make the world. Creation requires a body. What are you built on?',
+    prompt:'Cipactli Aztec earth monster, crocodilian and primordial, world forming from its body, purple and green, dark mythology tarot card 2:3' },
+
+  { id:'aztec_03',     rank:'three',  name:'Three of the Sun',    title:'Xipe Totec',      culture:'Aztec',
+    meaning:'The Flayed One — rebirth through the shedding of skin. The renewal that looks like destruction.',
+    prompt:'Xipe Totec Aztec god of renewal, wearing flayed skin, new growth emerging, purple and green, ritual transformation tarot card 2:3' },
+
+  { id:'aztec_04',     rank:'four',   name:'Four of the Sun',     title:'Tlaloc',          culture:'Aztec',
+    meaning:'Rain comes at a price. The goggle-eyed god demands children for the harvest. What is the cost of abundance?',
+    prompt:'Tlaloc Aztec rain god, goggle eyes, rain and thunder, sacrificial offerings, blue-green and purple palette, tarot card 2:3' },
+
+  { id:'aztec_05',     rank:'five',   name:'Five of the Sun',     title:'Tezcatlipoca',    culture:'Aztec',
+    meaning:'The Smoking Mirror shows you what you fear. The dark twin, the rival, the god who breaks the world to test it.',
+    prompt:'Tezcatlipoca Aztec god, smoking obsidian mirror, jaguar and darkness, purple and green, rival twin mythology tarot card 2:3' },
+
+  { id:'aztec_06',     rank:'six',    name:'Six of the Sun',      title:'Quetzalcoatl',    culture:'Aztec/Maya',
+    meaning:'The feathered serpent — wisdom and wind, the god who left and promised to return. Creation through knowledge.',
+    prompt:'Quetzalcoatl feathered serpent god, iridescent plumes and serpent scales, wind and sky, purple and green, Mesoamerican tarot card 2:3' },
+
+  { id:'aztec_07',     rank:'seven',  name:'Seven of the Sun',    title:'Itzpapalotl',     culture:'Aztec',
+    meaning:'The Obsidian Butterfly — the warrior goddess who hunts in the wilderness between worlds.',
+    prompt:'Itzpapalotl Aztec obsidian butterfly goddess, warrior feminine, black wings and obsidian blades, purple and green, tarot card 2:3' },
+
+  { id:'aztec_08',     rank:'eight',  name:'Eight of the Sun',    title:'Huitzilopochtli', culture:'Aztec',
+    meaning:'The ceaseless grind — the hummingbird warrior who demands constant sacrifice to keep the sun moving.',
+    prompt:'Huitzilopochtli Aztec god of war and the sun, hummingbird warrior, solar disc, purple and green, dramatic tarot card 2:3' },
+
+  { id:'aztec_09',     rank:'nine',   name:'Nine of the Sun',     title:'Mictlantecuhtli', culture:'Aztec',
+    meaning:'The lord of the dead waits at the end of the nine-level journey. Every death is a passage, not an ending.',
+    prompt:'Mictlantecuhtli Aztec lord of the dead, skeletal god of Mictlan, underworld throne, purple and green, dark tarot card 2:3' },
+
+  { id:'aztec_10',     rank:'ten',    name:'Ten of the Sun',      title:'The Five Suns',   culture:'Aztec',
+    meaning:'Four worlds destroyed before this one. The fifth sun is ours — and it too will end. Legacy is the myth that survives the fire.',
+    prompt:'The Five Suns Aztec creation myth, four destroyed worlds and the fifth rising, apocalyptic and reborn, purple and green tarot card 2:3' },
+
+  { id:'aztec_page',   rank:'page',   name:'Page of the Sun',     title:'Chicomecoatl',    culture:'Aztec',
+    meaning:'Seven Serpent, goddess of maize — the seed that feeds a civilization. Plant the small thing. The harvest is patient.',
+    prompt:'Chicomecoatl Aztec goddess of maize, sacred corn, agricultural abundance, purple and green, Mesoamerican tarot card 2:3' },
+
+  { id:'aztec_knight', rank:'knight', name:'Knight of the Sun',   title:'Ek Chuah',        culture:'Maya',
+    meaning:'The Maya god of merchants and cacao — the traveler who moves between worlds carrying goods and stories.',
+    prompt:'Ek Chuah Maya god of merchants, traveler with pack and staff, cacao pods, purple and green, Maya mythology tarot card 2:3' },
+
+  { id:'aztec_queen',  rank:'queen',  name:'Queen of the Sun',    title:'Ixchel',          culture:'Maya',
+    meaning:'The jaguar goddess of the moon, weaving, and medicine. She floods the world when she pours her waters out.',
+    prompt:'Ixchel Maya moon goddess, jaguar aspects, weaving and water, lunar light, purple and green, divine feminine tarot card 2:3' },
+
+  { id:'aztec_king',   rank:'king',   name:'King of the Sun',     title:'Kukulkan',        culture:'Maya',
+    meaning:'The feathered serpent as king — the ruler who descends the pyramid steps at equinox. Power that moves with cosmic timing.',
+    prompt:'Kukulkan Maya feathered serpent, pyramid at equinox, serpent shadow descending steps, purple and green, Maya mythology tarot card 2:3' },
 ];
 
-const DREAMSCAPE_PROMPTS = [
-  "dreamscape of a child's bedroom at night, toys floating like planets, closet cracked open with warm amber light, stars peeling off the ceiling like stickers, soft focus, nostalgia, ethereal, DreamShaper v8, 4k",
-  "backyard treehouse viewed from below, rope ladder disappearing into leaves, fireflies spelling secret words, summer evening purple sky, childhood imagination made real, magical realism, DreamShaper v8",
-  "abandoned playground at golden hour, swings moving on their own, merry-go-round glowing with soft moss light, wildflowers growing through cracks, liminal space, childhood memory, DreamShaper v8",
-  "couch cushion fort after a storm, blanket draped like tent walls, flashlight beam projecting shadow puppets onto canvas, dust motes glowing, cozy liminal, 1990s nostalgia, DreamShaper v8",
-  "refrigerator box transformed into spaceship, cardboard control panel with drawn buttons, child's hand on a crayon throttle, starry sky visible through a cut-out window, imagination manifest, DreamShaper v8",
-  "grandmother's kitchen at midnight, moonlight through lace curtains, cookie jar glowing from within, flour footprints on floor, warm amber and deep blue, memory as place, DreamShaper v8",
-  "the last day of elementary school, empty classroom after desks cleared, chalk drawing on board that says 'see you soon', one forgotten backpack, afternoon light through blinds, bittersweet, DreamShaper v8",
-  "summer slip-n-slide in backyard, water frozen mid-splash as frozen rainbow, one child suspended in air laughing, impossible physics, joy as stasis, hyperreal but magical, DreamShaper v8",
-  "attic exploration with dusty trunk opening, old Halloween costumes floating out like ghosts, one Mardi Gras mask with eyes that follow you, discovery as magic, warm sepia, DreamShaper v8",
-  "the monster under the bed revealed as guardian, large gentle eyes, fur like night sky with stars, one child's hand reaching down, fear transformed, dark but warm, DreamShaper v8",
-  "first sleepover, two sleeping bags facing each other, flashlight between them, hand shadows on ceiling, one shadow that doesn't match the hands, friendship magic, deep navy and golden, DreamShaper v8",
-  "the ice cream truck that came at dusk, playing music that sounds like lullaby, children walking toward it silhouetted, purple and orange sky, last day of something, melancholy nostalgia, DreamShaper v8"
+// ════════════════════════════════════════════════════════════════
+// QUEST DAYS
+// ════════════════════════════════════════════════════════════════
+  { day: 1, theme: 'Greek',         label: 'GREEK',   state: 'completed' },
+  { day: 2, theme: 'Norse',         label: 'NORSE',   state: 'completed' },
+  { day: 3, theme: 'Egyptian',      label: 'EGYPT',   state: 'completed' },
+  { day: 4, theme: 'Mesoamerican',  label: 'MESO',    state: 'today'     },
+  { day: 5, theme: '???',           label: 'DAY 5',   state: 'upcoming'  },
+  { day: 6, theme: '???',           label: 'DAY 6',   state: 'upcoming'  },
+  { day: 7, theme: '???',           label: 'DAY 7',   state: 'upcoming'  },
 ];
 
 function buildTimeline() {
@@ -916,56 +1111,18 @@ function buildTimeline() {
   `).join('');
 }
 
-function buildPrevDays() {
-  const container = document.getElementById('prevDaysContainer');
-  if (!container) return;
-  container.innerHTML = `
-    <div class="prev-day-row">
-      <div class="prev-day-number">1</div>
-      <div class="prev-day-info">
-        <div class="prev-day-theme">Greek Mythology</div>
-        <div class="prev-day-desc">Gods, heroes, monsters. Olympus, the underworld, epic quests.</div>
-        <div class="prev-day-count">ENTRIES <span>10K+</span> · REACTIONS <span>57K+</span></div>
-      </div>
-      <div class="prev-day-badge badge-done">DONE</div>
-    </div>
-    <div class="prev-day-row">
-      <div class="prev-day-number">2</div>
-      <div class="prev-day-info">
-        <div class="prev-day-theme">Norse Mythology</div>
-        <div class="prev-day-desc">Vikings, Valhalla, and the world tree. Odin, Thor, Loki.</div>
-        <div class="prev-day-count">ENTRIES <span>10K+</span> · REACTIONS <span>56K+</span></div>
-      </div>
-      <div class="prev-day-badge badge-done">DONE</div>
-    </div>
-    <div class="prev-day-row active-day">
-      <div class="prev-day-number">3</div>
-      <div class="prev-day-info">
-        <div class="prev-day-theme">Egyptian Mythology</div>
-        <div class="prev-day-desc">Pharaohs, the afterlife, and animal-headed gods.</div>
-        <div class="prev-day-count">ENTRIES <span>9.6K+</span> · REACTIONS <span>49K+</span> · YOURS <span id="todayEntryCountBadge">4</span></div>
-      </div>
-      <div class="prev-day-badge badge-today">TODAY</div>
-    </div>
-    <div class="prev-day-row"><div class="prev-day-number">4</div><div class="prev-day-info"><div class="prev-day-theme">Hindu Mythology</div><div class="prev-day-desc">Vedas, avatars, cosmic cycles…</div></div><div class="prev-day-badge badge-upcoming">UPCOMING</div></div>
-    <div class="prev-day-row"><div class="prev-day-number">5</div><div class="prev-day-info"><div class="prev-day-theme">Celtic Mythology</div><div class="prev-day-desc">Tuatha Dé Danann, heroes, otherworld…</div></div><div class="prev-day-badge badge-upcoming">UPCOMING</div></div>
-    <div class="prev-day-row"><div class="prev-day-number">6</div><div class="prev-day-info"><div class="prev-day-theme">Slavic Mythology</div><div class="prev-day-desc">House spirits, forest gods, Baba Yaga…</div></div><div class="prev-day-badge badge-upcoming">UPCOMING</div></div>
-    <div class="prev-day-row"><div class="prev-day-number">7</div><div class="prev-day-info"><div class="prev-day-theme">Abenaki Mythology</div><div class="prev-day-desc">Dawn land, Gluskab, the hidden traditions…</div></div><div class="prev-day-badge badge-upcoming">UPCOMING</div></div>
-  `;
-}
-
 // ════════════════════════════════════════════════════════════════
-// LOCAL STORAGE
+// LOCAL ENTRY STORE
 // ════════════════════════════════════════════════════════════════
 const STORE_KEY = 'ealdforn_challenge_entries_v1';
-let entries = [];
-let pendingImageData = null;
 
 function loadEntries() {
-  try { entries = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { entries = []; }
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY)) || [];
+  } catch { return []; }
 }
 
-function saveEntries() {
+function saveEntries(entries) {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(entries)); } catch {}
 }
 
@@ -974,10 +1131,14 @@ function getTodayKey() {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
+let entries = loadEntries();
+let pendingImageData = null;
+
 function updateSubmissionCount() {
   const today = getTodayKey();
   const todayEntries = entries.filter(e => e.dateKey === today);
-  const total = 4 + todayEntries.length;
+  // Base 2 (canon cards: Huitzilopochtli + Chicomecoatl) + any new ones logged live
+  const total = 2 + todayEntries.length;
   const countEl = document.getElementById('submissionCount');
   const localEl = document.getElementById('localEntryCount');
   const badgeEl = document.getElementById('todayEntryCountBadge');
@@ -990,24 +1151,28 @@ function addEntryCard(entry) {
   const grid = document.getElementById('entriesGrid');
   const slot = document.getElementById('uploadSlot');
   if (!grid || !slot) return;
+
   const card = document.createElement('div');
   card.className = 'entry-card new-entry';
   card.dataset.img = entry.imageData || '';
   card.dataset.title = entry.title;
   card.setAttribute('onclick', 'openLightbox(this)');
+
   card.innerHTML = `
-    <img src="${entry.imageData || ''}" alt="${entry.title}" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
+    <img src="${entry.imageData || ''}" alt="${entry.title}"
+      onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
     <div class="entry-card-body">
       <div class="entry-card-title">${entry.title || 'Untitled'}</div>
       <div class="entry-reactions"><span class="reaction">NEW ✨</span></div>
     </div>
   `;
+
   grid.insertBefore(card, slot);
   updateSubmissionCount();
 }
 
 // ════════════════════════════════════════════════════════════════
-// DROP ZONE
+// FILE / DROP HANDLING
 // ════════════════════════════════════════════════════════════════
 function bindDropZone() {
   const zone = document.getElementById('dropZone');
@@ -1022,12 +1187,13 @@ function bindDropZone() {
       pendingImageData = e.target.result;
       preview.src = pendingImageData;
       preview.classList.add('visible');
-      if (label) label.style.display = 'none';
+      label.style.display = 'none';
     };
     reader.readAsDataURL(file);
   }
 
   input.addEventListener('change', () => handleFile(input.files[0]));
+
   zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
   zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
   zone.addEventListener('drop', (e) => {
@@ -1044,16 +1210,27 @@ function bindSubmit() {
   document.getElementById('submitBtn')?.addEventListener('click', () => {
     const title = document.getElementById('entryTitle')?.value?.trim();
     const notes = document.getElementById('entryNotes')?.value?.trim();
-    const url = document.getElementById('entryUrl')?.value?.trim();
-    if (!title && !pendingImageData) { showToast('Add a title or image first'); return; }
+    const url   = document.getElementById('entryUrl')?.value?.trim();
+
+    if (!title && !pendingImageData) {
+      showToast('Add a title or image first');
+      return;
+    }
+
     const entry = {
       title: title || 'Untitled',
-      notes, url, imageData: pendingImageData,
-      dateKey: getTodayKey(), timestamp: Date.now()
+      notes,
+      url,
+      imageData: pendingImageData,
+      dateKey: getTodayKey(),
+      timestamp: Date.now()
     };
+
     entries.push(entry);
-    saveEntries();
+    saveEntries(entries);
     addEntryCard(entry);
+
+    // Reset form
     document.getElementById('entryTitle').value = '';
     document.getElementById('entryNotes').value = '';
     document.getElementById('entryUrl').value = '';
@@ -1062,12 +1239,13 @@ function bindSubmit() {
     if (preview) { preview.src = ''; preview.classList.remove('visible'); }
     const label = document.getElementById('dropZoneText');
     if (label) label.style.display = '';
-    showToast(`✓ Entry logged: ${entry.title.substring(0, 40)}`);
+
+    showToast(`✓ Entry logged: ${entry.title.substring(0, 36)}`);
   });
 }
 
 // ════════════════════════════════════════════════════════════════
-// COUNTDOWN
+// COUNTDOWN TO MIDNIGHT
 // ════════════════════════════════════════════════════════════════
 function updateCountdown() {
   const now = new Date();
@@ -1099,24 +1277,6 @@ function closeLightbox() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// DREAMSCAPES
-// ════════════════════════════════════════════════════════════════
-function bindDreamscapes() {
-  const card = document.getElementById('dreamscapesCard');
-  if (!card) return;
-  const previewSpan = document.getElementById('dreamscapesPreview');
-  card.addEventListener('click', () => {
-    const random = DREAMSCAPE_PROMPTS[Math.floor(Math.random() * DREAMSCAPE_PROMPTS.length)];
-    navigator.clipboard.writeText(random);
-    if (previewSpan) previewSpan.textContent = `✓ Copied: ${random.substring(0, 60)}…`;
-    showToast('🌙 Dreamscape prompt copied to clipboard');
-    setTimeout(() => {
-      if (previewSpan) previewSpan.textContent = 'Click to copy a random dreamscape prompt →';
-    }, 3000);
-  });
-}
-
-// ════════════════════════════════════════════════════════════════
 // TOAST
 // ════════════════════════════════════════════════════════════════
 function showToast(msg) {
@@ -1124,7 +1284,7 @@ function showToast(msg) {
   if (!t) return;
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  setTimeout(() => t.classList.remove('show'), 2400);
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1132,14 +1292,11 @@ function showToast(msg) {
 // ════════════════════════════════════════════════════════════════
 function init() {
   buildTimeline();
-  buildPrevDays();
-  loadEntries();
   updateSubmissionCount();
   updateCountdown();
   setInterval(updateCountdown, 1000);
   bindDropZone();
   bindSubmit();
-  bindDreamscapes();
 
   document.getElementById('lightboxCloseBtn')?.addEventListener('click', closeLightbox);
   document.getElementById('lightbox')?.addEventListener('click', (e) => {
@@ -1149,16 +1306,16 @@ function init() {
     if (e.key === 'Escape') closeLightbox();
   });
 
+  // Load any previously saved entries for today
   const today = getTodayKey();
   entries.filter(e => e.dateKey === today).forEach(addEntryCard);
-
-  console.log('%c🌙 EALDFORN · DAILY CHALLENGE · MYTHOLOGY ICEBERG', 'color:#c8a84a; font-size:14px');
-  console.log('%c   Egyptian cards: Thoth, Ra, Isis, Anubis wired', 'color:#5ab8ff');
-  console.log('%c   Dreamscapes: click the prompt card → copy random prompt', 'color:#40c8c0');
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
