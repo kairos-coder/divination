@@ -1,1854 +1,1757 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ealdforn #5 · Fire → Water · Digital Divination Live</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --fire-void: #060300;
-      --fire-surface: #0e0804;
-      --fire-raised: #1a0e06;
-      --fire-primary: #c94a2a;
-      --fire-bright: #e8602a;
-      --fire-glow: rgba(232,96,42,0.18);
-      --ember: #e8a840;
-      --gold: #e8c96a;
-      --ash: #8a7a6a;
-
-      --water-deep: #040d18;
-      --water-surface: #0a1824;
-      --water-raised: #152435;
-      --water-primary: #2a8acc;
-      --water-bright: #5ab8ff;
-      --water-foam: #c0e0ff;
-      --water-glow: rgba(90,184,255,0.15);
-      --teal: #40c8c0;
-      --teal-glow: rgba(64,200,192,0.2);
-
-      --divider: #2a1a0a;
-      --text: #f0e0d0;
-      --text-dim: #7a6a58;
-      --mono: 'Share Tech Mono', monospace;
-    }
-
-    html, body {
-      height: 100%;
-      background: var(--fire-void);
-      color: var(--text);
-      font-family: 'Cormorant Garamond', serif;
-      overflow-x: hidden;
-    }
-
-    /* ── BROADCAST BAR ─────────────────────────────────────────── */
-    .broadcast-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.25rem;
-      background: linear-gradient(90deg, #080402 0%, #0a1824 100%);
-      border-bottom: 1px solid rgba(232,96,42,0.25);
-      gap: 1rem;
-    }
-
-    .broadcast-bar::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, var(--fire-glow) 0%, transparent 40%, transparent 60%, var(--water-glow) 100%);
-      pointer-events: none;
-    }
-
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.18em;
-      color: var(--fire-bright);
-      flex-shrink: 0;
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--fire-primary);
-      box-shadow: 0 0 6px var(--fire-primary);
-      animation: livepulse 1.4s ease-in-out infinite;
-    }
-
-    @keyframes livepulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
-    }
-
-    .bar-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      background: linear-gradient(90deg, var(--ember), var(--water-bright));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-align: center;
-      flex: 1;
-    }
-
-    .countdown-bar {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      flex-shrink: 0;
-    }
-
-    .countdown-label {
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      letter-spacing: 0.15em;
-      color: var(--text-dim);
-    }
-
-    .countdown-time {
-      font-family: 'Cinzel', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--water-bright);
-      letter-spacing: 0.08em;
-      line-height: 1;
-      text-shadow: 0 0 12px var(--water-glow);
-      transition: color 0.5s;
-    }
-
-    .countdown-time.urgent {
-      color: var(--fire-bright);
-      text-shadow: 0 0 12px var(--fire-glow);
-      animation: urgentflicker 0.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes urgentflicker {
-      from { opacity: 1; }
-      to { opacity: 0.7; }
-    }
-
-    /* ── TTS PANEL ─────────────────────────────────────────────── */
-    .tts-panel {
-      background: linear-gradient(90deg, rgba(10,8,4,0.97) 0%, rgba(4,13,24,0.97) 100%);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0.5rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 90;
-    }
-
-    .tts-speaking-bar {
-      flex: 1;
-      min-width: 200px;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 6px;
-      padding: 0.35rem 0.6rem;
-      font-family: var(--mono);
-      font-size: 0.42rem;
-      color: var(--teal);
-      position: relative;
-      overflow: hidden;
-      min-height: 28px;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .tts-speaking-bar::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: var(--tts-progress, 0%);
-      background: linear-gradient(90deg, rgba(64,200,192,0.08), transparent);
-      transition: width 0.1s linear;
-      pointer-events: none;
-    }
-
-    .tts-wave {
-      display: flex;
-      gap: 2px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .tts-wave span {
-      display: block;
-      width: 3px;
-      background: var(--teal);
-      border-radius: 2px;
-      animation: ttswave 0.6s ease-in-out infinite;
-      opacity: 0;
-    }
-
-    .tts-speaking .tts-wave span { opacity: 1; }
-    .tts-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
-    .tts-wave span:nth-child(2) { height: 10px; animation-delay: 0.1s; }
-    .tts-wave span:nth-child(3) { height: 7px; animation-delay: 0.2s; }
-    .tts-wave span:nth-child(4) { height: 12px; animation-delay: 0.15s; }
-    .tts-wave span:nth-child(5) { height: 8px; animation-delay: 0.05s; }
-
-    @keyframes ttswave {
-      0%, 100% { transform: scaleY(0.4); }
-      50% { transform: scaleY(1); }
-    }
-
-    #ttsCurrentText {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: var(--teal);
-    }
-
-    /* Manual Injection */
-    .inject-area {
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .inject-input {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(90,184,255,0.2);
-      border-radius: 6px;
-      padding: 0.3rem 0.6rem;
-      font-family: var(--mono);
-      font-size: 0.42rem;
-      color: var(--water-foam);
-      width: 260px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .inject-input:focus {
-      border-color: var(--water-primary);
-      box-shadow: 0 0 8px rgba(42,138,204,0.2);
-    }
-
-    .inject-input::placeholder {
-      color: var(--text-dim);
-    }
-
-    .tts-btn {
-      background: none;
-      border: 1px solid;
-      border-radius: 5px;
-      font-family: var(--mono);
-      font-size: 0.4rem;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      padding: 0.3rem 0.6rem;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-
-    .tts-btn-speak {
-      border-color: var(--water-primary);
-      color: var(--water-bright);
-    }
-    .tts-btn-speak:hover {
-      background: rgba(42,138,204,0.15);
-      box-shadow: 0 0 8px rgba(42,138,204,0.2);
-    }
-
-    .tts-btn-loop {
-      border-color: var(--ember);
-      color: var(--ember);
-    }
-    .tts-btn-loop.active {
-      background: rgba(232,168,64,0.15);
-      box-shadow: 0 0 8px rgba(232,168,64,0.3);
-    }
-    .tts-btn-loop:hover {
-      background: rgba(232,168,64,0.1);
-    }
-
-    .tts-btn-stop {
-      border-color: var(--fire-primary);
-      color: var(--fire-bright);
-    }
-    .tts-btn-stop:hover {
-      background: rgba(201,74,42,0.15);
-    }
-
-    .voice-select {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 5px;
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      color: var(--text-dim);
-      padding: 0.3rem 0.4rem;
-      cursor: pointer;
-      outline: none;
-    }
-
-    /* ── SPLIT LAYOUT ──────────────────────────────────────────── */
-    .split-layout {
-      display: flex;
-      min-height: calc(100vh - 48px - 48px);
-      position: relative;
-    }
-
-    /* Diagonal divider glow */
-    .split-layout::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 1px;
-      background: linear-gradient(180deg,
-        transparent 0%,
-        var(--fire-primary) 20%,
-        var(--water-primary) 80%,
-        transparent 100%
-      );
-      box-shadow: 0 0 16px rgba(201,74,42,0.3), 0 0 16px rgba(42,138,204,0.3);
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    /* FIRE PANEL */
-    .panel-fire {
-      flex: 1;
-      background:
-        radial-gradient(ellipse at 80% 10%, rgba(201,74,42,0.08) 0%, transparent 60%),
-        linear-gradient(160deg, #0e0804 0%, #060300 100%);
-      padding: 1.25rem 1.25rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Ember flicker particles */
-    .panel-fire::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background: linear-gradient(0deg, rgba(201,74,42,0.06), transparent);
-      pointer-events: none;
-      animation: emberpulse 3s ease-in-out infinite;
-    }
-
-    @keyframes emberpulse {
-      0%, 100% { opacity: 0.6; transform: scaleY(1); }
-      50% { opacity: 1; transform: scaleY(1.15); }
-    }
-
-    /* WATER PANEL */
-    .panel-water {
-      flex: 1;
-      background:
-        radial-gradient(ellipse at 20% 90%, rgba(64,200,192,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(42,138,204,0.06) 0%, transparent 55%),
-        linear-gradient(160deg, #040d18 0%, #0a1824 60%, #152a3a 100%);
-      padding: 1.25rem 1.25rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .panel-water::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background: linear-gradient(180deg, rgba(42,138,204,0.05), transparent);
-      pointer-events: none;
-      animation: waterpulse 4s ease-in-out infinite;
-    }
-
-    @keyframes waterpulse {
-      0%, 100% { opacity: 0.5; }
-      60% { opacity: 1; }
-    }
-
-    /* Panel Headers */
-    .panel-header {
-      text-align: center;
-      padding-bottom: 0.6rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      position: relative;
-      z-index: 2;
-    }
-
-    .panel-fire .panel-header h2 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.1rem;
-      color: var(--fire-bright);
-      text-shadow: 0 0 24px rgba(232,96,42,0.5), 0 2px 4px rgba(0,0,0,0.8);
-      letter-spacing: 0.05em;
-    }
-
-    .panel-water .panel-header h2 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.1rem;
-      color: var(--water-bright);
-      text-shadow: 0 0 24px rgba(90,184,255,0.5), 0 2px 4px rgba(0,0,0,0.8);
-      letter-spacing: 0.05em;
-    }
-
-    .card-count {
-      font-family: var(--mono);
-      font-size: 0.42rem;
-      letter-spacing: 0.2em;
-      color: var(--text-dim);
-      margin-top: 0.2rem;
-    }
-
-    /* ── FIRE CARDS ─────────────────────────────────────────────── */
-    .auto-draw-container {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      perspective: 1200px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .card-slot {
-      width: 110px;
-      aspect-ratio: 2/3;
-      position: relative;
-      transform-style: preserve-3d;
-      cursor: pointer;
-      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6));
-    }
-
-    .card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .card-inner.flipped { transform: rotateY(180deg); }
-
-    .card-face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(232,168,64,0.25);
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    }
-
-    .card-back {
-      background: radial-gradient(ellipse at center, #2a1a08, #0a0602);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-back-sigil {
-      font-size: 2rem;
-      opacity: 0.4;
-      animation: sigilflicker 2s ease-in-out infinite;
-    }
-
-    @keyframes sigilflicker {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.2; }
-    }
-
-    .card-front {
-      background: var(--fire-surface);
-      transform: rotateY(180deg);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-front img {
-      width: 100%;
-      height: 55%;
-      object-fit: cover;
-      border-bottom: 1px solid rgba(232,168,64,0.15);
-    }
-
-    .card-front .info {
-      padding: 0.4rem 0.5rem;
-      flex: 1;
-    }
-
-    .card-front .pos {
-      font-family: 'Cinzel', serif;
-      font-size: 0.38rem;
-      letter-spacing: 0.2em;
-      color: var(--ember);
-    }
-
-    .card-front .name {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.52rem;
-      color: var(--gold);
-      margin: 0.2rem 0 0.15rem;
-      line-height: 1.3;
-    }
-
-    .card-front .meaning {
-      font-size: 0.42rem;
-      font-style: italic;
-      color: var(--ash);
-      line-height: 1.4;
-    }
-
-    /* Reading bar */
-    .reading-bar {
-      text-align: center;
-      padding: 0.5rem 0.75rem;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(232,168,64,0.1);
-      border-radius: 8px;
-      opacity: 0;
-      transform: translateY(4px);
-      transition: opacity 0.5s, transform 0.5s;
-      position: relative;
-      z-index: 2;
-    }
-
-    .reading-bar.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .reading-synthesis {
-      font-size: 0.65rem;
-      font-style: italic;
-      color: var(--text);
-      line-height: 1.5;
-      margin-bottom: 0.25rem;
-    }
-
-    .reading-cards {
-      font-family: 'Cinzel', serif;
-      font-size: 0.42rem;
-      letter-spacing: 0.15em;
-      color: var(--ember);
-    }
-
-    /* Gallery strip */
-    .gallery-strip {
-      display: flex;
-      gap: 3px;
-      overflow-x: auto;
-      padding: 0.4rem;
-      background: rgba(0,0,0,0.25);
-      border-radius: 6px;
-      scrollbar-width: none;
-      position: relative;
-      z-index: 2;
-    }
-
-    .gallery-strip::-webkit-scrollbar { display: none; }
-
-    .gallery-item {
-      width: 44px;
-      aspect-ratio: 2/3;
-      flex-shrink: 0;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid transparent;
-      transition: border-color 0.2s, transform 0.2s;
-      cursor: pointer;
-    }
-
-    .gallery-item:hover {
-      border-color: var(--ember);
-      transform: scale(1.05) translateY(-2px);
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Next draw timer */
-    .next-draw-row {
-      font-family: var(--mono);
-      font-size: 0.4rem;
-      color: var(--text-dim);
-      text-align: center;
-      position: relative;
-      z-index: 2;
-    }
-
-    .draw-progress {
-      height: 2px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 1px;
-      margin-top: 0.3rem;
-      overflow: hidden;
-    }
-
-    .draw-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--fire-primary), var(--ember));
-      transition: width 1s linear;
-      border-radius: 1px;
-    }
-
-    /* ── WATER GRID ─────────────────────────────────────────────── */
-    .water-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
-      gap: 0.5rem;
-      flex: 1;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(42,138,204,0.3) transparent;
-      position: relative;
-      z-index: 2;
-    }
-
-    .water-stub {
-      aspect-ratio: 2/3;
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,0.03) 0px,
-        rgba(255,255,255,0.03) 12px,
-        rgba(255,255,255,0.015) 12px,
-        rgba(255,255,255,0.015) 24px
-      );
-      border: 1.5px dashed rgba(42,138,204,0.4);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      padding: 0.4rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .water-stub::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(42,138,204,0.06), transparent 70%);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .water-stub:hover {
-      transform: translateY(-2px) scale(1.02);
-      border-color: var(--water-bright);
-      box-shadow: 0 4px 16px rgba(42,138,204,0.15);
-    }
-
-    .water-stub:hover::before { opacity: 1; }
-
-    .stub-icon {
-      font-size: 1.5rem;
-      opacity: 0.55;
-      margin-bottom: 0.2rem;
-      line-height: 1;
-    }
-
-    .stub-rank {
-      font-family: 'Cinzel', serif;
-      font-size: 0.45rem;
-      font-weight: 700;
-      color: var(--water-bright);
-      letter-spacing: 0.1em;
-    }
-
-    .stub-title {
-      font-size: 0.38rem;
-      text-align: center;
-      color: var(--water-foam);
-      margin: 0.15rem 0;
-      line-height: 1.3;
-    }
-
-    .stub-badge {
-      font-family: var(--mono);
-      font-size: 0.32rem;
-      padding: 0.08rem 0.25rem;
-      border-radius: 3px;
-      margin-top: 0.1rem;
-    }
-
-    .stub-badge.missing {
-      background: rgba(255,255,255,0.05);
-      color: var(--text-dim);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .stub-badge.done {
-      background: rgba(64,200,192,0.12);
-      color: var(--teal);
-      border: 1px solid rgba(64,200,192,0.25);
-    }
-
-    .water-stub.generated {
-      border: 1.5px solid rgba(64,200,192,0.45);
-      background: linear-gradient(160deg, rgba(64,200,192,0.06), rgba(42,138,204,0.08));
-    }
-
-    .water-stub.generated .stub-icon { opacity: 0.8; }
-
-    /* Reveal animation when first generated */
-    @keyframes waterReveal {
-      from { opacity: 0; transform: scale(0.9) translateY(6px); box-shadow: 0 0 0 rgba(64,200,192,0); }
-      to { opacity: 1; transform: scale(1) translateY(0); box-shadow: 0 0 20px rgba(64,200,192,0.25); }
-    }
-
-    .water-stub.just-generated {
-      animation: waterReveal 0.6s ease-out forwards;
-    }
-
-    /* ── GENERATION CONSOLE ─────────────────────────────────────── */
-    .generation-console {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-      padding: 0.5rem 0.6rem;
-      font-family: var(--mono);
-      font-size: 0.4rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .console-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.3rem;
-    }
-
-    .console-title {
-      color: var(--water-bright);
-      letter-spacing: 0.15em;
-      font-size: 0.38rem;
-    }
-
-    .console-log {
-      color: rgba(192,224,255,0.7);
-      max-height: 54px;
-      overflow-y: auto;
-      scrollbar-width: none;
-      line-height: 1.6;
-    }
-
-    .console-log .log-success { color: var(--teal); }
-    .console-log .log-error { color: #f66; }
-    .console-log .log-info { color: rgba(192,224,255,0.7); }
-
-    .copy-all-btn {
-      width: 100%;
-      margin-top: 0.35rem;
-      background: rgba(42,138,204,0.12);
-      border: 1px solid rgba(42,138,204,0.3);
-      color: var(--water-foam);
-      padding: 0.3rem;
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: all 0.2s;
-    }
-
-    .copy-all-btn:hover {
-      background: rgba(42,138,204,0.22);
-      border-color: var(--water-bright);
-    }
-
-    /* ── TOAST ─────────────────────────────────────────────────── */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      background: rgba(10,24,36,0.95);
-      border: 1px solid var(--water-primary);
-      color: var(--water-foam);
-      padding: 0.4rem 1rem;
-      border-radius: 6px;
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.25s, transform 0.25s;
-      pointer-events: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      white-space: nowrap;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ── LIGHTBOX ───────────────────────────────────────────────── */
-    .lightbox-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.88);
-      z-index: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      backdrop-filter: blur(6px);
-    }
-
-    .lightbox-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .lightbox-inner {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      max-width: 90vw;
-      max-height: 90vh;
-      transform: scale(0.94);
-      transition: transform 0.3s cubic-bezier(0.2,0,0.1,1);
-    }
-
-    .lightbox-overlay.open .lightbox-inner {
-      transform: scale(1);
-    }
-
-    .lightbox-img {
-      max-width: min(420px, 80vw);
-      max-height: 72vh;
-      object-fit: contain;
-      border-radius: 10px;
-      border: 1px solid rgba(232,168,64,0.3);
-      box-shadow:
-        0 0 60px rgba(201,74,42,0.25),
-        0 0 120px rgba(232,168,64,0.08),
-        0 24px 48px rgba(0,0,0,0.7);
-    }
-
-    .lightbox-meta {
-      text-align: center;
-    }
-
-    .lightbox-name {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.1rem;
-      color: var(--gold);
-      text-shadow: 0 0 20px rgba(232,168,64,0.4);
-      margin-bottom: 0.2rem;
-    }
-
-    .lightbox-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--ember);
-      margin-bottom: 0.4rem;
-    }
-
-    .lightbox-meaning {
-      font-size: 0.85rem;
-      font-style: italic;
-      color: rgba(240,224,208,0.75);
-      max-width: 360px;
-      line-height: 1.6;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: -2rem;
-      right: -1rem;
-      background: none;
-      border: 1px solid rgba(232,168,64,0.3);
-      color: var(--ember);
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .lightbox-close:hover {
-      background: rgba(232,168,64,0.1);
-      border-color: var(--gold);
-    }
-
-    .lightbox-nav {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.25rem;
-    }
-
-    .lightbox-nav-btn {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(232,168,64,0.2);
-      color: var(--ember);
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      letter-spacing: 0.1em;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .lightbox-nav-btn:hover {
-      background: rgba(232,168,64,0.1);
-      border-color: var(--ember);
-    }
-
-    /* ── VIDEO STRIP ────────────────────────────────────────────── */
-    .video-strip {
-      display: flex;
-      gap: 4px;
-      overflow-x: auto;
-      padding: 0.4rem;
-      background: rgba(0,0,0,0.25);
-      border-radius: 6px;
-      scrollbar-width: none;
-      position: relative;
-      z-index: 2;
-    }
-
-    .video-strip::-webkit-scrollbar { display: none; }
-
-    .video-thumb {
-      flex-shrink: 0;
-      width: 72px;
-      height: 48px;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid rgba(201,74,42,0.25);
-      cursor: pointer;
-      position: relative;
-      transition: border-color 0.2s, transform 0.2s;
-      background: #0a0602;
-    }
-
-    .video-thumb:hover {
-      border-color: var(--ember);
-      transform: scale(1.05) translateY(-2px);
-    }
-
-    .video-thumb video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-    }
-
-    .video-thumb-label {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.65);
-      font-family: var(--mono);
-      font-size: 0.28rem;
-      letter-spacing: 0.1em;
-      color: var(--ember);
-      text-align: center;
-      padding: 0.1rem 0;
-    }
-
-    .video-play-icon {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-
-    .video-thumb:hover .video-play-icon { opacity: 1; }
-
-    /* Video lightbox */
-    .video-lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.93);
-      z-index: 600;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      backdrop-filter: blur(10px);
-    }
-
-    .video-lightbox.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .video-lightbox video {
-      max-width: min(800px, 90vw);
-      max-height: 78vh;
-      border-radius: 10px;
-      border: 1px solid rgba(201,74,42,0.3);
-      box-shadow: 0 0 60px rgba(201,74,42,0.2), 0 24px 48px rgba(0,0,0,0.8);
-      outline: none;
-    }
-
-    .video-lightbox-meta {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--ember);
-    }
-
-    .video-lightbox-controls {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .video-lb-btn {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(232,168,64,0.25);
-      color: var(--ember);
-      font-family: var(--mono);
-      font-size: 0.45rem;
-      letter-spacing: 0.1em;
-      padding: 0.3rem 0.7rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .video-lb-btn:hover {
-      background: rgba(232,168,64,0.1);
-      border-color: var(--ember);
-    }
-
-    /* ── RESPONSIVE ─────────────────────────────────────────────── */
-    @media (max-width: 768px) {
-      .split-layout { flex-direction: column; }
-      .split-layout::after { display: none; }
-      .panel-fire, .panel-water { min-height: 50vh; }
-      .card-slot { width: 80px; }
-      .bar-title { font-size: 0.6rem; }
-      .inject-input { width: 160px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ealdforn #7 — Earth Deck Live Drop Ritual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+  /* ═══════════════════════════════════════════
+     ROOT VARIABLES — EARTH RITUAL PALETTE
+  ═══════════════════════════════════════════ */
+  :root {
+    --void:        #0a0905;
+    --soil:        #1a130a;
+    --loam:        #2a1f10;
+    --bark:        #3d2b15;
+    --moss:        #1e2e18;
+    --gold:        #c9922a;
+    --gold-dim:    #7a5518;
+    --gold-pale:   #e8c87a;
+    --sage:        #7a9e6a;
+    --sage-dim:    #3d5032;
+    --bone:        #d4c9a8;
+    --bone-dim:    #8a7e5e;
+    --ember:       #8b3a1a;
+    --water-blue:  #1a3a5c;
+    --grain:       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--void);
+    color: var(--bone);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: var(--grain);
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ═══════════════════════════════════════════
+     HEADER
+  ═══════════════════════════════════════════ */
+  #ritual-header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+    border-bottom: 1px solid var(--bark);
+    position: relative;
+  }
+
+  #ritual-header::after {
+    content: '❧';
+    display: block;
+    color: var(--gold-dim);
+    font-size: 1.4rem;
+    margin-top: 0.6rem;
+  }
+
+  .header-rune {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--sage);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--gold-pale);
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 40px rgba(201, 146, 42, 0.35);
+  }
+
+  .header-sub {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--bone-dim);
+    letter-spacing: 0.2em;
+    margin-top: 0.4rem;
+  }
+
+  /* live indicator */
+  .live-pip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--sage);
+    margin-top: 0.6rem;
+  }
+
+  .live-pip::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #5a9e3a;
+    animation: pulse-live 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-live {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(90,158,58,0.6); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(90,158,58,0); }
+  }
+
+  /* ═══════════════════════════════════════════
+     MAIN LAYOUT
+  ═══════════════════════════════════════════ */
+  #main-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr 240px;
+    grid-template-rows: auto auto auto;
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    align-items: start;
+  }
+
+  /* ═══════════════════════════════════════════
+     LEFT COLUMN — CYCLING DECK
+  ═══════════════════════════════════════════ */
+  #left-column {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    padding-right: 1rem;
+    border-right: 1px solid var(--bark);
+    position: sticky;
+    top: 1rem;
+  }
+
+  .column-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--bark);
+  }
+
+  #cycle-display {
+    perspective: 600px;
+  }
+
+  .cycle-card {
+    width: 100%;
+    aspect-ratio: 2/3.5;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+  }
+
+  .cycle-card.flipping {
+    transform: rotateY(90deg);
+  }
+
+  .cycle-card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0.8rem;
+    overflow: hidden;
+    border: 1px solid var(--bark);
+  }
+
+  .cycle-card-face.fire-bg {
+    background: linear-gradient(160deg, #1a0a05 0%, #2a1005 60%, #3d1a08 100%);
+    border-color: var(--ember);
+  }
+
+  .cycle-card-face.water-bg {
+    background: linear-gradient(160deg, #050a1a 0%, #0a1525 60%, #0d2040 100%);
+    border-color: var(--water-blue);
+  }
+
+  .cycle-card-face.air-bg {
+    background: linear-gradient(160deg, #0a0a12 0%, #12121e 60%, #1a1a2a 100%);
+    border-color: #2a2a4a;
+  }
+
+  .cycle-card-symbol {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    font-size: 1.5rem;
+    opacity: 0.25;
+  }
+
+  .cycle-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gold-pale);
+    line-height: 1.2;
+  }
+
+  .cycle-card-title {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--bone-dim);
+    margin-top: 0.2rem;
+  }
+
+  .cycle-card-suit {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    margin-top: 0.3rem;
+  }
+
+  .suit-fire { color: #c4512a; }
+  .suit-water { color: #3a7abf; }
+  .suit-air { color: #7a7abf; }
+  .suit-earth { color: var(--sage); }
+
+  .cycle-counter {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--bone-dim);
+    text-align: center;
+    margin-top: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* placeholder image area in cycle card */
+  .cycle-card-image {
+    width: 100%;
+    aspect-ratio: 1;
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0.3;
+    overflow: hidden;
+  }
+
+  .cycle-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    border-radius: 4px;
+  }
+
+  /* ═══════════════════════════════════════════
+     CENTER COLUMN — EARTH SHRINE GRID
+  ═══════════════════════════════════════════ */
+  #center-column {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 0 1.5rem;
+  }
+
+  .section-header {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+  }
+
+  .section-subtitle {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--bone-dim);
+    margin-bottom: 1.2rem;
+  }
+
+  /* progress bar */
+  #earth-progress-bar {
+    height: 2px;
+    background: var(--loam);
+    border-radius: 2px;
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+  }
+
+  #earth-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage-dim), var(--sage), var(--gold-dim));
+    width: 0%;
+    transition: width 0.8s ease;
+    border-radius: 2px;
+  }
+
+  #earth-progress-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--bone-dim);
+    letter-spacing: 0.2em;
+    margin-top: -0.9rem;
+    margin-bottom: 1.2rem;
+    text-align: right;
+  }
+
+  /* 4×4 shrine grid */
+  #earth-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+  }
+
+  .earth-slot {
+    aspect-ratio: 2/3.2;
+    border-radius: 5px;
+    border: 1px solid var(--bark);
+    background: var(--soil);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s, box-shadow 0.4s;
+    cursor: default;
+  }
+
+  .earth-slot.empty {
+    border-style: dashed;
+    border-color: var(--loam);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .earth-slot.empty .slot-number {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--loam);
+    letter-spacing: 0.2em;
+  }
+
+  .earth-slot.empty .slot-rune {
+    font-size: 1.2rem;
+    color: var(--loam);
+    opacity: 0.4;
+  }
+
+  .earth-slot.generating {
+    border-color: var(--gold-dim);
+    animation: slot-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes slot-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,146,42,0); }
+    50% { box-shadow: 0 0 12px 2px rgba(201,146,42,0.25); }
+  }
+
+  .earth-slot.filled {
+    border-color: var(--sage);
+    box-shadow: 0 0 15px rgba(122,158,106,0.15);
+    cursor: pointer;
+  }
+
+  .earth-slot.filled:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201,146,42,0.25);
+  }
+
+  .earth-slot.placeholder {
+    border-color: var(--gold-dim);
+    border-style: dashed;
+    background: linear-gradient(160deg, var(--soil) 0%, var(--moss) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    opacity: 0.6;
+  }
+
+  /* slot inner content */
+  .slot-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+  }
+
+  .slot-generating-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(10,9,5,0.7);
+    z-index: 2;
+  }
+
+  .generating-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--bark);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .slot-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(10,9,5,0.95) 40%);
+    padding: 1.5rem 0.5rem 0.4rem;
+  }
+
+  .slot-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    color: var(--gold-pale);
+    line-height: 1.2;
+  }
+
+  .slot-card-title {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: var(--sage);
+    line-height: 1.2;
+  }
+
+  .slot-keyword {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.6rem;
+    color: var(--bone-dim);
+    margin-top: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* slot reveal button */
+  .slot-reveal-btn {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    background: var(--gold-dim);
+    border: none;
+    color: var(--bone);
+    font-family: 'Cinzel', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.2s;
+  }
+
+  .slot-reveal-btn:hover { background: var(--gold); }
+
+  /* card fill animation */
+  @keyframes card-materialize {
+    0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+    60% { opacity: 1; transform: scale(1.02) translateY(-2px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .earth-slot.filling {
+    animation: card-materialize 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  }
+
+  /* ═══════════════════════════════════════════
+     ORACLE DRAW — THREE CARD SPREAD
+  ═══════════════════════════════════════════ */
+  #oracle-section {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 1.5rem 1.5rem 0;
+    border-top: 1px solid var(--bark);
+    margin-top: 1rem;
+  }
+
+  #oracle-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .oracle-card {
+    border: 1px solid var(--bark);
+    border-radius: 5px;
+    background: var(--soil);
+    padding: 0.9rem 0.7rem;
+    position: relative;
+    transition: border-color 0.3s, opacity 0.3s;
+  }
+
+  .oracle-card.refreshing {
+    opacity: 0.4;
+  }
+
+  .oracle-position {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--bone-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .oracle-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--gold-pale);
+    line-height: 1.3;
+  }
+
+  .oracle-card-title {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--sage);
+    margin-top: 0.2rem;
+  }
+
+  .oracle-suit-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    margin-top: 0.3rem;
+  }
+
+  .oracle-keyword {
+    font-size: 0.8rem;
+    color: var(--bone-dim);
+    font-style: italic;
+    margin-top: 0.3rem;
+    border-top: 1px solid var(--loam);
+    padding-top: 0.3rem;
+  }
+
+  .oracle-meaning {
+    font-size: 0.8rem;
+    color: var(--bone);
+    margin-top: 0.4rem;
+    line-height: 1.5;
+  }
+
+  .oracle-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+  }
+
+  /* ═══════════════════════════════════════════
+     RIGHT COLUMN — COUNCIL + LOG
+  ═══════════════════════════════════════════ */
+  #right-column {
+    grid-column: 3;
+    grid-row: 1 / 4;
+    padding-left: 1rem;
+    border-left: 1px solid var(--bark);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  /* GAIA council panel */
+  #council-panel {
+    border: 1px solid var(--bark);
+    border-radius: 5px;
+    background: var(--soil);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    background: var(--loam);
+    padding: 0.5rem 0.8rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+    border-bottom: 1px solid var(--bark);
+  }
+
+  #council-feed {
+    padding: 0.6rem;
+    min-height: 120px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  #council-feed::-webkit-scrollbar { width: 3px; }
+  #council-feed::-webkit-scrollbar-track { background: var(--void); }
+  #council-feed::-webkit-scrollbar-thumb { background: var(--bark); }
+
+  .council-entry {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    animation: entry-slide 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes entry-slide {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .council-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    border: 1px solid var(--bark);
+  }
+
+  .avatar-demeter { background: radial-gradient(circle, #2a3d1a, #1a2a0a); border-color: var(--sage-dim); }
+  .avatar-hera { background: radial-gradient(circle, #2a1a2a, #1a0a1a); border-color: #5a3a5a; }
+  .avatar-artemis { background: radial-gradient(circle, #0a1a2a, #050f1a); border-color: #2a4a6a; }
+
+  .council-text {
+    flex: 1;
+  }
+
+  .council-god-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--gold-dim);
+  }
+
+  .council-reaction {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--bone);
+    line-height: 1.4;
+    margin-top: 0.1rem;
+  }
+
+  /* blackbox log */
+  #log-panel {
+    border: 1px solid var(--bark);
+    border-radius: 5px;
+    background: var(--void);
+    overflow: hidden;
+    flex: 1;
+  }
+
+  #log-feed {
+    padding: 0.6rem;
+    font-family: 'EB Garamond', monospace;
+    font-size: 0.7rem;
+    min-height: 200px;
+    max-height: 350px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  #log-feed::-webkit-scrollbar { width: 3px; }
+  #log-feed::-webkit-scrollbar-track { background: var(--void); }
+  #log-feed::-webkit-scrollbar-thumb { background: var(--bark); }
+
+  .log-entry {
+    display: flex;
+    gap: 0.5rem;
+    line-height: 1.4;
+    animation: entry-slide 0.3s ease forwards;
+    opacity: 0;
+  }
+
+  .log-time {
+    color: var(--gold-dim);
+    flex-shrink: 0;
+    font-size: 0.65rem;
+  }
+
+  .log-text {
+    color: var(--bone-dim);
+    font-size: 0.7rem;
+  }
+
+  .log-text.highlight { color: var(--sage); }
+  .log-text.oracle-log { color: #6a9abf; }
+
+  /* TTS status */
+  #tts-status {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--bone-dim);
+    text-align: center;
+    padding: 0.3rem;
+    border: 1px solid var(--loam);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  #tts-status.speaking::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    animation: pulse-live 1s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════
+     CONTROL BAR
+  ═══════════════════════════════════════════ */
+  #control-bar {
+    grid-column: 1 / 4;
+    grid-row: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--bark);
+  }
+
+  .ritual-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid;
+    text-transform: uppercase;
+    background: transparent;
+  }
+
+  .btn-earth {
+    border-color: var(--sage);
+    color: var(--sage);
+  }
+
+  .btn-earth:hover {
+    background: rgba(122,158,106,0.12);
+    box-shadow: 0 0 12px rgba(122,158,106,0.2);
+    color: var(--gold-pale);
+  }
+
+  .btn-gold {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  .btn-gold:hover {
+    background: rgba(201,146,42,0.12);
+    box-shadow: 0 0 12px rgba(201,146,42,0.2);
+  }
+
+  .btn-dim {
+    border-color: var(--bark);
+    color: var(--bone-dim);
+  }
+
+  .btn-dim:hover {
+    border-color: var(--bone-dim);
+    color: var(--bone);
+  }
+
+  .btn-danger {
+    border-color: var(--ember);
+    color: #bf6a3a;
+  }
+
+  .btn-danger:hover {
+    background: rgba(139,58,26,0.15);
+    color: #e07a40;
+  }
+
+  .control-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--bark);
+  }
+
+  .control-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--bone-dim);
+  }
+
+  /* next-card selector */
+  #next-card-select {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    background: var(--soil);
+    border: 1px solid var(--bark);
+    color: var(--bone);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  #next-card-select:focus { outline: 1px solid var(--sage); }
+
+  /* ═══════════════════════════════════════════
+     TOOLTIP
+  ═══════════════════════════════════════════ */
+  .tooltip-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,9,5,0.85);
+    z-index: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .tooltip-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .tooltip-card {
+    border: 1px solid var(--sage);
+    border-radius: 8px;
+    background: var(--loam);
+    padding: 1.8rem;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 0 60px rgba(122,158,106,0.2);
+    animation: tooltip-rise 0.35s ease;
+  }
+
+  @keyframes tooltip-rise {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .tooltip-close {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    background: none;
+    border: none;
+    color: var(--bone-dim);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.2rem;
+  }
+
+  .tooltip-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.9rem;
+    color: var(--gold-pale);
+    margin-bottom: 0.2rem;
+  }
+
+  .tooltip-title {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--sage);
+    margin-bottom: 0.1rem;
+  }
+
+  .tooltip-culture {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--bone-dim);
+    margin-bottom: 0.8rem;
+  }
+
+  .tooltip-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .kw-chip {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+    background: var(--soil);
+    border: 1px solid var(--sage-dim);
+    border-radius: 20px;
+    color: var(--sage);
+  }
+
+  .tooltip-meaning {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--bone);
+    margin-bottom: 0.6rem;
+    border-top: 1px solid var(--bark);
+    padding-top: 0.6rem;
+  }
+
+  .tooltip-reversed {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--bone-dim);
+    font-style: italic;
+  }
+
+  .tooltip-reversed-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+    margin-bottom: 0.2rem;
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE ADJUSTMENTS
+  ═══════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    #main-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    #left-column { display: none; }
+    #right-column {
+      grid-column: 1;
+      grid-row: 3;
+      border-left: none;
+      border-top: 1px solid var(--bark);
+      padding-left: 0;
+      padding-top: 1rem;
+    }
+    #center-column { padding: 0; }
+    #oracle-section { padding: 1rem 0 0; }
+    #control-bar { grid-column: 1; }
+  }
+</style>
 </head>
+
 <body>
 
-<!-- ── BROADCAST BAR ──────────────────────────────────────────── -->
-<div class="broadcast-bar">
-  <div class="live-badge">
-    <div class="live-dot"></div>
-    LIVE
-  </div>
-  <div class="bar-title">EALDFORN #5 · FIRE → WATER · DIGITAL DIVINATION</div>
-  <div class="countdown-bar">
-    <div class="countdown-label">NIGHTCAFE DEADLINE</div>
-    <div class="countdown-time" id="countdownDisplay">--:--:--</div>
-  </div>
-</div>
+<!-- ══════════════════════════════════════════
+     RITUAL HEADER
+══════════════════════════════════════════ -->
+<header id="ritual-header">
+  <span class="header-rune">Ealdforn Sagas · Episode VII · The Global Pantheon</span>
+  <h1>The Earth Deck</h1>
+  <div class="header-sub">Harvest · Covenant · The Hunt</div>
+  <div class="live-pip">LIVE DROP RITUAL</div>
+</header>
 
-<!-- ── TTS / NARRATION PANEL ──────────────────────────────────── -->
-<div class="tts-panel">
-  <div class="tts-speaking-bar" id="ttsSpeakingBar">
-    <div class="tts-wave" id="ttsWave">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <span id="ttsCurrentText">⟡ narration idle — enable loop or inject a line</span>
-  </div>
+<!-- ══════════════════════════════════════════
+     MAIN LAYOUT
+══════════════════════════════════════════ -->
+<div id="main-grid">
 
-  <div class="inject-area">
-    <input
-      type="text"
-      class="inject-input"
-      id="injectInput"
-      placeholder="Inject live narration…"
-      maxlength="300"
-    />
-    <button class="tts-btn tts-btn-speak" id="speakBtn">▶ SPEAK</button>
-    <button class="tts-btn tts-btn-loop" id="loopBtn">⟳ LOOP</button>
-    <button class="tts-btn tts-btn-stop" id="stopBtn">■ STOP</button>
-    <select class="voice-select" id="voiceSelect" title="TTS Voice">
-      <option value="">Loading voices…</option>
-    </select>
-  </div>
-</div>
-
-<!-- ── SPLIT LAYOUT ───────────────────────────────────────────── -->
-<div class="split-layout">
-
-  <!-- 🔥 LEFT: FIRE PANEL -->
-  <div class="panel-fire">
-    <div class="panel-header">
-      <h2>🜂 SUIT OF FIRE</h2>
-      <div class="card-count">COMPLETE · 14 CARDS · 250+ VIEWS</div>
-    </div>
-
-    <div class="auto-draw-container" id="spreadContainer">
-      <div class="card-slot">
-        <div class="card-inner" id="cardPast">
-          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
-          <div class="card-face card-front" id="frontPast"></div>
+  <!-- LEFT: Cycling Deck -->
+  <aside id="left-column">
+    <div class="column-label">The Living Deck</div>
+    <div id="cycle-display">
+      <div class="cycle-card" id="cycle-card-el">
+        <div class="cycle-card-face fire-bg" id="cycle-card-inner">
+          <span class="cycle-card-symbol">🔥</span>
+          <div class="cycle-card-image" id="cycle-card-img"><span>⊕</span></div>
+          <div class="cycle-card-name" id="cycle-card-name">Ace of Fire</div>
+          <div class="cycle-card-title" id="cycle-card-title">Maui</div>
+          <div class="cycle-card-suit suit-fire" id="cycle-card-suit">✦ FIRE ✦</div>
         </div>
       </div>
-      <div class="card-slot">
-        <div class="card-inner" id="cardPresent">
-          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
-          <div class="card-face card-front" id="frontPresent"></div>
+      <div class="cycle-counter" id="cycle-counter">1 / 28</div>
+    </div>
+    <div style="margin-top:1rem;">
+      <div id="tts-status">TTS IDLE</div>
+    </div>
+  </aside>
+
+  <!-- CENTER: Earth Shrine Grid -->
+  <main id="center-column">
+    <div class="section-header">Shrine of the Earth</div>
+    <div class="section-subtitle">The ground that sustains and binds — 14 cards, filling live</div>
+
+    <div id="earth-progress-bar"><div id="earth-progress-fill"></div></div>
+    <div id="earth-progress-label">0 of 14 revealed</div>
+
+    <div id="earth-grid">
+      <!-- slots rendered by JS -->
+    </div>
+  </main>
+
+  <!-- CENTER ROW 2: Oracle -->
+  <section id="oracle-section">
+    <div class="section-header">The Oracle</div>
+    <div class="section-subtitle" style="margin-bottom:0.2rem;">Past · Present · Future — drawn from the living Fire &amp; Water decks</div>
+    <div class="oracle-controls">
+      <button class="ritual-btn btn-gold" onclick="drawOracle()">✦ Draw Oracle</button>
+      <span class="control-label">Auto-draws every 60s</span>
+    </div>
+    <div id="oracle-cards">
+      <div class="oracle-card" id="oracle-past">
+        <div class="oracle-position">Past</div>
+        <div class="oracle-card-name">—</div>
+        <div class="oracle-card-title" style="font-size:0.8rem;color:var(--bone-dim);">awaiting draw</div>
+      </div>
+      <div class="oracle-card" id="oracle-present">
+        <div class="oracle-position">Present</div>
+        <div class="oracle-card-name">—</div>
+        <div class="oracle-card-title" style="font-size:0.8rem;color:var(--bone-dim);">awaiting draw</div>
+      </div>
+      <div class="oracle-card" id="oracle-future">
+        <div class="oracle-position">Future</div>
+        <div class="oracle-card-name">—</div>
+        <div class="oracle-card-title" style="font-size:0.8rem;color:var(--bone-dim);">awaiting draw</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: Council + Log -->
+  <aside id="right-column">
+
+    <div class="column-label">Earth Triad · GAIA Council</div>
+
+    <div id="council-panel">
+      <div class="panel-header">⬡ DIVINE REACTIONS</div>
+      <div id="council-feed">
+        <div class="council-entry" style="animation-delay:0.1s">
+          <div class="council-avatar avatar-demeter">🌾</div>
+          <div class="council-text">
+            <div class="council-god-name">DEMETER</div>
+            <div class="council-reaction">The ritual begins. The shrine is empty. The earth waits.</div>
+          </div>
         </div>
       </div>
-      <div class="card-slot">
-        <div class="card-inner" id="cardFuture">
-          <div class="card-face card-back"><div class="card-back-sigil">🜂</div></div>
-          <div class="card-face card-front" id="frontFuture"></div>
-        </div>
+    </div>
+
+    <div id="log-panel">
+      <div class="panel-header">⬡ BLACKBOX LOG</div>
+      <div id="log-feed">
+        <!-- entries added by JS -->
       </div>
     </div>
 
-    <div class="reading-bar" id="readingBar">
-      <div class="reading-synthesis" id="readingSynthesis"></div>
-      <div class="reading-cards" id="readingCards"></div>
+    <div style="margin-top:auto;">
+      <div class="column-label">Session State</div>
+      <button class="ritual-btn btn-dim" style="width:100%;margin-bottom:0.4rem" onclick="exportSession()">Export Session Log</button>
+      <button class="ritual-btn btn-danger" style="width:100%" onclick="resetSession()">Clear Session</button>
     </div>
 
-    <div class="gallery-strip" id="galleryStrip"></div>
+  </aside>
 
-    <!-- VIDEO STRIP -->
-    <div class="video-strip" id="videoStrip"></div>
-
-    <div class="next-draw-row">
-      NEXT AUTO-DRAW IN <span id="nextDrawTimer">60</span>s
-      <div class="draw-progress"><div class="draw-progress-bar" id="drawProgressBar" style="width:100%"></div></div>
-    </div>
+  <!-- CONTROL BAR -->
+  <div id="control-bar">
+    <div class="control-label">Next Card:</div>
+    <select id="next-card-select" onchange="previewCard()"></select>
+    <button class="ritual-btn btn-earth" onclick="summonCard()">⊕ Summon to Shrine</button>
+    <div class="control-sep"></div>
+    <button class="ritual-btn btn-dim" onclick="markGenerating()">◌ Mark Generating</button>
+    <div class="control-sep"></div>
+    <button class="ritual-btn btn-gold" onclick="revealAllImages()">⊛ Reveal All Images</button>
+    <div class="control-sep"></div>
+    <button class="ritual-btn btn-dim" onclick="toggleCyclePlay()">⏸ Pause Cycle</button>
   </div>
 
-  <!-- 💧 RIGHT: WATER PANEL -->
-  <div class="panel-water">
-    <div class="panel-header">
-      <h2>🜄 SUIT OF WATER — LIVE BUILD</h2>
-      <div class="card-count" id="waterCount">0 / 14 GENERATED · CLICK STUB TO COPY PROMPT</div>
-    </div>
+</div><!-- /main-grid -->
 
-    <div class="water-grid" id="waterGrid"></div>
-
-    <div class="generation-console">
-      <div class="console-header">
-        <div class="console-title">⟡ GENERATION LOG</div>
-      </div>
-      <div class="console-log" id="consoleLog">
-        <span class="log-info">> Fire → Water live build ready.</span><br>
-        <span class="log-info">> Click any stub → copy NightCafe prompt.</span><br>
-        <span class="log-info">> Generate → upload to GitHub → refresh → stub becomes card.</span>
-      </div>
-      <button class="copy-all-btn" id="copyAllMissingBtn">📋 COPY ALL MISSING PROMPTS</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── VIDEO LIGHTBOX ─────────────────────────────────────────── -->
-<div class="video-lightbox" id="videoLightbox">
-  <video id="videoLightboxPlayer" controls playsinline></video>
-  <div class="video-lightbox-meta" id="videoLightboxLabel"></div>
-  <div class="video-lightbox-controls">
-    <button class="video-lb-btn" id="videoPrev">← PREV</button>
-    <button class="video-lb-btn" id="videoNext">NEXT →</button>
-    <button class="video-lb-btn" id="videoClose">✕ CLOSE</button>
+<!-- ══════════════════════════════════════════
+     CARD DETAIL TOOLTIP
+══════════════════════════════════════════ -->
+<div class="tooltip-overlay" id="tooltip-overlay" onclick="closeTooltip(event)">
+  <div class="tooltip-card" id="tooltip-card">
+    <button class="tooltip-close" onclick="closeTooltip(null)">✕</button>
+    <div class="tooltip-name" id="tt-name"></div>
+    <div class="tooltip-title" id="tt-title"></div>
+    <div class="tooltip-culture" id="tt-culture"></div>
+    <div class="tooltip-keywords" id="tt-keywords"></div>
+    <div class="tooltip-meaning" id="tt-meaning"></div>
+    <div class="tooltip-reversed-label">REVERSED</div>
+    <div class="tooltip-reversed" id="tt-reversed"></div>
   </div>
 </div>
 
-<!-- ── LIGHTBOX ──────────────────────────────────────────────── -->
-<div class="lightbox-overlay" id="lightboxOverlay">
-  <div class="lightbox-inner">
-    <button class="lightbox-close" id="lightboxClose">✕ CLOSE</button>
-    <img class="lightbox-img" id="lightboxImg" src="" alt="" />
-    <div class="lightbox-meta">
-      <div class="lightbox-name" id="lightboxName"></div>
-      <div class="lightbox-title" id="lightboxTitle"></div>
-      <div class="lightbox-meaning" id="lightboxMeaning"></div>
-    </div>
-    <div class="lightbox-nav">
-      <button class="lightbox-nav-btn" id="lightboxPrev">← PREV</button>
-      <button class="lightbox-nav-btn" id="lightboxNext">NEXT →</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
 <script>
-// ════════════════════════════════════════════════════════════════
-// DATA
-// ════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════
+   DATA LAYER — inline from minor_arcana.json
+   (Earth deck + Fire/Water for cycle/oracle)
+════════════════════════════════════════════ */
+const DECK_DATA = {
+  fire: [
+    { id:'fire_ace', name:'Ace of Fire', title:'Maui', culture:'Polynesian', rank:'ace', keywords:['stolen fire','divine spark','the gift','sacrifice for creation','genesis'], upright:'Maui descended into the underworld and stole fire from the goddess Mahuika. The Ace of Fire is the divine spark — the idea that costs everything to bring down from the realm of the gods. Create. But know the price the trickster paid.', reversed:'The gift rejected. Fire that burns the giver. The spark stolen and then wasted. Was the sacrifice worth the theft?', image:'data/images/minor/fire/fire_ace.png' },
+    { id:'fire_02', name:'Two of Fire', title:'Castor & Pollux', culture:'Greek', rank:'two', keywords:['partnership','twins','one mortal one divine','shared fate','the pact'], upright:'Two flames burn as one — but one is mortal, one divine. The Two of Fire is the partnership that transcends difference. One of you will carry the other.', reversed:'The twin who resents. The pact broken. The immortal who tires of sharing death.', image:'data/images/minor/fire/fire_02.png' },
+    { id:'fire_03', name:'Three of Fire', title:'Peitho', culture:'Greek', rank:'three', keywords:['persuasion','the pitch','seduction of the mind','charm','the ask'], upright:'The room leans in. Peitho, goddess of persuasion, speaks and the world bends toward her words. The Three of Fire is the pitch.', reversed:'The hollow pitch. Persuasion without substance. What are you actually selling?', image:'data/images/minor/fire/fire_03.png' },
+    { id:'fire_04', name:'Four of Fire', title:'Icarus', culture:'Greek', rank:'four', keywords:['the fall','hubris','exhaustion','the crash','too close to the sun'], upright:'The wax melts. The Four of Fire is the burnout — the moment ambition exceeds capacity. The fall is not failure. It is proof you flew.', reversed:'The near-miss. Recovery from the crash. Fly again — but lower this time.', image:'data/images/minor/fire/fire_04.png' },
+    { id:'fire_05', name:'Five of Fire', title:'Loki', culture:'Norse', rank:'five', keywords:['the critic','the hater','ugly truth','trickster\'s honesty','the reply'], upright:'Loki spoke back to the gods at the feast, exposing every secret, every hypocrisy. The Five of Fire is the voice of dissent — petty, unpolished, but not always wrong.', reversed:'The trickster silenced — or the criticism that was pure poison.', image:'data/images/minor/fire/fire_05.png' },
+    { id:'fire_06', name:'Six of Fire', title:'The Algorithm', culture:'Modern', rank:'six', keywords:['the feed','the viral spread','reputation','the echo','amplification'], upright:'The Algorithm amplifies your name until it belongs to everyone but you. Ride it. Don\'t believe it. The Algorithm has no loyalty.', reversed:'The Algorithm turns. The feed that built you now buries you.', image:'data/images/minor/fire/fire_06.png' },
+    { id:'fire_07', name:'Seven of Fire', title:'Talos', culture:'Greek', rank:'seven', keywords:['the automaton','invisible system','programmed force','the algorithm','the bronze guardian'], upright:'Talos patrols the shores of Crete — a bronze giant, inhuman, unstoppable, doing what it was built to do. Learn the code.', reversed:'The automaton broken. The system hacked. Even bronze giants have weaknesses. Find the pin.', image:'data/images/minor/fire/fire_07.png' },
+    { id:'fire_08', name:'Eight of Fire', title:'Huitzilopochtli', culture:'Aztec', rank:'eight', keywords:['the grind','ceaseless labor','momentum','the push','sacrifice for motion'], upright:'The Eight of Fire is the hustle — the ceaseless grind. The push IS the purpose. But ask: who is being sacrificed to keep this moving?', reversed:'The sun stopping. The grind that grinds nothing. Is it burnout — or wisdom?', image:'data/images/minor/fire/fire_08.png' },
+    { id:'fire_09', name:'Nine of Fire', title:'Cerberus', culture:'Greek', rank:'nine', keywords:['the gatekeeper','guardian','the last test','access','the threshold'], upright:'Three heads. One gate. The Nine of Fire is the gatekeeper. Someone stands between you and your goal. Prove yourself worthy of passage.', reversed:'The gate left unguarded. The watchdog sleeping. The gatekeeper was never the real obstacle.', image:'data/images/minor/fire/fire_09.png' },
+    { id:'fire_10', name:'Ten of Fire', title:'Surtr', culture:'Norse', rank:'ten', keywords:['the spectacular fall','the exit','burn it all','Ragnarök','completion by destruction'], upright:'Surtr burns the world. The Ten of Fire is the exit — the spectacular crash that ends the story. The world burns. Something new grows from the ash.', reversed:'The fire giant sheathing his sword. What did you save from the flames?', image:'data/images/minor/fire/fire_10.png' },
+    { id:'fire_page', name:'Page of Fire', title:'Agni', culture:'Hindu', rank:'page', keywords:['the messenger flame','youth','learning','the beginner','divine courier'], upright:'Agni carries offerings from mortals to the gods. The Page of Fire is the beginner who bridges realms. You are new here. That is your power.', reversed:'The messenger who never advances. Eternal apprenticeship without mastery.', image:'data/images/minor/fire/fire_page.png' },
+    { id:'fire_knight', name:'Knight of Fire', title:'Achilles', culture:'Greek', rank:'knight', keywords:['conviction','rage','the charge','the heel','invincible but for one weakness'], upright:'Achilles charges and the Trojans break. The Knight of Fire is conviction as armor. Charge. But know your heel.', reversed:'The heel struck. The rage that consumed the warrior. Conviction without action is just pride.', image:'data/images/minor/fire/fire_knight.png' },
+    { id:'fire_queen', name:'Queen of Fire', title:'Oya', culture:'Yoruba', rank:'queen', keywords:['warrior queen','commanding','unapologetic power','the empire','wind and fire'], upright:'Oya commands the wind. She wields the flame. The Queen of Fire is the sovereign who does not ask permission. Take your seat.', reversed:'The queen who fights alone. Power without allies.', image:'data/images/minor/fire/fire_queen.png' },
+    { id:'fire_king', name:'King of Fire', title:'The Founder', culture:'Modern', rank:'king', keywords:['the CEO','venture capital','empire builder','absolute will','the spark that scaled'], upright:'The King of Fire turned a spark into an empire. Can you hold it without becoming the monster at the center?', reversed:'The founder ousted by their own board. You built it. You don\'t own it anymore.', image:'data/images/minor/fire/fire_king.png' }
+  ],
+  water: [
+    { id:'water_ace', name:'Ace of Water', title:'Oshun', culture:'Yoruba', rank:'ace', keywords:['the reach','the message of love','vulnerability','the first move','fresh water'], upright:'Oshun reaches toward you with honey and a mirror. The Ace of Water is the DM slide — the vulnerable reach, the heart opened without guarantee.', reversed:'The mirror cracked. The reach that found no one.', image:'data/images/minor/water/water_ace.png' },
+    { id:'water_02', name:'Two of Water', title:'Echo & Narcissus', culture:'Greek', rank:'two', keywords:['unrequited connection','the talking stage','voice without body','the mismatch'], upright:'The Two of Water is the talking stage — the conversation where one voice dominates. Who is speaking? Who is echoing?', reversed:'Echo finding her own voice. The talking stage evolving into real dialogue.', image:'data/images/minor/water/water_02.png' },
+    { id:'water_03', name:'Three of Water', title:'Sedna', culture:'Inuit', rank:'three', keywords:['the call from below','projected desire','the deep','sacrifice','the avatar'], upright:'Sedna dwells at the bottom of the ocean. The Three of Water is the parasocial pull — the projected desire, the avatar of everything you want.', reversed:'Sedna\'s hair combed. The desire recognized, the projection named.', image:'data/images/minor/water/water_03.png' },
+    { id:'water_04', name:'Four of Water', title:'Izanami', culture:'Japanese', rank:'four', keywords:['the vanished','the ghost','withdrawal','silence','the one who disappeared'], upright:'Izanami descended to Yomi. The Four of Water is the ghost — the person who vanished without explanation. The silence is the answer.', reversed:'Izanami speaking from Yomi. The ghost returning — on her own terms.', image:'data/images/minor/water/water_04.png' },
+    { id:'water_05', name:'Five of Water', title:'Calypso', culture:'Greek', rank:'five', keywords:['the situationship','one loved more','loss','ambiguity','the island of almost'], upright:'The Five of Water is the situationship — the thing that was everything to one person and a detour to the other. Grieve what the other person couldn\'t feel.', reversed:'Calypso releasing Odysseus to the sea.', image:'data/images/minor/water/water_05.png' },
+    { id:'water_06', name:'Six of Water', title:"The Ghost of Hamlet's Father", culture:'Norse/English', rank:'six', keywords:['memory','looking back','nostalgia','the past','the demand from beyond'], upright:'The Six of Water is the memory that will not stay buried. Honor the past. But don\'t let it command the present.', reversed:'The ghost at rest. The memory released.', image:'data/images/minor/water/water_06.png' },
+    { id:'water_07', name:'Seven of Water', title:'The Peaches of Immortality', culture:'Chinese', rank:'seven', keywords:['escapism','fantasy','the daydream','the unlived life','the peach garden'], upright:'The Seven of Water is the daydream — the fantasy so sweet it becomes an island. Dream the alternate life. Then choose this one.', reversed:'The peaches eaten. Waking from the dream. The escape became a cage.', image:'data/images/minor/water/water_07.png' },
+    { id:'water_08', name:'Eight of Water', title:'Aeneas & Dido', culture:'Greek/Roman', rank:'eight', keywords:['the necessary departure','walking away','duty over love','the leaving'], upright:'The Eight of Water is the leaving — the departure that wounds everyone but must happen. Dido\'s pyre will light the harbor. You will see it from the sea.', reversed:'The leaving delayed. What are you waiting for?', image:'data/images/minor/water/water_08.png' },
+    { id:'water_09', name:'Nine of Water', title:'The Muses', culture:'Greek', rank:'nine', keywords:['inspiration','community','sacred circle','the group chat','harmony'], upright:'Nine voices in harmony. The Nine of Water is the group chat — the circle that holds you, the community that amplifies your song. Find your chorus.', reversed:'The Muses divided. Find a new circle.', image:'data/images/minor/water/water_09.png' },
+    { id:'water_10', name:'Ten of Water', title:'Shiva & Parvati', culture:'Hindu', rank:'ten', keywords:['union','fulfillment','trials overcome','the cosmic marriage','earned happiness'], upright:'The Ten of Water is the wedding — the happy ending earned through suffering. This is the culmination. Live in it. The cosmic dance continues.', reversed:'The wedding that wasn\'t. Parvati\'s tapas unrewarded.', image:'data/images/minor/water/water_10.png' },
+    { id:'water_page', name:'Page of Water', title:'The VTuber', culture:'Modern', rank:'page', keywords:['the crush','the projected fantasy','avatar love','young emotion','the screen'], upright:'The Page of Water is the crush — the flutter, the pursuit, the young emotion that doesn\'t know if it\'s love or just speed.', reversed:'The avatar retired. The crush that taught you about the difference between a screen and a soul.', image:'data/images/minor/water/water_page.png' },
+    { id:'water_knight', name:'Knight of Water', title:'Paris', culture:'Greek', rank:'knight', keywords:['the romantic','grand gesture','choosing love','the war that followed','idealism'], upright:'Paris chose love. He started the Trojan War. The Knight of Water is the grand gesture that changes everything. Know what you\'re trading for it.', reversed:'The romantic who started a war and couldn\'t finish it.', image:'data/images/minor/water/water_knight.png' },
+    { id:'water_queen', name:'Queen of Water', title:'Mami Wata', culture:'African (Diaspora)', rank:'queen', keywords:['the water spirit','deep hearing','holding space','wisdom','the therapist'], upright:'Mami Wata heals. She counsels. The Queen of Water holds space for your drowning. The water holds what you cannot carry.', reversed:'The waters muddied. Even water spirits need someone to hold their mirror.', image:'data/images/minor/water/water_queen.png' },
+    { id:'water_king', name:'King of Water', title:'Chiron', culture:'Greek', rank:'king', keywords:['the wounded healer','spiritual guide','wisdom through pain','the teacher'], upright:'Chiron taught heroes from his unhealable wound. The King of Water does not pretend to be whole. His wound is his credential.', reversed:'Chiron giving up his immortality to escape the pain. Even the wounded healer needs healing.', image:'data/images/minor/water/water_king.png' }
+  ],
+  earth: [
+    { id:'earth_ace', name:'Ace of Earth', title:'Lakshmi', culture:'Hindu', rank:'ace', keywords:['first wealth','abundance','blessing','genesis of riches','the lotus'], upright:'Lakshmi rises from the ocean of milk on a lotus flower, gold coins spilling from her hands. The Ace of Earth is the first dollar, the genesis of wealth. It is a blessing. Receive it. But know: Lakshmi is restless. She stays where she is honored.', reversed:'Lakshmi departing. The blessing withdrawn. Were you a good steward, or did you hoard what was meant to flow?', image:'data/images/minor/earth/earth_ace.png' },
+    { id:'earth_02', name:'Two of Earth', title:'Aristaeus', culture:'Greek', rank:'two', keywords:['minor crafts','beekeeping','the side pursuit','balance','the quiet skill'], upright:'Aristaeus kept bees. He tended the small things while the great gods fought their wars. The Two of Earth is the side hustle — the quiet craft that sustains when the main gig fails.', reversed:'The bees dying. The side hustle that consumes the main work. Don\'t let the hive starve.', image:'data/images/minor/earth/earth_02.png' },
+    { id:'earth_03', name:'Three of Earth', title:'The Seven Dwarves', culture:'Norse/Germanic', rank:'three', keywords:['the crew','shared labor','teamwork','the collab','each brings a gift'], upright:'Seven dwarves, each with a skill, each with a flaw, working the mine together. The Three of Earth is the collab — the crew that makes the impossible possible.', reversed:'The crew that fractures. One bad pick breaks the whole mine.', image:'data/images/minor/earth/earth_03.png' },
+    { id:'earth_04', name:'Four of Earth', title:'Tantalus', culture:'Greek', rank:'four', keywords:['denied abundance','the unreachable feast','scarcity amid plenty','the eternal lack'], upright:'The fruit hangs above him. The water recedes when he bends to drink. The Four of Earth is the feast you can see but not taste. Is the exclusion real, or self-imposed?', reversed:'The feast reached. The abundance that was always yours.', image:'data/images/minor/earth/earth_04.png' },
+    { id:'earth_05', name:'Five of Earth', title:"Demeter's Grief", culture:'Greek', rank:'five', keywords:['scarcity','withdrawal','the barren earth','loss','the market that dies'], upright:"Persephone descends and Demeter withdraws the harvest. The Five of Earth is the market crash, the scarcity that strikes when what you love is taken. Winter is real. But it is seasonal.", reversed:'The first green shoot. The scarcity is ending. Prepare to plant.', image:'data/images/minor/earth/earth_05.png' },
+    { id:'earth_06', name:'Six of Earth', title:'Anansi', culture:'West African', rank:'six', keywords:['the gift','clever provision','stories as currency','mutual aid',"the spider's web"], upright:'Anansi, the spider, owns all stories. The Six of Earth is the gift — the story you tell, the resource you share. Give. The web holds because every strand gives.', reversed:'Anansi hoarding stories. Generosity that became transaction.', image:'data/images/minor/earth/earth_06.png' },
+    { id:'earth_07', name:'Seven of Earth', title:'Chicomecoatl', culture:'Aztec', rank:'seven', keywords:['the first seed','maize','the long bet','investment','patient growth'], upright:'Chicomecoatl holds the first seed that will feed a civilization. The Seven of Earth is the seed round — the investment that takes seasons to mature. The maize does not rush. Neither should you.', reversed:'The failed crop. The seed that never sprouted. Did you stop watering too soon?', image:'data/images/minor/earth/earth_07.png' },
+    { id:'earth_08', name:'Eight of Earth', title:'Ptah', culture:'Egyptian', rank:'eight', keywords:['the maker','craft','artisan','mastery','the builder of worlds'], upright:'Ptah spoke the world into existence and then built it with his hands. The Eight of Earth is the craft — the skill that creates reality from raw material. Make. Ship. Make again.', reversed:"The maker who stopped making. Ptah's workshop silent. What stopped your hands?", image:'data/images/minor/earth/earth_08.png' },
+    { id:'earth_09', name:'Nine of Earth', title:'The Influencer', culture:'Modern', rank:'nine', keywords:['self-love','the curated self','the brand','beauty','the mirror'], upright:'The Influencer gazes into the ring light — Narcissus reborn. The Nine of Earth is the curated self. Self-love is power. Self-obsession is a mirror with no back.', reversed:'The ring light off. There is a self beyond the brand.', image:'data/images/minor/earth/earth_09.png' },
+    { id:'earth_10', name:'Ten of Earth', title:'House of Atreus', culture:'Greek', rank:'ten', keywords:['dynasty','generational wealth','generational curse','legacy','the bloodline'], upright:'The Ten of Earth is the dynasty. The wealth that passes down. The curse that passes with it. What are you inheriting? What will you pass on?', reversed:'The curse broken. Sometimes the greatest inheritance is freedom from the inheritance.', image:'data/images/minor/earth/earth_10.png' },
+    { id:'earth_page', name:'Page of Earth', title:'Kokopelli', culture:'Indigenous (Southwest)', rank:'page', keywords:['the hustler','the trader','cunning','learning the trade','fertility and music'], upright:'Kokopelli travels from village to village, flute in hand. The Page of Earth is the young hustler — learning every trade along the road. Every deal is an education.', reversed:"The trader who cheated. Kokopelli's flute silent. The margins weren't worth the trust you lost.", image:'data/images/minor/earth/earth_page.png' },
+    { id:'earth_knight', name:'Knight of Earth', title:'Croesus', culture:'Greek', rank:'knight', keywords:['the richest king','true believer in wealth','conviction','the bet','gold'], upright:"Croesus, king of Lydia, so wealthy his name became a word. The Knight of Earth is the true believer in wealth. Belief moves money. But gold is heavy.", reversed:"Croesus on the pyre. Gold will not carry you through the fire.", image:'data/images/minor/earth/earth_knight.png' },
+    { id:'earth_queen', name:'Queen of Earth', title:'Geb', culture:'Egyptian', rank:'queen', keywords:['earth god','abundance','the provider','household economy','the ground'], upright:"Geb's body is the ground that feeds everything. The Queen of Earth is the provider — the one who holds the household together through patience and abundance. The earth does not rush.", reversed:"The earth cracked. Geb trembling. Even the earth needs to lie fallow.", image:'data/images/minor/earth/earth_queen.png' },
+    { id:'earth_king', name:'King of Earth', title:'Shennong', culture:'Chinese', rank:'king', keywords:['the divine farmer','agriculture','market mover','the sage','absolute knowledge of the land'], upright:"Shennong tasted every herb to know which healed and which poisoned. The King of Earth is the sage — the one who understands what to plant and when. Knowledge is the real wealth.", reversed:"Shennong poisoned by the herb he couldn't identify. Even the divine farmer had a blind spot.", image:'data/images/minor/earth/earth_king.png' }
+  ]
+};
 
-const FIRE_DECK = [
-  {id:'fire_ace',    name:'Ace of Fire',    title:'Maui',             meaning:'The divine spark — the idea that costs everything to bring down.',       image:'data/images/minor/fire/fire_ace.png',    rank:'ace',    suit:'fire'},
-  {id:'fire_02',     name:'Two of Fire',    title:'Castor & Pollux',  meaning:'Two flames burn as one — mortal and divine.',                           image:'data/images/minor/fire/fire_02.png',     rank:'02',     suit:'fire'},
-  {id:'fire_03',     name:'Three of Fire',  title:'Peitho',           meaning:'The goddess of persuasion — the room leans in.',                        image:'data/images/minor/fire/fire_03.png',     rank:'03',     suit:'fire'},
-  {id:'fire_04',     name:'Four of Fire',   title:'Icarus',           meaning:'The burnout — when ambition exceeds capacity.',                         image:'data/images/minor/fire/fire_04.png',     rank:'04',     suit:'fire'},
-  {id:'fire_05',     name:'Five of Fire',   title:'Loki',             meaning:'The truth-teller who exposes every secret.',                            image:'data/images/minor/fire/fire_05.png',     rank:'05',     suit:'fire'},
-  {id:'fire_06',     name:'Six of Fire',    title:'The Algorithm',    meaning:'The viral moment — ride it.',                                           image:'data/images/minor/fire/fire_06.png',     rank:'06',     suit:'fire'},
-  {id:'fire_07',     name:'Seven of Fire',  title:'Talos',            meaning:'The system that shapes you without consent.',                           image:'data/images/minor/fire/fire_07.png',     rank:'07',     suit:'fire'},
-  {id:'fire_08',     name:'Eight of Fire',  title:'Huitzilopochtli',  meaning:'The ceaseless grind — push IS purpose.',                               image:'data/images/minor/fire/fire_08.png',     rank:'08',     suit:'fire'},
-  {id:'fire_09',     name:'Nine of Fire',   title:'Cerberus',         meaning:'Prove yourself worthy of passage.',                                     image:'data/images/minor/fire/fire_09.png',     rank:'09',     suit:'fire'},
-  {id:'fire_10',     name:'Ten of Fire',    title:'Surtr',            meaning:'The spectacular exit — not all endings are graceful.',                  image:'data/images/minor/fire/fire_10.png',     rank:'10',     suit:'fire'},
-  {id:'fire_page',   name:'Page of Fire',   title:'Agni',             meaning:'The youngest flame — new is power.',                                   image:'data/images/minor/fire/fire_page.png',   rank:'page',   suit:'fire'},
-  {id:'fire_knight', name:'Knight of Fire', title:'Achilles',         meaning:'Conviction as armor — charge.',                                        image:'data/images/minor/fire/fire_knight.png', rank:'knight', suit:'fire'},
-  {id:'fire_queen',  name:'Queen of Fire',  title:'Oya',              meaning:'The sovereign who does not ask permission.',                            image:'data/images/minor/fire/fire_queen.png',  rank:'queen',  suit:'fire'},
-  {id:'fire_king',   name:'King of Fire',   title:'The Founder',      meaning:'Can you hold it without becoming the monster?',                        image:'data/images/minor/fire/fire_king.png',   rank:'king',   suit:'fire'}
-];
-
-// Image paths match minor_arcana.json id convention: water_ace.png, water_02.png … water_page.png etc.
-// Full path: data/images/minor/water/{id}.png
-const WATER_DECK = [
-  {id:'water_ace',    rank:'ace',    name:'Ace of Water',    title:'Oshun',                  culture:'Yoruba',           meaning:'The DM slide — the vulnerable reach, the message sent into the void. Connection begins with risk.',                                              image:'data/images/minor/water/water_ace.png',    nightCafePrompt:'Oshun Yoruba orisha of love and fresh water, golden and flowing, honey and mirror, purple and green palette, tarot card 2:3'},
-  {id:'water_02',     rank:'two',    name:'Two of Water',    title:'Echo & Narcissus',       culture:'Greek',            meaning:'The talking stage — one voice dominates, the other only reflects. Who is speaking? Who is echoing?',                                            image:'data/images/minor/water/water_02.png',     nightCafePrompt:'Echo and Narcissus by the pool, one fading into voice the other gazing at reflection, purple and green, Greek mythology tarot card 2:3'},
-  {id:'water_03',     rank:'three',  name:'Three of Water',  title:'The Muses',              culture:'Greek',            meaning:'Nine voices in harmony. The group chat that holds you — the community that amplifies your song.',                                               image:'data/images/minor/water/water_03.png',     nightCafePrompt:'The Nine Muses of Greek mythology in harmony, singing together, purple and green, classical tarot card style 2:3'},
-  {id:'water_04',     rank:'four',   name:'Four of Water',   title:'Izanami',                culture:'Japanese',         meaning:'The ghost — the person who vanished without explanation. The silence is the answer.',                                                           image:'data/images/minor/water/water_04.png',     nightCafePrompt:'Izanami Japanese goddess of the underworld Yomi, spectral, purple and green, ghostly beauty tarot card 2:3'},
-  {id:'water_05',     rank:'five',   name:'Five of Water',   title:'Calypso',                culture:'Greek',            meaning:'The situationship — everything to one person, a detour to the other. Grieve what they couldn\'t feel.',                                        image:'data/images/minor/water/water_05.png',     nightCafePrompt:'Calypso on her island of Ogygia, watching the sea, purple and green, Greek mythology tarot card longing 2:3'},
-  {id:'water_06',     rank:'six',    name:'Six of Water',    title:'Ghost of Hamlet\'s Father', culture:'Norse/English', meaning:'The memory that will not stay buried. Honor the past — but don\'t let it command the present.',                                               image:'data/images/minor/water/water_06.png',     nightCafePrompt:'Ghost of Hamlet\'s father on castle battlements, ethereal, purple and green, Shakespearean tarot card haunting 2:3'},
-  {id:'water_07',     rank:'seven',  name:'Seven of Water',  title:'Peaches of Immortality', culture:'Chinese',          meaning:'The daydream — the fantasy so sweet it becomes an island. Dream the alternate life. Then choose this one.',                                      image:'data/images/minor/water/water_07.png',     nightCafePrompt:'Peaches of Immortality in celestial garden, glowing fruit, purple and green, Chinese mythology dreamlike tarot card 2:3'},
-  {id:'water_08',     rank:'eight',  name:'Eight of Water',  title:'Aeneas & Dido',          culture:'Greek/Roman',      meaning:'The necessary departure. Duty calls. The ship is in the harbor. Go.',                                                                         image:'data/images/minor/water/water_08.png',     nightCafePrompt:'Aeneas sailing from Carthage, Dido\'s pyre burning on the shore, purple and green, Roman epic tarot card 2:3'},
-  {id:'water_09',     rank:'nine',   name:'Nine of Water',   title:'Sedna',                  culture:'Inuit',            meaning:'The projected desire, the avatar of everything you want, the deep that calls you. The song is real. The sacrifice is real too.',               image:'data/images/minor/water/water_09.png',     nightCafePrompt:'Sedna Inuit sea goddess at the bottom of the ocean, fingers becoming sea creatures, purple and green, Arctic mythology tarot card 2:3'},
-  {id:'water_10',     rank:'ten',    name:'Ten of Water',    title:'Shiva & Parvati',        culture:'Hindu',            meaning:'The union earned through suffering. The cosmic marriage. This is the culmination. Live in it.',                                                  image:'data/images/minor/water/water_10.png',     nightCafePrompt:'Shiva and Parvati in cosmic union, divine marriage, purple and green, Hindu mythology tarot card sacred love 2:3'},
-  {id:'water_page',   rank:'page',   name:'Page of Water',   title:'The VTuber',             culture:'Modern',           meaning:'The crush — the flutter, the pursuit. Enjoy the stream. Respect the person behind the screen.',                                                image:'data/images/minor/water/water_page.png',   nightCafePrompt:'VTuber as modern mythic archetype, anime avatar on screen, chat flowing, purple and green, digital tarot card 2:3'},
-  {id:'water_knight', rank:'knight', name:'Knight of Water', title:'Paris',                  culture:'Greek',            meaning:'The grand gesture that changes everything. Love is a choice. Know what you\'re trading for it.',                                               image:'data/images/minor/water/water_knight.png', nightCafePrompt:'Paris choosing Aphrodite, golden apple, Helen in the distance, purple and green, Greek mythology tarot card 2:3'},
-  {id:'water_queen',  rank:'queen',  name:'Queen of Water',  title:'Mami Wata',              culture:'African (Diaspora)', meaning:'The therapist — the listener, the one who holds space for your drowning. The water holds what you cannot carry.',                             image:'data/images/minor/water/water_queen.png',  nightCafePrompt:'Mami Wata African water spirit, rising from the sea, serpent and mirror, purple and green, African diaspora tarot card 2:3'},
-  {id:'water_king',   rank:'king',   name:'King of Water',   title:'Chiron',                 culture:'Greek',            meaning:'The wounded healer — his wound is his credential. He does not pretend to be whole.',                                                          image:'data/images/minor/water/water_king.png',   nightCafePrompt:'Chiron the wise centaur, wounded healer, teaching young heroes, purple and green, Greek mythology tarot card 2:3'},
-];
-
-// ── KITTEN TTS SCRIPT LIBRARY ─────────────────────────────────
-// These cycle during loop mode. Fire = warm/authoritative, Water = cool/deep/ethereal.
-const TTS_SCRIPTS = [
-  // Fire — power, myth, ambition
-  { text: "The Fire deck burns tonight. Every card a myth alive.", type: 'fire' },
-  { text: "Fourteen archetypes. Fourteen gods. Which one speaks to you?", type: 'fire' },
-  { text: "Maui stole fire from the gods. Tonight we make something from that flame.", type: 'fire' },
-  { text: "The Algorithm. Six of Fire. The viral moment — you do not get to choose when it comes. You only get to be ready.", type: 'fire' },
-  { text: "The King of Fire asks a question that has no easy answer: can you hold power without becoming the monster that power makes you?", type: 'fire' },
-  { text: "Achilles did not choose his heel. But he charged anyway. That is the Knight of Fire.", type: 'fire' },
-  { text: "Icarus is not a warning about flying too high. He is a warning about loving the height more than the landing.", type: 'fire' },
-  { text: "Oya does not ask permission. The Queen of Fire never has.", type: 'fire' },
-  { text: "Loki does not lie. He reveals. The Five of Fire holds up the mirror you were trying to avoid.", type: 'fire' },
-  { text: "Surtr ends the world with fire. Not out of malice. The Ten of Fire is not failure — it is spectacle.", type: 'fire' },
-  { text: "The past. The present. The future. Three cards drawn from chaos. One story the moment needed to tell.", type: 'fire' },
-  { text: "Agni is the youngest flame, but fire does not care how old you are. Page of Fire. New is its own kind of power.", type: 'fire' },
-
-  // Water — depth, grief, memory, surrender
-  { text: "The Water deck takes shape, one card at a time. Witness the making.", type: 'water' },
-  { text: "This is live creation — the myth is still wet.", type: 'water' },
-  { text: "Tiamat waits in the deep. The Queen of Water was there before any of us had names.", type: 'water' },
-  { text: "Every stub that lights is a card born. Every missing image is a myth waiting to be called into form.", type: 'water' },
-  { text: "Mnemosyne holds memory in still water. What do you carry that you haven't looked at yet?", type: 'water' },
-  { text: "Sedna's fingers became seals and whales. The Four of Water teaches that creation sometimes arrives through loss.", type: 'water' },
-  { text: "The Flood. Ten of Water. Rebirth through destruction. Cinematic scale. Not every ending is a tragedy.", type: 'water' },
-  { text: "Yemanya rises when you call her name over the ocean. She has been waiting longer than you know.", type: 'water' },
-  { text: "Narcissus did not fall in love with himself. He fell in love with the version of himself that existed only in reflection.", type: 'water' },
-  { text: "Kanaloa lives in the place where light does not reach. The Seven of Water is not absence. It is depth.", type: 'water' },
-  { text: "Mazu guides ships through storms she did not start. The Nine of Water protects what is worth protecting.", type: 'water' },
-  { text: "The Current does not judge. The Eight of Water is surrender — not defeat. There is a difference.", type: 'water' },
-  { text: "The Nereids danced before Olympus had a name. The Three of Water does not need an audience.", type: 'water' },
-  { text: "Poseidon commands the water but the water was never his. The Knight rides a wave that was already moving.", type: 'water' },
-
-  // Neutral — meta, show, Ealdforn world
-  { text: "NightCafe daily challenge closes at eight. The deadline is the ritual.", type: 'neutral' },
-  { text: "This is Ealdforn number five. The suits are fire and water. Opposites that require each other to exist.", type: 'neutral' },
-  { text: "Come back tomorrow. There will be more cards. There is always more myth.", type: 'neutral' },
-  { text: "We are building this live. You are watching a tarot deck become real in real time.", type: 'neutral' },
-  { text: "The Ealdforn Sagas draw from Greek, Norse, Polynesian, Yoruba, Inuit, and Abenaki sources. Every card is a crossroads.", type: 'neutral' },
-  { text: "Fire and Water. Destruction and memory. Ambition and surrender. The deck holds the full range of what it means to be alive.", type: 'neutral' },
-  { text: "Every image in this deck was generated on NightCafe and refined by hand. There is no automation in the myth-making.", type: 'neutral' },
-  { text: "If you are watching this live, you are part of the reading.", type: 'neutral' },
-  { text: "The oracle does not predict. It reflects. The cards show you what you already know but haven't said yet.", type: 'neutral' },
-  { text: "Fourteen fire cards. Fourteen water cards in progress. Twenty-eight myths for the age of the algorithm.", type: 'neutral' },
-];
-
-// ════════════════════════════════════════════════════════════════
-// KITTEN TTS ENGINE
-// ════════════════════════════════════════════════════════════════
-const TTS = (() => {
-  let voices = [];
-  let selectedVoiceIndex = -1;
-  let loopActive = false;
-  let loopPointer = 0;
-  let currentUtterance = null;
-  let isSpeaking = false;
-
-  function loadVoices() {
-    voices = window.speechSynthesis.getVoices();
-    if (!voices.length) return;
-    populateVoiceSelect();
+/* ════════════════════════════════════════════
+   COUNCIL DATA
+════════════════════════════════════════════ */
+const EARTH_TRIAD = {
+  Demeter: {
+    avatar: '🌾',
+    avatarClass: 'avatar-demeter',
+    reactions: [
+      card => `Demeter blesses the ${card.title}. The harvest deepens.`,
+      card => `She who fed the world knows this name: ${card.title}. It belongs.`,
+      card => `The soil accepts ${card.title}. Slot sealed.`,
+      card => `Demeter nods. The shrine grows heavy with ${card.keywords[0]}.`,
+      card => `Grain and grief — both mine. ${card.title} carries the weight well.`
+    ]
+  },
+  Hera: {
+    avatar: '👑',
+    avatarClass: 'avatar-hera',
+    reactions: [
+      card => `Hera watches from her throne. ${card.title} is noted.`,
+      card => `The covenant holds. ${card.title} is bound to the shrine now.`,
+      card => `Hera approves — or does not object. For now, the same.`,
+      card => `${card.title}. The law of the house recognizes you.`,
+      card => `Hera: "The ${card.keywords[1] || card.keywords[0]}. Yes. This was always mine to sanction."`
+    ]
+  },
+  Artemis: {
+    avatar: '🌙',
+    avatarClass: 'avatar-artemis',
+    reactions: [
+      card => `Artemis marks ${card.title} and moves on. The hunt continues.`,
+      card => `The moon witnesses the addition of ${card.title}. Uninterrupted.`,
+      card => `She who hunts alone: "${card.title} — filed. The shrine grows."`,
+      card => `Artemis sees the ${card.keywords[0]} in ${card.title}. She does not smile. But she does not look away.`,
+      card => `The bow is lowered. ${card.title} is accepted.`
+    ]
   }
+};
 
-  function populateVoiceSelect() {
-    const sel = document.getElementById('voiceSelect');
-    if (!sel) return;
-    sel.innerHTML = '';
-    voices.forEach((v, i) => {
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = `${v.name.substring(0, 20)} (${v.lang})`;
-      sel.appendChild(opt);
-    });
-    // Default: prefer a melodic English voice
-    const preferred = voices.findIndex(v =>
-      v.lang.startsWith('en') && (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira') || v.name.includes('Victoria') || v.name.includes('Google UK'))
-    );
-    sel.value = preferred >= 0 ? preferred : 0;
-    selectedVoiceIndex = parseInt(sel.value);
-    sel.addEventListener('change', () => { selectedVoiceIndex = parseInt(sel.value); });
-  }
+/* ════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════ */
+const SESSION_KEY = 'ealdforn7_earth_session';
 
-  function setDisplay(text, speaking) {
-    const bar = document.getElementById('ttsSpeakingBar');
-    const textEl = document.getElementById('ttsCurrentText');
-    const wave = document.getElementById('ttsWave');
-    if (textEl) textEl.textContent = text;
-    if (bar) bar.classList.toggle('tts-speaking', speaking);
-    if (wave) wave.parentElement?.classList?.toggle('tts-speaking', speaking);
-  }
+let state = loadSession();
 
-  function speak(text, opts = {}) {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-
-    const utter = new SpeechSynthesisUtterance(text);
-    currentUtterance = utter;
-    isSpeaking = true;
-
-    // Voice tuning by type
-    const type = opts.type || 'neutral';
-    const voiceIdx = selectedVoiceIndex >= 0 ? selectedVoiceIndex : 0;
-    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
-
-    utter.rate  = type === 'fire'    ? 0.88 : type === 'water' ? 0.78 : 0.83;
-    utter.pitch = type === 'fire'    ? 0.78 : type === 'water' ? 0.62 : 0.70;
-    utter.volume = 0.95;
-
-    setDisplay(text, true);
-
-    utter.onend = () => {
-      isSpeaking = false;
-      setDisplay('⟡ narration idle', false);
-      if (loopActive) {
-        setTimeout(() => advanceLoop(), 1800);
-      }
-    };
-
-    utter.onerror = () => {
-      isSpeaking = false;
-      setDisplay('⟡ speech error — retrying', false);
-      if (loopActive) setTimeout(() => advanceLoop(), 2500);
-    };
-
-    window.speechSynthesis.speak(utter);
-  }
-
-  function advanceLoop() {
-    if (!loopActive) return;
-    const script = TTS_SCRIPTS[loopPointer % TTS_SCRIPTS.length];
-    loopPointer++;
-    speak(script.text, { type: script.type });
-  }
-
-  function startLoop() {
-    loopActive = true;
-    loopPointer = Math.floor(Math.random() * TTS_SCRIPTS.length);
-    document.getElementById('loopBtn')?.classList.add('active');
-    advanceLoop();
-  }
-
-  function stopAll() {
-    loopActive = false;
-    isSpeaking = false;
-    window.speechSynthesis.cancel();
-    document.getElementById('loopBtn')?.classList.remove('active');
-    setDisplay('⟡ narration stopped', false);
-  }
-
-  function injectLine(text) {
-    if (!text.trim()) return;
-    loopActive = false;
-    document.getElementById('loopBtn')?.classList.remove('active');
-    speak(text.trim(), { type: 'neutral' });
-  }
-
-  function speakCardReading(draw) {
-    const text = `${draw.past.title}, ${draw.present.title}, ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ', reversed,' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'current'} of the moment.`;
-    speak(text, { type: 'fire' });
-  }
-
-  return { loadVoices, startLoop, stopAll, injectLine, speakCardReading, speak };
-})();
-
-// ════════════════════════════════════════════════════════════════
-// FIRE DECK LOGIC
-// ════════════════════════════════════════════════════════════════
-let drawTimer = 60;
-let cycleInterval, drawCountdownInterval;
-
-function drawFireSpread() {
-  const shuffled = [...FIRE_DECK];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+function loadSession() {
+  const saved = localStorage.getItem(SESSION_KEY);
+  if (saved) {
+    try { return JSON.parse(saved); } catch(e) {}
   }
   return {
-    past:    { ...shuffled[0], position: 'past',    reversed: Math.random() < 0.28 },
-    present: { ...shuffled[1], position: 'present', reversed: Math.random() < 0.28 },
-    future:  { ...shuffled[2], position: 'future',  reversed: Math.random() < 0.28 }
+    filledSlots: {},      // slotIndex -> cardId
+    generatingSlots: [],  // slotIndexes in "generating" state
+    revealedImages: {},   // cardId -> true
+    log: [],
+    oracleHistory: []
   };
 }
 
-function renderCard(card, frontId, cardId) {
-  const front = document.getElementById(frontId);
-  if (!front) return null;
-  front.innerHTML = `
-    <img src="${card.image}" alt="${card.name}" onerror="this.style.background='#1a0e06'; this.style.display='flex'">
-    <div class="info">
-      <div class="pos">${card.position.toUpperCase()}${card.reversed ? ' ⥮ REV' : ''}</div>
-      <div class="name">${card.name}</div>
-      <div class="meaning">${card.title} — ${card.meaning.substring(0, 64)}…</div>
-    </div>
-  `;
-  const inner = document.getElementById(cardId);
-  inner.classList.remove('flipped');
-  return inner;
+function saveSession() {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(state));
 }
 
-let lastDraw = null;
-
-function revealCards(draw) {
-  lastDraw = draw;
-  const past    = renderCard(draw.past,    'frontPast',    'cardPast');
-  const present = renderCard(draw.present, 'frontPresent', 'cardPresent');
-  const future  = renderCard(draw.future,  'frontFuture',  'cardFuture');
-
-  setTimeout(() => past?.classList.add('flipped'),    100);
-  setTimeout(() => present?.classList.add('flipped'), 500);
-  setTimeout(() => future?.classList.add('flipped'),  900);
-
-  setTimeout(() => {
-    const syn = `${draw.past.title} → ${draw.present.title} → ${draw.future.title}. ${draw.present.title}${draw.present.reversed ? ' reversed' : ''} speaks to the ${draw.future.reversed ? 'resistance' : 'flow'} of the moment.`;
-    const el = document.getElementById('readingSynthesis');
-    const cards = document.getElementById('readingCards');
-    if (el) el.textContent = syn;
-    if (cards) cards.textContent = `${draw.past.name} · ${draw.present.name} · ${draw.future.name}`;
-    document.getElementById('readingBar')?.classList.add('visible');
-
-    // Broadcast to other tabs
-    try { new BroadcastChannel('ealdforn_narration').postMessage({ text: syn, source: 'Fire Deck', timestamp: Date.now() }); } catch(e) {}
-
-    // Speak the reading
-    TTS.speakCardReading(draw);
-  }, 1400);
+/* ════════════════════════════════════════════
+   LOGGING
+════════════════════════════════════════════ */
+function timestamp() {
+  const d = new Date();
+  return d.toTimeString().slice(0,8);
 }
 
-function clearCards() {
-  ['cardPast','cardPresent','cardFuture'].forEach(id => {
-    document.getElementById(id)?.classList.remove('flipped');
-  });
-  document.getElementById('readingBar')?.classList.remove('visible');
-  setTimeout(() => {
-    ['frontPast','frontPresent','frontFuture'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '';
-    });
-  }, 450);
+function log(text, type='') {
+  const entry = { time: timestamp(), text, type };
+  state.log.push(entry);
+  saveSession();
+  renderLogEntry(entry);
 }
 
-function startAutoDraw() {
-  revealCards(drawFireSpread());
-  drawTimer = 60;
-  updateDrawProgress();
-
-  cycleInterval = setInterval(() => {
-    clearCards();
-    setTimeout(() => revealCards(drawFireSpread()), 500);
-    drawTimer = 60;
-  }, 60000);
-
-  drawCountdownInterval = setInterval(() => {
-    drawTimer = Math.max(0, drawTimer - 1);
-    updateDrawProgress();
-  }, 1000);
+function renderLogEntry(entry) {
+  const feed = document.getElementById('log-feed');
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `<span class="log-time">${entry.time}</span><span class="log-text ${entry.type}">${entry.text}</span>`;
+  feed.appendChild(el);
+  feed.scrollTop = feed.scrollHeight;
 }
 
-function updateDrawProgress() {
-  const el = document.getElementById('nextDrawTimer');
-  const bar = document.getElementById('drawProgressBar');
-  if (el) el.textContent = drawTimer;
-  if (bar) bar.style.width = `${(drawTimer / 60) * 100}%`;
-}
+/* ════════════════════════════════════════════
+   EARTH GRID RENDERING
+════════════════════════════════════════════ */
+function renderEarthGrid() {
+  const grid = document.getElementById('earth-grid');
+  grid.innerHTML = '';
 
-// ════════════════════════════════════════════════════════════════
-// WATER DECK LOGIC
-// ════════════════════════════════════════════════════════════════
-let generatedWaterCards = new Set();
+  for (let i = 0; i < 14; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'earth-slot';
+    slot.dataset.slot = i;
 
-function loadGeneratedStatus() {
-  try {
-    const saved = localStorage.getItem('ealdforn_water_generated');
-    if (saved) generatedWaterCards = new Set(JSON.parse(saved));
-  } catch(e) {}
+    const cardId = state.filledSlots[i];
+    const isGenerating = state.generatingSlots.includes(i);
 
-  WATER_DECK.forEach(card => {
-    fetch(card.image, { method: 'HEAD', cache: 'no-cache' })
-      .then(res => {
-        if (res.ok && !generatedWaterCards.has(card.id)) {
-          generatedWaterCards.add(card.id);
-          saveGeneratedStatus();
-          renderWaterGrid();
+    if (cardId) {
+      const card = DECK_DATA.earth.find(c => c.id === cardId);
+      slot.classList.add('filled');
+      slot.onclick = () => showTooltip(card);
+      slot.title = card.name;
+
+      const imageRevealed = state.revealedImages[cardId];
+
+      slot.innerHTML = `
+        ${imageRevealed
+          ? `<img class="slot-image" src="${card.image}" alt="${card.name}" onerror="this.style.display='none'">`
+          : `<div style="width:100%;aspect-ratio:1;background:var(--moss);display:flex;align-items:center;justify-content:center;opacity:0.6;font-size:1.6rem">🌿</div>
+             <button class="slot-reveal-btn" onclick="event.stopPropagation();revealImage('${cardId}')">REVEAL</button>`
         }
-      }).catch(() => {});
+        <div class="slot-info">
+          <div class="slot-card-name">${card.name}</div>
+          <div class="slot-card-title">${card.title}</div>
+          <div class="slot-keyword">${card.keywords.slice(0,2).join(' · ')}</div>
+        </div>`;
+
+    } else if (isGenerating) {
+      slot.classList.add('generating');
+      slot.innerHTML = `
+        <div class="slot-generating-overlay">
+          <div class="generating-spinner"></div>
+          <div style="font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold-dim);letter-spacing:0.15em">GENERATING</div>
+        </div>
+        <div class="earth-slot empty">
+          <div class="slot-number">SLOT ${String(i+1).padStart(2,'0')}</div>
+        </div>`;
+
+    } else if (i === 13) {
+      // 14th card — empty placeholder
+      slot.classList.add('placeholder');
+      slot.innerHTML = `
+        <div style="font-size:1.5rem;opacity:0.3">✦</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.15em;color:var(--gold-dim);margin-top:0.3rem">XIV</div>
+        <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:0.7rem;color:var(--bark);margin-top:0.2rem">awaits</div>`;
+
+    } else {
+      slot.classList.add('empty');
+      slot.innerHTML = `
+        <div class="slot-rune">⊕</div>
+        <div class="slot-number">SLOT ${String(i+1).padStart(2,'0')}</div>`;
+    }
+
+    grid.appendChild(slot);
+  }
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const filled = Object.keys(state.filledSlots).length;
+  const pct = (filled / 14) * 100;
+  document.getElementById('earth-progress-fill').style.width = pct + '%';
+  document.getElementById('earth-progress-label').textContent = `${filled} of 14 revealed`;
+}
+
+/* ════════════════════════════════════════════
+   CARD SUMMONING
+════════════════════════════════════════════ */
+function populateCardSelect() {
+  const sel = document.getElementById('next-card-select');
+  const used = new Set(Object.values(state.filledSlots));
+  sel.innerHTML = '<option value="">— choose a card —</option>';
+  DECK_DATA.earth.forEach(card => {
+    if (!used.has(card.id)) {
+      const opt = document.createElement('option');
+      opt.value = card.id;
+      opt.textContent = `${card.name} — ${card.title}`;
+      sel.appendChild(opt);
+    }
   });
 }
 
-function saveGeneratedStatus() {
-  try { localStorage.setItem('ealdforn_water_generated', JSON.stringify([...generatedWaterCards])); } catch(e) {}
+function previewCard() {
+  // Could show preview info — for now just ensures select is readable
 }
 
-function renderWaterGrid() {
-  const grid = document.getElementById('waterGrid');
-  if (!grid) return;
-  const count = generatedWaterCards.size;
-  const countEl = document.getElementById('waterCount');
-  if (countEl) countEl.textContent = `${count} / 14 GENERATED · CLICK STUB TO COPY PROMPT`;
+function summonCard() {
+  const sel = document.getElementById('next-card-select');
+  const cardId = sel.value;
+  if (!cardId) { log('No card selected. Choose from the dropdown.'); return; }
 
-  grid.innerHTML = WATER_DECK.map(card => {
-    const done = generatedWaterCards.has(card.id);
-    const shortTitle = card.title.length > 18 ? card.title.substring(0, 16) + '…' : card.title;
-    return `
-      <div class="water-stub ${done ? 'generated' : ''}"
-           data-id="${card.id}"
-           data-prompt="${card.nightCafePrompt.replace(/"/g,'&quot;')}"
-           data-image="${card.image}"
-           title="${done ? card.name + ' ✓' : card.name + ' — ' + card.meaning.substring(0,80)}">
-        <div class="stub-icon">${done ? '💧' : '🕳'}</div>
-        <div class="stub-rank">${card.rank.toUpperCase()}</div>
-        <div class="stub-title">${shortTitle}</div>
-        <div class="stub-badge ${done ? 'done' : 'missing'}">${done ? 'DONE ✓' : 'MISSING'}</div>
-      </div>
-    `;
-  }).join('');
+  const card = DECK_DATA.earth.find(c => c.id === cardId);
+  if (!card) return;
 
-  document.querySelectorAll('.water-stub').forEach(stub => {
-    stub.addEventListener('click', () => {
-      const id = stub.dataset.id;
-      const done = generatedWaterCards.has(id);
-      if (!done) {
-        navigator.clipboard.writeText(stub.dataset.prompt).catch(() => {});
-        showToast(`📋 Copied: ${id} prompt`);
-        addToConsole(`📋 Copied prompt for ${id}`, 'info');
-        TTS.speak(`Copying prompt for ${id.replace('_',' ')}. Generate, then upload.`, { type: 'water' });
-      } else {
-        showToast(`✓ ${id} already generated`);
-      }
-    });
+  // Find next empty slot
+  let targetSlot = -1;
+  for (let i = 0; i < 14; i++) {
+    if (!state.filledSlots[i]) { targetSlot = i; break; }
+  }
+  if (targetSlot === -1) { log('All 14 shrine slots are filled. The Earth deck is complete.', 'highlight'); return; }
+
+  // Remove from generating if present
+  state.generatingSlots = state.generatingSlots.filter(s => s !== targetSlot);
+
+  // Fill slot
+  state.filledSlots[targetSlot] = cardId;
+  saveSession();
+
+  // Re-render
+  renderEarthGrid();
+  populateCardSelect();
+
+  // Animate the new slot
+  setTimeout(() => {
+    const slotEl = document.querySelector(`[data-slot="${targetSlot}"]`);
+    if (slotEl) slotEl.classList.add('filling');
+  }, 50);
+
+  // Log
+  log(`${card.title} summoned — Slot ${targetSlot+1} filled. [${card.keywords[0]}]`, 'highlight');
+
+  // Council reaction
+  addCouncilReaction(card);
+
+  // TTS
+  speakCard(card);
+
+  // Auto-select next card
+  sel.value = '';
+}
+
+function markGenerating() {
+  const filledCount = Object.keys(state.filledSlots).length;
+  const generatingOrFilled = new Set([...Object.keys(state.filledSlots).map(Number), ...state.generatingSlots]);
+
+  // Mark next empty slot as generating
+  for (let i = 0; i < 14; i++) {
+    if (!generatingOrFilled.has(i)) {
+      state.generatingSlots.push(i);
+      saveSession();
+      renderEarthGrid();
+      log(`Slot ${i+1} marked as generating — NightCafe request dispatched.`);
+      return;
+    }
+  }
+  log('No available slots to mark as generating.');
+}
+
+function revealImage(cardId) {
+  state.revealedImages[cardId] = true;
+  saveSession();
+  renderEarthGrid();
+  const card = DECK_DATA.earth.find(c => c.id === cardId);
+  if (card) log(`${card.title} image revealed.`, 'highlight');
+}
+
+function revealAllImages() {
+  Object.values(state.filledSlots).forEach(id => {
+    state.revealedImages[id] = true;
   });
+  saveSession();
+  renderEarthGrid();
+  log('All filled slots image-revealed.', 'highlight');
 }
 
-function addToConsole(message, type = 'info') {
-  const el = document.getElementById('consoleLog');
-  if (!el) return;
-  const cls = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : 'log-info';
-  const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '⟡';
-  const line = document.createElement('span');
-  line.className = cls;
-  line.textContent = `${prefix} ${message}`;
-  el.prepend(document.createElement('br'));
-  el.prepend(line);
-  // Keep max 12 lines
-  while (el.childNodes.length > 24) el.removeChild(el.lastChild);
+/* ════════════════════════════════════════════
+   COUNCIL REACTIONS
+════════════════════════════════════════════ */
+function addCouncilReaction(card) {
+  const godNames = ['Demeter', 'Hera', 'Artemis'];
+  const godName = godNames[Math.floor(Math.random() * 3)];
+  const god = EARTH_TRIAD[godName];
+  const reactions = god.reactions;
+  const reaction = reactions[Math.floor(Math.random() * reactions.length)](card);
+
+  const feed = document.getElementById('council-feed');
+  const entry = document.createElement('div');
+  entry.className = 'council-entry';
+  entry.innerHTML = `
+    <div class="council-avatar ${god.avatarClass}">${god.avatar}</div>
+    <div class="council-text">
+      <div class="council-god-name">${godName.toUpperCase()}</div>
+      <div class="council-reaction">${reaction}</div>
+    </div>`;
+  feed.appendChild(entry);
+  feed.scrollTop = feed.scrollHeight;
+
+  log(`Council: ${godName} — "${reaction.slice(0, 60)}..."`, '');
 }
 
-function copyAllMissingPrompts() {
-  const missing = WATER_DECK.filter(c => !generatedWaterCards.has(c.rank));
-  if (!missing.length) { showToast('🎉 All Water cards generated!'); return; }
-  const text = missing.map(c => `${c.rank.toUpperCase()} of Water — ${c.title}:\n${c.nightCafePrompt}`).join('\n\n---\n\n');
-  navigator.clipboard.writeText(text).catch(() => {});
-  showToast(`📋 Copied ${missing.length} missing prompts`);
-  addToConsole(`Copied ${missing.length} missing Water prompts to clipboard`, 'info');
+/* ════════════════════════════════════════════
+   TTS — KITTEN SYSTEM
+════════════════════════════════════════════ */
+let ttsQueue = [];
+let ttsPlaying = false;
+
+function speakCard(card) {
+  const line1 = card.title;
+  const line2 = card.keywords.slice(0,3).join('. ');
+  const sentence = card.upright.split('.')[0] + '.';
+  speakText(`${line1}. ${line2}. ${sentence}`);
 }
 
-// ════════════════════════════════════════════════════════════════
-// COUNTDOWN
-// ════════════════════════════════════════════════════════════════
-function updateCountdown() {
-  const now = new Date();
-  const reset = new Date();
-  reset.setHours(20, 0, 0, 0);
-  if (now >= reset) reset.setDate(reset.getDate() + 1);
-  const diff = reset - now;
-  const hours = Math.floor(diff / 3600000);
-  const mins  = Math.floor((diff % 3600000) / 60000);
-  const secs  = Math.floor((diff % 60000) / 1000);
-  const display = `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-  const el = document.getElementById('countdownDisplay');
-  if (el) {
-    el.textContent = display;
-    el.classList.toggle('urgent', hours === 0 && mins < 30);
+function speakText(text) {
+  ttsQueue.push(text);
+  if (!ttsPlaying) processTtsQueue();
+}
+
+function processTtsQueue() {
+  if (ttsQueue.length === 0) {
+    ttsPlaying = false;
+    setTtsStatus('idle');
+    return;
+  }
+  ttsPlaying = true;
+  const text = ttsQueue.shift();
+  setTtsStatus('speaking');
+
+  const chunks = chunkText(text, 180);
+  speakChunks(chunks, 0);
+}
+
+function chunkText(text, maxLen) {
+  const chunks = [];
+  let remaining = text;
+  while (remaining.length > 0) {
+    if (remaining.length <= maxLen) { chunks.push(remaining); break; }
+    let cut = remaining.lastIndexOf('.', maxLen);
+    if (cut === -1) cut = remaining.lastIndexOf(' ', maxLen);
+    if (cut === -1) cut = maxLen;
+    chunks.push(remaining.slice(0, cut + 1).trim());
+    remaining = remaining.slice(cut + 1).trim();
+  }
+  return chunks;
+}
+
+function speakChunks(chunks, idx) {
+  if (idx >= chunks.length) {
+    setTimeout(processTtsQueue, 200);
+    return;
+  }
+  const utterance = new SpeechSynthesisUtterance(chunks[idx]);
+  utterance.rate = 0.88;
+  utterance.pitch = 0.90;
+  utterance.volume = 1;
+
+  // Pick a female voice if available
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha'));
+  if (preferred) utterance.voice = preferred;
+
+  utterance.onend = () => {
+    const pause = chunks[idx].endsWith('.') ? 350 : 120;
+    setTimeout(() => speakChunks(chunks, idx + 1), pause);
+  };
+  utterance.onerror = () => speakChunks(chunks, idx + 1);
+
+  speechSynthesis.speak(utterance);
+}
+
+function setTtsStatus(state) {
+  const el = document.getElementById('tts-status');
+  if (state === 'speaking') {
+    el.textContent = 'TTS SPEAKING';
+    el.classList.add('speaking');
+  } else {
+    el.textContent = 'TTS IDLE';
+    el.classList.remove('speaking');
   }
 }
 
-// ════════════════════════════════════════════════════════════════
-// VIDEO STRIP
-// ════════════════════════════════════════════════════════════════
-const PROMO_VIDEOS = [
-  { src: 'data/videos/ealdforn1.mp4', label: 'EALDFORN #1' },
-  { src: 'data/videos/ealdforn2.mp4', label: 'EALDFORN #2' },
-  { src: 'data/videos/ealdforn3.mp4', label: 'EALDFORN #3' },
-  { src: 'data/videos/ealdforn4.mp4', label: 'EALDFORN #4' },
-  { src: 'data/videos/ealdforn5.mp4', label: 'EALDFORN #5' },
-];
+// Preload voices
+speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 
-let videoIndex = 0;
+/* ════════════════════════════════════════════
+   ORACLE DRAW
+════════════════════════════════════════════ */
+const ORACLE_POOL = [...DECK_DATA.fire, ...DECK_DATA.water];
+const ORACLE_POSITIONS = ['past', 'present', 'future'];
 
-function buildVideoStrip() {
-  const strip = document.getElementById('videoStrip');
-  if (!strip) return;
+function drawOracle() {
+  const cards = document.querySelectorAll('.oracle-card');
+  cards.forEach(c => c.classList.add('refreshing'));
 
-  strip.innerHTML = PROMO_VIDEOS.map((v, i) => `
-    <div class="video-thumb" data-index="${i}" title="Play ${v.label}">
-      <video src="${v.src}" muted preload="metadata" tabindex="-1"></video>
-      <div class="video-play-icon">▶</div>
-      <div class="video-thumb-label">${v.label}</div>
-    </div>
-  `).join('');
+  setTimeout(() => {
+    const drawn = [];
+    const pool = [...ORACLE_POOL];
 
-  strip.querySelectorAll('.video-thumb').forEach(thumb => {
-    // Seek thumbnail video to 0.5s for a preview frame
-    const tv = thumb.querySelector('video');
-    tv.addEventListener('loadedmetadata', () => { tv.currentTime = 0.5; });
+    for (let i = 0; i < 3; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      drawn.push(pool.splice(idx, 1)[0]);
+    }
 
-    thumb.addEventListener('click', () => {
-      openVideoLightbox(parseInt(thumb.dataset.index));
+    ORACLE_POSITIONS.forEach((pos, i) => {
+      const card = drawn[i];
+      const el = document.getElementById(`oracle-${pos}`);
+      const suit = DECK_DATA.fire.includes(card) ? 'fire' : 'water';
+      const suitLabel = suit === 'fire' ? '✦ FIRE' : '◆ WATER';
+      const suitClass = `suit-${suit}`;
+
+      el.innerHTML = `
+        <div class="oracle-position">${pos.toUpperCase()}</div>
+        <div class="oracle-card-name">${card.name}</div>
+        <div class="oracle-card-title">${card.title}</div>
+        <div class="oracle-suit-badge ${suitClass}">${suitLabel}</div>
+        <div class="oracle-keyword">${card.keywords[0]}</div>
+        <div class="oracle-meaning">${card.upright.split('.')[0]}.</div>`;
+
+      el.classList.remove('refreshing');
     });
-  });
+
+    const oracle_line = drawn.map(c => c.title).join(' · ');
+    log(`Oracle: ${oracle_line}`, 'oracle-log');
+    state.oracleHistory.push({ time: timestamp(), cards: drawn.map(c=>c.id) });
+    saveSession();
+  }, 400);
 }
 
-function openVideoLightbox(index) {
-  videoIndex = index;
-  const v = PROMO_VIDEOS[index];
-  const player = document.getElementById('videoLightboxPlayer');
-  const label  = document.getElementById('videoLightboxLabel');
-  const lb     = document.getElementById('videoLightbox');
-  if (!player || !lb) return;
+// Auto-draw every 60s
+let oracleInterval = setInterval(drawOracle, 60000);
 
-  player.src = v.src;
-  player.volume = 1;
-  player.muted = false;
-  if (label) label.textContent = v.label;
-  lb.classList.add('open');
-  player.play().catch(() => {});
+/* ════════════════════════════════════════════
+   CYCLE DECK (left column — Fire + Water)
+════════════════════════════════════════════ */
+const CYCLE_POOL = [...DECK_DATA.fire, ...DECK_DATA.water];
+let cycleIndex = 0;
+let cyclePlaying = true;
+let cycleTimer;
 
-  // Pause TTS while video plays
-  window.speechSynthesis?.cancel();
-  document.getElementById('loopBtn')?.classList.remove('active');
+function getCycleCard(idx) {
+  return CYCLE_POOL[idx % CYCLE_POOL.length];
 }
 
-function closeVideoLightbox() {
-  const player = document.getElementById('videoLightboxPlayer');
-  const lb     = document.getElementById('videoLightbox');
-  if (player) { player.pause(); player.src = ''; }
-  lb?.classList.remove('open');
+function updateCycleDisplay(card) {
+  const suit = DECK_DATA.fire.includes(card) ? 'fire' : 'water';
+  const inner = document.getElementById('cycle-card-inner');
+  inner.className = `cycle-card-face ${suit}-bg`;
+
+  document.getElementById('cycle-card-name').textContent = card.name;
+  document.getElementById('cycle-card-title').textContent = card.title;
+  const suitEl = document.getElementById('cycle-card-suit');
+  suitEl.textContent = suit === 'fire' ? '✦ FIRE ✦' : '◆ WATER ◆';
+  suitEl.className = `cycle-card-suit suit-${suit}`;
+
+  const symbol = document.querySelector('.cycle-card-symbol');
+  symbol.textContent = suit === 'fire' ? '🔥' : '💧';
+
+  // Try image
+  const imgContainer = document.getElementById('cycle-card-img');
+  const img = new Image();
+  img.onload = () => {
+    imgContainer.innerHTML = '';
+    const i = document.createElement('img');
+    i.src = card.image;
+    i.style.width = '100%'; i.style.height = '100%'; i.style.objectFit = 'cover'; i.style.borderRadius = '4px';
+    imgContainer.appendChild(i);
+  };
+  img.onerror = () => { imgContainer.innerHTML = `<span style="font-size:1.4rem;opacity:0.3">${suit==='fire'?'🔥':'💧'}</span>`; };
+  img.src = card.image;
+
+  document.getElementById('cycle-counter').textContent = `${(cycleIndex % CYCLE_POOL.length) + 1} / ${CYCLE_POOL.length}`;
 }
 
-function bindVideoLightbox() {
-  document.getElementById('videoClose')?.addEventListener('click', closeVideoLightbox);
-  document.getElementById('videoPrev')?.addEventListener('click', () => {
-    openVideoLightbox((videoIndex - 1 + PROMO_VIDEOS.length) % PROMO_VIDEOS.length);
-  });
-  document.getElementById('videoNext')?.addEventListener('click', () => {
-    openVideoLightbox((videoIndex + 1) % PROMO_VIDEOS.length);
-  });
-  document.getElementById('videoLightbox')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('videoLightbox')) closeVideoLightbox();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (!document.getElementById('videoLightbox')?.classList.contains('open')) return;
-    if (e.key === 'Escape') closeVideoLightbox();
-    if (e.key === 'ArrowLeft') openVideoLightbox((videoIndex - 1 + PROMO_VIDEOS.length) % PROMO_VIDEOS.length);
-    if (e.key === 'ArrowRight') openVideoLightbox((videoIndex + 1) % PROMO_VIDEOS.length);
-  });
+function stepCycle() {
+  const el = document.getElementById('cycle-card-el');
+  el.classList.add('flipping');
+  setTimeout(() => {
+    cycleIndex = (cycleIndex + 1) % CYCLE_POOL.length;
+    updateCycleDisplay(getCycleCard(cycleIndex));
+    el.classList.remove('flipping');
+  }, 350);
 }
 
-
-let lightboxIndex = 0;
-
-function openLightbox(index) {
-  const card = FIRE_DECK[index];
-  if (!card) return;
-  lightboxIndex = index;
-
-  document.getElementById('lightboxImg').src = card.image;
-  document.getElementById('lightboxImg').alt = card.name;
-  document.getElementById('lightboxName').textContent = card.name;
-  document.getElementById('lightboxTitle').textContent = card.title;
-  document.getElementById('lightboxMeaning').textContent = card.meaning;
-
-  document.getElementById('lightboxOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+function startCycle() {
+  cycleTimer = setInterval(stepCycle, 30000);
 }
 
-function closeLightbox() {
-  document.getElementById('lightboxOverlay').classList.remove('open');
-  document.body.style.overflow = '';
+function toggleCyclePlay() {
+  const btn = event.target;
+  if (cyclePlaying) {
+    clearInterval(cycleTimer);
+    cyclePlaying = false;
+    btn.textContent = '▶ Resume Cycle';
+  } else {
+    startCycle();
+    cyclePlaying = true;
+    btn.textContent = '⏸ Pause Cycle';
+  }
 }
 
-function lightboxNav(dir) {
-  const next = (lightboxIndex + dir + FIRE_DECK.length) % FIRE_DECK.length;
-  openLightbox(next);
+/* ════════════════════════════════════════════
+   TOOLTIP
+════════════════════════════════════════════ */
+function showTooltip(card) {
+  document.getElementById('tt-name').textContent = card.name;
+  document.getElementById('tt-title').textContent = card.title;
+  document.getElementById('tt-culture').textContent = card.culture.toUpperCase();
+  document.getElementById('tt-keywords').innerHTML = card.keywords.map(k => `<span class="kw-chip">${k}</span>`).join('');
+  document.getElementById('tt-meaning').textContent = card.upright;
+  document.getElementById('tt-reversed').textContent = card.reversed;
+  document.getElementById('tooltip-overlay').classList.add('visible');
 }
 
-function bindLightbox() {
-  document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
-  document.getElementById('lightboxPrev')?.addEventListener('click', () => lightboxNav(-1));
-  document.getElementById('lightboxNext')?.addEventListener('click', () => lightboxNav(1));
-  document.getElementById('lightboxOverlay')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (!document.getElementById('lightboxOverlay').classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'ArrowRight') lightboxNav(1);
-  });
+function closeTooltip(e) {
+  if (!e || e.target === document.getElementById('tooltip-overlay')) {
+    document.getElementById('tooltip-overlay').classList.remove('visible');
+  }
 }
 
-// ════════════════════════════════════════════════════════════════
-// GALLERY
-// ════════════════════════════════════════════════════════════════
-function buildGallery() {
-  const strip = document.getElementById('galleryStrip');
-  if (!strip) return;
-  strip.innerHTML = FIRE_DECK.map((card, i) => `
-    <div class="gallery-item" title="${card.name} — ${card.title}" data-index="${i}">
-      <img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.style.opacity='0.2'; this.style.background='#1a0e06'">
-    </div>
-  `).join('');
+/* ════════════════════════════════════════════
+   SESSION MANAGEMENT
+════════════════════════════════════════════ */
+function exportSession() {
+  const data = {
+    exported: new Date().toISOString(),
+    episode: 'Ealdforn #7',
+    filledCards: Object.entries(state.filledSlots).map(([slot, id]) => {
+      const card = DECK_DATA.earth.find(c => c.id === id);
+      return { slot: Number(slot)+1, id, name: card?.name, title: card?.title };
+    }),
+    oracleDraws: state.oracleHistory,
+    log: state.log
+  };
 
-  strip.querySelectorAll('.gallery-item').forEach(item => {
-    item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
-  });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ealdforn7_session_${Date.now()}.json`;
+  a.click();
+  log('Session exported to JSON.');
 }
 
-// ════════════════════════════════════════════════════════════════
-// TOAST
-// ════════════════════════════════════════════════════════════════
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2200);
+function resetSession() {
+  if (!confirm('Clear all session state? This cannot be undone.')) return;
+  localStorage.removeItem(SESSION_KEY);
+  state = loadSession();
+  document.getElementById('council-feed').innerHTML = '';
+  document.getElementById('log-feed').innerHTML = '';
+  renderEarthGrid();
+  populateCardSelect();
+  log('Session cleared. The shrine is empty. The earth waits.');
+  addCouncilReaction(DECK_DATA.earth[0]);
 }
 
-// ════════════════════════════════════════════════════════════════
-// UI BINDINGS
-// ════════════════════════════════════════════════════════════════
-function bindUI() {
-  // TTS buttons
-  document.getElementById('loopBtn')?.addEventListener('click', () => {
-    const btn = document.getElementById('loopBtn');
-    if (btn?.classList.contains('active')) {
-      TTS.stopAll();
-    } else {
-      TTS.startLoop();
-    }
-  });
-
-  document.getElementById('stopBtn')?.addEventListener('click', () => TTS.stopAll());
-
-  document.getElementById('speakBtn')?.addEventListener('click', () => {
-    const input = document.getElementById('injectInput');
-    const text = input?.value?.trim();
-    if (text) {
-      TTS.injectLine(text);
-      if (input) input.value = '';
-    }
-  });
-
-  document.getElementById('injectInput')?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const text = e.target.value.trim();
-      if (text) { TTS.injectLine(text); e.target.value = ''; }
-    }
-  });
-
-  document.getElementById('copyAllMissingBtn')?.addEventListener('click', copyAllMissingPrompts);
+/* ════════════════════════════════════════════
+   RESTORE SESSION LOG
+════════════════════════════════════════════ */
+function restoreLog() {
+  const feed = document.getElementById('log-feed');
+  // Show last 20 log entries
+  const recent = state.log.slice(-20);
+  recent.forEach(e => renderLogEntry(e));
 }
 
-// ════════════════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
 function init() {
-  buildGallery();
-  buildVideoStrip();
-  bindLightbox();
-  bindVideoLightbox();
-  loadGeneratedStatus();
-  renderWaterGrid();
-  startAutoDraw();
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-  bindUI();
-  addToConsole('Fire → Water live dashboard ready.', 'info');
-
-  // Load TTS voices (may be async on some browsers)
-  TTS.loadVoices();
-  window.speechSynthesis.onvoiceschanged = () => TTS.loadVoices();
-
-  console.log('%c🜂🜄 EALDFORN #5 LIVE DASHBOARD', 'color:#e8602a; font-size:16px; font-weight:bold');
-  console.log('%c   Loop narration: click ⟳ LOOP button', 'color:#e8a840');
-  console.log('%c   Inject live line: type in box → SPEAK or Enter', 'color:#5ab8ff');
-  console.log('%c   Water stubs: click to copy NightCafe prompt', 'color:#40c8c0');
+  renderEarthGrid();
+  populateCardSelect();
+  updateCycleDisplay(getCycleCard(0));
+  startCycle();
+  drawOracle();
+  restoreLog();
+  log('Ritual space initialized. Ealdforn #7 — Earth Deck Live Drop.');
+  if (Object.keys(state.filledSlots).length > 0) {
+    log(`Session restored — ${Object.keys(state.filledSlots).length} cards already in the shrine.`, 'highlight');
+  }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+document.addEventListener('DOMContentLoaded', init);
 </script>
+
 </body>
 </html>
+ENDJSON
