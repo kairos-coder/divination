@@ -41,7 +41,7 @@
         "upright": "Maui descended into the underworld and stole fire from the goddess Mahuika. The Ace of Fire is the divine spark — the idea that costs everything to bring down from the realm of the gods. Create. But know the price the trickster paid.",
         "reversed": "The gift rejected. Fire that burns the giver. The spark stolen and then wasted. Was the sacrifice worth the theft?",
         "image": "data/images/minor/fire/fire_ace.png",
-        "prompt": "Maui Polynesian demigod stealing fire from the underworld, purple and green color palette, NightCafe tarot card style, dramatic Polynesian mythology art, glowing embers"
+        "prompt": "Maui, Polynesian demigod who stole fire from the underworld, as tarot card."
       },
       {
         "id": "fire_02",
@@ -55,7 +55,7 @@
         "upright": "Two flames burn as one — but one is mortal, one divine. Castor and Pollux swore an oath to share immortality, alternating days between Olympus and Hades. The Two of Fire is the partnership that transcends difference. One of you will carry the other.",
         "reversed": "The twin who resents. The pact broken. The immortal who tires of sharing death. Who is carrying whom?",
         "image": "data/images/minor/fire/fire_02.png",
-        "prompt": "Castor and Pollux the Divine Twins of Greek mythology, one glowing with immortal light one shadowed with mortality, purple and green, tarot card style"
+        "prompt": "Castor and Pollux, the divine twins of Greek mythology — one immortal, one mortal, as tarot card."
       },
       {
         "id": "fire_03",
@@ -69,7 +69,7 @@
         "upright": "The room leans in. Peitho, goddess of persuasion, speaks and the world bends toward her words. The Three of Fire is the pitch — the moment when language becomes force. Speak. They are listening.",
         "reversed": "The hollow pitch. Persuasion without substance. Charm that fades when the room empties. What are you actually selling?",
         "image": "data/images/minor/fire/fire_03.png",
-        "prompt": "Peitho Greek goddess of persuasion, golden-tongued, room bending toward her words, purple and green, tarot card style, divine feminine power"
+        "prompt": "Peitho, Greek goddess of persuasion and seduction, as tarot card."
       },
       {
         "id": "fire_04",
@@ -83,7 +83,7 @@
         "upright": "The wax melts. Icarus plummets, wings failing, the sun that lifted him now destroying him. The Four of Fire is the burnout — the moment ambition exceeds capacity. The fall is not failure. It is proof you flew.",
         "reversed": "The near-miss. Recovery from the crash. The lesson learned without the death. Fly again — but lower this time.",
         "image": "data/images/minor/fire/fire_04.png",
-        "prompt": "Icarus falling from the sky, wax wings melting, sun blazing above, purple and green color palette, dramatic Greek mythology tarot card art"
+        "prompt": "Icarus, the boy who flew too close to the sun, wax wings melting, as tarot card."
       },
       {
         "id": "fire_05",
@@ -97,7 +97,7 @@
         "upright": "Loki spoke back to the gods at the feast, exposing every secret, every hypocrisy. The ugliest truth-teller in Asgard — and sometimes the only honest one. The Five of Fire is the voice of dissent — petty, unpolished, but not always wrong. Who is criticizing you, and why?",
         "reversed": "The trickster silenced — or the criticism that was pure poison. The hater who had no truth, only bile. Ignore them. Or don't — Loki was right about Ragnarök.",
         "image": "data/images/minor/fire/fire_05.png",
-        "prompt": "Loki Norse trickster god at the feast of the gods, sharp-tongued, purple and green, dramatic tarot card style, Norse mythology"
+        "prompt": "Loki, Norse trickster god who named every hypocrisy of the gods, as tarot card."
       },
       {
         "id": "fire_06",
@@ -111,7 +111,7 @@
         "upright": "The Algorithm amplifies your name until it belongs to everyone but you. It is Pheme reborn in code — intoxicating, uncontrollable, already fading. The Six of Fire is the viral moment. Ride it. Don't believe it. The Algorithm has no loyalty.",
         "reversed": "The Algorithm turns. The feed that built you now buries you. Fame that becomes infamy. What you posted yesterday is evidence today. The viral moment is a loan, not a gift.",
         "image": "data/images/minor/fire/fire_06.png",
-        "prompt": "The Algorithm personified as a divine entity, data streams flowing like fire, glowing feeds, purple and green, modern mythic tarot card style"
+        "prompt": "Pheme, Greek goddess of fame and rumor, reborn as a digital entity of viral spread, as tarot card."
       },
       {
         "id": "fire_07",
@@ -125,7 +125,7 @@
         "upright": "Talos patrols the shores of Crete — a bronze giant, inhuman, unstoppable, doing what it was built to do. The Seven of Fire is the system that shapes you without your consent. It is not evil. It is not good. It is programmed. Learn the code.",
         "reversed": "The automaton broken. The system hacked. Talos felled by a single pin pulled from his heel. Even bronze giants have weaknesses. Find the pin.",
         "image": "data/images/minor/fire/fire_07.png",
-        "prompt": "Talos the bronze automaton of Greek mythology, towering guardian, purple and green, mechanized ancient giant, tarot card style"
+        "prompt": "Talos, the bronze automaton guardian of Crete from Greek mythology, as tarot card."
       },
       {
         "id": "fire_08",
@@ -139,7 +139,7 @@
         "upright": "Huitzilopochtli, the hummingbird warrior, demanded constant sacrifice to keep the sun moving. Without blood, the sun would stop. The Eight of Fire is the hustle — the ceaseless grind that defines the modern condition. The push IS the purpose. But ask: who is being sacrificed to keep this moving?",
         "reversed": "The sun stopping. The grind that grinds nothing. Huitzilopochtli's temple abandoned. Is it burnout — or wisdom?",
         "image": "data/images/minor/fire/fire_08.png",
-        "prompt": "Huitzilopochtli Aztec god of war and the sun, hummingbird warrior, purple and green, dramatic Mesoamerican tarot card art"
+        "prompt": "Huitzilopochtli, Aztec god of the sun and war who demanded sacrifice to keep the world moving, as tarot card."
       },
       {
         "id": "fire_09",
@@ -153,7 +153,7 @@
         "upright": "Three heads. One gate. Cerberus guards the entrance to the underworld — nothing passes without his consent. The Nine of Fire is the gatekeeper. Someone stands between you and your goal. Prove yourself worthy of passage.",
         "reversed": "The gate left unguarded. The watchdog sleeping. Cerberus tamed by Orpheus's song. The gatekeeper was never the real obstacle.",
         "image": "data/images/minor/fire/fire_09.png",
-        "prompt": "Cerberus three-headed guardian of the Greek underworld, towering at the gate, purple and green flames, tarot card style"
+        "prompt": "Cerberus, the three-headed guardian of the Greek underworld, as tarot card."
       },
       {
         "id": "fire_10",
@@ -167,7 +167,7 @@
         "upright": "Surtr rides out of Muspelheim at Ragnarök, his sword brighter than the sun, and burns the world. The Ten of Fire is the exit — the spectacular crash that ends the story. Not all endings are graceful. Some are mythic. The world burns. Something new grows from the ash.",
         "reversed": "The fire giant sheathing his sword. The world that was almost burned and survived. The exit that could have destroyed everything — but didn't. What did you save from the flames?",
         "image": "data/images/minor/fire/fire_10.png",
-        "prompt": "Surtr Norse fire giant at Ragnarök, flaming sword, world burning, purple and green apocalyptic tarot card style"
+        "prompt": "Surtr, Norse fire giant who burns the world at Ragnarök, as tarot card."
       },
       {
         "id": "fire_page",
@@ -181,7 +181,7 @@
         "upright": "Agni, the fire god, carries offerings from mortals to the gods. He is the youngest flame — messenger, courier, the spark that connects worlds. The Page of Fire is the beginner who bridges realms. You are new here. That is your power.",
         "reversed": "The messenger who never advances. Agni's flame flickering. Eternal apprenticeship without mastery. When do you stop carrying messages and speak your own?",
         "image": "data/images/minor/fire/fire_page.png",
-        "prompt": "Agni Hindu god of fire, young divine messenger, flames rising, purple and green, Indian mythology tarot card style"
+        "prompt": "Agni, Hindu god of fire and divine messenger between mortals and gods, as tarot card."
       },
       {
         "id": "fire_knight",
@@ -195,7 +195,7 @@
         "upright": "Achilles charges and the Trojans break. The Knight of Fire is conviction as armor — the warrior who cannot be stopped, driven by rage and love and the need to be remembered. Charge. But know your heel.",
         "reversed": "The heel struck. The rage that consumed the warrior. Achilles sulking in his tent while the battle rages. Conviction without action is just pride.",
         "image": "data/images/minor/fire/fire_knight.png",
-        "prompt": "Achilles Greek warrior charging into battle, armor gleaming, purple and green, dramatic tarot card style, invincible rage"
+        "prompt": "Achilles, the near-invincible Greek hero driven by rage and glory, as tarot card."
       },
       {
         "id": "fire_queen",
@@ -209,7 +209,7 @@
         "upright": "Oya, orisha of fire, wind, and transformation, leads warriors into battle and carries the souls of the dead through the storm. The Queen of Fire is the sovereign who does not ask permission. She commands the wind. She wields the flame. Take your seat.",
         "reversed": "The queen who fights alone. Oya's storm without direction. Power without allies. Who stands with you on the field?",
         "image": "data/images/minor/fire/fire_queen.png",
-        "prompt": "Oya Yoruba orisha of fire and wind, warrior queen, storm swirling, purple and green, African diaspora tarot card style"
+        "prompt": "Oya, Yoruba orisha of fire, wind, and transformation, warrior queen of storms, as tarot card."
       },
       {
         "id": "fire_king",
@@ -223,7 +223,7 @@
         "upright": "The Founder built the system and now rules from within it. Venture capital as divine right. Scale as manifest destiny. The King of Fire is the one who turned a spark into an empire. Absolute authority. The platform is yours. Can you hold it without becoming the monster at the center?",
         "reversed": "The founder ousted by their own board. The empire that outgrew its builder. The platform that no longer answers to its creator. You built it. You don't own it anymore.",
         "image": "data/images/minor/fire/fire_king.png",
-        "prompt": "The Founder as a modern mythic archetype, tech empire builder, throne of code, purple and green, modern tarot card style, startup mythology"
+        "prompt": "The Founder, modern archetype of the tech empire builder who became king of his own creation, as tarot card."
       }
     ],
     "earth": [
@@ -239,7 +239,7 @@
         "upright": "Lakshmi rises from the ocean of milk on a lotus flower, gold coins spilling from her hands. The Ace of Earth is the first dollar, the genesis of wealth. It is a blessing. Receive it. But know: Lakshmi is restless. She stays where she is honored.",
         "reversed": "Lakshmi departing. The blessing withdrawn. Wealth that flowed away as quickly as it came. Were you a good steward, or did you hoard what was meant to flow?",
         "image": "data/images/minor/earth/earth_ace.png",
-        "prompt": "Lakshmi Hindu goddess of wealth rising from the ocean on a lotus, gold coins, purple and green, Indian mythology tarot card style"
+        "prompt": "Lakshmi, Hindu goddess of wealth and abundance who rises from the cosmic ocean on a lotus, as tarot card."
       },
       {
         "id": "earth_02",
@@ -253,7 +253,7 @@
         "upright": "Aristaeus kept bees. He made cheese. He tended the small things while the great gods fought their wars. The Two of Earth is the side hustle — the quiet craft that sustains when the main gig fails. Tend it. The bees don't care about your title.",
         "reversed": "The bees dying. The side hustle that consumes the main work. Aristaeus punished for Orpheus's death — the collateral damage of the side pursuit. Don't let the hive starve.",
         "image": "data/images/minor/earth/earth_02.png",
-        "prompt": "Aristaeus Greek god of beekeeping and minor crafts, tending hives, purple and green pastoral tarot card style"
+        "prompt": "Aristaeus, Greek god of beekeeping, cheesemaking, and the minor pastoral crafts, as tarot card."
       },
       {
         "id": "earth_03",
@@ -267,7 +267,7 @@
         "upright": "Seven dwarves, each with a skill, each with a flaw, working the mine together. The Three of Earth is the collab — the crew that makes the impossible possible. Who is on your team? What does each one bring that no one else can?",
         "reversed": "The crew that fractures. The dwarves arguing over the gem. The shared labor that became competition. Vet your collaborators. One bad pick breaks the whole mine.",
         "image": "data/images/minor/earth/earth_03.png",
-        "prompt": "Seven dwarves working together in a mine, each with unique tools, purple and green, Germanic folklore tarot card style"
+        "prompt": "The Seven Dwarves of Germanic folklore, master craftsmen working the mine together, as tarot card."
       },
       {
         "id": "earth_04",
@@ -281,7 +281,7 @@
         "upright": "The fruit hangs above him. The water recedes when he bends to drink. Tantalus is surrounded by everything he wants and can touch none of it. The Four of Earth is the feast you can see but not taste. Is the exclusion real, or self-imposed?",
         "reversed": "The feast reached. Tantalus breaking the curse. The abundance that was always yours. What barrier did you finally push through?",
         "image": "data/images/minor/earth/earth_04.png",
-        "prompt": "Tantalus reaching for fruit that hangs just out of reach, water receding, Greek underworld punishment, purple and green, tarot card style"
+        "prompt": "Tantalus, the cursed Greek king who starves surrounded by food and water forever just out of reach, as tarot card."
       },
       {
         "id": "earth_05",
@@ -295,7 +295,7 @@
         "upright": "Persephone descends and Demeter withdraws the harvest. The earth goes cold. The Five of Earth is the market crash, the scarcity that strikes when what you love is taken. Winter is real. But it is seasonal. Even Demeter's grief has a cycle.",
         "reversed": "The first green shoot. Persephone returning. The market recovering. Grief releasing its grip on the ground. The scarcity is ending. Prepare to plant.",
         "image": "data/images/minor/earth/earth_05.png",
-        "prompt": "Demeter grieving, the earth turning barren and cold, purple and green, Greek mythology tarot card style, winter landscape"
+        "prompt": "Demeter, Greek goddess of the harvest, in grief as the earth turns barren and winter descends, as tarot card."
       },
       {
         "id": "earth_06",
@@ -309,7 +309,7 @@
         "upright": "Anansi, the spider, owns all stories. He traded, tricked, and negotiated his way into becoming the keeper of every tale. The Six of Earth is the gift — the story you tell, the resource you share, the clever provision that feeds the community. Give. The web holds because every strand gives.",
         "reversed": "Anansi hoarding stories. The spider who forgot the web is made of sharing. The gift withheld. Generosity that became transaction.",
         "image": "data/images/minor/earth/earth_06.png",
-        "prompt": "Anansi the spider trickster of West African folklore, weaving a web of stories, purple and green, African mythology tarot card style"
+        "prompt": "Anansi, West African spider trickster who owns all stories and trades in wit and generosity, as tarot card."
       },
       {
         "id": "earth_07",
@@ -323,7 +323,7 @@
         "upright": "Chicomecoatl, goddess of maize, holds the first seed that will feed a civilization. The Seven of Earth is the seed round — the investment that takes seasons to mature. Plant. Wait. The harvest is not tomorrow. The maize does not rush. Neither should you.",
         "reversed": "The failed crop. The seed that never sprouted. The investment that withered in the field. Was it the seed, or the soil? Or did you stop watering too soon?",
         "image": "data/images/minor/earth/earth_07.png",
-        "prompt": "Chicomecoatl Aztec goddess of maize, holding sacred corn, purple and green, Mesoamerican tarot card style, agricultural abundance"
+        "prompt": "Chicomecoatl, Aztec goddess of maize and the sacred first seed of civilization, as tarot card."
       },
       {
         "id": "earth_08",
@@ -337,7 +337,7 @@
         "upright": "Ptah spoke the world into existence and then built it with his hands. The Eight of Earth is the craft — the skill that creates reality from raw material. He is the architect, the builder, the maker. Make. Ship. Make again. The world was built by hands like yours.",
         "reversed": "The maker who stopped making. Ptah's workshop silent. Craft without purpose. Skill that no longer finds expression. What stopped your hands?",
         "image": "data/images/minor/earth/earth_08.png",
-        "prompt": "Ptah Egyptian creator god, master craftsman at his workbench, divine tools, purple and green, Egyptian mythology tarot card style"
+        "prompt": "Ptah, Egyptian creator god and divine craftsman who built the world with word and hand, as tarot card."
       },
       {
         "id": "earth_09",
@@ -351,7 +351,7 @@
         "upright": "The Influencer gazes into the ring light — Narcissus reborn in the age of the algorithm. The curated self, the brand, the pool that shows only what you want to see. Self-love is power. Self-obsession is a mirror with no back. The reflection is not the person.",
         "reversed": "The ring light off. The Influencer looking up from the screen. The reflection losing its hold. There is a world beyond the mirror. There is a self beyond the brand.",
         "image": "data/images/minor/earth/earth_09.png",
-        "prompt": "The Influencer as modern mythic archetype, ring light, curated reflection, purple and green, modern tarot card style, social media mythology"
+        "prompt": "The Influencer, modern archetype of Narcissus reborn under the ring light — the curated self as brand, as tarot card."
       },
       {
         "id": "earth_10",
@@ -365,7 +365,7 @@
         "upright": "The House of Atreus ruled Mycenae for generations — and every generation bathed in blood. The Ten of Earth is the dynasty. The wealth that passes down. The curse that passes with it. What are you inheriting? What will you pass on?",
         "reversed": "The curse broken. The dynasty ended. Atreus's last descendant laying down the knife. Sometimes the greatest inheritance is freedom from the inheritance.",
         "image": "data/images/minor/earth/earth_10.png",
-        "prompt": "The House of Atreus cursed Greek dynasty, bloodline and gold, palace shadows, purple and green, dramatic tarot card style"
+        "prompt": "The House of Atreus, the cursed Greek dynasty of Mycenae where every generation inherited blood and gold, as tarot card."
       },
       {
         "id": "earth_page",
@@ -379,7 +379,7 @@
         "upright": "Kokopelli travels from village to village, flute in hand, trading goods and stories, bringing fertility to the land. The Page of Earth is the young hustler — the one who lives by wit and charm, learning every trade along the road. Every deal is an education.",
         "reversed": "The trader who cheated. Kokopelli's flute silent. The hustle that hustled itself. The margins weren't worth the trust you lost.",
         "image": "data/images/minor/earth/earth_page.png",
-        "prompt": "Kokopelli Native American flute player and trader, traveling between villages, purple and green, Indigenous American tarot card style"
+        "prompt": "Kokopelli, Southwestern Native American trickster trader and fertility deity who plays the flute between villages, as tarot card."
       },
       {
         "id": "earth_knight",
@@ -393,7 +393,7 @@
         "upright": "Croesus, king of Lydia, so wealthy his name became a word. He believed his gold made him invincible. The Knight of Earth is the true believer in wealth — the gold bug, the crypto bro, the one who rides the market with religious conviction. Belief moves money. But gold is heavy.",
         "reversed": "Croesus on the pyre. The wealth that didn't save him. The coin that couldn't stop the conqueror. Gold will not carry you through the fire.",
         "image": "data/images/minor/earth/earth_knight.png",
-        "prompt": "King Croesus of Lydia, wealthiest king, surrounded by gold, purple and green, Greek history tarot card style"
+        "prompt": "Croesus, the legendarily wealthy king of Lydia who believed gold made him untouchable, as tarot card."
       },
       {
         "id": "earth_queen",
@@ -407,7 +407,7 @@
         "upright": "Geb, god of the earth, lies beneath the sky goddess Nut, his body the ground that feeds everything. The Queen of Earth is the provider — the one who holds the household together through patience and abundance. The earth does not rush. It provides.",
         "reversed": "The earth cracked. Geb trembling. The provider depleted, the ground that can no longer give. Even the earth needs to lie fallow.",
         "image": "data/images/minor/earth/earth_queen.png",
-        "prompt": "Geb Egyptian god of the earth, body forming the landscape, green fields, purple sky above, Egyptian mythology tarot card style"
+        "prompt": "Geb, Egyptian god of the earth whose body is the fertile land beneath the sky, as tarot card."
       },
       {
         "id": "earth_king",
@@ -421,7 +421,7 @@
         "upright": "Shennong, the divine farmer, taught humanity agriculture and tasted every herb to know which healed and which poisoned. The King of Earth is the sage of the land — the one who knows the market, who moves capital like seasons, who understands what to plant and when. Knowledge is the real wealth.",
         "reversed": "Shennong poisoned by the herb he couldn't identify. The sage who missed something. The market that turned on the expert. Even the divine farmer had a blind spot.",
         "image": "data/images/minor/earth/earth_king.png",
-        "prompt": "Shennong Chinese divine farmer, tasting herbs, agricultural sage, purple and green, Chinese mythology tarot card style"
+        "prompt": "Shennong, the Chinese divine farmer who taught humanity agriculture and tasted every herb to find its power, as tarot card."
       }
     ],
     "water": [
@@ -437,7 +437,7 @@
         "upright": "Oshun, orisha of love and fresh water, reaches toward you with honey and a mirror. The Ace of Water is the DM slide — the vulnerable reach, the message sent into the void, the heart opened without guarantee. Connection begins with risk. She is the sweet water that sustains life.",
         "reversed": "The mirror cracked. The reach that found no one. Oshun's waters muddied. The message that was sent but never received. Try again — but with clearer water.",
         "image": "data/images/minor/water/water_ace.png",
-        "prompt": "Oshun Yoruba orisha of love and fresh water, golden and flowing, honey and mirror, purple and green, African diaspora tarot card style"
+        "prompt": "Oshun, Yoruba orisha of love, fresh water, and beauty who reaches toward you with honey and a mirror, as tarot card."
       },
       {
         "id": "water_02",
@@ -451,21 +451,21 @@
         "upright": "Echo could only repeat what others said. Narcissus could only hear himself. The Two of Water is the talking stage — the conversation where one voice dominates and the other only reflects. Who is speaking? Who is echoing? Is there a real person in either reflection?",
         "reversed": "Echo finding her own voice. Narcissus looking up from the pool. The talking stage evolving into real dialogue — or ending so both can find a better match.",
         "image": "data/images/minor/water/water_02.png",
-        "prompt": "Echo and Narcissus by the pool, one fading into voice the other gazing at reflection, purple and green, Greek mythology tarot card style"
+        "prompt": "Echo and Narcissus beside the pool — one reduced to a voice, one seeing only himself, as tarot card."
       },
       {
         "id": "water_03",
         "name": "Three of Water",
         "title": "Sedna",
         "culture": "Inuit",
-        "rank": "nine",
+        "rank": "three",
         "element": "Water",
         "ruling_god": "Aphrodite",
         "keywords": ["the call from below", "projected desire", "the deep", "sacrifice", "the avatar"],
-        "upright": "Sedna's fingers were cut off and became the creatures of the sea. She dwells at the bottom of the ocean, and shamans dive down to comb her hair and ask for good hunting. The Nine of Water is the eGirl — the projected desire, the avatar of everything you want, the deep that calls you. The song is real. The sacrifice is real too. Who is diving? Who is being dived for?",
+        "upright": "Sedna's fingers were cut off and became the creatures of the sea. She dwells at the bottom of the ocean, and shamans dive down to comb her hair and ask for good hunting. The Three of Water is the parasocial pull — the projected desire, the avatar of everything you want, the deep that calls you. The song is real. The sacrifice is real too. Who is diving? Who is being dived for?",
         "reversed": "Sedna's hair combed. The shaman returning to the surface. The desire recognized, the projection named. You can love the deep without drowning in it.",
         "image": "data/images/minor/water/water_03.png",
-        "prompt": "Sedna Inuit sea goddess at the bottom of the ocean, fingers becoming sea creatures, purple and green, Arctic mythology tarot card style"
+        "prompt": "Sedna, Inuit goddess of the sea whose severed fingers became the creatures of the deep, as tarot card."
       },
       {
         "id": "water_04",
@@ -479,7 +479,7 @@
         "upright": "Izanami died giving birth to fire and descended to Yomi, the underworld. Izanagi came to retrieve her but looked when he shouldn't have — and saw her rotting. She became the goddess of death. The Four of Water is the ghost — the person who vanished without explanation, the silence that is itself a message. They are not coming back. The silence is the answer.",
         "reversed": "Izanami speaking from Yomi. The ghost returning — on her own terms. The explanation offered. But trust, once vanished, is slow to return.",
         "image": "data/images/minor/water/water_04.png",
-        "prompt": "Izanami Japanese goddess of the underworld Yomi, spectral, purple and green, Japanese mythology tarot card style, ghostly beauty"
+        "prompt": "Izanami, Japanese goddess of death and the underworld Yomi, beautiful and spectral, as tarot card."
       },
       {
         "id": "water_05",
@@ -493,7 +493,7 @@
         "upright": "Calypso kept Odysseus for seven years. She offered him immortality. He chose to leave — and wept on the shore for home. The Five of Water is the situationship — the thing that was everything to one person and a detour to the other. Grieve what the other person couldn't feel.",
         "reversed": "Calypso releasing Odysseus to the sea. The island left behind. The situationship ending — and the clarity that comes when you stop holding someone who wants to leave.",
         "image": "data/images/minor/water/water_05.png",
-        "prompt": "Calypso on her island of Ogygia, watching the sea, purple and green, Greek mythology tarot card style, longing"
+        "prompt": "Calypso, the Greek sea nymph who kept Odysseus on her island for seven years while he longed for home, as tarot card."
       },
       {
         "id": "water_06",
@@ -507,7 +507,7 @@
         "upright": "The ghost walks the battlements at Elsinore, demanding justice, demanding remembrance. The Six of Water is the memory that will not stay buried — the nostalgia post, the past that pulls you backward, the voice from beyond that says: remember me. Honor the past. But don't let it command the present.",
         "reversed": "The ghost at rest. Hamlet's father finally silent. The memory released. The song that honors what was without trying to retrieve it. The past can be laid to rest.",
         "image": "data/images/minor/water/water_06.png",
-        "prompt": "The ghost of Hamlet's father on the castle battlements, ethereal, purple and green, Shakespearean tarot card style, haunting"
+        "prompt": "The ghost of Hamlet's father, armored and ethereal on the battlements of Elsinore, demanding to be remembered, as tarot card."
       },
       {
         "id": "water_07",
@@ -521,7 +521,7 @@
         "upright": "In the garden of the Queen Mother of the West, the peaches of immortality ripen once every three thousand years. Sun Wukong ate them all and became ungovernable. The Seven of Water is the daydream — the fantasy so sweet it becomes an island. Dream the alternate life. Then choose this one — or steal the peach and become a legend.",
         "reversed": "The peaches eaten. Waking from the dream. The fantasy that was paradise revealed as theft. Sun Wukong punished under a mountain for five hundred years. The escape became a cage.",
         "image": "data/images/minor/water/water_07.png",
-        "prompt": "The Peaches of Immortality in the celestial garden, glowing fruit, purple and green, Chinese mythology tarot card style, dreamlike"
+        "prompt": "The Peaches of Immortality in the celestial garden of Xi Wangmu, glowing with divine light, stolen by Sun Wukong, as tarot card."
       },
       {
         "id": "water_08",
@@ -535,23 +535,22 @@
         "upright": "Aeneas sailed from Carthage. Dido built a pyre. The Eight of Water is the leaving — the departure that wounds everyone but must happen. Duty calls. The ship is in the harbor. Go. Dido's pyre will light the harbor. You will see it from the sea.",
         "reversed": "The leaving delayed. Aeneas lingering in Carthage while the gods grow impatient. The departure postponed until the pyre is already lit. What are you waiting for?",
         "image": "data/images/minor/water/water_08.png",
-        "prompt": "Aeneas sailing from Carthage, Dido's pyre burning on the shore, purple and green, Roman epic tarot card style"
+        "prompt": "Aeneas sailing from Carthage as Dido's funeral pyre burns on the shore behind him, as tarot card."
       },
       {
         "id": "water_09",
         "name": "Nine of Water",
         "title": "The Muses",
         "culture": "Greek",
-        "rank": "three",
+        "rank": "nine",
         "element": "Water",
         "ruling_god": "Apollo",
         "keywords": ["inspiration", "community", "sacred circle", "the group chat", "harmony"],
-        "upright": "Nine voices in harmony. The Muses sing together and the world becomes more beautiful. The Three of Water is the group chat — the circle that holds you, the friends who inspire, the community that amplifies your song. Find your chorus.",
+        "upright": "Nine voices in harmony. The Muses sing together and the world becomes more beautiful. The Nine of Water is the group chat — the circle that holds you, the friends who inspire, the community that amplifies your song. Find your chorus.",
         "reversed": "The Muses divided. The chorus that became competition. The group chat that turned toxic. Discord where there should be harmony. Find a new circle.",
         "image": "data/images/minor/water/water_09.png",
-        "prompt": "The Nine Muses of Greek mythology in harmony, singing together, purple and green, classical tarot card style, artistic inspiration"
+        "prompt": "The Nine Muses of Greek mythology, singing in divine harmony, each embodying a different art, as tarot card."
       },
-        
       {
         "id": "water_10",
         "name": "Ten of Water",
@@ -564,7 +563,7 @@
         "upright": "Parvati performed tapas for millennia to win Shiva. He tested her. She persisted. They married and the cosmos balanced. The Ten of Water is the wedding — the happy ending earned through suffering, the union that almost didn't happen. This is the culmination. Live in it. The cosmic dance continues.",
         "reversed": "The wedding that wasn't. Parvati's tapas unrewarded. Shiva retreating to his mountain. The arc that was almost complete. What trial did you fail — or what test was unfair?",
         "image": "data/images/minor/water/water_10.png",
-        "prompt": "Shiva and Parvati in cosmic union, divine marriage, purple and green, Hindu mythology tarot card style, sacred love"
+        "prompt": "Shiva and Parvati in divine union, the cosmic marriage that balances creation and destruction, as tarot card."
       },
       {
         "id": "water_page",
@@ -578,7 +577,7 @@
         "upright": "The VTuber streams and the chat falls in love — with the avatar, the voice, the person who may not be the person. The Page of Water is the crush — the flutter, the pursuit, the young emotion that doesn't yet know if it's love or just speed. Enjoy the stream. Respect the person behind the screen.",
         "reversed": "The stream ended. The avatar retired. The crush that taught you something about projection — and about the difference between a screen and a soul.",
         "image": "data/images/minor/water/water_page.png",
-        "prompt": "The VTuber as modern mythic archetype, anime avatar on screen, chat flowing, purple and green, modern digital tarot card style"
+        "prompt": "The VTuber, modern archetype of the anime avatar whose voice the internet falls in love with behind the screen, as tarot card."
       },
       {
         "id": "water_knight",
@@ -592,7 +591,7 @@
         "upright": "Paris chose Aphrodite over Athena and Hera. He got Helen. He started the Trojan War. The Knight of Water is the romantic — the grand gesture that changes everything. Love is a choice. Know what you're trading for it. Helen was worth a war to Paris. Was she worth it to Troy?",
         "reversed": "Paris on the battlefield, Helen watching from the walls. The romantic who started a war and couldn't finish it. The grand gesture that cost more than the love was worth.",
         "image": "data/images/minor/water/water_knight.png",
-        "prompt": "Paris choosing Aphrodite, golden apple, Helen in the distance, purple and green, Greek mythology tarot card style"
+        "prompt": "Paris of Troy, who chose love over wisdom and power and started a ten-year war for it, as tarot card."
       },
       {
         "id": "water_queen",
@@ -606,7 +605,7 @@
         "upright": "Mami Wata rises from the water, serpent in hand, mirror in the other. She heals. She counsels. She sees into the deep. The Queen of Water is the therapist, the listener, the one who holds space for your drowning. Seek counsel. Be counsel. The water holds what you cannot carry.",
         "reversed": "The waters muddied. Mami Wata withdrawing. The listener who has heard too much. Even water spirits need someone to hold their mirror.",
         "image": "data/images/minor/water/water_queen.png",
-        "prompt": "Mami Wata African water spirit, rising from the sea, serpent and mirror, purple and green, African diaspora tarot card style"
+        "prompt": "Mami Wata, African diaspora water spirit who rises from the sea holding a serpent and a mirror to heal and counsel, as tarot card."
       },
       {
         "id": "water_king",
@@ -620,7 +619,7 @@
         "upright": "Chiron, the wisest centaur, wounded by a poisoned arrow that would never heal. He taught heroes from his wound — Achilles, Asclepius, Jason. The King of Water is the priest — the spiritual authority who knows suffering and still serves. His wound is his credential. He does not pretend to be whole.",
         "reversed": "Chiron giving up his immortality to escape the pain. The healer who could not heal himself. The priest who lost faith. Even Chiron needed release. Even the wounded healer needs healing.",
         "image": "data/images/minor/water/water_king.png",
-        "prompt": "Chiron the wise centaur, wounded healer, teaching young heroes, purple and green, Greek mythology tarot card style"
+        "prompt": "Chiron, the wounded centaur of Greek mythology who taught heroes from his unhealable wound, as tarot card."
       }
     ],
     "air": [
@@ -636,7 +635,7 @@
         "upright": "Thoth, ibis-headed god of writing, records every word, every deed, every secret. He invented language and gave it to humanity. The Ace of Air is the leak — the truth that breaks containment, the document that changes everything. Information wants to be free. Thoth knew this before the first word was written.",
         "reversed": "The record sealed. Thoth's scroll hidden. The leak that was planted, not real. Verify before you amplify. Even the god of writing can forge a document.",
         "image": "data/images/minor/air/air_ace.png",
-        "prompt": "Thoth Egyptian god of writing, ibis-headed, scroll and stylus, purple and green, Egyptian mythology tarot card style"
+        "prompt": "Thoth, ibis-headed Egyptian god of writing, knowledge, and the record of all things, as tarot card."
       },
       {
         "id": "air_02",
@@ -650,7 +649,7 @@
         "upright": "The Sphinx crouches at the gate and asks her riddle. No one passes without answering. The Two of Air is the subtext — the meaning hidden beneath the words, the question that must be answered before you can move forward. Read carefully. The real message is the one not spoken aloud.",
         "reversed": "The riddle solved. Oedipus answered and the Sphinx fell from her perch. The subtext decoded. The hidden meaning revealed — and with it, the path forward. But the answer brought its own destruction.",
         "image": "data/images/minor/air/air_02.png",
-        "prompt": "The Sphinx at the gate, asking her riddle, lion body and human face, purple and green, Greek-Egyptian mythology tarot card style"
+        "prompt": "The Sphinx, Greek-Egyptian riddler at the gate who destroys those who cannot answer, as tarot card."
       },
       {
         "id": "air_03",
@@ -664,7 +663,7 @@
         "upright": "At the Althing, every free Norseman could speak and vote. Laws were spoken from the Law Rock. Disputes were settled. The Three of Air is the consensus — the groupthink, the narrative that wins. Agreement is comfortable. Is it correct? Even the Althing could be swayed by a skilled speaker.",
         "reversed": "The Althing divided. The vote that failed. The consensus that cracked under the weight of one dissenting voice. The law that was spoken but not believed. Courage is lonely.",
         "image": "data/images/minor/air/air_03.png",
-        "prompt": "The Norse Althing assembly, free men gathered at the Law Rock, purple and green, Viking age tarot card style"
+        "prompt": "The Norse Althing, the ancient assembly where free men gathered at the Law Rock to speak and vote, as tarot card."
       },
       {
         "id": "air_04",
@@ -678,7 +677,7 @@
         "upright": "Cassandra saw the fall of Troy. She screamed the truth. No one believed her — Apollo's curse. The Four of Air is the doomscroll — the compulsion to see what's coming, the curse of knowing what others deny. You are not crazy. You are Cassandra. But ask: is this prophecy, or anxiety?",
         "reversed": "Cassandra believed at last — too late. The doomscroll stopped. The prophecy acknowledged. The anxiety quieting. Sometimes being right is a curse. Sometimes relief comes when the disaster finally arrives and you can say: I saw this coming.",
         "image": "data/images/minor/air/air_04.png",
-        "prompt": "Cassandra of Troy, screaming prophecy, unheard, purple and green, Greek mythology tarot card style, tragic seer"
+        "prompt": "Cassandra of Troy, the cursed prophetess who saw the city fall and screamed the truth to no one who believed her, as tarot card."
       },
       {
         "id": "air_05",
@@ -692,7 +691,7 @@
         "upright": "The Reply Guy sits in the mentions, keyboard sharpened, thread pulled, receipts deployed. He is Arachne reborn in the digital age — his tapestry is the takedown thread, his Athena is the poster he's ratioing. The Five of Air is the public evisceration, the post that was too good, the skill that threatened power. You won the argument. That's why they're mad.",
         "reversed": "The Reply Guy ratio'd himself. The thread that backfired. Arachne as a spider, still weaving but now ignored. The post that taught you something about when to speak and when to let the tapestry speak for itself.",
         "image": "data/images/minor/air/air_05.png",
-        "prompt": "The Reply Guy as modern mythic archetype, keyboard warrior, thread unfolding, purple and green, modern internet tarot card style"
+        "prompt": "Arachne, the mortal weaver who challenged Athena and was transformed — reborn as the reply guy whose thread destroys gods, as tarot card."
       },
       {
         "id": "air_06",
@@ -706,7 +705,7 @@
         "upright": "Proteus changed form to avoid answering — lion, serpent, water, fire. The Six of Air is the alt account, the new identity, the fresh start in a new city. Sometimes reinvention is the only way to escape those who would hold you to your old shape. Keep changing until they let go.",
         "reversed": "Proteus caught. The shape-shifter forced to answer. The alt discovered. The mask slipping. The identity you tried to escape follows you. Integration, not escape — that's the real work.",
         "image": "data/images/minor/air/air_06.png",
-        "prompt": "Proteus the shape-shifting Greek sea god, multiple forms flowing, purple and green, mythology tarot card style"
+        "prompt": "Proteus, the Greek sea god who shifts between lion, serpent, water, and fire to avoid being held, as tarot card."
       },
       {
         "id": "air_07",
@@ -720,7 +719,7 @@
         "upright": "Coyote steals fire. Coyote gets tricked by his own reflection. Coyote dies and comes back. The Seven of Air is the trickster's truth — the deception that teaches something real, the gaslight that, examined, reveals the architecture of the lie. Coyote is not malicious. He is the universe teaching you to pay attention.",
         "reversed": "Coyote tricked by his own trick. The deceiver deceived. The gaslight recognized and named. You were never crazy — Coyote just wanted to see if you were paying attention.",
         "image": "data/images/minor/air/air_07.png",
-        "prompt": "Coyote the trickster of Native American mythology, cunning and wild, purple and green, Indigenous tarot card style"
+        "prompt": "Coyote, the Plains trickster deity who steals fire, tricks himself, dies, and returns to teach the lesson, as tarot card."
       },
       {
         "id": "air_08",
@@ -734,7 +733,7 @@
         "upright": "Ma'at holds the feather of truth against which every soul is weighed. The Eight of Air is the receipts — the evidence that cannot be erased, the record that pursues, the truth that weighs the heart. Deploy your evidence wisely. Ma'at's feather is light, but it tips every scale.",
         "reversed": "The feather heavy. Ma'at's scales unbalanced. The receipts that were fabricated, the evidence that doesn't hold. Truth is not what you claim. Truth is what the feather says.",
         "image": "data/images/minor/air/air_08.png",
-        "prompt": "Ma'at Egyptian goddess of truth and justice, holding the feather, scales balancing, purple and green, Egyptian mythology tarot card style"
+        "prompt": "Ma'at, Egyptian goddess of truth and cosmic order who weighs every soul against the feather of justice, as tarot card."
       },
       {
         "id": "air_09",
@@ -748,7 +747,7 @@
         "upright": "Kuebiko, the scarecrow god, knows everything about the world — and cannot move. He stands in the field and witnesses. The Nine of Air is the 3AM thought — the guilt that spirals, the mind that cannot find peace, the awareness that paralyzes. The thought is not the truth. Kuebiko knows everything. He is still standing.",
         "reversed": "Kuebiko finding his legs. The scarecrow stepping down from his post. The spiral quieting. The 3AM thought recognized as a distortion — not a prophecy, not a verdict. Sleep returning.",
         "image": "data/images/minor/air/air_09.png",
-        "prompt": "Kuebiko Japanese scarecrow god who knows everything but cannot move, standing in a field, purple and green, Japanese mythology tarot card style"
+        "prompt": "Kuebiko, the Japanese scarecrow god of infinite knowledge who cannot move, standing watch in the field, as tarot card."
       },
       {
         "id": "air_10",
@@ -762,7 +761,7 @@
         "upright": "The timeline votes. The ostracism sherds are digital now — quote tweets, callout threads, the ratio that becomes exile. The Ten of Air is the cancellation — public judgment, banishment from the discourse. The mob is loud. What is true? What is just? Ostracism in Athens lasted ten years. Online, it can be forever — or a week.",
         "reversed": "Return from exile. The cancelled welcomed back — or the cancellation itself cancelled. The landscape has changed. Have you? The sherds are buried. The discourse moves on.",
         "image": "data/images/minor/air/air_10.png",
-        "prompt": "The Cancellation as modern mythic archetype, digital ostracism, timeline voting, purple and green, modern internet tarot card style"
+        "prompt": "The Cancellation, modern archetype of Athenian ostracism reborn — the digital exile voted by a thousand anonymous sherds, as tarot card."
       },
       {
         "id": "air_page",
@@ -776,7 +775,7 @@
         "upright": "Hermod rode to Hel to bargain for Baldr's return. He rode for nine nights. He barely spoke. He returned with the conditions. The Page of Air is the lurker — the silent observer, the one who watches and learns before entering the discourse. Not every truth needs to be spoken. Yet. Hermod watched. Then he rode.",
         "reversed": "Hermod returning from Hel empty-handed. The lurker who finally spoke — and was ignored. The silence that was strategic — and then became permanent. Speak. The window is open.",
         "image": "data/images/minor/air/air_page.png",
-        "prompt": "Hermod Norse messenger god riding to Hel, silent and determined, purple and green, Norse mythology tarot card style"
+        "prompt": "Hermod, the Norse messenger who rode alone through nine nights of darkness to bargain with Hel, as tarot card."
       },
       {
         "id": "air_knight",
@@ -790,7 +789,7 @@
         "upright": "The Shitposter is Momus reborn — sharp, swift, dangerous with a keyboard. He criticizes the algorithmic gods until they exile him from the platform. The Knight of Air is the blade of wit — satire that cuts through propaganda. Aim it. Know: even the gods can't take what they can't laugh at. But they can deplatform you.",
         "reversed": "The post that went too far. The Shitposter exiled from every platform. Momus cast out of Olympus, his mockery too sharp even for the gods. The blade that cut the wielder.",
         "image": "data/images/minor/air/air_knight.png",
-        "prompt": "The Shitposter as modern mythic archetype, blade of wit, digital exile, purple and green, modern internet tarot card style"
+        "prompt": "Momus, the Greek god of mockery and criticism cast out of Olympus for speaking truth too sharply, reborn as the shitposter, as tarot card."
       },
       {
         "id": "air_queen",
@@ -804,7 +803,7 @@
         "upright": "Saraswati, goddess of knowledge, music, and wisdom, holds the veena and the book. She does not fight battles — she makes the strategists who win them. The Queen of Air is the power behind the throne, the wisdom that no one sees pulling the levers. Not all influence is loud. Saraswati whispers. Empires shift.",
         "reversed": "Saraswati's veena silent. The strategist whose wisdom is ignored. The advisor whose counsel the king no longer seeks. The voice inside the system that no one listens to — until it's too late.",
         "image": "data/images/minor/air/air_queen.png",
-        "prompt": "Saraswati Hindu goddess of wisdom and music, holding veena, serene, purple and green, Indian mythology tarot card style"
+        "prompt": "Saraswati, Hindu goddess of knowledge, music, and wisdom who holds the veena and makes empires with quiet counsel, as tarot card."
       },
       {
         "id": "air_king",
@@ -818,7 +817,7 @@
         "upright": "Odysseus designed the Trojan Horse. He outwitted the Cyclops. He navigated the Sirens. He came home after twenty years and reclaimed his throne. The King of Air is the architect — the one who designs the system and executes the long game. Cunning is a form of patience. The long way home teaches what the short way never could.",
         "reversed": "Odysseus lost at sea. The cunning that outsmarted itself. The architect whose system became a maze with no exit. Even the wisest king needs the gods to eventually let him come home. Are you lost — or are you avoiding the homecoming?",
         "image": "data/images/minor/air/air_king.png",
-        "prompt": "Odysseus the cunning Greek king, architect of the Trojan Horse, sailing home, purple and green, Greek mythology tarot card style"
+        "prompt": "Odysseus, the cunning Greek king who built the Trojan Horse and took twenty years to find his way home, as tarot card."
       }
     ]
   }
