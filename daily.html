@@ -1,1321 +1,900 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ealdforn · NightCafe Challenge · Mythology Iceberg</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      /* Shared with live.html */
-      --fire-void: #060300;
-      --fire-surface: #0e0804;
-      --fire-primary: #c94a2a;
-      --fire-bright: #e8602a;
-      --fire-glow: rgba(232,96,42,0.18);
-      --ember: #e8a840;
-      --gold: #e8c96a;
-      --ash: #8a7a6a;
-
-      --water-deep: #040d18;
-      --water-surface: #0a1824;
-      --water-primary: #2a8acc;
-      --water-bright: #5ab8ff;
-      --water-foam: #c0e0ff;
-      --water-glow: rgba(90,184,255,0.15);
-      --teal: #40c8c0;
-
-      /* Quest accent — deep gold/ochre */
-      --myth-gold: #c8a84a;
-      --myth-deep: #1a1206;
-      --myth-glow: rgba(200,168,74,0.2);
-
-      --text: #f0e0d0;
-      --text-dim: #7a6a58;
-      --mono: 'Share Tech Mono', monospace;
-    }
-
-    html, body {
-      min-height: 100%;
-      background: var(--fire-void);
-      color: var(--text);
-      font-family: 'Cormorant Garamond', serif;
-      overflow-x: hidden;
-    }
-
-    /* ── BROADCAST BAR ─────────────────────────────────────────── */
-    .broadcast-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.25rem;
-      background: linear-gradient(90deg, #080402 0%, #0a1412 100%);
-      border-bottom: 1px solid rgba(200,168,74,0.2);
-      gap: 1rem;
-    }
-
-    .broadcast-bar::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, var(--fire-glow) 0%, transparent 35%, transparent 65%, var(--myth-glow) 100%);
-      pointer-events: none;
-    }
-
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.18em;
-      color: var(--myth-gold);
-      flex-shrink: 0;
-    }
-
-    .live-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--myth-gold);
-      box-shadow: 0 0 6px var(--myth-gold);
-      animation: livepulse 1.4s ease-in-out infinite;
-    }
-
-    @keyframes livepulse {
-      0%,100% { opacity:1; transform:scale(1); }
-      50% { opacity:0.35; transform:scale(0.65); }
-    }
-
-    .bar-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      background: linear-gradient(90deg, var(--ember), var(--myth-gold), var(--water-bright));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-align: center;
-      flex: 1;
-    }
-
-    .countdown-bar {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      flex-shrink: 0;
-    }
-
-    .countdown-label {
-      font-family: var(--mono);
-      font-size: 0.36rem;
-      letter-spacing: 0.15em;
-      color: var(--text-dim);
-    }
-
-    .countdown-time {
-      font-family: 'Cinzel', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--myth-gold);
-      letter-spacing: 0.08em;
-      line-height: 1;
-      text-shadow: 0 0 12px var(--myth-glow);
-    }
-
-    /* ── MAIN GRID ─────────────────────────────────────────────── */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 0;
-      min-height: calc(100vh - 48px);
-    }
-
-    /* ── QUEST PANEL (top-left, large) ─────────────────────────── */
-    .quest-panel {
-      grid-column: 1;
-      grid-row: 1 / 3;
-      background:
-        radial-gradient(ellipse at 60% 15%, rgba(200,168,74,0.07) 0%, transparent 55%),
-        radial-gradient(ellipse at 10% 85%, rgba(201,74,42,0.06) 0%, transparent 50%),
-        linear-gradient(160deg, #0a0804 0%, #060300 100%);
-      border-right: 1px solid rgba(200,168,74,0.12);
-      padding: 1.5rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .quest-panel::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 100px;
-      background: linear-gradient(0deg, rgba(200,168,74,0.04), transparent);
-      pointer-events: none;
-      animation: mythpulse 4s ease-in-out infinite;
-    }
-
-    @keyframes mythpulse {
-      0%,100% { opacity:0.5; }
-      50% { opacity:1; }
-    }
-
-    /* Quest header */
-    .quest-header {
-      position: relative;
-      z-index: 2;
-    }
-
-    .quest-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.4rem;
-      letter-spacing: 0.25em;
-      color: var(--myth-gold);
-      margin-bottom: 0.3rem;
-    }
-
-    .quest-name {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.4rem;
-      color: var(--gold);
-      text-shadow: 0 0 30px rgba(232,201,106,0.3);
-      line-height: 1.2;
-      margin-bottom: 0.3rem;
-    }
-
-    .quest-tagline {
-      font-size: 0.75rem;
-      font-style: italic;
-      color: rgba(240,224,208,0.6);
-      line-height: 1.5;
-      max-width: 420px;
-    }
-
-    /* Day timeline */
-    .day-timeline {
-      display: flex;
-      gap: 0.35rem;
-      position: relative;
-      z-index: 2;
-      flex-wrap: wrap;
-    }
-
-    .day-pip {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.2rem;
-      cursor: default;
-    }
-
-    .day-pip-circle {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(200,168,74,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      font-weight: 700;
-      color: var(--text-dim);
-      position: relative;
-      transition: all 0.2s;
-    }
-
-    .day-pip.completed .day-pip-circle {
-      background: rgba(200,168,74,0.15);
-      border-color: var(--myth-gold);
-      color: var(--myth-gold);
-    }
-
-    .day-pip.today .day-pip-circle {
-      background: rgba(200,168,74,0.2);
-      border-color: var(--gold);
-      color: var(--gold);
-      box-shadow: 0 0 12px rgba(200,168,74,0.3);
-      animation: todaypulse 2s ease-in-out infinite;
-    }
-
-    @keyframes todaypulse {
-      0%,100% { box-shadow: 0 0 8px rgba(200,168,74,0.3); }
-      50% { box-shadow: 0 0 18px rgba(200,168,74,0.5); }
-    }
-
-    .day-pip-label {
-      font-family: var(--mono);
-      font-size: 0.3rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      text-align: center;
-      max-width: 48px;
-      line-height: 1.2;
-    }
-
-    .day-pip.today .day-pip-label { color: var(--myth-gold); }
-    .day-pip.completed .day-pip-label { color: rgba(200,168,74,0.6); }
-
-    /* Today's theme block */
-    .today-theme {
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(200,168,74,0.15);
-      border-radius: 10px;
-      padding: 0.9rem 1rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .theme-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      letter-spacing: 0.2em;
-      color: var(--myth-gold);
-      margin-bottom: 0.3rem;
-    }
-
-    .theme-name {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.1rem;
-      color: var(--gold);
-      margin-bottom: 0.3rem;
-    }
-
-    .theme-desc {
-      font-size: 0.72rem;
-      font-style: italic;
-      color: rgba(240,224,208,0.65);
-      line-height: 1.55;
-    }
-
-    .theme-stats {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    .theme-stat {
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      color: var(--text-dim);
-    }
-
-    .theme-stat span {
-      color: var(--water-bright);
-    }
-
-    /* ── YOUR ENTRIES ───────────────────────────────────────────── */
-    .entries-section {
-      position: relative;
-      z-index: 2;
-      flex: 1;
-    }
-
-    .section-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      color: var(--ember);
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(232,168,64,0.15);
-    }
-
-    .entries-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 0.6rem;
-    }
-
-    .entry-card {
-      aspect-ratio: 2/3;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(200,168,74,0.2);
-      background: var(--fire-surface);
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .entry-card:hover {
-      transform: translateY(-3px) scale(1.02);
-      border-color: var(--myth-gold);
-      box-shadow: 0 6px 24px rgba(200,168,74,0.15);
-    }
-
-    .entry-card img {
-      width: 100%; height: 65%;
-      object-fit: cover;
-    }
-
-    .entry-card-body {
-      padding: 0.35rem 0.4rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .entry-card-title {
-      font-size: 0.38rem;
-      color: var(--text);
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .entry-reactions {
-      display: flex;
-      gap: 0.3rem;
-      flex-wrap: wrap;
-      margin-top: 0.2rem;
-    }
-
-    .reaction {
-      font-family: var(--mono);
-      font-size: 0.3rem;
-      color: var(--text-dim);
-      background: rgba(255,255,255,0.04);
-      padding: 0.08rem 0.2rem;
-      border-radius: 3px;
-    }
-
-    /* Upload slot */
-    .upload-slot {
-      aspect-ratio: 2/3;
-      border-radius: 8px;
-      border: 1.5px dashed rgba(200,168,74,0.35);
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,0.02) 0px,
-        rgba(255,255,255,0.02) 10px,
-        transparent 10px, transparent 20px
-      );
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      gap: 0.3rem;
-      padding: 0.5rem;
-    }
-
-    .upload-slot:hover, .upload-slot.dragover {
-      border-color: var(--myth-gold);
-      background: rgba(200,168,74,0.06);
-      box-shadow: 0 0 16px rgba(200,168,74,0.1);
-    }
-
-    .upload-icon { font-size: 1.4rem; opacity: 0.5; }
-
-    .upload-label {
-      font-family: var(--mono);
-      font-size: 0.32rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      text-align: center;
-    }
-
-    /* ── RIGHT COLUMN ──────────────────────────────────────────── */
-    /* Top-right: Previous days summary */
-    .prev-panel {
-      grid-column: 2;
-      grid-row: 1;
-      background:
-        radial-gradient(ellipse at 30% 20%, rgba(42,138,204,0.06) 0%, transparent 55%),
-        linear-gradient(160deg, #040d18 0%, #060300 100%);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .prev-days {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      flex: 1;
-    }
-
-    .prev-day-row {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 0.6rem 0.75rem;
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-      position: relative;
-    }
-
-    .prev-day-row.active-day {
-      border-color: rgba(200,168,74,0.2);
-      background: rgba(200,168,74,0.04);
-    }
-
-    .prev-day-number {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1rem;
-      color: var(--myth-gold);
-      opacity: 0.4;
-      line-height: 1;
-      flex-shrink: 0;
-      width: 24px;
-      text-align: center;
-    }
-
-    .prev-day-row.active-day .prev-day-number { opacity: 1; }
-
-    .prev-day-info { flex: 1; }
-
-    .prev-day-theme {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.1em;
-      color: var(--gold);
-      margin-bottom: 0.2rem;
-    }
-
-    .prev-day-desc {
-      font-size: 0.5rem;
-      font-style: italic;
-      color: rgba(240,224,208,0.5);
-      line-height: 1.4;
-    }
-
-    .prev-day-count {
-      font-family: var(--mono);
-      font-size: 0.35rem;
-      color: var(--text-dim);
-      margin-top: 0.2rem;
-    }
-
-    .prev-day-count span { color: var(--teal); }
-
-    .prev-day-badge {
-      font-family: var(--mono);
-      font-size: 0.3rem;
-      padding: 0.1rem 0.3rem;
-      border-radius: 3px;
-      align-self: flex-start;
-      flex-shrink: 0;
-    }
-
-    .badge-today {
-      background: rgba(200,168,74,0.15);
-      color: var(--myth-gold);
-      border: 1px solid rgba(200,168,74,0.3);
-    }
-
-    .badge-done {
-      background: rgba(64,200,192,0.1);
-      color: var(--teal);
-      border: 1px solid rgba(64,200,192,0.2);
-    }
-
-    .badge-upcoming {
-      background: rgba(255,255,255,0.04);
-      color: var(--text-dim);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    /* ── BOTTOM-RIGHT: Upload / Submit panel ───────────────────── */
-    .submit-panel {
-      grid-column: 2;
-      grid-row: 2;
-      background:
-        radial-gradient(ellipse at 80% 80%, rgba(201,74,42,0.05) 0%, transparent 55%),
-        linear-gradient(160deg, #060300 0%, #040d18 100%);
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      border-top: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .submit-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .form-label {
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      letter-spacing: 0.12em;
-      color: var(--text-dim);
-      flex-shrink: 0;
-      width: 52px;
-    }
-
-    .form-input {
-      flex: 1;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 5px;
-      padding: 0.3rem 0.55rem;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.6rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .form-input:focus {
-      border-color: rgba(200,168,74,0.4);
-      box-shadow: 0 0 8px rgba(200,168,74,0.1);
-    }
-
-    .form-input::placeholder { color: var(--text-dim); font-style: italic; }
-
-    .form-textarea {
-      resize: none;
-      height: 52px;
-      line-height: 1.5;
-    }
-
-    /* Drop zone */
-    .drop-zone {
-      border: 1.5px dashed rgba(200,168,74,0.3);
-      border-radius: 8px;
-      padding: 0.75rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: rgba(0,0,0,0.2);
-      position: relative;
-    }
-
-    .drop-zone:hover, .drop-zone.dragover {
-      border-color: var(--myth-gold);
-      background: rgba(200,168,74,0.05);
-    }
-
-    .drop-zone input[type=file] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .drop-zone-text {
-      font-family: var(--mono);
-      font-size: 0.4rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      pointer-events: none;
-    }
-
-    .drop-preview {
-      max-height: 90px;
-      max-width: 100%;
-      object-fit: contain;
-      border-radius: 5px;
-      display: none;
-      margin: 0 auto;
-    }
-
-    .drop-preview.visible { display: block; }
-
-    .submit-btn {
-      background: linear-gradient(135deg, rgba(200,168,74,0.15), rgba(200,168,74,0.08));
-      border: 1px solid rgba(200,168,74,0.4);
-      color: var(--gold);
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      padding: 0.45rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-      width: 100%;
-    }
-
-    .submit-btn:hover {
-      background: linear-gradient(135deg, rgba(200,168,74,0.25), rgba(200,168,74,0.15));
-      box-shadow: 0 0 16px rgba(200,168,74,0.15);
-    }
-
-    /* Previous challenge card (Childhood Dreamscapes) */
-    .prev-challenge-card {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(90,184,255,0.1);
-      border-radius: 8px;
-      padding: 0.6rem 0.75rem;
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
-    }
-
-    .prev-challenge-icon { font-size: 1.4rem; opacity: 0.6; flex-shrink: 0; }
-
-    .prev-challenge-info { flex: 1; }
-
-    .prev-challenge-label {
-      font-family: var(--mono);
-      font-size: 0.34rem;
-      letter-spacing: 0.15em;
-      color: var(--text-dim);
-      margin-bottom: 0.15rem;
-    }
-
-    .prev-challenge-name {
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      color: var(--water-foam);
-      letter-spacing: 0.08em;
-    }
-
-    .prev-challenge-status {
-      font-family: var(--mono);
-      font-size: 0.32rem;
-      color: var(--teal);
-      margin-top: 0.1rem;
-    }
-
-    /* Saved entries from localStorage */
-    .saved-count {
-      font-family: var(--mono);
-      font-size: 0.38rem;
-      color: var(--text-dim);
-      text-align: center;
-    }
-
-    .saved-count span { color: var(--myth-gold); }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      background: rgba(10,8,4,0.95);
-      border: 1px solid var(--myth-gold);
-      color: var(--gold);
-      padding: 0.4rem 1rem;
-      border-radius: 6px;
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.25s, transform 0.25s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Lightbox */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      backdrop-filter: blur(8px);
-    }
-
-    .lightbox.open { opacity: 1; pointer-events: all; }
-
-    .lightbox img {
-      max-width: 80vw;
-      max-height: 82vh;
-      object-fit: contain;
-      border-radius: 10px;
-      border: 1px solid rgba(200,168,74,0.3);
-      box-shadow: 0 0 60px rgba(200,168,74,0.15), 0 24px 48px rgba(0,0,0,0.7);
-    }
-
-    .lightbox-close-btn {
-      position: absolute;
-      top: 1.5rem; right: 1.5rem;
-      background: none;
-      border: 1px solid rgba(200,168,74,0.3);
-      color: var(--myth-gold);
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .main-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
-      .quest-panel { grid-column: 1; grid-row: 1; }
-      .prev-panel  { grid-column: 1; grid-row: 2; }
-      .submit-panel { grid-column: 1; grid-row: 3; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EARTH DECK · Living Shrine · Ealdforn #7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9922a; --gold-bright: #e8c87a; --gold-dim: #7a5518;
+            --sage: #7a9e6a; --sage-dim: #3d5032; --moss: #1e2e18;
+            --soil: #1a130a; --loam: #2a1f10; --bark: #3d2b15;
+            --deep: #0a0905; --bone: #d4c9a8; --bone-dim: #8a7e5e;
+            --ember: #8b3a1a; --water-blue: #1a3a5c; --water-bright: #3a7abf;
+            --locked: #5a9e3a;
+            --void: #0a0905;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--void);
+            color: var(--bone);
+            font-family: 'EB Garamond', Georgia, serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        #starfield { position:fixed; inset:0; z-index:0; pointer-events:none; }
+        .sacred-bg {
+            position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+        .cosmos {
+            position:relative; z-index:1; max-width:1500px; margin:0 auto; padding:1.2rem;
+            display:flex; flex-direction:column; gap:1.2rem;
+        }
+
+        /* HEADER */
+        .header { text-align:center; padding:1.5rem 1rem 0.4rem; position:relative; }
+        .header::before {
+            content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+            width:1px; height:1.5rem;
+            background:linear-gradient(to bottom,transparent,var(--gold));
+        }
+        .gaia-title {
+            font-family:'Cinzel Decorative',serif;
+            font-size:clamp(1.8rem,4.5vw,3.8rem); font-weight:900; letter-spacing:0.25em;
+            background:linear-gradient(135deg,var(--gold-dim),var(--gold-bright),var(--gold),var(--sage));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            filter:drop-shadow(0 0 25px rgba(201,146,42,0.5));
+            animation:titlePulse 4s ease-in-out infinite;
+        }
+        @keyframes titlePulse {
+            0%,100%{filter:drop-shadow(0 0 18px rgba(201,146,42,0.35))}
+            50%{filter:drop-shadow(0 0 45px rgba(201,146,42,0.8))}
+        }
+        .subtitle {
+            font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.4em;
+            color: var(--sage); margin-top:0.3rem;
+        }
+
+        /* STATUS BAR */
+        .status-bar {
+            display:flex; justify-content:center; gap:1.2rem; flex-wrap:wrap;
+            font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.14em;
+            color:var(--gold-dim); padding:0.5rem 1rem;
+            border:1px solid rgba(201,146,42,0.1); border-radius:2px;
+            background:rgba(10,9,5,0.8);
+        }
+        .si { display:flex; gap:0.35rem; align-items:center; }
+        .sd {
+            width:6px; height:6px; border-radius:50%; background:var(--gold-dim);
+            transition:all 0.3s;
+        }
+        .sd.live { background:var(--locked); box-shadow:0 0 8px var(--locked); animation:blink 1.5s infinite; }
+        .sd.locked { background:var(--locked); box-shadow:0 0 8px var(--locked); }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        /* ZONE LABELS */
+        .zone-label {
+            font-family:'Cinzel Decorative',serif; font-size:0.58rem; letter-spacing:0.35em;
+            display:flex; align-items:center; gap:0.7rem;
+        }
+        .zone-label::before,.zone-label::after { content:''; flex:1; height:1px; }
+        .zl-pontus { color:#5599cc; }
+        .zl-pontus::before,.zl-pontus::after { background:linear-gradient(to right,transparent,#1a3a5c44); }
+        .zl-shrine { color:#7a9e6a; }
+        .zl-shrine::before,.zl-shrine::after { background:linear-gradient(to right,transparent,#3d503244); }
+        .zl-oracle { color:#c9922a; }
+        .zl-oracle::before,.zl-oracle::after { background:linear-gradient(to right,transparent,#7a551844); }
+
+        /* ══ PONTUS — WATER SIDE ══ */
+        .pontus-zone {
+            background:linear-gradient(180deg,rgba(5,10,22,0.96),rgba(8,15,30,0.93));
+            border:1px solid rgba(26,58,92,0.35); border-top:2px solid #1a3a5c;
+            border-radius:6px; overflow:hidden;
+        }
+        .pontus-header {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0.7rem 1.2rem; border-bottom:1px solid rgba(26,58,92,0.2);
+        }
+        .pontus-title {
+            font-family:'Cinzel Decorative',serif; font-size:0.82rem;
+            letter-spacing:0.18em; color:#7ab0dd;
+        }
+        .pontus-meta {
+            font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:0.16em;
+            color:rgba(90,140,190,0.5);
+        }
+        #pontusCanvas { width:100%; height:220px; display:block; }
+        .pontus-ticker {
+            padding:0.5rem 1.2rem; border-top:1px solid rgba(26,58,92,0.12);
+            min-height:2rem; display:flex; align-items:center; gap:0.6rem;
+        }
+        #tickerText {
+            font-family:'Cinzel',serif; font-size:0.64rem; letter-spacing:0.14em;
+            color:rgba(90,150,210,0.65); font-style:italic; transition:opacity 0.4s;
+        }
+        .pulse-timer {
+            font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.15em;
+            color:#88bbee; margin-left:auto; white-space:nowrap;
+        }
+        .pontus-legend {
+            display:flex; gap:0.8rem; flex-wrap:wrap; padding:0.4rem 1.2rem;
+            border-top:1px solid rgba(26,58,92,0.1);
+        }
+        .leg-item {
+            display:flex; align-items:center; gap:0.3rem;
+            font-family:'Cinzel',serif; font-size:0.54rem; letter-spacing:0.1em;
+            color:rgba(130,170,210,0.4);
+        }
+        .leg-sw { width:16px; height:1.5px; border-radius:1px; }
+
+        /* ══ SPLIT LAYOUT ══ */
+        .split-row {
+            display:flex; gap:1.2rem; align-items:flex-start;
+        }
+        .water-col { width:35%; min-width:280px; display:flex; flex-direction:column; gap:1rem; }
+        .earth-col { width:65%; display:flex; flex-direction:column; gap:1rem; }
+
+        /* ══ EARTH SHRINE ══ */
+        .shrine-zone {
+            background:linear-gradient(160deg,rgba(12,8,4,0.96),rgba(8,12,6,0.97));
+            border:1px solid rgba(61,43,21,0.35); border-top:2px solid #3d5032;
+            border-radius:6px; overflow:hidden;
+        }
+        .shrine-header {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0.7rem 1.2rem; border-bottom:1px solid rgba(61,43,21,0.18);
+        }
+        .shrine-title {
+            font-family:'Cinzel Decorative',serif; font-size:0.82rem;
+            letter-spacing:0.18em; color:#9acd7a;
+        }
+        .shrine-progress {
+            font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:0.14em;
+            color:var(--gold-dim);
+        }
+        .shrine-body { padding:1rem; position:relative; }
+        .shrine-grid {
+            display:grid; grid-template-columns:repeat(4,1fr); gap:0.7rem;
+            position:relative; z-index:1;
+        }
+        .slot {
+            aspect-ratio:2/3.2; border-radius:5px; border:1px dashed var(--bark);
+            background:var(--soil); position:relative; overflow:hidden;
+            transition:border-color 0.3s, box-shadow 0.3s; cursor:default;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            min-height:100px;
+        }
+        .slot.filled {
+            border-style:solid; border-color:var(--sage);
+            box-shadow:0 0 12px rgba(122,158,106,0.12); cursor:pointer;
+        }
+        .slot.filled:hover { border-color:var(--gold); box-shadow:0 0 18px rgba(201,146,42,0.2); }
+        .slot.generating {
+            border-color:var(--gold-dim); border-style:dashed;
+            animation:slotPulse 2s ease-in-out infinite;
+        }
+        @keyframes slotPulse {
+            0%,100%{box-shadow:0 0 0 0 rgba(201,146,42,0)}
+            50%{box-shadow:0 0 12px 3px rgba(201,146,42,0.2)}
+        }
+        .slot-empty-text {
+            font-family:'Cinzel',serif; font-size:0.55rem; color:var(--loam);
+            letter-spacing:0.18em;
+        }
+        .slot-rune { font-size:1.2rem; color:var(--loam); opacity:0.35; }
+        .slot-image {
+            width:100%; aspect-ratio:1; object-fit:cover; display:block;
+            border-radius:3px 3px 0 0;
+        }
+        .slot-info {
+            width:100%; padding:0.3rem 0.4rem 0.5rem;
+            background:linear-gradient(transparent,rgba(10,9,5,0.9) 30%);
+        }
+        .slot-name {
+            font-family:'Cinzel',serif; font-size:0.48rem; letter-spacing:0.08em;
+            color:var(--gold-pale); line-height:1.2;
+        }
+        .slot-title {
+            font-family:'EB Garamond',serif; font-style:italic; font-size:0.65rem;
+            color:var(--sage); line-height:1.2;
+        }
+        .slot-keyword {
+            font-size:0.55rem; color:var(--bone-dim); margin-top:0.1rem;
+        }
+        .slot-generating-overlay {
+            position:absolute; inset:0; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:0.4rem;
+            background:rgba(10,9,5,0.7); z-index:2;
+        }
+        .gen-spinner {
+            width:20px; height:20px; border:2px solid var(--bark);
+            border-top-color:var(--gold); border-radius:50%;
+            animation:spin 1.2s linear infinite;
+        }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .mycelial-overlay {
+            position:absolute; inset:0; pointer-events:none; z-index:0;
+        }
+
+        /* ══ FOCAL CARD ══ */
+        .focal-zone {
+            background:linear-gradient(150deg,rgba(15,20,8,0.95),rgba(10,14,5,0.96));
+            border:1px solid rgba(122,158,106,0.25); border-top:2px solid var(--sage-dim);
+            border-radius:6px; padding:1.5rem; text-align:center;
+            max-width:500px; margin:0 auto; width:100%;
+        }
+        .focal-name {
+            font-family:'Cinzel Decorative',serif; font-size:clamp(1.2rem,3vw,2rem);
+            color:var(--gold-bright); letter-spacing:0.12em;
+            text-shadow:0 0 25px rgba(201,146,42,0.4);
+        }
+        .focal-title {
+            font-family:'EB Garamond',serif; font-style:italic; font-size:1.2rem;
+            color:var(--sage); margin-top:0.2rem;
+        }
+        .focal-culture {
+            font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.25em;
+            color:var(--bone-dim); margin-bottom:0.6rem;
+        }
+        .focal-keywords {
+            display:flex; flex-wrap:wrap; gap:0.35rem; justify-content:center;
+            margin-bottom:0.7rem;
+        }
+        .kw-chip {
+            font-family:'Cinzel',serif; font-size:0.52rem; letter-spacing:0.1em;
+            padding:0.18rem 0.5rem; background:var(--soil);
+            border:1px solid var(--sage-dim); border-radius:20px; color:var(--sage);
+        }
+        .focal-meaning {
+            font-size:1rem; line-height:1.7; color:var(--bone);
+            border-top:1px solid var(--bark); padding-top:0.7rem;
+            font-style:italic;
+        }
+        .focal-placeholder {
+            font-family:'Cinzel',serif; font-size:0.9rem; letter-spacing:0.2em;
+            color:var(--sage-dim); padding:1.5rem;
+        }
+
+        /* ══ ORACLE ══ */
+        .oracle-zone {
+            background:linear-gradient(160deg,rgba(15,10,8,0.94),rgba(12,8,10,0.95));
+            border:1px solid rgba(122,158,106,0.18); border-top:2px solid var(--gold-dim);
+            border-radius:6px; padding:1rem;
+        }
+        .oracle-header {
+            display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:0.8rem;
+        }
+        .oracle-title {
+            font-family:'Cinzel Decorative',serif; font-size:0.75rem;
+            letter-spacing:0.18em; color:var(--gold);
+        }
+        .oracle-cards {
+            display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem;
+        }
+        .oc {
+            background:rgba(10,9,5,0.5); border:1px solid var(--bark);
+            border-radius:5px; padding:0.8rem 0.6rem; text-align:center;
+            transition:opacity 0.3s;
+        }
+        .oc.refreshing { opacity:0.4; }
+        .oc-pos {
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.3em;
+            color:var(--bone-dim); text-transform:uppercase; margin-bottom:0.4rem;
+        }
+        .oc-name {
+            font-family:'Cinzel',serif; font-size:0.68rem; color:var(--gold-pale);
+            line-height:1.3;
+        }
+        .oc-title {
+            font-style:italic; font-size:0.8rem; color:var(--sage); margin-top:0.15rem;
+        }
+        .oc-keyword {
+            font-size:0.7rem; color:var(--bone-dim); margin-top:0.2rem;
+            border-top:1px solid var(--loam); padding-top:0.2rem;
+        }
+
+        /* ══ COUNCIL PANEL ══ */
+        .council-zone {
+            background:rgba(10,9,5,0.7); border:1px solid var(--bark);
+            border-radius:6px; overflow:hidden;
+        }
+        .council-header {
+            background:var(--loam); padding:0.4rem 0.8rem;
+            font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.22em;
+            color:var(--gold-dim); border-bottom:1px solid var(--bark);
+        }
+        .council-feed {
+            padding:0.5rem; min-height:100px; max-height:180px; overflow-y:auto;
+            display:flex; flex-direction:column; gap:0.4rem;
+        }
+        .council-entry {
+            display:flex; gap:0.4rem; align-items:flex-start;
+            animation:entrySlide 0.4s ease forwards; opacity:0;
+        }
+        @keyframes entrySlide {
+            from{opacity:0;transform:translateX(6px)}
+            to{opacity:1;transform:translateX(0)}
+        }
+        .council-avatar {
+            width:26px; height:26px; border-radius:50%; display:flex;
+            align-items:center; justify-content:center; font-size:0.8rem;
+            flex-shrink:0; border:1px solid var(--bark);
+        }
+        .av-demeter { background:radial-gradient(circle,#2a3d1a,#1a2a0a); border-color:var(--sage-dim); }
+        .av-hera { background:radial-gradient(circle,#2a1a2a,#1a0a1a); border-color:#5a3a5a; }
+        .av-artemis { background:radial-gradient(circle,#0a1a2a,#050f1a); border-color:#2a4a6a; }
+        .council-god {
+            font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.1em;
+            color:var(--gold-dim);
+        }
+        .council-reaction {
+            font-style:italic; font-size:0.75rem; color:var(--bone); line-height:1.4;
+        }
+
+        /* ══ LOG ══ */
+        .log-zone {
+            background:var(--void); border:1px solid var(--bark);
+            border-radius:6px; overflow:hidden;
+        }
+        .log-feed {
+            padding:0.5rem; font-family:'EB Garamond',serif; font-size:0.65rem;
+            min-height:120px; max-height:200px; overflow-y:auto;
+            display:flex; flex-direction:column; gap:0.25rem;
+        }
+        .log-entry {
+            display:flex; gap:0.4rem; line-height:1.4;
+            animation:entrySlide 0.3s ease forwards; opacity:0;
+        }
+        .log-time { color:var(--gold-dim); flex-shrink:0; font-size:0.6rem; }
+        .log-text { color:var(--bone-dim); font-size:0.65rem; }
+        .log-text.hl { color:var(--sage); }
+        .log-text.ol { color:#6a9abf; }
+
+        /* ══ CONTROLS ══ */
+        .control-bar {
+            display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;
+            padding:0.6rem 1rem; border:1px solid rgba(201,146,42,0.1);
+            border-radius:4px; background:rgba(10,9,5,0.7);
+        }
+        .ctrl-label {
+            font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.18em;
+            color:var(--bone-dim);
+        }
+        select {
+            font-family:'Cinzel',serif; font-size:0.6rem; background:var(--soil);
+            border:1px solid var(--bark); color:var(--bone);
+            padding:0.35rem 0.5rem; border-radius:3px; cursor:pointer;
+        }
+        .r-btn {
+            font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:0.14em;
+            padding:0.4rem 0.8rem; border-radius:3px; cursor:pointer;
+            transition:all 0.18s; background:transparent; border:1px solid;
+            text-transform:uppercase;
+        }
+        .btn-earth { border-color:var(--sage); color:var(--sage); }
+        .btn-earth:hover { background:rgba(122,158,106,0.1); box-shadow:0 0 10px rgba(122,158,106,0.15); }
+        .btn-gold { border-color:var(--gold-dim); color:var(--gold); }
+        .btn-gold:hover { background:rgba(201,146,42,0.1); box-shadow:0 0 10px rgba(201,146,42,0.15); }
+        .btn-dim { border-color:var(--bark); color:var(--bone-dim); }
+        .btn-dim:hover { border-color:var(--bone-dim); color:var(--bone); }
+        .btn-danger { border-color:var(--ember); color:#bf6a3a; }
+
+        /* TOAST */
+        #toast {
+            position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%);
+            background:rgba(8,8,18,0.95); border:1px solid var(--gold-dim);
+            border-radius:2px; padding:0.5rem 1.3rem;
+            font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.12em;
+            color:var(--gold); z-index:100; opacity:0; transition:opacity 0.4s;
+            text-align:center; max-width:90vw;
+        }
+        #toast.show { opacity:1; }
+        #toast.success { border-color:var(--locked); color:var(--locked); }
+
+        /* TOOLTIP OVERLAY */
+        .tooltip-overlay {
+            position:fixed; inset:0; display:flex; align-items:center;
+            justify-content:center; background:rgba(10,9,5,0.85);
+            z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s;
+        }
+        .tooltip-overlay.visible { opacity:1; pointer-events:all; }
+        .tooltip-card {
+            border:1px solid var(--sage); border-radius:8px;
+            background:var(--loam); padding:1.5rem; max-width:380px; width:90%;
+            position:relative; box-shadow:0 0 50px rgba(122,158,106,0.18);
+        }
+        .tooltip-close {
+            position:absolute; top:0.6rem; right:0.6rem;
+            background:none; border:none; color:var(--bone-dim);
+            cursor:pointer; font-size:1rem;
+        }
+
+        @media (max-width:850px) {
+            .split-row { flex-direction:column; }
+            .water-col,.earth-col { width:100%; min-width:auto; }
+            .oracle-cards { grid-template-columns:1fr; }
+        }
+    </style>
 </head>
 <body>
+<canvas id="starfield"></canvas>
+<div class="sacred-bg"></div>
+<div class="cosmos">
 
-<!-- ── BROADCAST BAR ──────────────────────────────────────────── -->
-<div class="broadcast-bar">
-  <div class="live-badge">
-    <div class="live-dot"></div>
-    LIVE
-  </div>
-  <div class="bar-title">EALDFORN · NIGHTCAFE CHALLENGE · MYTHOLOGY ICEBERG</div>
-  <div class="countdown-bar">
-    <div class="countdown-label">UNTIL MIDNIGHT RESET</div>
-    <div class="countdown-time" id="countdownDisplay">--:--:--</div>
-  </div>
+    <!-- HEADER -->
+    <div class="header">
+        <h1 class="gaia-title">EARTH DECK</h1>
+        <div class="subtitle">Harvest · Covenant · The Hunt · Ealdforn #7</div>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="si"><div class="sd live"></div><span>SHRINE ACTIVE</span></div>
+        <div class="si"><div class="sd" id="dotLock"></div><span id="statusLock">PONTUS FLOWING</span></div>
+        <div class="si"><span id="statusAge">🌫️ Still Night</span></div>
+        <div class="si"><span id="statusBand">Band: whisper</span></div>
+        <div class="si"><span id="statusRevealed">Revealed: 0/14</span></div>
+    </div>
+
+    <!-- ══ SPLIT ROW: WATER (35%) + EARTH (65%) ══ -->
+    <div class="split-row">
+
+        <!-- WATER COLUMN — Pontus wave field -->
+        <div class="water-col">
+            <div class="zone-label zl-pontus">✦ PONTUS · The Great Sea ✦</div>
+            <div class="pontus-zone">
+                <div class="pontus-header">
+                    <div class="pontus-title">🌊 PONTUS — Titan Wave Field</div>
+                    <div class="pontus-meta" id="pontusFlowMeta">Flow: whisper · Titans: 5</div>
+                </div>
+                <canvas id="pontusCanvas"></canvas>
+                <div class="pontus-legend" id="pontusLegend"></div>
+                <div class="pontus-ticker">
+                    <div id="tickerText">The primordial sea stirs...</div>
+                    <div class="pulse-timer" id="pulseTimer">Still Water · 27.3s</div>
+                </div>
+            </div>
+
+            <!-- COUNCIL PANEL (moved to water side rail) -->
+            <div class="zone-label zl-shrine" style="margin-top:0.4rem">✦ GAIA COUNCIL · Earth Triad ✦</div>
+            <div class="council-zone">
+                <div class="council-header">⬡ DIVINE REACTIONS</div>
+                <div class="council-feed" id="councilFeed">
+                    <div class="council-entry" style="animation-delay:0.1s">
+                        <div class="council-avatar av-demeter">🌾</div>
+                        <div>
+                            <div class="council-god">DEMETER</div>
+                            <div class="council-reaction">The shrine opens. The earth waits.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOG -->
+            <div class="log-zone">
+                <div class="council-header">⬡ BLACKBOX LOG</div>
+                <div class="log-feed" id="logFeed"></div>
+            </div>
+        </div>
+
+        <!-- EARTH COLUMN — Shrine Grid -->
+        <div class="earth-col">
+            <div class="zone-label zl-shrine">✦ OUREA · The Sacred Mountains · Earth Shrine ✦</div>
+            <div class="shrine-zone">
+                <div class="shrine-header">
+                    <div class="shrine-title">🏔️ 4×4 EARTH SHRINE</div>
+                    <div class="shrine-progress" id="shrineProgress">0 of 14 revealed</div>
+                </div>
+                <div class="shrine-body">
+                    <div class="shrine-grid" id="shrineGrid"></div>
+                    <svg class="mycelial-overlay" id="mycelialSvg"></svg>
+                </div>
+            </div>
+
+            <!-- FOCAL CARD -->
+            <div class="zone-label zl-oracle" style="margin-top:0.4rem">✦ FOCAL CARD · The Featured Earth ✦</div>
+            <div class="focal-zone" id="focalZone">
+                <div class="focal-placeholder" id="focalPlaceholder">SUMMONING — Select a card</div>
+                <div class="focal-name" id="focalName" style="display:none"></div>
+                <div class="focal-title" id="focalTitle" style="display:none"></div>
+                <div class="focal-culture" id="focalCulture" style="display:none"></div>
+                <div class="focal-keywords" id="focalKeywords" style="display:none"></div>
+                <div class="focal-meaning" id="focalMeaning" style="display:none"></div>
+            </div>
+
+            <!-- ORACLE -->
+            <div class="zone-label zl-oracle" style="margin-top:0.4rem">✦ THE ORACLE · Past · Present · Future ✦</div>
+            <div class="oracle-zone">
+                <div class="oracle-header">
+                    <div class="oracle-title">🔮 Fire + Water · Auto-Draw 60s</div>
+                    <button class="r-btn btn-gold" onclick="drawOracle()">⟳ Draw</button>
+                </div>
+                <div class="oracle-cards" id="oracleCards">
+                    <div class="oc" id="ocPast">
+                        <div class="oc-pos">Past</div>
+                        <div class="oc-name">—</div>
+                        <div class="oc-title">awaiting</div>
+                    </div>
+                    <div class="oc" id="ocPresent">
+                        <div class="oc-pos">Present</div>
+                        <div class="oc-name">—</div>
+                        <div class="oc-title">awaiting</div>
+                    </div>
+                    <div class="oc" id="ocFuture">
+                        <div class="oc-pos">Future</div>
+                        <div class="oc-name">—</div>
+                        <div class="oc-title">awaiting</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="control-bar">
+                <span class="ctrl-label">Next Card:</span>
+                <select id="cardSelect" onchange="previewFocal()"></select>
+                <button class="r-btn btn-earth" onclick="summonCard()">⊕ Summon</button>
+                <button class="r-btn btn-dim" onclick="markGenerating()">◌ Generating</button>
+                <button class="r-btn btn-gold" onclick="revealAllImages()">⊛ Reveal All</button>
+                <button class="r-btn btn-dim" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
+                <button class="r-btn btn-danger" onclick="resetShrine()">Clear</button>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-<!-- ── MAIN GRID ──────────────────────────────────────────────── -->
-<div class="main-grid">
-
-  <!-- ══ LEFT: QUEST PANEL ══════════════════════════════════════ -->
-  <div class="quest-panel">
-
-    <div class="quest-header">
-      <div class="quest-eyebrow">⟡ 7-DAY QUEST · ACTIVE</div>
-      <div class="quest-name">The Mythology Iceberg</div>
-      <div class="quest-tagline">A 7-day descent into myth and legend. Start with the stories everyone knows, then go deeper into the forgotten gods and folklore of civilisations rarely explored.</div>
+<div id="toast"></div>
+<div class="tooltip-overlay" id="tooltipOverlay" onclick="closeTooltip(event)">
+    <div class="tooltip-card" id="tooltipCard">
+        <button class="tooltip-close" onclick="closeTooltip(null)">✕</button>
+        <div id="ttContent"></div>
     </div>
-
-    <!-- Day timeline -->
-    <div class="day-timeline" id="dayTimeline"></div>
-
-    <!-- Today's theme -->
-    <div class="today-theme">
-      <div class="theme-eyebrow">TODAY · DAY 4 OF 7</div>
-      <div class="theme-name">🐍 Mesoamerican Mythology</div>
-      <div class="theme-desc">Aztec and Maya cosmology. Feathered serpents, sun gods, and creation stories written in sacrifice.</div>
-      <div class="theme-stats">
-        <div class="theme-stat">ENTRIES <span id="entryCount">376</span></div>
-        <div class="theme-stat">REACTIONS <span>844</span></div>
-        <div class="theme-stat">YOUR SUBMISSIONS <span id="submissionCount">0</span></div>
-      </div>
-    </div>
-
-    <!-- Your entries -->
-    <div class="entries-section">
-      <div class="section-title">YOUR ENTRIES TODAY</div>
-      <div class="entries-grid" id="entriesGrid">
-        <!-- Canon cards from minor_arcana — already in the Ealdforn deck -->
-        <div class="entry-card" data-img="data/images/minor/fire/fire_08.png" data-title="Huitzilopochtli — Eight of Fire" onclick="openLightbox(this)">
-          <img src="data/images/minor/fire/fire_08.png" alt="Huitzilopochtli" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
-          <div class="entry-card-body">
-            <div class="entry-card-title">Huitzilopochtli — Eight of Fire</div>
-            <div class="entry-reactions">
-              <span class="reaction">🜂 CANON</span>
-            </div>
-          </div>
-        </div>
-        <div class="entry-card" data-img="data/images/minor/earth/earth_07.png" data-title="Chicomecoatl — Seven of Earth" onclick="openLightbox(this)">
-          <img src="data/images/minor/earth/earth_07.png" alt="Chicomecoatl" onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
-          <div class="entry-card-body">
-            <div class="entry-card-title">Chicomecoatl — Seven of Earth</div>
-            <div class="entry-reactions">
-              <span class="reaction">🜃 CANON</span>
-            </div>
-          </div>
-        </div>
-        <!-- Upload slot x2 — Quetzalcoatl and Tlaloc targets -->
-        <div class="upload-slot" id="uploadSlot" title="Generate: Quetzalcoatl — feathered serpent, creation, wind">
-          <div class="upload-icon">🐍</div>
-          <div class="upload-label">QUETZALCOATL</div>
-        </div>
-        <div class="upload-slot" id="uploadSlot2" title="Generate: Tlaloc — rain god, goggle eyes, sacrifice">
-          <div class="upload-icon">🌧</div>
-          <div class="upload-label">TLALOC</div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /quest-panel -->
-
-  <!-- ══ TOP-RIGHT: PREV DAYS ════════════════════════════════════ -->
-  <div class="prev-panel">
-
-    <div class="section-title">QUEST PROGRESS</div>
-
-    <div class="prev-days">
-      <div class="prev-day-row">
-        <div class="prev-day-number">1</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Greek Mythology</div>
-          <div class="prev-day-desc">Gods, heroes, monsters. Olympus, the underworld, epic quests — the myths that shaped Western storytelling.</div>
-          <div class="prev-day-count">ENTRIES <span>10K+</span> · REACTIONS <span>57K+</span> · YOUR ENTRIES <span>0</span></div>
-        </div>
-        <div class="prev-day-badge badge-done">DONE</div>
-      </div>
-
-      <div class="prev-day-row">
-        <div class="prev-day-number">2</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Norse Mythology</div>
-          <div class="prev-day-desc">Vikings, Valhalla, and the world tree. Odin, Thor, Loki, and the inevitable twilight of the gods.</div>
-          <div class="prev-day-count">ENTRIES <span>10K+</span> · REACTIONS <span>56K+</span> · YOUR ENTRIES <span>4</span></div>
-          <div style="margin-top:0.3rem; display:flex; gap:0.3rem; flex-wrap:wrap;">
-            <span class="reaction" style="font-size:0.32rem;">Baldr · 4 reactions</span>
-            <span class="reaction" style="font-size:0.32rem;">Bragi · 1</span>
-            <span class="reaction" style="font-size:0.32rem;">Skadi · 1</span>
-            <span class="reaction" style="font-size:0.32rem;">Hel · 1</span>
-          </div>
-        </div>
-        <div class="prev-day-badge badge-done">DONE</div>
-      </div>
-
-      <div class="prev-day-row active-day">
-        <div class="prev-day-number">3</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Egyptian Mythology</div>
-          <div class="prev-day-desc">Pharaohs, the afterlife, and animal-headed gods.</div>
-          <div class="prev-day-count">ENTRIES <span>9.6K+</span> · REACTIONS <span>49K+</span> · YOUR ENTRIES <span>4</span></div>
-          <div style="margin-top:0.3rem; display:flex; gap:0.3rem; flex-wrap:wrap;">
-            <span class="reaction" style="font-size:0.32rem;">Thoth · ❤️4 👏3 ✨2</span>
-            <span class="reaction" style="font-size:0.32rem;">Ra · 🔥2 👏2 😎1</span>
-            <span class="reaction" style="font-size:0.32rem;">Isis · 😎2 👏2 ❤️1</span>
-            <span class="reaction" style="font-size:0.32rem;">Anubis · —</span>
-          </div>
-        </div>
-        <div class="prev-day-badge badge-done">DONE</div>
-      </div>
-
-      <div class="prev-day-row active-day" style="border-color:rgba(200,168,74,0.3)">
-        <div class="prev-day-number">4</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Mesoamerican Mythology</div>
-          <div class="prev-day-desc">Feathered serpents, sun gods, and creation stories written in sacrifice.</div>
-          <div class="prev-day-count">ENTRIES <span>376</span> · REACTIONS <span>844</span> · YOUR ENTRIES <span id="todayEntryCountBadge">2</span></div>
-          <div style="margin-top:0.3rem; display:flex; gap:0.3rem; flex-wrap:wrap;">
-            <span class="reaction" style="font-size:0.32rem;">Huitzilopochtli · 🜂 canon</span>
-            <span class="reaction" style="font-size:0.32rem;">Chicomecoatl · 🜃 canon</span>
-          </div>
-        </div>
-        <div class="prev-day-badge badge-today">TODAY</div>
-      </div>
-
-      <div class="prev-day-row">
-        <div class="prev-day-number">5</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Day 5 — Unknown</div>
-          <div class="prev-day-desc">Further still…</div>
-        </div>
-        <div class="prev-day-badge badge-upcoming">UPCOMING</div>
-      </div>
-
-      <div class="prev-day-row">
-        <div class="prev-day-number">6</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Day 6 — Unknown</div>
-          <div class="prev-day-desc">The forgotten layers…</div>
-        </div>
-        <div class="prev-day-badge badge-upcoming">UPCOMING</div>
-      </div>
-
-      <div class="prev-day-row">
-        <div class="prev-day-number">7</div>
-        <div class="prev-day-info">
-          <div class="prev-day-theme">Day 7 — Unknown</div>
-          <div class="prev-day-desc">The bottom of the iceberg.</div>
-        </div>
-        <div class="prev-day-badge badge-upcoming">UPCOMING</div>
-      </div>
-    </div>
-
-    <!-- Previous daily challenge -->
-    <div class="prev-challenge-card">
-      <div class="prev-challenge-icon">🌙</div>
-      <div class="prev-challenge-info">
-        <div class="prev-challenge-label">PREVIOUS DAILY CHALLENGE</div>
-        <div class="prev-challenge-name">Childhood Dreamscapes</div>
-        <div class="prev-challenge-status">✓ COMPLETED</div>
-      </div>
-    </div>
-
-  </div><!-- /prev-panel -->
-
-  <!-- ══ BOTTOM-RIGHT: SUBMIT NEW ENTRY ════════════════════════ -->
-  <div class="submit-panel">
-
-    <div class="section-title">LOG NEW ENTRY</div>
-
-    <div class="drop-zone" id="dropZone">
-      <input type="file" id="fileInput" accept="image/*" />
-      <img class="drop-preview" id="dropPreview" alt="preview" />
-      <div class="drop-zone-text" id="dropZoneText">🜂 DROP IMAGE OR CLICK TO UPLOAD</div>
-    </div>
-
-    <div class="submit-form">
-      <div class="form-row">
-        <div class="form-label">CARD</div>
-        <select class="form-input" id="deckPromptSelect" style="font-family:var(--mono); font-size:0.42rem; cursor:pointer;">
-          <option value="">— pick a card to copy prompt —</option>
-        </select>
-      </div>
-      <div class="form-row" id="promptPreviewRow" style="display:none">
-        <div class="form-label" style="color:var(--myth-gold)">PROMPT</div>
-        <div class="form-input" id="promptPreview" style="font-size:0.38rem; color:var(--text-dim); font-style:italic; line-height:1.4; cursor:pointer; user-select:all;" title="Click to copy"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">TITLE</div>
-        <input type="text" class="form-input" id="entryTitle" placeholder="e.g. Horus, falcon-headed god, tarot card…" />
-      </div>
-      <div class="form-row">
-        <div class="form-label">NOTES</div>
-        <textarea class="form-input form-textarea" id="entryNotes" placeholder="Prompt notes, reactions, observations…"></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-label">URL</div>
-        <input type="text" class="form-input" id="entryUrl" placeholder="NightCafe share URL (optional)" />
-      </div>
-    </div>
-
-    <button class="submit-btn" id="submitBtn">⟡ ADD TO TODAY'S ENTRIES</button>
-
-    <div class="saved-count" id="savedCount">
-      <span id="localEntryCount">4</span> entries logged today
-    </div>
-
-  </div><!-- /submit-panel -->
-
-</div><!-- /main-grid -->
-
-<div class="toast" id="toast"></div>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox">
-  <img id="lightboxImg" src="" alt="" />
-  <button class="lightbox-close-btn" id="lightboxCloseBtn">✕ CLOSE</button>
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════════════
-// QUEST DAY TIMELINE DATA
-// ════════════════════════════════════════════════════════════════
-// ════════════════════════════════════════════════════════════════
-// AZTEC DECK — 14 cards, image convention: aztec_ace.png etc.
-// All images: data/images/minor/aztec/{id}.png
-// ════════════════════════════════════════════════════════════════
-const AZTEC_DECK = [
-  { id:'aztec_ace',    rank:'ace',    name:'Ace of the Sun',      title:'Tonatiuh',        culture:'Aztec',
-    meaning:'The sun demands blood to rise. The first card is the first sacrifice — the cost of beginning.',
-    prompt:'Tonatiuh Aztec sun god, blazing disc face, sacrificial light, feathers and obsidian, purple and green palette, tarot card 2:3 aspect ratio' },
-
-  { id:'aztec_02',     rank:'two',    name:'Two of the Sun',      title:'Cipactli',        culture:'Aztec',
-    meaning:'The crocodilian earth monster slain to make the world. Creation requires a body. What are you built on?',
-    prompt:'Cipactli Aztec earth monster, crocodilian and primordial, world forming from its body, purple and green, dark mythology tarot card 2:3' },
-
-  { id:'aztec_03',     rank:'three',  name:'Three of the Sun',    title:'Xipe Totec',      culture:'Aztec',
-    meaning:'The Flayed One — rebirth through the shedding of skin. The renewal that looks like destruction.',
-    prompt:'Xipe Totec Aztec god of renewal, wearing flayed skin, new growth emerging, purple and green, ritual transformation tarot card 2:3' },
-
-  { id:'aztec_04',     rank:'four',   name:'Four of the Sun',     title:'Tlaloc',          culture:'Aztec',
-    meaning:'Rain comes at a price. The goggle-eyed god demands children for the harvest. What is the cost of abundance?',
-    prompt:'Tlaloc Aztec rain god, goggle eyes, rain and thunder, sacrificial offerings, blue-green and purple palette, tarot card 2:3' },
-
-  { id:'aztec_05',     rank:'five',   name:'Five of the Sun',     title:'Tezcatlipoca',    culture:'Aztec',
-    meaning:'The Smoking Mirror shows you what you fear. The dark twin, the rival, the god who breaks the world to test it.',
-    prompt:'Tezcatlipoca Aztec god, smoking obsidian mirror, jaguar and darkness, purple and green, rival twin mythology tarot card 2:3' },
-
-  { id:'aztec_06',     rank:'six',    name:'Six of the Sun',      title:'Quetzalcoatl',    culture:'Aztec/Maya',
-    meaning:'The feathered serpent — wisdom and wind, the god who left and promised to return. Creation through knowledge.',
-    prompt:'Quetzalcoatl feathered serpent god, iridescent plumes and serpent scales, wind and sky, purple and green, Mesoamerican tarot card 2:3' },
-
-  { id:'aztec_07',     rank:'seven',  name:'Seven of the Sun',    title:'Itzpapalotl',     culture:'Aztec',
-    meaning:'The Obsidian Butterfly — the warrior goddess who hunts in the wilderness between worlds.',
-    prompt:'Itzpapalotl Aztec obsidian butterfly goddess, warrior feminine, black wings and obsidian blades, purple and green, tarot card 2:3' },
-
-  { id:'aztec_08',     rank:'eight',  name:'Eight of the Sun',    title:'Huitzilopochtli', culture:'Aztec',
-    meaning:'The ceaseless grind — the hummingbird warrior who demands constant sacrifice to keep the sun moving.',
-    prompt:'Huitzilopochtli Aztec god of war and the sun, hummingbird warrior, solar disc, purple and green, dramatic tarot card 2:3' },
-
-  { id:'aztec_09',     rank:'nine',   name:'Nine of the Sun',     title:'Mictlantecuhtli', culture:'Aztec',
-    meaning:'The lord of the dead waits at the end of the nine-level journey. Every death is a passage, not an ending.',
-    prompt:'Mictlantecuhtli Aztec lord of the dead, skeletal god of Mictlan, underworld throne, purple and green, dark tarot card 2:3' },
-
-  { id:'aztec_10',     rank:'ten',    name:'Ten of the Sun',      title:'The Five Suns',   culture:'Aztec',
-    meaning:'Four worlds destroyed before this one. The fifth sun is ours — and it too will end. Legacy is the myth that survives the fire.',
-    prompt:'The Five Suns Aztec creation myth, four destroyed worlds and the fifth rising, apocalyptic and reborn, purple and green tarot card 2:3' },
-
-  { id:'aztec_page',   rank:'page',   name:'Page of the Sun',     title:'Chicomecoatl',    culture:'Aztec',
-    meaning:'Seven Serpent, goddess of maize — the seed that feeds a civilization. Plant the small thing. The harvest is patient.',
-    prompt:'Chicomecoatl Aztec goddess of maize, sacred corn, agricultural abundance, purple and green, Mesoamerican tarot card 2:3' },
-
-  { id:'aztec_knight', rank:'knight', name:'Knight of the Sun',   title:'Ek Chuah',        culture:'Maya',
-    meaning:'The Maya god of merchants and cacao — the traveler who moves between worlds carrying goods and stories.',
-    prompt:'Ek Chuah Maya god of merchants, traveler with pack and staff, cacao pods, purple and green, Maya mythology tarot card 2:3' },
-
-  { id:'aztec_queen',  rank:'queen',  name:'Queen of the Sun',    title:'Ixchel',          culture:'Maya',
-    meaning:'The jaguar goddess of the moon, weaving, and medicine. She floods the world when she pours her waters out.',
-    prompt:'Ixchel Maya moon goddess, jaguar aspects, weaving and water, lunar light, purple and green, divine feminine tarot card 2:3' },
-
-  { id:'aztec_king',   rank:'king',   name:'King of the Sun',     title:'Kukulkan',        culture:'Maya',
-    meaning:'The feathered serpent as king — the ruler who descends the pyramid steps at equinox. Power that moves with cosmic timing.',
-    prompt:'Kukulkan Maya feathered serpent, pyramid at equinox, serpent shadow descending steps, purple and green, Maya mythology tarot card 2:3' },
+// ══════════════════════════════════════════════
+// DATA — Earth deck + Fire/Water for oracle
+// ══════════════════════════════════════════════
+const EARTH = [
+    {id:'earth_ace',name:'Ace of Earth',title:'Lakshmi',culture:'Hindu',keywords:['abundance','lotus','first wealth'],upright:'Lakshmi rises from the ocean of milk — gold coins spilling. The genesis of riches. Receive it.',reversed:'Lakshmi departing. The blessing withdrawn.',image:'data/images/minor/earth/earth_ace.png'},
+    {id:'earth_02',name:'Two of Earth',title:'Aristaeus',culture:'Greek',keywords:['beekeeping','craft','quiet skill'],upright:'He tended bees while gods fought wars. The side pursuit that sustains.',reversed:'The bees dying. Side hustle consuming the main.',image:'data/images/minor/earth/earth_02.png'},
+    {id:'earth_03',name:'Three of Earth',title:'Seven Dwarves',culture:'Norse',keywords:['teamwork','collab','crew'],upright:'Seven dwarves, each with a skill. The collab that makes the impossible possible.',reversed:'The crew fractures. One bad pick breaks the mine.',image:'data/images/minor/earth/earth_03.png'},
+    {id:'earth_04',name:'Four of Earth',title:'Tantalus',culture:'Greek',keywords:['denied feast','scarcity','lack'],upright:'The fruit hangs above. The water recedes. Feast you can see but not taste.',reversed:'The feast reached. Abundance always yours.',image:'data/images/minor/earth/earth_04.png'},
+    {id:'earth_05',name:'Five of Earth',title:"Demeter's Grief",culture:'Greek',keywords:['barren earth','loss','winter'],upright:'Persephone descends and Demeter withdraws the harvest. Winter is real but seasonal.',reversed:'First green shoot. Scarcity ending.',image:'data/images/minor/earth/earth_05.png'},
+    {id:'earth_06',name:'Six of Earth',title:'Anansi',culture:'West African',keywords:['stories','gift','web'],upright:'Anansi owns all stories. The gift — every strand gives. The web holds.',reversed:'Hoarding stories. Generosity became transaction.',image:'data/images/minor/earth/earth_06.png'},
+    {id:'earth_07',name:'Seven of Earth',title:'Chicomecoatl',culture:'Aztec',keywords:['seed round','patience','maize'],upright:'First seed that feeds a civilization. The investment that takes seasons. Do not rush.',reversed:'Failed crop. Stopped watering too soon.',image:'data/images/minor/earth/earth_07.png'},
+    {id:'earth_08',name:'Eight of Earth',title:'Ptah',culture:'Egyptian',keywords:['maker','craft','mastery'],upright:'Spoke the world into existence, then built it with his hands. Make. Ship. Make again.',reversed:"Workshop silent. Ptah's hands stopped.",image:'data/images/minor/earth/earth_08.png'},
+    {id:'earth_09',name:'Nine of Earth',title:'The Influencer',culture:'Modern',keywords:['curated self','brand','mirror'],upright:'Gazing into the ring light. Self-love is power. Self-obsession is a mirror with no back.',reversed:'Ring light off. A self beyond the brand.',image:'data/images/minor/earth/earth_09.png'},
+    {id:'earth_10',name:'Ten of Earth',title:'House of Atreus',culture:'Greek',keywords:['dynasty','legacy','bloodline'],upright:'Wealth passing down. The curse passing with it. What are you inheriting?',reversed:'The curse broken. Freedom from the inheritance.',image:'data/images/minor/earth/earth_10.png'},
+    {id:'earth_page',name:'Page of Earth',title:'Kokopelli',culture:'Southwest',keywords:['hustler','trader','music'],upright:'Traveling village to village, flute in hand. Every deal an education.',reversed:'Flute silent. Trust lost in the margins.',image:'data/images/minor/earth/earth_page.png'},
+    {id:'earth_knight',name:'Knight of Earth',title:'Croesus',culture:'Greek',keywords:['wealth','conviction','gold'],upright:'So wealthy his name became a word. Belief moves money. But gold is heavy.',reversed:'Gold will not carry you through the fire.',image:'data/images/minor/earth/earth_knight.png'},
+    {id:'earth_queen',name:'Queen of Earth',title:'Geb',culture:'Egyptian',keywords:['provider','ground','abundance'],upright:"Geb's body is the ground that feeds everything. The earth does not rush.",reversed:'Earth cracked. Even the earth needs fallow.',image:'data/images/minor/earth/earth_queen.png'},
+    {id:'earth_king',name:'King of Earth',title:'Shennong',culture:'Chinese',keywords:['divine farmer','sage','knowledge'],upright:'Tasted every herb to know which healed. Knowledge is the real wealth.',reversed:'Poisoned by the herb he could not identify.',image:'data/images/minor/earth/earth_king.png'}
 ];
-
-// ════════════════════════════════════════════════════════════════
-// QUEST DAYS
-// ════════════════════════════════════════════════════════════════
-  { day: 1, theme: 'Greek',         label: 'GREEK',   state: 'completed' },
-  { day: 2, theme: 'Norse',         label: 'NORSE',   state: 'completed' },
-  { day: 3, theme: 'Egyptian',      label: 'EGYPT',   state: 'completed' },
-  { day: 4, theme: 'Mesoamerican',  label: 'MESO',    state: 'today'     },
-  { day: 5, theme: '???',           label: 'DAY 5',   state: 'upcoming'  },
-  { day: 6, theme: '???',           label: 'DAY 6',   state: 'upcoming'  },
-  { day: 7, theme: '???',           label: 'DAY 7',   state: 'upcoming'  },
+const FIRE_WATER = [
+    {id:'fire_ace',name:'Ace of Fire',title:'Maui',suit:'fire',keywords:['spark','stolen fire'],upright:'Maui stole fire from the goddess Mahuika. The divine spark.',image:'data/images/minor/fire/fire_ace.png'},
+    {id:'fire_02',name:'Two of Fire',title:'Castor & Pollux',suit:'fire',keywords:['twins','pact'],upright:'One mortal, one divine. The partnership that transcends difference.',image:'data/images/minor/fire/fire_02.png'},
+    {id:'fire_03',name:'Three of Fire',title:'Peitho',suit:'fire',keywords:['persuasion','charm'],upright:'The room leans in. The world bends toward her words.',image:'data/images/minor/fire/fire_03.png'},
+    {id:'fire_04',name:'Four of Fire',title:'Icarus',suit:'fire',keywords:['fall','hubris'],upright:'The wax melts. The fall is proof you flew.',image:'data/images/minor/fire/fire_04.png'},
+    {id:'fire_05',name:'Five of Fire',title:'Loki',suit:'fire',keywords:['critic','truth'],upright:'Loki exposed every hypocrisy at the feast. Ugly truth.',image:'data/images/minor/fire/fire_05.png'},
+    {id:'fire_06',name:'Six of Fire',title:'The Algorithm',suit:'fire',keywords:['feed','viral'],upright:'Amplifies your name until it belongs to everyone but you.',image:'data/images/minor/fire/fire_06.png'},
+    {id:'fire_07',name:'Seven of Fire',title:'Talos',suit:'fire',keywords:['automaton','system'],upright:'Bronze giant doing what it was built to do. Learn the code.',image:'data/images/minor/fire/fire_07.png'},
+    {id:'fire_08',name:'Eight of Fire',title:'Huitzilopochtli',suit:'fire',keywords:['grind','momentum'],upright:'The ceaseless grind. The push IS the purpose.',image:'data/images/minor/fire/fire_08.png'},
+    {id:'water_ace',name:'Ace of Water',title:'Oshun',suit:'water',keywords:['reach','love'],upright:'Honey and a mirror. The vulnerable reach, heart opened.',image:'data/images/minor/water/water_ace.png'},
+    {id:'water_02',name:'Two of Water',title:'Echo & Narcissus',suit:'water',keywords:['talking stage','echo'],upright:'One voice dominates. Who is speaking? Who is echoing?',image:'data/images/minor/water/water_02.png'},
+    {id:'water_03',name:'Three of Water',title:'Sedna',suit:'water',keywords:['deep call','desire'],upright:'Dwells at the ocean bottom. The parasocial pull.',image:'data/images/minor/water/water_03.png'},
+    {id:'water_04',name:'Four of Water',title:'Izanami',suit:'water',keywords:['ghost','silence'],upright:'Descended to Yomi. The silence is the answer.',image:'data/images/minor/water/water_04.png'},
+    {id:'water_05',name:'Five of Water',title:'Calypso',suit:'water',keywords:['situationship','loss'],upright:'Everything to one person, a detour to the other.',image:'data/images/minor/water/water_05.png'},
+    {id:'water_06',name:'Six of Water',title:"Hamlet's Ghost",suit:'water',keywords:['memory','past'],upright:'The memory that will not stay buried. Honor the past.',image:'data/images/minor/water/water_06.png'}
 ];
+const COUNCIL = {
+    Demeter:{avatar:'🌾',cls:'av-demeter',lines:[c=>`Demeter blesses ${c.title}. The harvest deepens.`,c=>`The soil accepts ${c.title}. Slot sealed.`,c=>`She who fed the world knows: ${c.title} belongs.`]},
+    Hera:{avatar:'👑',cls:'av-hera',lines:[c=>`Hera watches. ${c.title} is noted.`,c=>`The covenant holds. ${c.title} bound to the shrine.`,c=>`Hera approves — or does not object. Same, for now.`]},
+    Artemis:{avatar:'🌙',cls:'av-artemis',lines:[c=>`Artemis marks ${c.title} and moves on.`,c=>`The moon witnesses ${c.title}. Uninterrupted.`,c=>`Bow lowered. ${c.title} accepted.`]}
+};
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
 
-function buildTimeline() {
-  const el = document.getElementById('dayTimeline');
-  if (!el) return;
-  el.innerHTML = QUEST_DAYS.map(d => `
-    <div class="day-pip ${d.state}">
-      <div class="day-pip-circle">${d.day}</div>
-      <div class="day-pip-label">${d.label}</div>
-    </div>
-  `).join('');
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const SK='ealdforn7_shrine';
+let S=loadS();
+function loadS(){try{const s=localStorage.getItem(SK);return s?JSON.parse(s):{slots:{},gen:[],revealed:{},focal:null,log:[]};}catch(e){return{slots:{},gen:[],revealed:{},focal:null,log:[]};}}
+function saveS(){localStorage.setItem(SK,JSON.stringify(S));}
+
+// ══════════════════════════════════════════════
+// LOG
+// ══════════════════════════════════════════════
+function ts(){return new Date().toTimeString().slice(0,8);}
+function log(msg,type=''){
+    S.log.push({t:ts(),msg,type});
+    if(S.log.length>80)S.log.shift();
+    saveS();
+    const feed=document.getElementById('logFeed');
+    const e=document.createElement('div');e.className='log-entry';
+    e.innerHTML=`<span class="log-time">${ts()}</span><span class="log-text ${type}">${msg}</span>`;
+    feed.appendChild(e);feed.scrollTop=feed.scrollHeight;
 }
 
-// ════════════════════════════════════════════════════════════════
-// LOCAL ENTRY STORE
-// ════════════════════════════════════════════════════════════════
-const STORE_KEY = 'ealdforn_challenge_entries_v1';
+// ══════════════════════════════════════════════
+// STARFIELD
+// ══════════════════════════════════════════════
+const sc=document.getElementById('starfield'),sctx=sc.getContext('2d');
+const stars=Array.from({length:180},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1,a:Math.random()*0.45+0.08,tw:Math.random()*Math.PI*2}));
+function rs(){sc.width=window.innerWidth;sc.height=window.innerHeight;}
+window.addEventListener('resize',rs);rs();
+(function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.65+0.35*Math.sin(s.tw+t*0.0003));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(212,201,168,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
 
-function loadEntries() {
-  try {
-    return JSON.parse(localStorage.getItem(STORE_KEY)) || [];
-  } catch { return []; }
+// ══════════════════════════════════════════════
+// PONTUS CANVAS
+// ══════════════════════════════════════════════
+const pCvs=document.getElementById('pontusCanvas'),pCtx=pCvs.getContext('2d');
+function rp(){pCvs.width=pCvs.parentElement.clientWidth;pCvs.height=220;}
+window.addEventListener('resize',rp);rp();
+const TITANS=['Oceanus','Tethys','Pontus','Nereus','Doris','Thaumas','Phorcys','Ceto'];
+const pOff=TITANS.map(()=>Math.random()*Math.PI*2);
+const leg=document.getElementById('pontusLegend');
+leg.innerHTML=TITANS.map((t,i)=>{const b=40+i*12;return`<div class="leg-item"><div class="leg-sw" style="background:rgb(${18+i*3},${55+b},${170+i*5})"></div>${t}</div>`;}).join('');
+
+let pTime=0,pPaused=false;
+function drawP(){
+    if(pPaused){requestAnimationFrame(drawP);return;}
+    const W=pCvs.width,H=pCvs.height;pTime+=0.016;
+    pCtx.clearRect(0,0,W,H);
+    TITANS.forEach((t,i)=>{
+        pOff[i]+=0.014*(0.8+i*0.1);
+        const yC=(H/(TITANS.length+1))*(i+1);
+        const amp=5+Math.sin(pTime*0.7+i)*3;
+        const b=40+i*12;
+        const alpha=0.25+Math.sin(pTime*0.5+i)*0.1;
+        pCtx.beginPath();pCtx.strokeStyle=`rgba(${18+i*3},${55+b},${170+i*5},${alpha})`;pCtx.lineWidth=1.2;
+        for(let x=0;x<=W;x+=4){
+            const y=yC+Math.sin(x*0.018+pOff[i])*amp+Math.sin(x*0.04+pOff[i]*0.6)*(amp*0.3);
+            x===0?pCtx.moveTo(x,y):pCtx.lineTo(x,y);
+        }
+        pCtx.stroke();
+        pCtx.fillStyle=`rgba(${18+i*3},${55+b},${170+i*5},0.45)`;
+        pCtx.font='italic 9px "EB Garamond"';pCtx.fillText(t,8,yC-amp-5);
+    });
+    requestAnimationFrame(drawP);
 }
+drawP();
+// pulse timer
+setInterval(()=>{
+    const s=27.3+Math.sin(Date.now()*0.008)*2.5;
+    document.getElementById('pulseTimer').textContent=`Still Water · ${s.toFixed(1)}s`;
+},1000);
 
-function saveEntries(entries) {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(entries)); } catch {}
-}
-
-function getTodayKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-}
-
-let entries = loadEntries();
-let pendingImageData = null;
-
-function updateSubmissionCount() {
-  const today = getTodayKey();
-  const todayEntries = entries.filter(e => e.dateKey === today);
-  // Base 2 (canon cards: Huitzilopochtli + Chicomecoatl) + any new ones logged live
-  const total = 2 + todayEntries.length;
-  const countEl = document.getElementById('submissionCount');
-  const localEl = document.getElementById('localEntryCount');
-  const badgeEl = document.getElementById('todayEntryCountBadge');
-  if (countEl) countEl.textContent = total;
-  if (localEl) localEl.textContent = total;
-  if (badgeEl) badgeEl.textContent = total;
-}
-
-function addEntryCard(entry) {
-  const grid = document.getElementById('entriesGrid');
-  const slot = document.getElementById('uploadSlot');
-  if (!grid || !slot) return;
-
-  const card = document.createElement('div');
-  card.className = 'entry-card new-entry';
-  card.dataset.img = entry.imageData || '';
-  card.dataset.title = entry.title;
-  card.setAttribute('onclick', 'openLightbox(this)');
-
-  card.innerHTML = `
-    <img src="${entry.imageData || ''}" alt="${entry.title}"
-      onerror="this.parentElement.style.background='#1a1206'; this.style.display='none'">
-    <div class="entry-card-body">
-      <div class="entry-card-title">${entry.title || 'Untitled'}</div>
-      <div class="entry-reactions"><span class="reaction">NEW ✨</span></div>
-    </div>
-  `;
-
-  grid.insertBefore(card, slot);
-  updateSubmissionCount();
-}
-
-// ════════════════════════════════════════════════════════════════
-// FILE / DROP HANDLING
-// ════════════════════════════════════════════════════════════════
-function bindDropZone() {
-  const zone = document.getElementById('dropZone');
-  const input = document.getElementById('fileInput');
-  const preview = document.getElementById('dropPreview');
-  const label = document.getElementById('dropZoneText');
-
-  function handleFile(file) {
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      pendingImageData = e.target.result;
-      preview.src = pendingImageData;
-      preview.classList.add('visible');
-      label.style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  input.addEventListener('change', () => handleFile(input.files[0]));
-
-  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    handleFile(e.dataTransfer.files[0]);
-  });
-}
-
-// ════════════════════════════════════════════════════════════════
-// SUBMIT
-// ════════════════════════════════════════════════════════════════
-function bindSubmit() {
-  document.getElementById('submitBtn')?.addEventListener('click', () => {
-    const title = document.getElementById('entryTitle')?.value?.trim();
-    const notes = document.getElementById('entryNotes')?.value?.trim();
-    const url   = document.getElementById('entryUrl')?.value?.trim();
-
-    if (!title && !pendingImageData) {
-      showToast('Add a title or image first');
-      return;
+// ══════════════════════════════════════════════
+// EARTH GRID
+// ══════════════════════════════════════════════
+function renderGrid(){
+    const g=document.getElementById('shrineGrid');g.innerHTML='';
+    const filled=Object.keys(S.slots).length;
+    document.getElementById('shrineProgress').textContent=`${filled} of 14 revealed`;
+    document.getElementById('statusRevealed').textContent=`Revealed: ${filled}/14`;
+    for(let i=0;i<14;i++){
+        const s=document.createElement('div');s.className='slot';s.dataset.slot=i;
+        const cid=S.slots[i];
+        if(cid){
+            const c=EARTH.find(x=>x.id===cid);
+            s.classList.add('filled');
+            s.onclick=()=>{setFocal(c);showTooltip(c);};
+            const imgR=S.revealed[cid];
+            s.innerHTML=imgR
+                ?`<img class="slot-image" src="${c.image}" alt="${c.name}" onerror="this.style.display='none'"><div class="slot-info"><div class="slot-name">${c.name}</div><div class="slot-title">${c.title}</div><div class="slot-keyword">${c.keywords[0]}</div></div>`
+                :`<div style="width:100%;aspect-ratio:1;background:var(--moss);display:flex;align-items:center;justify-content:center;opacity:0.5;font-size:1.4rem">🌿</div><div class="slot-info"><div class="slot-name">${c.name}</div><div class="slot-title">${c.title}</div></div>`;
+        }else if(S.gen.includes(i)){
+            s.classList.add('generating');
+            s.innerHTML=`<div class="slot-generating-overlay"><div class="gen-spinner"></div><div style="font-family:'Cinzel',serif;font-size:0.5rem;color:var(--gold-dim);letter-spacing:0.12em">GENERATING</div></div><span class="slot-empty-text">SLOT ${String(i+1).padStart(2,'0')}</span>`;
+        }else if(i===13){
+            s.innerHTML=`<span class="slot-rune">✦</span><span class="slot-empty-text">XIV · awaits</span>`;
+        }else{
+            s.innerHTML=`<span class="slot-rune">⊕</span><span class="slot-empty-text">SLOT ${String(i+1).padStart(2,'0')}</span>`;
+        }
+        g.appendChild(s);
     }
-
-    const entry = {
-      title: title || 'Untitled',
-      notes,
-      url,
-      imageData: pendingImageData,
-      dateKey: getTodayKey(),
-      timestamp: Date.now()
-    };
-
-    entries.push(entry);
-    saveEntries(entries);
-    addEntryCard(entry);
-
-    // Reset form
-    document.getElementById('entryTitle').value = '';
-    document.getElementById('entryNotes').value = '';
-    document.getElementById('entryUrl').value = '';
-    pendingImageData = null;
-    const preview = document.getElementById('dropPreview');
-    if (preview) { preview.src = ''; preview.classList.remove('visible'); }
-    const label = document.getElementById('dropZoneText');
-    if (label) label.style.display = '';
-
-    showToast(`✓ Entry logged: ${entry.title.substring(0, 36)}`);
-  });
+    drawMycelial();
+    populateSelect();
+}
+function drawMycelial(){
+    const svg=document.getElementById('mycelialSvg');
+    const grid=document.getElementById('shrineGrid');
+    if(!grid)return;
+    const gr=grid.getBoundingClientRect();
+    svg.setAttribute('viewBox',`0 0 ${gr.width} ${gr.height}`);
+    svg.style.width=gr.width+'px';svg.style.height=gr.height+'px';
+    svg.innerHTML='';
+    const slots=grid.querySelectorAll('.slot');
+    for(let i=0;i<14;i++){
+        if(!S.slots[i])continue;
+        const r=Math.floor(i/4),c=i%4;
+        if(c<3&&S.slots[i+1])drawLine(svg,slots[i],slots[i+1],gr);
+        if(r<3&&i+4<14&&S.slots[i+4])drawLine(svg,slots[i],slots[i+4],gr);
+    }
+}
+function drawLine(svg,a,b,gr){
+    const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+    const x1=ra.left+ra.width/2-gr.left,y1=ra.top+ra.height/2-gr.top;
+    const x2=rb.left+rb.width/2-gr.left,y2=rb.top+rb.height/2-gr.top;
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',x1);l.setAttribute('y1',y1);
+    l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+    l.setAttribute('stroke','#7a9e6a');l.setAttribute('stroke-width','1.2');
+    l.setAttribute('opacity','0.5');
+    svg.appendChild(l);
 }
 
-// ════════════════════════════════════════════════════════════════
-// COUNTDOWN TO MIDNIGHT
-// ════════════════════════════════════════════════════════════════
-function updateCountdown() {
-  const now = new Date();
-  const midnight = new Date();
-  midnight.setHours(24, 0, 0, 0);
-  const diff = midnight - now;
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  const el = document.getElementById('countdownDisplay');
-  if (el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+// ══════════════════════════════════════════════
+// CARD SELECT + SUMMON
+// ══════════════════════════════════════════════
+function populateSelect(){
+    const sel=document.getElementById('cardSelect');
+    const used=new Set(Object.values(S.slots));
+    sel.innerHTML='<option value="">— choose card —</option>';
+    EARTH.forEach(c=>{if(!used.has(c.id)){const o=document.createElement('option');o.value=c.id;o.textContent=`${c.name} — ${c.title}`;sel.appendChild(o);}});
+}
+function previewFocal(){
+    const v=document.getElementById('cardSelect').value;
+    if(!v)return;
+    const c=EARTH.find(x=>x.id===v);
+    if(c)setFocal(c,true);
+}
+function summonCard(){
+    const sel=document.getElementById('cardSelect');
+    const cid=sel.value;if(!cid){log('No card selected.');return;}
+    const c=EARTH.find(x=>x.id===cid);if(!c)return;
+    let tgt=-1;
+    for(let i=0;i<14;i++){if(!S.slots[i]){tgt=i;break;}}
+    if(tgt===-1){log('All 14 slots filled. Shrine complete.','hl');return;}
+    S.gen=S.gen.filter(x=>x!==tgt);
+    S.slots[tgt]=cid;S.focal=cid;saveS();
+    renderGrid();setFocal(c);
+    log(`${c.title} summoned — Slot ${tgt+1}. [${c.keywords[0]}]`,'hl');
+    addCouncil(c);
+    sel.value='';
+}
+function markGenerating(){
+    const used=new Set([...Object.keys(S.slots).map(Number),...S.gen]);
+    for(let i=0;i<14;i++){if(!used.has(i)){S.gen.push(i);saveS();renderGrid();log(`Slot ${i+1} marked generating.`);return;}}
+    log('No slots available.');
+}
+function revealAllImages(){
+    Object.values(S.slots).forEach(id=>{S.revealed[id]=true;});
+    saveS();renderGrid();log('All images revealed.','hl');
+}
+function resetShrine(){
+    if(!confirm('Clear shrine?'))return;
+    S={slots:{},gen:[],revealed:{},focal:null,log:[]};
+    saveS();renderGrid();
+    document.getElementById('focalPlaceholder').style.display='block';
+    ['focalName','focalTitle','focalCulture','focalKeywords','focalMeaning'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('logFeed').innerHTML='';
+    log('Shrine cleared. The earth waits.');
 }
 
-// ════════════════════════════════════════════════════════════════
-// LIGHTBOX
-// ════════════════════════════════════════════════════════════════
-function openLightbox(cardEl) {
-  const img = cardEl?.dataset?.img || cardEl?.querySelector('img')?.src;
-  if (!img) return;
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lightboxImg');
-  if (!lb || !lbImg) return;
-  lbImg.src = img;
-  lb.classList.add('open');
+// ══════════════════════════════════════════════
+// FOCAL CARD
+// ══════════════════════════════════════════════
+function setFocal(c,preview=false){
+    const ph=document.getElementById('focalPlaceholder');
+    const els=['focalName','focalTitle','focalCulture','focalKeywords','focalMeaning'];
+    if(!c){
+        ph.style.display='block';ph.textContent=preview?'SUMMONING — Preview':'SUMMONING — Select a card';
+        els.forEach(id=>document.getElementById(id).style.display='none');
+        return;
+    }
+    ph.style.display='none';
+    els.forEach(id=>document.getElementById(id).style.display='');
+    document.getElementById('focalName').textContent=c.name;
+    document.getElementById('focalTitle').textContent=c.title;
+    document.getElementById('focalCulture').textContent=c.culture.toUpperCase();
+    document.getElementById('focalKeywords').innerHTML=c.keywords.map(k=>`<span class="kw-chip">${k}</span>`).join('');
+    document.getElementById('focalMeaning').textContent=c.upright;
+    if(!preview)S.focal=c.id;
+    saveS();
 }
 
-function closeLightbox() {
-  document.getElementById('lightbox')?.classList.remove('open');
+// ══════════════════════════════════════════════
+// TOOLTIP
+// ══════════════════════════════════════════════
+function showTooltip(c){
+    document.getElementById('ttContent').innerHTML=`
+        <div style="font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold-pale)">${c.name}</div>
+        <div style="font-style:italic;font-size:1.2rem;color:var(--sage)">${c.title}</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--bone-dim)">${c.culture.toUpperCase()}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.6rem 0">${c.keywords.map(k=>`<span class="kw-chip">${k}</span>`).join('')}</div>
+        <div style="font-size:0.9rem;line-height:1.7;color:var(--bone);border-top:1px solid var(--bark);padding-top:0.6rem">${c.upright}</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.2em;color:var(--ember);margin-top:0.5rem">REVERSED</div>
+        <div style="font-size:0.8rem;color:var(--bone-dim);font-style:italic">${c.reversed}</div>`;
+    document.getElementById('tooltipOverlay').classList.add('visible');
+}
+function closeTooltip(e){
+    if(!e||e.target===document.getElementById('tooltipOverlay'))
+        document.getElementById('tooltipOverlay').classList.remove('visible');
 }
 
-// ════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// COUNCIL
+// ══════════════════════════════════════════════
+function addCouncil(c){
+    const gods=['Demeter','Hera','Artemis'];
+    const g=godspick(gods);
+    const god=COUNCIL[g];
+    const line=god.lines[Math.floor(Math.random()*god.lines.length)](c);
+    const feed=document.getElementById('councilFeed');
+    const e=document.createElement('div');e.className='council-entry';
+    e.innerHTML=`<div class="council-avatar ${god.cls}">${god.avatar}</div><div><div class="council-god">${g.toUpperCase()}</div><div class="council-reaction">${line}</div></div>`;
+    feed.appendChild(e);feed.scrollTop=feed.scrollHeight;
+    log(`Council: ${g} — "${line.slice(0,50)}..."`);
+}
+
+// ══════════════════════════════════════════════
+// ORACLE
+// ══════════════════════════════════════════════
+let oracleTimer;
+function drawOracle(){
+    const cards=document.querySelectorAll('.oc');
+    cards.forEach(c=>c.classList.add('refreshing'));
+    setTimeout(()=>{
+        const pool=[...FIRE_WATER];
+        const drawn=[];
+        for(let i=0;i<3;i++){const idx=Math.floor(Math.random()*pool.length);drawn.push(pool.splice(idx,1)[0]);}
+        const pos=['Past','Present','Future'];
+        pos.forEach((p,i)=>{
+            const c=drawn[i];
+            const el=document.getElementById('oc'+p);
+            el.innerHTML=`<div class="oc-pos">${p}</div><div class="oc-name">${c.name}</div><div class="oc-title">${c.title}</div><div class="oc-keyword">${c.keywords[0]}</div>`;
+            el.classList.remove('refreshing');
+        });
+        log(`Oracle: ${drawn.map(c=>c.title).join(' · ')}`,'ol');
+    },350);
+}
+function startOracle(){oracleTimer=setInterval(drawOracle,60000);}
+
+// ══════════════════════════════════════════════
+// PAUSE
+// ══════════════════════════════════════════════
+function togglePause(){
+    pPaused=!pPaused;
+    document.getElementById('pauseBtn').textContent=pPaused?'▶ Resume':'⏸ Pause';
+    if(pPaused){clearInterval(oracleTimer);}else{startOracle();drawP();}
+    log(pPaused?'Field paused.':'Field resumed.');
+}
+
+// ══════════════════════════════════════════════
 // TOAST
-// ════════════════════════════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2400);
+// ══════════════════════════════════════════════
+let ttT;
+function toast(msg,type=''){
+    const el=document.getElementById('toast');el.className='show '+type;el.textContent=msg;
+    clearTimeout(ttT);ttT=setTimeout(()=>{el.className='';},3500);
 }
 
-// ════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════
 // INIT
-// ════════════════════════════════════════════════════════════════
-function init() {
-  buildTimeline();
-  updateSubmissionCount();
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-  bindDropZone();
-  bindSubmit();
-
-  document.getElementById('lightboxCloseBtn')?.addEventListener('click', closeLightbox);
-  document.getElementById('lightbox')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('lightbox')) closeLightbox();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
-  });
-
-  // Load any previously saved entries for today
-  const today = getTodayKey();
-  entries.filter(e => e.dateKey === today).forEach(addEntryCard);
+// ══════════════════════════════════════════════
+function init(){
+    renderGrid();
+    if(S.focal){const c=EARTH.find(x=>x.id===S.focal);if(c)setFocal(c);}
+    drawOracle();
+    startOracle();
+    // restore last few log entries
+    const recent=S.log.slice(-12);
+    recent.forEach(e=>{
+        const feed=document.getElementById('logFeed');
+        const el=document.createElement('div');el.className='log-entry';
+        el.innerHTML=`<span class="log-time">${e.t}</span><span class="log-text ${e.type||''}">${e.msg}</span>`;
+        feed.appendChild(el);
+    });
+    log('Earth Shrine initialized. Pontus flows.','hl');
+    document.getElementById('tickerText').textContent='The primordial sea stirs. Titans drift in the deep.';
 }
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+document.addEventListener('DOMContentLoaded',init);
+window.addEventListener('resize',()=>{rp();drawMycelial();});
 </script>
 </body>
 </html>
