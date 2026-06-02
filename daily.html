@@ -231,16 +231,19 @@
 <div class="tts-bar">
     <span class="tts-label">🗣️ TTS</span>
     <select id="ttsLang" onchange="setTtsLang()">
-        <option value="en-US">English</option>
-        <option value="el-GR">Ἑλληνική</option>
-        <option value="ja-JP">日本語</option>
-        <option value="hi-IN">हिन्दी</option>
-        <option value="yo-NG">Yorùbá</option>
-        <option value="ar-EG">مصري</option>
-        <option value="is-IS">Norrœnt</option>
-        <option value="zh-CN">中文</option>
-        <option value="sw-KE">Kiswahili</option>
-    </select>
+    <option value="es-MX">Español — ritual</option>
+    <option value="en-US">English — deep</option>
+    <option value="el-GR">Ἑλληνική</option>
+    <option value="ja-JP">日本語</option>
+    <option value="hi-IN">हिन्दी</option>
+    <option value="yo-NG">Yorùbá</option>
+    <option value="ar-EG">مصري</option>
+    <option value="is-IS">Norrœnt — deep</option>
+    <option value="zh-CN">中文</option>
+    <option value="sw-KE">Kiswahili</option>
+    <option value="fr-FR">Français</option>
+    <option value="it-IT">Italiano</option>
+</select>
     <select id="ttsMode" onchange="setTtsMode()">
         <option value="off">TTS Off</option>
         <option value="oracle">Read Oracle</option>
@@ -539,20 +542,45 @@ function togglePause(){
     if(pPaused){clearInterval(oracleTimer);clearInterval(countdownInterval);}else{startOracle();drawP();}
 }
 // ══════════════════════════════════════════
-// TTS — Multi-language + Manual Inject
+// TTS — Ritual Voice System
 // ══════════════════════════════════════════
-let ttsLang='en-US',ttsMode='off',ttsQueue=[],ttsActive=false;
-const LANG_VOICES={
-    'en-US':{rate:0.9,pitch:1.0,name:'english'},
-    'el-GR':{rate:0.78,pitch:0.9,name:'greek'},
-    'ja-JP':{rate:0.82,pitch:1.0,name:'japanese'},
-    'hi-IN':{rate:0.85,pitch:0.95,name:'hindi'},
-    'yo-NG':{rate:0.8,pitch:0.95,name:'yoruba'},
-    'ar-EG':{rate:0.78,pitch:0.9,name:'arabic'},
-    'is-IS':{rate:0.75,pitch:0.85,name:'icelandic'},
-    'zh-CN':{rate:0.82,pitch:1.0,name:'chinese'},
-    'sw-KE':{rate:0.8,pitch:0.95,name:'swahili'}
+let ttsLang='es-MX',ttsMode='off',ttsQueue=[],ttsActive=false,voicesReady=false,allVoices=[];
+
+const LANG_CONFIG={
+    'es-MX':{rate:0.72,pitch:0.55,label:'Español — ritual'},
+    'en-US':{rate:0.82,pitch:0.7,label:'English — deep'},
+    'el-GR':{rate:0.72,pitch:0.65,label:'Ἑλληνική'},
+    'ja-JP':{rate:0.76,pitch:0.7,label:'日本語'},
+    'hi-IN':{rate:0.78,pitch:0.72,label:'हिन्दी'},
+    'yo-NG':{rate:0.74,pitch:0.68,label:'Yorùbá'},
+    'ar-EG':{rate:0.72,pitch:0.6,label:'مصري'},
+    'is-IS':{rate:0.68,pitch:0.55,label:'Norrœnt — deep'},
+    'zh-CN':{rate:0.76,pitch:0.7,label:'中文'},
+    'sw-KE':{rate:0.74,pitch:0.7,label:'Kiswahili'},
+    'fr-FR':{rate:0.76,pitch:0.65,label:'Français'},
+    'it-IT':{rate:0.74,pitch:0.62,label:'Italiano'},
 };
+
+function initVoices(){
+    allVoices=speechSynthesis.getVoices();
+    if(allVoices.length>0){voicesReady=true;return;}
+    speechSynthesis.onvoiceschanged=()=>{
+        allVoices=speechSynthesis.getVoices();
+        if(allVoices.length>0)voicesReady=true;
+    };
+}
+initVoices();
+
+function pickVoice(lang){
+    if(!allVoices.length)return null;
+    // Prefer a voice that matches the language and sounds deep/resonant
+    const langCode=lang.split('-')[0];
+    const matches=allVoices.filter(v=>v.lang.startsWith(langCode));
+    if(!matches.length)return allVoices.find(v=>v.lang.startsWith('en'))||allVoices[0];
+    // Prefer male-sounding voices for ritual feel (usually have "male" in name or are from certain providers)
+    const male=matches.find(v=>v.name.toLowerCase().includes('male')||v.name.toLowerCase().includes('david')||v.name.toLowerCase().includes('mark')||v.name.toLowerCase().includes('pablo')||v.name.toLowerCase().includes('diego'));
+    return male||matches[0];
+}
 
 function setTtsLang(){ttsLang=document.getElementById('ttsLang').value;}
 function setTtsMode(){ttsMode=document.getElementById('ttsMode').value;}
@@ -561,9 +589,10 @@ function speakPhrase(){
     const input=document.getElementById('ttsPhrase');
     const phrase=input.value.trim();
     if(!phrase)return;
+    if(!voicesReady){setTimeout(()=>speakPhrase(),200);return;}
     enqueueTts(phrase);
     input.value='';
-    log(`TTS spoken: "${phrase.slice(0,40)}${phrase.length>40?'...':''}" [${ttsLang}]`);
+    log(`TTS: "${phrase.slice(0,40)}${phrase.length>40?'...':''}" [${ttsLang}]`);
 }
 
 function enqueueTts(text){
@@ -574,17 +603,18 @@ function enqueueTts(text){
 function processTts(){
     if(!ttsQueue.length){ttsActive=false;setTtsStatus(false);return;}
     ttsActive=true;setTtsStatus(true);
+
     const text=ttsQueue.shift();
     const u=new SpeechSynthesisUtterance(text);
-    const cfg=LANG_VOICES[ttsLang]||LANG_VOICES['en-US'];
+    const cfg=LANG_CONFIG[ttsLang]||LANG_CONFIG['es-MX'];
     u.lang=ttsLang;u.rate=cfg.rate;u.pitch=cfg.pitch;u.volume=1;
 
-    const voices=speechSynthesis.getVoices();
-    const match=voices.find(v=>v.lang.startsWith(ttsLang.split('-')[0]));
-    if(match)u.voice=match;
+    const voice=pickVoice(ttsLang);
+    if(voice)u.voice=voice;
 
-    u.onend=()=>setTimeout(processTts,150);
-    u.onerror=()=>setTimeout(processTts,150);
+    u.onend=()=>setTimeout(processTts,300);
+    u.onerror=()=>{setTimeout(processTts,300);};
+    speechSynthesis.cancel(); // Clear any stuck utterance
     speechSynthesis.speak(u);
 }
 
@@ -593,37 +623,37 @@ function setTtsStatus(active){
     el.style.display=active?'flex':'none';
 }
 
-// Hook into existing summons
-const origSummon=summonCard;
+// Hook summons
+const origSummon2=summonCard;
 summonCard=function(){
-    origSummon();
-    if(ttsMode==='summons'||ttsMode==='both'){
+    origSummon2();
+    if((ttsMode==='summons'||ttsMode==='both')&&voicesReady){
         const cid=S.focal;
         if(cid){
             const c=EARTH.find(x=>x.id===cid);
-            if(c)enqueueTts(`${c.title}. ${c.name}. ${c.keywords.slice(0,2).join('. ')}.`);
+            if(c)enqueueTts(`${c.title}. ${c.keywords.slice(0,3).join(', ')}.`);
         }
     }
 };
 
-// Hook into oracle draws
-const origDraw=drawOracle;
+// Hook oracle
+const origDraw2=drawOracle;
 drawOracle=function(){
-    origDraw();
-    if(ttsMode==='oracle'||ttsMode==='both'){
-        // The oracle cards update async, so we grab titles from the pool
-        const pool=[...ORACLE_POOL];
-        const drawn=[];
-        for(let i=0;i<3;i++){const idx=Math.floor(Math.random()*pool.length);drawn.push(pool.splice(idx,1)[0]);}
+    origDraw2();
+    if((ttsMode==='oracle'||ttsMode==='both')&&voicesReady){
         setTimeout(()=>{
-            enqueueTts(`Oracle. ${drawn.map(c=>c.title).join('. ')}.`);
-        },400);
+            const names=[];
+            ['Past','Present','Future'].forEach(p=>{
+                const el=document.getElementById('oc'+p);
+                if(el){
+                    const titleEl=el.querySelector('.oc-title');
+                    if(titleEl)names.push(titleEl.textContent);
+                }
+            });
+            if(names.length)enqueueTts(`Oracle: ${names.join('. ')}.`);
+        },500);
     }
 };
-
-// Preload voices
-speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
-speechSynthesis.getVoices();
 // ══════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════
