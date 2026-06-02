@@ -180,6 +180,39 @@
             .left-col,.right-col { width:100%; }
             .bottom-row { flex-direction:column; }
             #pontusCanvas { height:200px; }
+
+         /* ══ TTS BAR ══ */
+.tts-bar {
+    display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;
+    padding:0.5rem 0.8rem;
+    border:1px solid rgba(201,146,42,0.1); border-radius:4px;
+    background:rgba(10,9,5,0.7);
+    font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.1em;
+}
+.tts-bar select {
+    font-family:'Cinzel',serif; font-size:0.48rem;
+    background:var(--soil); border:1px solid var(--bark);
+    color:var(--bone); padding:0.22rem 0.4rem; border-radius:3px; cursor:pointer;
+}
+.tts-bar input {
+    font-family:'EB Garamond',serif; font-size:0.55rem;
+    background:var(--soil); border:1px solid var(--bark);
+    color:var(--bone); padding:0.22rem 0.5rem; border-radius:3px;
+    flex:1; min-width:140px; outline:none;
+}
+.tts-bar input:focus { border-color:var(--sage); }
+.tts-speaking {
+    display:flex; align-items:center; gap:0.3rem;
+    color:var(--sage); font-size:0.46rem;
+}
+.tts-dot {
+    width:6px; height:6px; border-radius:50%;
+    background:var(--locked);
+    animation:blink 0.8s infinite;
+}
+.tts-label {
+    color:var(--bone-dim); font-size:0.44rem; letter-spacing:0.12em;
+}   
         }
     </style>
 </head>
@@ -194,7 +227,32 @@
         <div class="subtitle">Harvest · Covenant · The Hunt</div>
         <div class="live-badge"><span class="live-dot"></span> LIVE DROP RITUAL · Ealdforn #7</div>
     </div>
-
+    <!-- TTS BAR -->
+<div class="tts-bar">
+    <span class="tts-label">🗣️ TTS</span>
+    <select id="ttsLang" onchange="setTtsLang()">
+        <option value="en-US">English</option>
+        <option value="el-GR">Ἑλληνική</option>
+        <option value="ja-JP">日本語</option>
+        <option value="hi-IN">हिन्दी</option>
+        <option value="yo-NG">Yorùbá</option>
+        <option value="ar-EG">مصري</option>
+        <option value="is-IS">Norrœnt</option>
+        <option value="zh-CN">中文</option>
+        <option value="sw-KE">Kiswahili</option>
+    </select>
+    <select id="ttsMode" onchange="setTtsMode()">
+        <option value="off">TTS Off</option>
+        <option value="oracle">Read Oracle</option>
+        <option value="summons">Read Summons</option>
+        <option value="both">Read All</option>
+    </select>
+    <input type="text" id="ttsPhrase" placeholder="Speak a phrase into the shrine...">
+    <button class="r-btn btn-gold" onclick="speakPhrase()" style="font-size:0.44rem;padding:0.22rem 0.5rem;">🗣️ Speak</button>
+    <div class="tts-speaking" id="ttsStatus" style="display:none;">
+        <span class="tts-dot"></span> speaking
+    </div>
+</div>
     <!-- 50-50 SPLIT -->
     <div class="split-50">
 
@@ -480,7 +538,92 @@ function togglePause(){
     pPaused=!pPaused;document.getElementById('pauseBtn').textContent=pPaused?'▶':'⏸';
     if(pPaused){clearInterval(oracleTimer);clearInterval(countdownInterval);}else{startOracle();drawP();}
 }
+// ══════════════════════════════════════════
+// TTS — Multi-language + Manual Inject
+// ══════════════════════════════════════════
+let ttsLang='en-US',ttsMode='off',ttsQueue=[],ttsActive=false;
+const LANG_VOICES={
+    'en-US':{rate:0.9,pitch:1.0,name:'english'},
+    'el-GR':{rate:0.78,pitch:0.9,name:'greek'},
+    'ja-JP':{rate:0.82,pitch:1.0,name:'japanese'},
+    'hi-IN':{rate:0.85,pitch:0.95,name:'hindi'},
+    'yo-NG':{rate:0.8,pitch:0.95,name:'yoruba'},
+    'ar-EG':{rate:0.78,pitch:0.9,name:'arabic'},
+    'is-IS':{rate:0.75,pitch:0.85,name:'icelandic'},
+    'zh-CN':{rate:0.82,pitch:1.0,name:'chinese'},
+    'sw-KE':{rate:0.8,pitch:0.95,name:'swahili'}
+};
 
+function setTtsLang(){ttsLang=document.getElementById('ttsLang').value;}
+function setTtsMode(){ttsMode=document.getElementById('ttsMode').value;}
+
+function speakPhrase(){
+    const input=document.getElementById('ttsPhrase');
+    const phrase=input.value.trim();
+    if(!phrase)return;
+    enqueueTts(phrase);
+    input.value='';
+    log(`TTS spoken: "${phrase.slice(0,40)}${phrase.length>40?'...':''}" [${ttsLang}]`);
+}
+
+function enqueueTts(text){
+    ttsQueue.push(text);
+    if(!ttsActive)processTts();
+}
+
+function processTts(){
+    if(!ttsQueue.length){ttsActive=false;setTtsStatus(false);return;}
+    ttsActive=true;setTtsStatus(true);
+    const text=ttsQueue.shift();
+    const u=new SpeechSynthesisUtterance(text);
+    const cfg=LANG_VOICES[ttsLang]||LANG_VOICES['en-US'];
+    u.lang=ttsLang;u.rate=cfg.rate;u.pitch=cfg.pitch;u.volume=1;
+
+    const voices=speechSynthesis.getVoices();
+    const match=voices.find(v=>v.lang.startsWith(ttsLang.split('-')[0]));
+    if(match)u.voice=match;
+
+    u.onend=()=>setTimeout(processTts,150);
+    u.onerror=()=>setTimeout(processTts,150);
+    speechSynthesis.speak(u);
+}
+
+function setTtsStatus(active){
+    const el=document.getElementById('ttsStatus');
+    el.style.display=active?'flex':'none';
+}
+
+// Hook into existing summons
+const origSummon=summonCard;
+summonCard=function(){
+    origSummon();
+    if(ttsMode==='summons'||ttsMode==='both'){
+        const cid=S.focal;
+        if(cid){
+            const c=EARTH.find(x=>x.id===cid);
+            if(c)enqueueTts(`${c.title}. ${c.name}. ${c.keywords.slice(0,2).join('. ')}.`);
+        }
+    }
+};
+
+// Hook into oracle draws
+const origDraw=drawOracle;
+drawOracle=function(){
+    origDraw();
+    if(ttsMode==='oracle'||ttsMode==='both'){
+        // The oracle cards update async, so we grab titles from the pool
+        const pool=[...ORACLE_POOL];
+        const drawn=[];
+        for(let i=0;i<3;i++){const idx=Math.floor(Math.random()*pool.length);drawn.push(pool.splice(idx,1)[0]);}
+        setTimeout(()=>{
+            enqueueTts(`Oracle. ${drawn.map(c=>c.title).join('. ')}.`);
+        },400);
+    }
+};
+
+// Preload voices
+speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+speechSynthesis.getVoices();
 // ══════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════
