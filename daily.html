@@ -37,6 +37,37 @@
         .live-dot { width:5px; height:5px; border-radius:50%; background:var(--locked); animation:blink 1.5s infinite; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+        /* TTS BAR */
+        .tts-bar {
+            display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;
+            padding:0.5rem 0.8rem;
+            border:1px solid rgba(201,146,42,0.1); border-radius:4px;
+            background:rgba(10,9,5,0.7);
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.1em;
+        }
+        .tts-bar select {
+            font-family:'Cinzel',serif; font-size:0.48rem;
+            background:var(--soil); border:1px solid var(--bark);
+            color:var(--bone); padding:0.22rem 0.4rem; border-radius:3px; cursor:pointer;
+        }
+        .tts-bar input {
+            font-family:'EB Garamond',serif; font-size:0.55rem;
+            background:var(--soil); border:1px solid var(--bark);
+            color:var(--bone); padding:0.22rem 0.5rem; border-radius:3px;
+            flex:1; min-width:140px; outline:none;
+        }
+        .tts-bar input:focus { border-color:var(--sage); }
+        .tts-speaking {
+            display:flex; align-items:center; gap:0.3rem;
+            color:var(--sage); font-size:0.46rem;
+        }
+        .tts-dot {
+            width:6px; height:6px; border-radius:50%;
+            background:var(--locked);
+            animation:blink 0.8s infinite;
+        }
+        .tts-label { color:var(--bone-dim); font-size:0.44rem; letter-spacing:0.12em; }
+
         /* 50-50 SPLIT */
         .split-50 { display:flex; gap:0.9rem; align-items:flex-start; }
         .left-col { width:50%; display:flex; flex-direction:column; gap:0.7rem; }
@@ -49,7 +80,7 @@
         .zl-shrine { color:#7a9e6a; } .zl-shrine::before,.zl-shrine::after { background:linear-gradient(to right,transparent,#3d503244); }
         .zl-oracle { color:#c9922a; } .zl-oracle::before,.zl-oracle::after { background:linear-gradient(to right,transparent,#7a551844); }
 
-        /* ══ ORACLE (top of left) ══ */
+        /* ORACLE */
         .oracle-zone {
             background:linear-gradient(160deg,rgba(15,10,8,0.94),rgba(12,8,10,0.95));
             border:1px solid rgba(122,158,106,0.14); border-top:2px solid var(--gold-dim);
@@ -66,11 +97,7 @@
             display:flex; flex-direction:column; align-items:center;
         }
         .oc.refreshing { opacity:0.35; }
-        .oc-img {
-            width:100%; aspect-ratio:1; object-fit:cover;
-            border-radius:3px; margin-bottom:0.25rem;
-            background:rgba(0,0,0,0.3);
-        }
+        .oc-img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:3px; margin-bottom:0.25rem; background:rgba(0,0,0,0.3); }
         .oc-pos { font-family:'Cinzel',serif; font-size:0.38rem; letter-spacing:0.22em; color:var(--bone-dim); text-transform:uppercase; margin-bottom:0.15rem; }
         .oc-name { font-family:'Cinzel',serif; font-size:0.5rem; color:var(--gold-bright); line-height:1.15; }
         .oc-title { font-style:italic; font-size:0.6rem; color:var(--sage); margin-top:0.04rem; line-height:1.15; }
@@ -78,7 +105,7 @@
         .oracle-draw-btn { font-family:'Cinzel',serif; font-size:0.46rem; letter-spacing:0.12em; padding:0.28rem 0.6rem; border-radius:3px; cursor:pointer; background:transparent; border:1px solid var(--gold-dim); color:var(--gold); transition:all 0.14s; margin-top:0.45rem; width:100%; text-transform:uppercase; }
         .oracle-draw-btn:hover { background:rgba(201,146,42,0.07); border-color:var(--gold); }
 
-        /* ══ PONTUS (bottom of left) ══ */
+        /* PONTUS */
         .pontus-zone {
             background:linear-gradient(180deg,rgba(5,10,22,0.96),rgba(8,15,30,0.93));
             border:1px solid rgba(26,58,92,0.3); border-top:2px solid #1a3a5c;
@@ -92,7 +119,7 @@
         #tickerText { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.08em; color:rgba(90,150,210,0.58); font-style:italic; }
         .pulse-timer { font-family:'Cinzel',serif; font-size:0.54rem; letter-spacing:0.1em; color:#88bbee; margin-left:auto; white-space:nowrap; }
 
-        /* ══ SHRINE (top of right) ══ */
+        /* SHRINE */
         .shrine-zone {
             background:linear-gradient(160deg,rgba(12,8,4,0.96),rgba(8,12,6,0.97));
             border:1px solid rgba(61,43,21,0.3); border-top:2px solid #3d5032;
@@ -113,15 +140,22 @@
         .slot.filled { border-style:solid; border-color:var(--sage); box-shadow:0 0 6px rgba(122,158,106,0.07); cursor:pointer; }
         .slot.filled:hover { border-color:var(--gold); box-shadow:0 0 12px rgba(201,146,42,0.14); }
         .slot.generating { border-color:var(--gold-dim); border-style:dashed; animation:slotPulse 2s ease-in-out infinite; }
+        .slot.just-summoned { animation:summonPulse 0.8s cubic-bezier(0.2,0.8,0.3,1); }
         @keyframes slotPulse { 0%,100%{box-shadow:0 0 0 0 rgba(201,146,42,0)} 50%{box-shadow:0 0 7px 2px rgba(201,146,42,0.14)} }
+        @keyframes summonPulse {
+            0% { box-shadow:0 0 0 0 rgba(201,146,42,0.8); transform:scale(0.92); }
+            40% { box-shadow:0 0 25px 8px rgba(201,146,42,0.4); transform:scale(1.04); }
+            100% { box-shadow:0 0 6px rgba(122,158,106,0.07); transform:scale(1); }
+        }
         .slot-image { width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:3px 3px 0 0; }
+        .slot-fallback { width:100%; aspect-ratio:1; background:var(--moss); display:none; align-items:center; justify-content:center; opacity:0.4; font-size:1rem; }
         .slot-info { width:100%; padding:0.18rem 0.25rem 0.25rem; background:linear-gradient(transparent,rgba(10,9,5,0.82) 30%); }
         .slot-name { font-family:'Cinzel',serif; font-size:0.38rem; letter-spacing:0.05em; color:var(--gold-bright); line-height:1.1; }
         .slot-title { font-family:'EB Garamond',serif; font-style:italic; font-size:0.5rem; color:var(--sage); line-height:1.1; }
         .slot-keyword { font-size:0.42rem; color:var(--bone-dim); margin-top:0.04rem; }
         .mycelial-overlay { position:absolute; inset:0; pointer-events:none; z-index:0; }
 
-        /* ══ FOCAL (bottom of right) ══ */
+        /* FOCAL */
         .focal-zone {
             background:linear-gradient(150deg,rgba(15,20,8,0.95),rgba(10,14,5,0.96));
             border:1px solid rgba(122,158,106,0.18); border-top:2px solid var(--sage-dim);
@@ -135,7 +169,7 @@
         .focal-meaning { font-size:0.72rem; line-height:1.5; color:var(--bone); border-top:1px solid var(--bark); padding-top:0.4rem; font-style:italic; }
         .focal-god { font-family:'Cinzel',serif; font-size:0.46rem; letter-spacing:0.14em; color:var(--gold-dim); margin-top:0.25rem; }
 
-        /* ══ BOTTOM ROW ══ */
+        /* BOTTOM ROW */
         .bottom-row { display:flex; gap:0.7rem; }
         .council-zone { flex:1; background:rgba(10,9,5,0.55); border:1px solid var(--bark); border-radius:5px; overflow:hidden; }
         .council-header { background:var(--loam); padding:0.25rem 0.55rem; font-family:'Cinzel',serif; font-size:0.42rem; letter-spacing:0.16em; color:var(--gold-dim); border-bottom:1px solid var(--bark); }
@@ -180,39 +214,6 @@
             .left-col,.right-col { width:100%; }
             .bottom-row { flex-direction:column; }
             #pontusCanvas { height:200px; }
-
-         /* ══ TTS BAR ══ */
-.tts-bar {
-    display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;
-    padding:0.5rem 0.8rem;
-    border:1px solid rgba(201,146,42,0.1); border-radius:4px;
-    background:rgba(10,9,5,0.7);
-    font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.1em;
-}
-.tts-bar select {
-    font-family:'Cinzel',serif; font-size:0.48rem;
-    background:var(--soil); border:1px solid var(--bark);
-    color:var(--bone); padding:0.22rem 0.4rem; border-radius:3px; cursor:pointer;
-}
-.tts-bar input {
-    font-family:'EB Garamond',serif; font-size:0.55rem;
-    background:var(--soil); border:1px solid var(--bark);
-    color:var(--bone); padding:0.22rem 0.5rem; border-radius:3px;
-    flex:1; min-width:140px; outline:none;
-}
-.tts-bar input:focus { border-color:var(--sage); }
-.tts-speaking {
-    display:flex; align-items:center; gap:0.3rem;
-    color:var(--sage); font-size:0.46rem;
-}
-.tts-dot {
-    width:6px; height:6px; border-radius:50%;
-    background:var(--locked);
-    animation:blink 0.8s infinite;
-}
-.tts-label {
-    color:var(--bone-dim); font-size:0.44rem; letter-spacing:0.12em;
-}   
         }
     </style>
 </head>
@@ -221,48 +222,42 @@
 <div class="sacred-bg"></div>
 <div class="cosmos">
 
-    <!-- HEADER -->
     <div class="header">
         <h1 class="gaia-title">EARTH DECK</h1>
         <div class="subtitle">Harvest · Covenant · The Hunt</div>
         <div class="live-badge"><span class="live-dot"></span> LIVE DROP RITUAL · Ealdforn #7</div>
     </div>
+
     <!-- TTS BAR -->
-<div class="tts-bar">
-    <span class="tts-label">🗣️ TTS</span>
-    <select id="ttsLang" onchange="setTtsLang()">
-    <option value="es-MX">Español — ritual</option>
-    <option value="en-US">English — deep</option>
-    <option value="el-GR">Ἑλληνική</option>
-    <option value="ja-JP">日本語</option>
-    <option value="hi-IN">हिन्दी</option>
-    <option value="yo-NG">Yorùbá</option>
-    <option value="ar-EG">مصري</option>
-    <option value="is-IS">Norrœnt — deep</option>
-    <option value="zh-CN">中文</option>
-    <option value="sw-KE">Kiswahili</option>
-    <option value="fr-FR">Français</option>
-    <option value="it-IT">Italiano</option>
-</select>
-    <select id="ttsMode" onchange="setTtsMode()">
-        <option value="off">TTS Off</option>
-        <option value="oracle">Read Oracle</option>
-        <option value="summons">Read Summons</option>
-        <option value="both">Read All</option>
-    </select>
-    <input type="text" id="ttsPhrase" placeholder="Speak a phrase into the shrine...">
-    <button class="r-btn btn-gold" onclick="speakPhrase()" style="font-size:0.44rem;padding:0.22rem 0.5rem;">🗣️ Speak</button>
-    <div class="tts-speaking" id="ttsStatus" style="display:none;">
-        <span class="tts-dot"></span> speaking
+    <div class="tts-bar">
+        <span class="tts-label">🗣️ TTS</span>
+        <select id="ttsLang" onchange="setTtsLang()">
+            <option value="es-MX">Español — ritual</option>
+            <option value="en-US">English — deep</option>
+            <option value="el-GR">Ἑλληνική</option>
+            <option value="ja-JP">日本語</option>
+            <option value="hi-IN">हिन्दी</option>
+            <option value="yo-NG">Yorùbá</option>
+            <option value="ar-EG">مصري</option>
+            <option value="is-IS">Norrœnt — deep</option>
+            <option value="zh-CN">中文</option>
+            <option value="sw-KE">Kiswahili</option>
+            <option value="fr-FR">Français</option>
+            <option value="it-IT">Italiano</option>
+        </select>
+        <select id="ttsMode" onchange="setTtsMode()">
+            <option value="off">TTS Off</option>
+            <option value="oracle">Read Oracle</option>
+            <option value="summons">Read Summons</option>
+            <option value="both">Read All</option>
+        </select>
+        <input type="text" id="ttsPhrase" placeholder="Speak a phrase into the shrine...">
+        <button class="r-btn btn-gold" onclick="speakPhrase()" style="font-size:0.44rem;padding:0.22rem 0.5rem;">🗣️ Speak</button>
+        <div class="tts-speaking" id="ttsStatus" style="display:none;"><span class="tts-dot"></span> speaking</div>
     </div>
-</div>
-    <!-- 50-50 SPLIT -->
+
     <div class="split-50">
-
-        <!-- LEFT COLUMN: Oracle + Pontus -->
         <div class="left-col">
-
-            <!-- ORACLE -->
             <div class="zone-label zl-oracle">✦ THE ORACLE · Fire + Water · 30s Auto-Draw ✦</div>
             <div class="oracle-zone">
                 <div class="oracle-header">
@@ -273,7 +268,6 @@
                 <button class="oracle-draw-btn" onclick="drawOracle()">⟳ Draw Now</button>
             </div>
 
-            <!-- PONTUS WAVE FIELD -->
             <div class="zone-label zl-pontus">✦ PONTUS · The Great Sea ✦</div>
             <div class="pontus-zone">
                 <div class="pontus-header">
@@ -288,10 +282,7 @@
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: Shrine + Focal -->
         <div class="right-col">
-
-            <!-- EARTH SHRINE -->
             <div class="zone-label zl-shrine">✦ OUREA · 4×4 Earth Shrine ✦</div>
             <div class="shrine-zone">
                 <div class="shrine-header">
@@ -304,7 +295,6 @@
                 </div>
             </div>
 
-            <!-- FOCAL CARD -->
             <div class="zone-label zl-oracle">✦ FOCAL CARD ✦</div>
             <div class="focal-zone" id="focalZone">
                 <div class="focal-name" id="focalName">—</div>
@@ -317,7 +307,6 @@
         </div>
     </div>
 
-    <!-- BOTTOM ROW: Council + Log -->
     <div class="bottom-row">
         <div class="council-zone">
             <div class="council-header">⬡ GAIA COUNCIL · Earth Triad</div>
@@ -329,17 +318,14 @@
         </div>
     </div>
 
-    <!-- CONTROLS -->
     <div class="control-bar">
         <span class="ctrl-label">Next:</span>
         <select id="cardSelect" onchange="previewFocal()"></select>
         <button class="r-btn btn-earth" onclick="summonCard()">⊕ Summon</button>
         <button class="r-btn btn-dim" onclick="markGenerating()">◌ Gen</button>
-        <button class="r-btn btn-gold" onclick="revealAll()">⊛ Reveal</button>
         <button class="r-btn btn-dim" onclick="togglePause()" id="pauseBtn">⏸</button>
         <button class="r-btn btn-dim" onclick="resetShrine()">Clear</button>
     </div>
-
 </div>
 
 <div id="toast"></div>
@@ -349,7 +335,7 @@
 
 <script>
 // ══════════════════════════════════════════
-// CANONICAL DATA — minor_arcana.json
+// CANONICAL DATA
 // ══════════════════════════════════════════
 const EARTH=[{id:"earth_ace",name:"Ace of Earth",title:"Lakshmi",culture:"Hindu",rank:"ace",ruling_god:"Demeter",keywords:["first wealth","abundance","blessing","genesis of riches","the lotus"],upright:"Lakshmi rises from the ocean of milk on a lotus flower, gold coins spilling from her hands. The Ace of Earth is the first dollar, the genesis of wealth. It is a blessing. Receive it. But know: Lakshmi is restless. She stays where she is honored.",reversed:"Lakshmi departing. The blessing withdrawn. Wealth that flowed away as quickly as it came. Were you a good steward, or did you hoard what was meant to flow?",image:"data/images/minor/earth/earth_ace.png"},{id:"earth_02",name:"Two of Earth",title:"Aristaeus",culture:"Greek",rank:"two",ruling_god:"Artemis",keywords:["minor crafts","beekeeping","the side pursuit","balance","the quiet skill"],upright:"Aristaeus kept bees. He made cheese. He tended the small things while the great gods fought their wars. The Two of Earth is the side hustle — the quiet craft that sustains when the main gig fails. Tend it. The bees don't care about your title.",reversed:"The bees dying. The side hustle that consumes the main work. Aristaeus punished for Orpheus's death — the collateral damage of the side pursuit. Don't let the hive starve.",image:"data/images/minor/earth/earth_02.png"},{id:"earth_03",name:"Three of Earth",title:"The Seven Dwarves",culture:"Norse/Germanic",rank:"three",ruling_god:"Hera",keywords:["the crew","shared labor","teamwork","the collab","each brings a gift"],upright:"Seven dwarves, each with a skill, each with a flaw, working the mine together. The Three of Earth is the collab — the crew that makes the impossible possible. Who is on your team? What does each one bring that no one else can?",reversed:"The crew that fractures. The dwarves arguing over the gem. The shared labor that became competition. Vet your collaborators. One bad pick breaks the whole mine.",image:"data/images/minor/earth/earth_03.png"},{id:"earth_04",name:"Four of Earth",title:"Tantalus",culture:"Greek",rank:"four",ruling_god:"Demeter",keywords:["denied abundance","the unreachable feast","scarcity amid plenty","the eternal lack"],upright:"The fruit hangs above him. The water recedes when he bends to drink. Tantalus is surrounded by everything he wants and can touch none of it. The Four of Earth is the feast you can see but not taste. Is the exclusion real, or self-imposed?",reversed:"The feast reached. Tantalus breaking the curse. The abundance that was always yours. What barrier did you finally push through?",image:"data/images/minor/earth/earth_04.png"},{id:"earth_05",name:"Five of Earth",title:"Demeter's Grief",culture:"Greek",rank:"five",ruling_god:"Demeter",keywords:["scarcity","withdrawal","the barren earth","loss","the market that dies"],upright:"Persephone descends and Demeter withdraws the harvest. The earth goes cold. The Five of Earth is the market crash, the scarcity that strikes when what you love is taken. Winter is real. But it is seasonal. Even Demeter's grief has a cycle.",reversed:"The first green shoot. Persephone returning. The market recovering. Grief releasing its grip on the ground. The scarcity is ending. Prepare to plant.",image:"data/images/minor/earth/earth_05.png"},{id:"earth_06",name:"Six of Earth",title:"Anansi",culture:"West African",rank:"six",ruling_god:"Hera",keywords:["the gift","clever provision","stories as currency","mutual aid","the spider's web"],upright:"Anansi, the spider, owns all stories. He traded, tricked, and negotiated his way into becoming the keeper of every tale. The Six of Earth is the gift — the story you tell, the resource you share, the clever provision that feeds the community. Give. The web holds because every strand gives.",reversed:"Anansi hoarding stories. The spider who forgot the web is made of sharing. The gift withheld. Generosity that became transaction.",image:"data/images/minor/earth/earth_06.png"},{id:"earth_07",name:"Seven of Earth",title:"Chicomecoatl",culture:"Aztec",rank:"seven",ruling_god:"Demeter",keywords:["the first seed","maize","the long bet","investment","patient growth"],upright:"Chicomecoatl, goddess of maize, holds the first seed that will feed a civilization. The Seven of Earth is the seed round — the investment that takes seasons to mature. Plant. Wait. The harvest is not tomorrow. The maize does not rush. Neither should you.",reversed:"The failed crop. The seed that never sprouted. The investment that withered in the field. Was it the seed, or the soil? Or did you stop watering too soon?",image:"data/images/minor/earth/earth_07.png"},{id:"earth_08",name:"Eight of Earth",title:"Ptah",culture:"Egyptian",rank:"eight",ruling_god:"Hephaestus",keywords:["the maker","craft","artisan","mastery","the builder of worlds"],upright:"Ptah spoke the world into existence and then built it with his hands. The Eight of Earth is the craft — the skill that creates reality from raw material. He is the architect, the builder, the maker. Make. Ship. Make again. The world was built by hands like yours.",reversed:"The maker who stopped making. Ptah's workshop silent. Craft without purpose. Skill that no longer finds expression. What stopped your hands?",image:"data/images/minor/earth/earth_08.png"},{id:"earth_09",name:"Nine of Earth",title:"The Influencer",culture:"Modern",rank:"nine",ruling_god:"Artemis",keywords:["self-love","the curated self","the brand","beauty","the mirror"],upright:"The Influencer gazes into the ring light — Narcissus reborn in the age of the algorithm. The curated self, the brand, the pool that shows only what you want to see. Self-love is power. Self-obsession is a mirror with no back. The reflection is not the person.",reversed:"The ring light off. The Influencer looking up from the screen. The reflection losing its hold. There is a world beyond the mirror. There is a self beyond the brand.",image:"data/images/minor/earth/earth_09.png"},{id:"earth_10",name:"Ten of Earth",title:"House of Atreus",culture:"Greek",rank:"ten",ruling_god:"Hera",keywords:["dynasty","generational wealth","generational curse","legacy","the bloodline"],upright:"The House of Atreus ruled Mycenae for generations — and every generation bathed in blood. The Ten of Earth is the dynasty. The wealth that passes down. The curse that passes with it. What are you inheriting? What will you pass on?",reversed:"The curse broken. The dynasty ended. Atreus's last descendant laying down the knife. Sometimes the greatest inheritance is freedom from the inheritance.",image:"data/images/minor/earth/earth_10.png"},{id:"earth_page",name:"Page of Earth",title:"Kokopelli",culture:"Indigenous (Southwest)",rank:"page",ruling_god:"Hermes",keywords:["the hustler","the trader","cunning","learning the trade","fertility and music"],upright:"Kokopelli travels from village to village, flute in hand, trading goods and stories, bringing fertility to the land. The Page of Earth is the young hustler — the one who lives by wit and charm, learning every trade along the road. Every deal is an education.",reversed:"The trader who cheated. Kokopelli's flute silent. The hustle that hustled itself. The margins weren't worth the trust you lost.",image:"data/images/minor/earth/earth_page.png"},{id:"earth_knight",name:"Knight of Earth",title:"Croesus",culture:"Greek",rank:"knight",ruling_god:"Demeter",keywords:["the richest king","true believer in wealth","conviction","the bet","gold"],upright:"Croesus, king of Lydia, so wealthy his name became a word. He believed his gold made him invincible. The Knight of Earth is the true believer in wealth — the gold bug, the crypto bro, the one who rides the market with religious conviction. Belief moves money. But gold is heavy.",reversed:"Croesus on the pyre. The wealth that didn't save him. The coin that couldn't stop the conqueror. Gold will not carry you through the fire.",image:"data/images/minor/earth/earth_knight.png"},{id:"earth_queen",name:"Queen of Earth",title:"Geb",culture:"Egyptian",rank:"queen",ruling_god:"Demeter",keywords:["earth god","abundance","the provider","household economy","the ground"],upright:"Geb, god of the earth, lies beneath the sky goddess Nut, his body the ground that feeds everything. The Queen of Earth is the provider — the one who holds the household together through patience and abundance. The earth does not rush. It provides.",reversed:"The earth cracked. Geb trembling. The provider depleted, the ground that can no longer give. Even the earth needs to lie fallow.",image:"data/images/minor/earth/earth_queen.png"},{id:"earth_king",name:"King of Earth",title:"Shennong",culture:"Chinese",rank:"king",ruling_god:"Hera",keywords:["the divine farmer","agriculture","market mover","the sage","absolute knowledge of the land"],upright:"Shennong, the divine farmer, taught humanity agriculture and tasted every herb to know which healed and which poisoned. The King of Earth is the sage of the land — the one who knows the market, who moves capital like seasons, who understands what to plant and when. Knowledge is the real wealth.",reversed:"Shennong poisoned by the herb he couldn't identify. The sage who missed something. The market that turned on the expert. Even the divine farmer had a blind spot.",image:"data/images/minor/earth/earth_king.png"}];
 const FIRE=[{id:"fire_ace",name:"Ace of Fire",title:"Maui",suit:"fire",ruling_god:"Apollo",keywords:["stolen fire","divine spark"],upright:"Maui stole fire from the goddess Mahuika. The divine spark — the idea that costs everything.",image:"data/images/minor/fire/fire_ace.png"},{id:"fire_02",name:"Two of Fire",title:"Castor & Pollux",suit:"fire",ruling_god:"Ares",keywords:["partnership","twins"],upright:"Two flames burn as one — one mortal, one divine. The partnership that transcends difference.",image:"data/images/minor/fire/fire_02.png"},{id:"fire_03",name:"Three of Fire",title:"Peitho",suit:"fire",ruling_god:"Apollo",keywords:["persuasion","the pitch"],upright:"Peitho speaks and the world bends toward her words. The moment language becomes force.",image:"data/images/minor/fire/fire_03.png"},{id:"fire_04",name:"Four of Fire",title:"Icarus",suit:"fire",ruling_god:"Hephaestus",keywords:["the fall","hubris"],upright:"The wax melts. The burnout — ambition exceeding capacity. The fall is proof you flew.",image:"data/images/minor/fire/fire_04.png"},{id:"fire_05",name:"Five of Fire",title:"Loki",suit:"fire",ruling_god:"Ares",keywords:["the critic","ugly truth"],upright:"Loki exposed every hypocrisy at the feast. The voice of dissent — petty but not always wrong.",image:"data/images/minor/fire/fire_05.png"},{id:"fire_06",name:"Six of Fire",title:"The Algorithm",suit:"fire",ruling_god:"Apollo",keywords:["the feed","viral spread"],upright:"The Algorithm amplifies your name until it belongs to everyone but you. Ride it. Don't believe it.",image:"data/images/minor/fire/fire_06.png"},{id:"fire_07",name:"Seven of Fire",title:"Talos",suit:"fire",ruling_god:"Hephaestus",keywords:["automaton","invisible system"],upright:"A bronze giant doing what it was built to do. The system that shapes you. Learn the code.",image:"data/images/minor/fire/fire_07.png"},{id:"fire_08",name:"Eight of Fire",title:"Huitzilopochtli",suit:"fire",ruling_god:"Ares",keywords:["the grind","ceaseless labor"],upright:"The hummingbird warrior demanded sacrifice to keep the sun moving. The push IS the purpose.",image:"data/images/minor/fire/fire_08.png"},{id:"fire_09",name:"Nine of Fire",title:"Cerberus",suit:"fire",ruling_god:"Hephaestus",keywords:["gatekeeper","the last test"],upright:"Three heads. One gate. Prove yourself worthy of passage.",image:"data/images/minor/fire/fire_09.png"},{id:"fire_10",name:"Ten of Fire",title:"Surtr",suit:"fire",ruling_god:"Apollo",keywords:["spectacular fall","Ragnarök"],upright:"Surtr burns the world at Ragnarök. Something new grows from the ash.",image:"data/images/minor/fire/fire_10.png"},{id:"fire_page",name:"Page of Fire",title:"Agni",suit:"fire",ruling_god:"Apollo",keywords:["messenger flame","the beginner"],upright:"Agni carries offerings from mortals to the gods. You are new here. That is your power.",image:"data/images/minor/fire/fire_page.png"},{id:"fire_knight",name:"Knight of Fire",title:"Achilles",suit:"fire",ruling_god:"Ares",keywords:["conviction","the charge"],upright:"Achilles charges and the Trojans break. Conviction as armor. Charge. Know your heel.",image:"data/images/minor/fire/fire_knight.png"},{id:"fire_queen",name:"Queen of Fire",title:"Oya",suit:"fire",ruling_god:"Ares",keywords:["warrior queen","wind and fire"],upright:"Oya commands the wind. She wields the flame. Take your seat.",image:"data/images/minor/fire/fire_queen.png"},{id:"fire_king",name:"King of Fire",title:"The Founder",suit:"fire",ruling_god:"Hephaestus",keywords:["the CEO","empire builder"],upright:"The Founder turned a spark into an empire. Can you hold it?",image:"data/images/minor/fire/fire_king.png"}];
@@ -362,7 +348,7 @@ const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
 // ══════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════
-const SK='ealdforn7_shrine_v4';
+const SK='ealdforn7_shrine_v6';
 let S=loadS();
 function loadS(){try{const s=localStorage.getItem(SK);return s?JSON.parse(s):{slots:{},gen:[],revealed:{},focal:null,log:[]};}catch(e){return{slots:{},gen:[],revealed:{},focal:null,log:[]};}}
 function saveS(){localStorage.setItem(SK,JSON.stringify(S));}
@@ -385,7 +371,7 @@ window.addEventListener('resize',rs);rs();
 (function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.6+0.4*Math.sin(s.tw+t*0.0003));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(212,201,168,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
 
 // ══════════════════════════════════════════
-// PONTUS CANVAS — Filled wave layers
+// PONTUS CANVAS — Filled waves + Bioluminescence
 // ══════════════════════════════════════════
 const pCvs=document.getElementById('pontusCanvas'),pCtx=pCvs.getContext('2d');
 function rp(){pCvs.width=pCvs.parentElement.clientWidth;pCvs.height=280;}
@@ -394,6 +380,13 @@ const TITANS=['Oceanus','Tethys','Pontus','Nereus','Doris','Thaumas','Phorcys','
 const pOff=TITANS.map(()=>Math.random()*Math.PI*2);
 let pTime=0,pPaused=false;
 const DEPTH_PALETTE=[{fill:'rgba(70,175,185,0.50)',foam:'rgba(140,225,220,0.48)'},{fill:'rgba(50,150,175,0.48)',foam:'rgba(110,200,205,0.42)'},{fill:'rgba(35,125,165,0.46)',foam:'rgba(80,175,190,0.36)'},{fill:'rgba(28,100,155,0.44)',foam:'rgba(60,150,175,0.31)'},{fill:'rgba(22,78,140,0.42)',foam:'rgba(48,125,155,0.26)'},{fill:'rgba(18,58,120,0.40)',foam:'rgba(38,100,135,0.21)'},{fill:'rgba(14,40,95,0.38)',foam:'rgba(28,75,110,0.16)'},{fill:'rgba(10,25,65,0.36)',foam:'rgba(18,50,85,0.12)'}];
+
+let bioParticles=[];
+const MAX_BIO=30;
+function spawnBio(W,H,depth){
+    return{x:Math.random()*W,y:H*0.35+depth*(H*0.07)+Math.random()*25,r:0.3+Math.random()*1.4,alpha:0,targetAlpha:0.12+Math.random()*0.45,life:0,maxLife:70+Math.random()*220,rise:0.06+Math.random()*0.35,drift:Math.random()*0.35-0.175,depth:depth,hue:155+Math.random()*45};
+}
+
 function drawP(){
     if(pPaused){requestAnimationFrame(drawP);return;}
     const W=pCvs.width,H=pCvs.height;pTime+=0.016;
@@ -415,8 +408,30 @@ function drawP(){
         pCtx.fillStyle=`rgba(160,200,225,${0.18+d*0.04})`;pCtx.font='italic 6px "EB Garamond"';
         pCtx.fillText(TITANS[d],8+Math.sin(pTime*0.25+d)*2,baseY-amp-4);
     }
+    // Light rays
     pCtx.globalAlpha=0.02;
     for(let i=0;i<4;i++){const rx=W*0.2+i*W*0.22;const g=pCtx.createLinearGradient(rx,0,rx,H*0.7);g.addColorStop(0,'rgba(100,190,210,0.5)');g.addColorStop(1,'rgba(100,190,210,0)');pCtx.fillStyle=g;pCtx.beginPath();pCtx.moveTo(rx-12,0);pCtx.lineTo(rx+20,H*0.6);pCtx.lineTo(rx-4,H*0.6);pCtx.closePath();pCtx.fill();}
+
+    // Bioluminescence
+    if(bioParticles.length<MAX_BIO&&Math.random()<0.35){
+        const depth=Math.floor(Math.random()*TITANS.length);
+        bioParticles.push(spawnBio(W,H,depth));
+    }
+    pCtx.globalAlpha=1;
+    for(let i=bioParticles.length-1;i>=0;i--){
+        const p=bioParticles[i];
+        p.life++;p.y-=p.rise;p.x+=p.drift+Math.sin(p.life*0.02)*0.12;
+        if(p.life<p.maxLife*0.12)p.alpha=p.targetAlpha*(p.life/(p.maxLife*0.12));
+        else if(p.life>p.maxLife*0.65)p.alpha=p.targetAlpha*((p.maxLife-p.life)/(p.maxLife*0.35));
+        else p.alpha=p.targetAlpha;
+        if(p.life>=p.maxLife||p.y<-10||p.alpha<0.008){bioParticles.splice(i,1);continue;}
+        pCtx.beginPath();pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        pCtx.fillStyle=`rgba(${Math.floor(p.hue-35)},${Math.floor(p.hue+25)},${Math.floor(p.hue+55)},${p.alpha})`;
+        pCtx.fill();
+        pCtx.beginPath();pCtx.arc(p.x,p.y,p.r*3,0,Math.PI*2);
+        pCtx.fillStyle=`rgba(${Math.floor(p.hue-35)},${Math.floor(p.hue+25)},${Math.floor(p.hue+55)},${p.alpha*0.12})`;
+        pCtx.fill();
+    }
     pCtx.globalAlpha=1;
     requestAnimationFrame(drawP);
 }
@@ -424,7 +439,7 @@ drawP();
 setInterval(()=>{document.getElementById('pulseTimer').textContent=`Still Water · ${(27.3+Math.sin(Date.now()*0.008)*2.5).toFixed(1)}s`;},1000);
 
 // ══════════════════════════════════════════
-// EARTH GRID + MYCELIAL
+// EARTH GRID + ANIMATED MYCELIAL
 // ══════════════════════════════════════════
 function renderGrid(){
     const g=document.getElementById('shrineGrid');g.innerHTML='';
@@ -436,7 +451,10 @@ function renderGrid(){
         if(cid){
             const c=EARTH.find(x=>x.id===cid);
             s.classList.add('filled');s.onclick=()=>{setFocal(c);showTooltip(c);};
-            s.innerHTML=S.revealed[cid]?`<img class="slot-image" src="${c.image}" alt="${c.name}" onerror="this.style.display='none'"><div class="slot-info"><div class="slot-name">${c.name}</div><div class="slot-title">${c.title}</div><div class="slot-keyword">${c.keywords[0]}</div></div>`:`<div style="width:100%;aspect-ratio:1;background:var(--moss);display:flex;align-items:center;justify-content:center;opacity:0.4;font-size:1rem">🌿</div><div class="slot-info"><div class="slot-name">${c.name}</div><div class="slot-title">${c.title}</div></div>`;
+            s.innerHTML=`
+                <img class="slot-image" src="${c.image}" alt="${c.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="slot-fallback">🌿</div>
+                <div class="slot-info"><div class="slot-name">${c.name}</div><div class="slot-title">${c.title}</div><div class="slot-keyword">${c.keywords[0]}</div></div>`;
         }else if(S.gen.includes(i)){
             s.classList.add('generating');
             s.innerHTML=`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.2rem;background:rgba(10,9,5,0.6);z-index:2"><div style="width:12px;height:12px;border:2px solid var(--bark);border-top-color:var(--gold);border-radius:50%;animation:spin 1.2s linear infinite"></div></div><span style="font-family:'Cinzel',serif;font-size:0.4rem;color:var(--loam)">${String(i+1).padStart(2,'0')}</span>`;
@@ -447,19 +465,55 @@ function renderGrid(){
     }
     drawMycelial();populateSelect();
 }
+
+let mycelialAnimations=[];
 function drawMycelial(){
     const svg=document.getElementById('mycelialSvg'),grid=document.getElementById('shrineGrid');
     if(!grid)return;
     const gr=grid.getBoundingClientRect();
     svg.setAttribute('viewBox',`0 0 ${gr.width} ${gr.height}`);
-    svg.style.width=gr.width+'px';svg.style.height=gr.height+'px';svg.innerHTML='';
+    svg.style.width=gr.width+'px';svg.style.height=gr.height+'px';
+    mycelialAnimations.forEach(a=>cancelAnimationFrame(a.id));
+    mycelialAnimations=[];
+    const existingLines=new Set();
+    svg.querySelectorAll('line').forEach(l=>{existingLines.add(`${l.dataset.a}-${l.dataset.b}`);});
     const slots=grid.querySelectorAll('.slot');
-    for(let i=0;i<14;i++){if(!S.slots[i])continue;const r=Math.floor(i/4),c=i%4;if(c<3&&S.slots[i+1])drawLine(svg,slots[i],slots[i+1],gr);if(r<3&&i+4<14&&S.slots[i+4])drawLine(svg,slots[i],slots[i+4],gr);}
+    const newConnections=[];
+    for(let i=0;i<14;i++){
+        if(!S.slots[i])continue;
+        const r=Math.floor(i/4),c=i%4;
+        if(c<3&&S.slots[i+1]&&!existingLines.has(`${i}-${i+1}`))newConnections.push({a:i,b:i+1});
+        if(r<3&&i+4<14&&S.slots[i+4]&&!existingLines.has(`${i}-${i+4}`))newConnections.push({a:i,b:i+4});
+    }
+    svg.querySelectorAll('line').forEach(l=>{if(!l.dataset.grown)l.dataset.grown='1';});
+    newConnections.forEach(conn=>animateMycelial(svg,slots[conn.a],slots[conn.b],gr,conn.a,conn.b));
+    svg.querySelectorAll('line').forEach(l=>{const a=parseInt(l.dataset.a),b=parseInt(l.dataset.b);if(!S.slots[a]||!S.slots[b])l.remove();});
 }
-function drawLine(svg,a,b,gr){const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',ra.left+ra.width/2-gr.left);l.setAttribute('y1',ra.top+ra.height/2-gr.top);l.setAttribute('x2',rb.left+rb.width/2-gr.left);l.setAttribute('y2',rb.top+rb.height/2-gr.top);l.setAttribute('stroke','#7a9e6a');l.setAttribute('stroke-width','0.8');l.setAttribute('opacity','0.38');svg.appendChild(l);}
+function animateMycelial(svg,a,b,gr,idxA,idxB){
+    const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+    const x1=ra.left+ra.width/2-gr.left,y1=ra.top+ra.height/2-gr.top;
+    const x2=rb.left+rb.width/2-gr.left,y2=rb.top+rb.height/2-gr.top;
+    const dx=x2-x1,dy=y2-y1;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',x1);line.setAttribute('y1',y1);
+    line.setAttribute('x2',x1);line.setAttribute('y2',y1);
+    line.setAttribute('stroke','#7a9e6a');line.setAttribute('stroke-width','0.8');
+    line.setAttribute('opacity','0.38');line.dataset.a=idxA;line.dataset.b=idxB;
+    svg.appendChild(line);
+    const start=performance.now();
+    const dur=500+Math.random()*300;
+    function grow(now){
+        const p=Math.min(1,(now-start)/dur);
+        const e=1-Math.pow(1-p,3);
+        line.setAttribute('x2',x1+dx*e);line.setAttribute('y2',y1+dy*e);
+        if(p<1){const id=requestAnimationFrame(grow);mycelialAnimations.push({id,line});}
+        else{line.dataset.grown='1';line.setAttribute('opacity','0.6');setTimeout(()=>line.setAttribute('opacity','0.38'),300);}
+    }
+    const id=requestAnimationFrame(grow);mycelialAnimations.push({id,line});
+}
 
 // ══════════════════════════════════════════
-// CARD SELECT + SUMMON
+// SUMMON + SELECT
 // ══════════════════════════════════════════
 function populateSelect(){const sel=document.getElementById('cardSelect');const used=new Set(Object.values(S.slots));sel.innerHTML='<option value="">— choose —</option>';EARTH.forEach(c=>{if(!used.has(c.id)){const o=document.createElement('option');o.value=c.id;o.textContent=`${c.name} — ${c.title}`;sel.appendChild(o);}});}
 function previewFocal(){const v=document.getElementById('cardSelect').value;if(v){const c=EARTH.find(x=>x.id===v);if(c)setFocal(c,true);}}
@@ -469,12 +523,12 @@ function summonCard(){
     const c=EARTH.find(x=>x.id===cid);if(!c)return;
     let tgt=-1;for(let i=0;i<14;i++){if(!S.slots[i]){tgt=i;break;}}
     if(tgt===-1){log('All 14 slots filled.','hl');return;}
-    S.gen=S.gen.filter(x=>x!==tgt);S.slots[tgt]=cid;S.focal=cid;saveS();
+    S.gen=S.gen.filter(x=>x!==tgt);S.slots[tgt]=cid;S.revealed[cid]=true;S.focal=cid;saveS();
     renderGrid();setFocal(c);log(`${c.title} summoned — Slot ${tgt+1}. Ruled by ${c.ruling_god}.`,'hl');
     addCouncil(c);sel.value='';
+    setTimeout(()=>{const slotEl=document.querySelector(`[data-slot="${tgt}"]`);if(slotEl){slotEl.classList.add('just-summoned');setTimeout(()=>slotEl.classList.remove('just-summoned'),800);}},50);
 }
 function markGenerating(){const used=new Set([...Object.keys(S.slots).map(Number),...S.gen]);for(let i=0;i<14;i++){if(!used.has(i)){S.gen.push(i);saveS();renderGrid();log(`Slot ${i+1} marked generating.`);return;}}log('No slots available.');}
-function revealAll(){Object.values(S.slots).forEach(id=>{S.revealed[id]=true;});saveS();renderGrid();log('All images revealed.','hl');}
 function resetShrine(){
     if(!confirm('Clear shrine?'))return;
     S={slots:{},gen:[],revealed:{},focal:null,log:[]};saveS();renderGrid();
@@ -515,7 +569,7 @@ function addCouncil(c){
 }
 
 // ══════════════════════════════════════════
-// ORACLE — 30s auto-draw with images
+// ORACLE — 30s auto-draw
 // ══════════════════════════════════════════
 let oracleTimer,oracleCountdown=30,countdownInterval;
 function drawOracle(){
@@ -526,7 +580,10 @@ function drawOracle(){
         for(let i=0;i<3;i++){const idx=Math.floor(Math.random()*pool.length);drawn.push(pool.splice(idx,1)[0]);}
         ['Past','Present','Future'].forEach((p,i)=>{
             const c=drawn[i],el=document.getElementById('oc'+p);
-            el.innerHTML=`<img class="oc-img" src="${c.image}" alt="${c.name}" onerror="this.style.display='none';"><div class="oc-pos">${p}</div><div class="oc-name">${c.name}</div><div class="oc-title">${c.title}</div><div class="oc-god">${c.ruling_god||''}</div>`;
+            el.innerHTML=`
+                <img class="oc-img" src="${c.image}" alt="${c.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div style="width:100%;aspect-ratio:1;background:rgba(0,0,0,0.25);border-radius:3px;margin-bottom:0.25rem;display:none;align-items:center;justify-content:center;font-size:1.2rem;opacity:0.2">◇</div>
+                <div class="oc-pos">${p}</div><div class="oc-name">${c.name}</div><div class="oc-title">${c.title}</div><div class="oc-god">${c.ruling_god||''}</div>`;
             el.classList.remove('refreshing');
         });
         log(`Oracle: ${drawn.map(c=>c.title).join(' · ')}`,'ol');
@@ -541,119 +598,24 @@ function togglePause(){
     pPaused=!pPaused;document.getElementById('pauseBtn').textContent=pPaused?'▶':'⏸';
     if(pPaused){clearInterval(oracleTimer);clearInterval(countdownInterval);}else{startOracle();drawP();}
 }
+
 // ══════════════════════════════════════════
-// TTS — Ritual Voice System
+// TTS
 // ══════════════════════════════════════════
 let ttsLang='es-MX',ttsMode='off',ttsQueue=[],ttsActive=false,voicesReady=false,allVoices=[];
-
-const LANG_CONFIG={
-    'es-MX':{rate:0.72,pitch:0.55,label:'Español — ritual'},
-    'en-US':{rate:0.82,pitch:0.7,label:'English — deep'},
-    'el-GR':{rate:0.72,pitch:0.65,label:'Ἑλληνική'},
-    'ja-JP':{rate:0.76,pitch:0.7,label:'日本語'},
-    'hi-IN':{rate:0.78,pitch:0.72,label:'हिन्दी'},
-    'yo-NG':{rate:0.74,pitch:0.68,label:'Yorùbá'},
-    'ar-EG':{rate:0.72,pitch:0.6,label:'مصري'},
-    'is-IS':{rate:0.68,pitch:0.55,label:'Norrœnt — deep'},
-    'zh-CN':{rate:0.76,pitch:0.7,label:'中文'},
-    'sw-KE':{rate:0.74,pitch:0.7,label:'Kiswahili'},
-    'fr-FR':{rate:0.76,pitch:0.65,label:'Français'},
-    'it-IT':{rate:0.74,pitch:0.62,label:'Italiano'},
-};
-
-function initVoices(){
-    allVoices=speechSynthesis.getVoices();
-    if(allVoices.length>0){voicesReady=true;return;}
-    speechSynthesis.onvoiceschanged=()=>{
-        allVoices=speechSynthesis.getVoices();
-        if(allVoices.length>0)voicesReady=true;
-    };
-}
+const LANG_CONFIG={'es-MX':{rate:0.72,pitch:0.55,label:'Español — ritual'},'en-US':{rate:0.82,pitch:0.7,label:'English — deep'},'el-GR':{rate:0.72,pitch:0.65,label:'Ἑλληνική'},'ja-JP':{rate:0.76,pitch:0.7,label:'日本語'},'hi-IN':{rate:0.78,pitch:0.72,label:'हिन्दी'},'yo-NG':{rate:0.74,pitch:0.68,label:'Yorùbá'},'ar-EG':{rate:0.72,pitch:0.6,label:'مصري'},'is-IS':{rate:0.68,pitch:0.55,label:'Norrœnt — deep'},'zh-CN':{rate:0.76,pitch:0.7,label:'中文'},'sw-KE':{rate:0.74,pitch:0.7,label:'Kiswahili'},'fr-FR':{rate:0.76,pitch:0.65,label:'Français'},'it-IT':{rate:0.74,pitch:0.62,label:'Italiano'}};
+function initVoices(){allVoices=speechSynthesis.getVoices();if(allVoices.length>0){voicesReady=true;return;}speechSynthesis.onvoiceschanged=()=>{allVoices=speechSynthesis.getVoices();if(allVoices.length>0)voicesReady=true;};}
 initVoices();
-
-function pickVoice(lang){
-    if(!allVoices.length)return null;
-    // Prefer a voice that matches the language and sounds deep/resonant
-    const langCode=lang.split('-')[0];
-    const matches=allVoices.filter(v=>v.lang.startsWith(langCode));
-    if(!matches.length)return allVoices.find(v=>v.lang.startsWith('en'))||allVoices[0];
-    // Prefer male-sounding voices for ritual feel (usually have "male" in name or are from certain providers)
-    const male=matches.find(v=>v.name.toLowerCase().includes('male')||v.name.toLowerCase().includes('david')||v.name.toLowerCase().includes('mark')||v.name.toLowerCase().includes('pablo')||v.name.toLowerCase().includes('diego'));
-    return male||matches[0];
-}
-
+function pickVoice(lang){if(!allVoices.length)return null;const lc=lang.split('-')[0];const m=allVoices.filter(v=>v.lang.startsWith(lc));if(!m.length)return allVoices.find(v=>v.lang.startsWith('en'))||allVoices[0];const male=m.find(v=>v.name.toLowerCase().includes('male')||v.name.toLowerCase().includes('david')||v.name.toLowerCase().includes('mark')||v.name.toLowerCase().includes('pablo')||v.name.toLowerCase().includes('diego'));return male||m[0];}
 function setTtsLang(){ttsLang=document.getElementById('ttsLang').value;}
 function setTtsMode(){ttsMode=document.getElementById('ttsMode').value;}
+function speakPhrase(){const input=document.getElementById('ttsPhrase');const phrase=input.value.trim();if(!phrase)return;if(!voicesReady){setTimeout(()=>speakPhrase(),200);return;}enqueueTts(phrase);input.value='';log(`TTS: "${phrase.slice(0,40)}${phrase.length>40?'...':''}" [${ttsLang}]`);}
+function enqueueTts(text){ttsQueue.push(text);if(!ttsActive)processTts();}
+function processTts(){if(!ttsQueue.length){ttsActive=false;setTtsStatus(false);return;}ttsActive=true;setTtsStatus(true);const text=ttsQueue.shift();const u=new SpeechSynthesisUtterance(text);const cfg=LANG_CONFIG[ttsLang]||LANG_CONFIG['es-MX'];u.lang=ttsLang;u.rate=cfg.rate;u.pitch=cfg.pitch;u.volume=1;const voice=pickVoice(ttsLang);if(voice)u.voice=voice;u.onend=()=>setTimeout(processTts,300);u.onerror=()=>{setTimeout(processTts,300);};speechSynthesis.cancel();speechSynthesis.speak(u);}
+function setTtsStatus(active){document.getElementById('ttsStatus').style.display=active?'flex':'none';}
+const origSummon2=summonCard;summonCard=function(){origSummon2();if((ttsMode==='summons'||ttsMode==='both')&&voicesReady){const cid=S.focal;if(cid){const c=EARTH.find(x=>x.id===cid);if(c)enqueueTts(`${c.title}. ${c.keywords.slice(0,3).join(', ')}.`);}}};
+const origDraw2=drawOracle;drawOracle=function(){origDraw2();if((ttsMode==='oracle'||ttsMode==='both')&&voicesReady){setTimeout(()=>{const names=[];['Past','Present','Future'].forEach(p=>{const el=document.getElementById('oc'+p);if(el){const t=el.querySelector('.oc-title');if(t)names.push(t.textContent);}});if(names.length)enqueueTts(`Oracle: ${names.join('. ')}.`);},500);}};
 
-function speakPhrase(){
-    const input=document.getElementById('ttsPhrase');
-    const phrase=input.value.trim();
-    if(!phrase)return;
-    if(!voicesReady){setTimeout(()=>speakPhrase(),200);return;}
-    enqueueTts(phrase);
-    input.value='';
-    log(`TTS: "${phrase.slice(0,40)}${phrase.length>40?'...':''}" [${ttsLang}]`);
-}
-
-function enqueueTts(text){
-    ttsQueue.push(text);
-    if(!ttsActive)processTts();
-}
-
-function processTts(){
-    if(!ttsQueue.length){ttsActive=false;setTtsStatus(false);return;}
-    ttsActive=true;setTtsStatus(true);
-
-    const text=ttsQueue.shift();
-    const u=new SpeechSynthesisUtterance(text);
-    const cfg=LANG_CONFIG[ttsLang]||LANG_CONFIG['es-MX'];
-    u.lang=ttsLang;u.rate=cfg.rate;u.pitch=cfg.pitch;u.volume=1;
-
-    const voice=pickVoice(ttsLang);
-    if(voice)u.voice=voice;
-
-    u.onend=()=>setTimeout(processTts,300);
-    u.onerror=()=>{setTimeout(processTts,300);};
-    speechSynthesis.cancel(); // Clear any stuck utterance
-    speechSynthesis.speak(u);
-}
-
-function setTtsStatus(active){
-    const el=document.getElementById('ttsStatus');
-    el.style.display=active?'flex':'none';
-}
-
-// Hook summons
-const origSummon2=summonCard;
-summonCard=function(){
-    origSummon2();
-    if((ttsMode==='summons'||ttsMode==='both')&&voicesReady){
-        const cid=S.focal;
-        if(cid){
-            const c=EARTH.find(x=>x.id===cid);
-            if(c)enqueueTts(`${c.title}. ${c.keywords.slice(0,3).join(', ')}.`);
-        }
-    }
-};
-
-// Hook oracle
-const origDraw2=drawOracle;
-drawOracle=function(){
-    origDraw2();
-    if((ttsMode==='oracle'||ttsMode==='both')&&voicesReady){
-        setTimeout(()=>{
-            const names=[];
-            ['Past','Present','Future'].forEach(p=>{
-                const el=document.getElementById('oc'+p);
-                if(el){
-                    const titleEl=el.querySelector('.oc-title');
-                    if(titleEl)names.push(titleEl.textContent);
-                }
-            });
-            if(names.length)enqueueTts(`Oracle: ${names.join('. ')}.`);
-        },500);
-    }
-};
 // ══════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════
@@ -676,7 +638,7 @@ function init(){
     const recent=S.log.slice(-10);
     recent.forEach(e=>{const feed=document.getElementById('logFeed'),el=document.createElement('div');el.className='log-entry';el.innerHTML=`<span class="log-time">${e.t}</span><span class="log-text ${e.type||''}">${e.msg}</span>`;feed.appendChild(el);});
     document.getElementById('councilFeed').innerHTML=`<div class="council-entry"><div class="council-avatar av-demeter">🌾</div><div><div class="council-god">DEMETER</div><div class="council-reaction">The shrine opens. The earth waits.</div></div></div>`;
-    log('Earth Shrine initialized. Pontus flows. Oracle draws every 30s.','hl');
+    log('Earth Shrine initialized. Pontus flows with bioluminescence. Mycelial web grows.','hl');
 }
 document.addEventListener('DOMContentLoaded',init);
 window.addEventListener('resize',()=>{rp();drawMycelial();});
