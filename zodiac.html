@@ -1,547 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zodiac · Celestial Grimoire · Ealdforn Republic</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold: #c9a84c; --gold-light: #e8c96a; --gold-dark: #7a5c18; --gold-dim: #3a2c10;
-            --void: #05050d; --deep: #09091a; --surface: #0e0e20; --border: #1e1e3a;
-            --border-gold: rgba(201,168,76,0.15); --text: #ede5d0; --text-mid: #a89880; --text-dim: #605848;
-            --sage: #7a9e6a; --water: #5599cc; --fire: #cc6644; --air: #aa88cc;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            background: var(--void);
-            background-image:
-                radial-gradient(ellipse 60% 40% at 50% 30%, #0a0828 0%, transparent 60%),
-                radial-gradient(ellipse 40% 50% at 80% 80%, #081420 0%, transparent 55%),
-                radial-gradient(ellipse 30% 40% at 20% 70%, #120828 0%, transparent 50%);
-            color: var(--text);
-            font-family: 'EB Garamond', Georgia, serif;
-            min-height: 100vh; overflow-x: hidden;
-        }
-        #starfield { position:fixed; inset:0; z-index:0; pointer-events:none; }
-        .cosmos { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:1rem; display:flex; flex-direction:column; gap:1rem; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zodiac · Celestial Grimoire · Ealdforn Republic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c9a84c;--gold-light:#e8c96a;--gold-dark:#7a5c18;--void:#05050d;--surface:#0e0e20;--border:#1e1e3a;--border-gold:rgba(201,168,76,0.12);--text:#ede5d0;--text-mid:#a89880;--text-dim:#605848;--sage:#7a9e6a;--water:#5599cc;--fire:#cc6644;--air:#aa88cc;--ember:#8b3a1a;--moon:#8899bb}
+body{background:var(--void);background-image:radial-gradient(ellipse 60% 40% at 50% 30%,#0a0828 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 80% 80%,#081420 0%,transparent 55%);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.75}
 
-        /* HEADER */
-        .header { text-align:center; padding:1.5rem 1rem 0.5rem; position:relative; }
-        .header::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:1px; height:2rem; background:linear-gradient(to bottom,transparent,var(--gold)); }
-        .zodiac-title { font-family:'Cinzel Decorative',serif; font-size:clamp(1.6rem,4vw,3.2rem); font-weight:900; letter-spacing:0.2em; background:linear-gradient(135deg,var(--gold-dark),var(--gold-light),var(--gold),var(--air)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 25px rgba(201,168,76,0.35)); animation:titlePulse 5s ease-in-out infinite; }
-        @keyframes titlePulse { 0%,100%{filter:drop-shadow(0 0 18px rgba(201,168,76,0.25))} 50%{filter:drop-shadow(0 0 40px rgba(201,168,76,0.6))} }
-        .subtitle { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.35em; color:var(--text-dim); margin-top:0.3rem; }
+nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:200}
+.nav-brand{display:flex;flex-direction:column;gap:1px}
+.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--gold);letter-spacing:1px}
+.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
 
-        /* STATUS */
-        .status-strip { display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.12em; color:var(--text-dim); padding:0.4rem 1rem; border:1px solid rgba(201,168,76,0.08); border-radius:4px; background:rgba(5,5,13,0.7); }
-        .status-item { display:flex; align-items:center; gap:0.4rem; }
-        .status-dot { width:5px; height:5px; border-radius:50%; }
-        .status-dot.dawn { background:#e8a840; box-shadow:0 0 8px #e8a840; }
-        .status-dot.dusk { background:#8844aa; box-shadow:0 0 8px #8844aa; }
-        .status-dot.idle { background:var(--text-dim); }
+.cosmos{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:5rem 1.5rem 3rem}
 
-        /* SPLIT LAYOUT */
-        .main-grid { display:grid; grid-template-columns:1fr 320px; gap:1rem; align-items:start; }
-        @media (max-width:800px) { .main-grid { grid-template-columns:1fr; } }
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,2.4rem);color:var(--gold-light);letter-spacing:0.12em;text-shadow:0 0 30px rgba(201,168,76,0.2)}
+.date-line{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold);margin-top:0.3rem}
+.date-line span{color:var(--text-dim);font-size:0.5rem;display:block;margin-top:0.15rem;letter-spacing:0.15em}
 
-        /* LEFT: CELESTIAL TABLE + READING */
-        .celestial-panel { display:flex; flex-direction:column; gap:1rem; }
+.intro-text{text-align:center;max-width:600px;margin:0 auto 2rem;font-style:italic;font-size:0.9rem;line-height:1.7;color:var(--text-mid)}
+.intro-text strong{color:var(--gold-light);font-style:normal}
 
-        /* Sky table */
-        .sky-table-wrap { overflow-x:auto; border:1px solid rgba(201,168,76,0.1); border-radius:6px; background:rgba(5,5,13,0.7); }
-        .sky-table { width:100%; border-collapse:collapse; font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:0.06em; }
-        .sky-table th { padding:0.5rem 0.6rem; text-align:left; color:var(--gold); font-weight:400; letter-spacing:0.12em; border-bottom:1px solid var(--border-gold); font-size:0.5rem; }
-        .sky-table td { padding:0.4rem 0.6rem; border-bottom:1px solid rgba(30,30,58,0.3); color:var(--text-mid); }
-        .sky-table tr:hover td { background:rgba(201,168,76,0.03); }
-        .sky-table .body-name { color:var(--text); font-weight:600; }
-        .sky-table .sign-glyph { font-size:0.9rem; margin-right:0.3rem; }
-        .sky-table .olympian-cell { color:var(--gold-light); }
-        .sky-table .arcana-cell { color:var(--air); font-style:italic; }
+/* SOLAR + LUNAR */
+.luminary-box{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+@media(max-width:600px){.luminary-box{grid-template-columns:1fr}}
+.lum-card{border-radius:10px;padding:1.5rem;text-align:center}
+.lum-card.solar{background:linear-gradient(160deg,rgba(25,15,5,0.9),rgba(15,10,5,0.95));border:1px solid var(--gold)}
+.lum-card.lunar{background:linear-gradient(160deg,rgba(10,10,25,0.9),rgba(5,5,20,0.95));border:1px solid var(--moon)}
+.lum-card .lum-icon{font-size:2.5rem;margin-bottom:0.5rem}
+.lum-card .lum-title{font-family:'Cinzel Decorative',serif;font-size:0.8rem;letter-spacing:0.1em;margin-bottom:0.5rem}
+.lum-card.solar .lum-title{color:var(--gold-light)}
+.lum-card.lunar .lum-title{color:var(--moon)}
+.lum-card .lum-olympian{font-size:1.1rem;color:var(--text);font-style:italic;margin-bottom:0.3rem}
+.lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-mid)}
+.lum-card .lum-sign .glyph{font-size:1.3rem}
+.lum-card .lum-reading{font-size:0.85rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
+.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;color:var(--text-dim);margin-top:0.5rem}
 
-        /* Card of the day */
-        .card-day { border:1px solid var(--gold); border-radius:8px; padding:1.2rem; text-align:center; background:linear-gradient(160deg,rgba(20,15,8,0.9),rgba(10,14,5,0.9)); box-shadow:0 0 30px rgba(201,168,76,0.1); }
-        .card-day-label { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.25em; color:var(--gold-dark); text-transform:uppercase; margin-bottom:0.3rem; }
-        .card-day-arcana { font-family:'Cinzel Decorative',serif; font-size:1.4rem; color:var(--gold-light); }
-        .card-day-olympian { font-family:'EB Garamond',serif; font-style:italic; font-size:1rem; color:var(--text-mid); margin-top:0.2rem; }
-        .card-day-body { font-size:0.7rem; color:var(--gold-dim); margin-top:0.3rem; }
+/* PLANETARY WATCHERS */
+.watchers-section{margin:2rem 0}
+.watchers-title{font-family:'Cinzel Decorative',serif;font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;text-align:center;margin-bottom:1.2rem}
+.watchers-title::after{content:'';display:block;width:180px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0.6rem auto 0}
 
-        /* Reading */
-        .reading-zone { border:1px solid rgba(201,168,76,0.12); border-radius:6px; padding:1.5rem; background:rgba(5,5,13,0.6); min-height:200px; }
-        .reading-label { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.2em; color:var(--gold); text-transform:uppercase; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
-        .reading-label::after { content:''; flex:1; height:1px; background:var(--border-gold); }
-        .reading-text { font-size:1rem; line-height:1.8; color:var(--text); font-style:italic; }
-        .reading-loading { color:var(--text-dim); font-style:italic; animation:pulse 2s ease-in-out infinite; }
-        @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
-        .reading-error { color:#cc6644; font-style:italic; }
+.watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.3rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:flex-start}
+.watcher-entry:hover{border-color:var(--border-gold)}
+.watcher-icon{font-size:1.5rem;flex-shrink:0;width:40px;text-align:center}
+.watcher-body{flex:1}
+.watcher-headline{font-size:0.85rem;line-height:1.5;color:var(--text)}
+.watcher-headline strong{color:var(--gold-light)}
+.watcher-headline .sign-name{color:var(--gold-light)}
+.watcher-headline .glyph{font-size:1rem}
+.watcher-whisper{font-size:0.75rem;line-height:1.5;color:var(--text-dim);font-style:italic;margin-top:0.3rem}
+.watcher-meta{font-family:'Cinzel',serif;font-size:0.45rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.4rem}
 
-        /* RIGHT: BIRTH WIDGET + CONJUNCTIONS */
-        .side-panel { display:flex; flex-direction:column; gap:1rem; }
+/* BIRTH WIDGET */
+.birth-widget{margin:2.5rem 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center}
+.birth-widget select{font-family:'Cinzel',serif;font-size:0.6rem;background:var(--deep);border:1px solid var(--border);color:var(--text);padding:0.6rem 1rem;border-radius:6px;cursor:pointer;margin-bottom:0.8rem;width:260px}
+.birth-widget select:focus{border-color:var(--gold);outline:none}
+.birth-reading{font-size:0.85rem;line-height:1.7;color:var(--text-mid);font-style:italic;min-height:50px}
 
-        .birth-widget { border:1px solid rgba(201,168,76,0.12); border-radius:6px; padding:1rem; background:rgba(5,5,13,0.6); }
-        .widget-title { font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.18em; color:var(--gold); margin-bottom:0.8rem; }
-        .widget-select { width:100%; font-family:'Cinzel',serif; font-size:0.6rem; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:0.5rem; border-radius:4px; cursor:pointer; margin-bottom:0.6rem; }
-        .widget-select:focus { border-color:var(--gold); outline:none; }
-        .birth-reading { font-size:0.8rem; line-height:1.6; color:var(--text-mid); font-style:italic; min-height:60px; }
+.btn-row{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.ritual-btn{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.12em;padding:0.5rem 1.2rem;border-radius:4px;cursor:pointer;transition:all 0.2s;background:transparent;border:1px solid;text-transform:uppercase;text-decoration:none;display:inline-block}
+.btn-gold{border-color:var(--gold-dim);color:var(--gold)}.btn-gold:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
+.btn-dim{border-color:var(--border);color:var(--text-dim)}.btn-dim:hover{border-color:var(--text-dim);color:var(--text-mid)}
 
-        .conjunction-list { border:1px solid rgba(201,168,76,0.1); border-radius:6px; padding:0.8rem; background:rgba(5,5,13,0.5); max-height:250px; overflow-y:auto; }
-        .conj-item { font-size:0.7rem; line-height:1.5; color:var(--text-mid); padding:0.3rem 0; border-bottom:1px solid rgba(30,30,58,0.2); }
-        .conj-item:last-child { border-bottom:none; }
-        .conj-highlight { color:var(--gold-light); }
+footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px solid rgba(201,168,76,0.04)}
+.footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4}
 
-        /* BUTTONS */
-        .btn-row { display:flex; gap:0.5rem; flex-wrap:wrap; }
-        .ritual-btn { font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.12em; padding:0.5rem 1.2rem; border-radius:4px; cursor:pointer; transition:all 0.2s; background:transparent; border:1px solid; text-transform:uppercase; }
-        .btn-gold { border-color:var(--gold-dim); color:var(--gold); } .btn-gold:hover { background:rgba(201,168,76,0.08); border-color:var(--gold); box-shadow:0 0 16px rgba(201,168,76,0.15); }
-        .btn-dim { border-color:var(--border); color:var(--text-dim); } .btn-dim:hover { border-color:var(--text-dim); color:var(--text-mid); }
-
-        #toast { position:fixed; bottom:1rem; left:50%; transform:translateX(-50%); background:rgba(8,8,18,0.94); border:1px solid var(--gold-dim); border-radius:4px; padding:0.5rem 1.2rem; font-family:'Cinzel',serif; font-size:0.55rem; color:var(--gold); z-index:100; opacity:0; transition:opacity 0.4s; }
-        #toast.show { opacity:1; }
-    </style>
+#toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:rgba(8,8,18,0.94);border:1px solid var(--gold-dim);border-radius:4px;padding:0.5rem 1.2rem;font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);z-index:100;opacity:0;transition:opacity 0.4s}
+#toast.show{opacity:1}
+</style>
 </head>
 <body>
 <canvas id="starfield"></canvas>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-title">Celestial Grimoire</div>
+    <div class="nav-brand-sub">Ealdforn Republic</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">← Temple</a></li>
+    <li><a href="draw.html">Draw Cards</a></li>
+    <li><a href="daily.html">Earth Shrine</a></li>
+    <li><a href="archive.html">Archive</a></li>
+  </ul>
+</nav>
+
 <div class="cosmos">
 
     <div class="header">
-        <h1 class="zodiac-title">ZODIAC · CELESTIAL GRIMOIRE</h1>
-        <div class="subtitle">The Sky Is The Source Code · Ealdforn Republic</div>
+        <h1>ZODIAC · CELESTIAL GRIMOIRE</h1>
+        <div class="date-line" id="dateLine"></div>
     </div>
 
-    <div class="status-strip">
-        <div class="status-item"><span class="status-dot" id="periodDot"></span><span id="periodLabel">computing...</span></div>
-        <div class="status-item" id="sunriseDisplay">☀️ Sunrise: --:--</div>
-        <div class="status-item" id="sunsetDisplay">🌙 Sunset: --:--</div>
-        <div class="status-item" id="moonPhase">🌑 Moon: --</div>
+    <div class="intro-text">
+        Each day, the celestial bodies move through the constellations. Each body <strong>is</strong> an Olympian. Each Olympian watches over the sign they currently occupy. This is today's report — who is watching whom.
     </div>
 
-    <div class="main-grid">
-        <!-- LEFT -->
-        <div class="celestial-panel">
-            <div class="sky-table-wrap">
-                <table class="sky-table">
-                    <thead><tr><th>Body</th><th>Sign</th><th>Olympian</th><th>Arcana</th><th>Celestial</th></tr></thead>
-                    <tbody id="skyTableBody"></tbody>
-                </table>
-            </div>
+    <!-- SUN + MOON -->
+    <div class="luminary-box" id="luminaryBox"></div>
 
-            <div class="card-day" id="cardDay">
-                <div class="card-day-label">Today's Celestial Card</div>
-                <div class="card-day-arcana">—</div>
-                <div class="card-day-olympian">computing...</div>
-                <div class="card-day-body"></div>
-            </div>
+    <!-- PLANETARY WATCHERS -->
+    <div class="watchers-section">
+        <div class="watchers-title">✦ The Planetary Watchers ✦</div>
+        <div id="watchersList"></div>
+    </div>
 
-            <div class="reading-zone">
-                <div class="reading-label" id="readingLabel">✦ Reading</div>
-                <div class="reading-text" id="readingText"><span class="reading-loading">The council gathers. Listening to the sky...</span></div>
-            </div>
+    <!-- BIRTH WIDGET -->
+    <div class="birth-widget">
+        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem;">✦ Your Sign's Watcher Today</div>
+        <select id="birthSign" onchange="birthReading()">
+            <option value="">— Select your sign —</option>
+        </select>
+        <div class="birth-reading" id="birthReadingText">Choose your zodiac sign to see which Olympian watches over you today.</div>
+    </div>
 
-            <div class="btn-row">
-                <button class="ritual-btn btn-gold" onclick="refreshReading()">⟳ Refresh Reading</button>
-                <button class="ritual-btn btn-dim" onclick="window.location.href='index.html'">← Temple</button>
-                <button class="ritual-btn btn-dim" onclick="window.location.href='daily.html'">Earth Shrine</button>
-            </div>
-        </div>
-
-        <!-- RIGHT -->
-        <div class="side-panel">
-            <div class="birth-widget">
-                <div class="widget-title">✦ Birth Sign Reading</div>
-                <select class="widget-select" id="birthSign" onchange="birthReading()">
-                    <option value="">— Select your sign —</option>
-                </select>
-                <div class="birth-reading" id="birthReadingText">Choose your zodiac sign to receive a reading from the Ealdforn tablet.</div>
-            </div>
-
-            <div class="conjunction-list" id="conjunctionList">
-                <div class="widget-title">✦ Celestial Conversations</div>
-                <div style="color:var(--text-dim);font-style:italic;font-size:0.7rem;">computing aspects...</div>
-            </div>
-        </div>
+    <div class="btn-row">
+        <button class="ritual-btn btn-gold" onclick="refreshAlmanac()">⟳ Refresh Almanac</button>
+        <a href="index.html" class="ritual-btn btn-dim">← Temple</a>
     </div>
 </div>
+
 <div id="toast"></div>
+<footer><div class="footer-text">Celestial Grimoire · Ealdforn Republic · The Sky Is The Source Code</div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script>
 // ══════════════════════════════════════════
-// THE TABLET — Zodiac → Olympian → Arcana → Celestial Body
+// THE TABLET — Celestial Body → Olympian → Arcana
 // ══════════════════════════════════════════
-const TABLET = {
-    'Aries':       {olympian:'Ares',        arcana:'The Hierophant (V)',   body:'Mars',       glyph:'♈'},
-    'Taurus':      {olympian:'Demeter',     arcana:'The Empress (III)',    body:'Ceres',      glyph:'♉'},
-    'Gemini':      {olympian:'Hermes',      arcana:'The Magician (I)',     body:'Mercury',    glyph:'♊'},
-    'Cancer':      {olympian:'Zeus',        arcana:'The Emperor (IV)',     body:'Jupiter',    glyph:'♋'},
-    'Leo':         {olympian:'Apollo',      arcana:'The Sun (XIX)',        body:'The Sun',    glyph:'♌'},
-    'Virgo':       {olympian:'Athena',      arcana:'Justice (VIII)',       body:'Phobos',     glyph:'♍'},
-    'Libra':       {olympian:'Hera',        arcana:'The High Priestess (II)',body:'Saturn',   glyph:'♎'},
-    'Scorpio':     {olympian:'Hades',       arcana:'Death (XIII)',         body:'Pluto',      glyph:'♏'},
-    'Sagittarius': {olympian:'Artemis',     arcana:'The Chariot (VII)',    body:'The Moon',   glyph:'♐'},
-    'Capricorn':   {olympian:'Hephaestus',  arcana:'Strength (XI)',        body:'Uranus',     glyph:'♑'},
-    'Aquarius':    {olympian:'Dionysus',    arcana:'The Fool (0)',         body:'Eros',       glyph:'♒'},
-    'Pisces':      {olympian:'Poseidon',    arcana:'The Tower (XVI)',      body:'Neptune',    glyph:'♓'}
+const CELESTIAL_OLYMPIANS = {
+    'Sun':     {olympian:'Apollo',     arcana:'The Sun (XIX)',       icon:'☀️', domain:'light, radiance, creative fire'},
+    'Moon':    {olympian:'Artemis',    arcana:'The Chariot (VII)',   icon:'🌙', domain:'the hunt, sovereignty, silver stillness'},
+    'Mercury': {olympian:'Hermes',     arcana:'The Magician (I)',    icon:'☿', domain:'messages, translation, the boundary-crosser'},
+    'Venus':   {olympian:'Aphrodite',  arcana:'The Lovers (VI)',     icon:'♀', domain:'love, desire, the pull that binds'},
+    'Mars':    {olympian:'Ares',       arcana:'The Hierophant (V)',  icon:'♂', domain:'conquest, tradition as weapon, the spear'},
+    'Jupiter': {olympian:'Zeus',       arcana:'The Emperor (IV)',    icon:'♃', domain:'authority, structure, the thunder that orders'},
+    'Saturn':  {olympian:'Hera',       arcana:'The High Priestess (II)',icon:'♄', domain:'the covenant, hidden knowledge, the binding oath'},
+    'Uranus':  {olympian:'Hephaestus', arcana:'Strength (XI)',       icon:'♅', domain:'the forge, invisible craft, endurance'},
+    'Neptune': {olympian:'Poseidon',   arcana:'The Tower (XVI)',     icon:'♆', domain:'upheaval, the wave, destruction that reveals'},
+    'Pluto':   {olympian:'Hades',      arcana:'Death (XIII)',        icon:'♇', domain:'the underworld, transformation, hidden wealth'},
+    'Ceres':   {olympian:'Demeter',    arcana:'The Empress (III)',   icon:'⚳', domain:'harvest, abundance, the cultivated earth'},
+    'Eros':    {olympian:'Dionysus',   arcana:'The Fool (0)',        icon:'⚴', domain:'ecstasy, the leap, divine madness'},
+    'Phobos':  {olympian:'Athena',     arcana:'Justice (VIII)',      icon:'⚵', domain:'strategy, the whisper of caution, wisdom before battle'}
 };
-const SIGNS = Object.keys(TABLET);
+
+// Zodiac sign info
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_GLYPHS = {'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
+const SIGN_CONSTELLATIONS = {'Aries':'the Ram','Taurus':'the Bull','Gemini':'the Twins','Cancer':'the Crab','Leo':'the Lion','Virgo':'the Maiden','Libra':'the Scales','Scorpio':'the Scorpion','Sagittarius':'the Archer','Capricorn':'the Sea-Goat','Aquarius':'the Water-Bearer','Pisces':'the Fish'};
 
 // ══════════════════════════════════════════
 // STARFIELD
 // ══════════════════════════════════════════
 const sc=document.getElementById('starfield'),sctx=sc.getContext('2d');
-const stars=Array.from({length:200},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.1,a:Math.random()*0.4+0.06,tw:Math.random()*Math.PI*2}));
+const stars=Array.from({length:220},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.2,a:Math.random()*0.45+0.05,tw:Math.random()*Math.PI*2}));
 function rs(){sc.width=window.innerWidth;sc.height=window.innerHeight;}
 window.addEventListener('resize',rs);rs();
-(function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.55+0.45*Math.sin(s.tw+t*0.00025));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(232,224,208,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
+(function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.55+0.45*Math.sin(s.tw+t*0.0002));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(232,224,208,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
 
 // ══════════════════════════════════════════
-// ECLIPTIC LONGITUDE → ZODIAC SIGN
+// ASTRONOMY HELPERS
 // ══════════════════════════════════════════
-function eclipticToSign(lonDeg){
-    // Normalize 0-360
-    let lon=((lonDeg%360)+360)%360;
-    const signs=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-    const idx=Math.floor(lon/30);
-    return signs[Math.min(idx,11)];
-}
+function eclipticToSign(lonDeg){let lon=((lonDeg%360)+360)%360;const idx=Math.floor(lon/30);return SIGNS[Math.min(idx,11)];}
 
-// ══════════════════════════════════════════
-// GET BODY POSITIONS
-// ══════════════════════════════════════════
 function getBodyPosition(bodyName,date){
-    const observer=new Astronomy.Observer(40,0,0); // 40°N, 0°W
+    const observer=new Astronomy.Observer(40,-74,0);
     try{
-        const bodyMap={
-            'Sun':Astronomy.Body.Sun,'Moon':Astronomy.Body.Moon,
-            'Mercury':Astronomy.Body.Mercury,'Venus':Astronomy.Body.Venus,
-            'Mars':Astronomy.Body.Mars,'Jupiter':Astronomy.Body.Jupiter,
-            'Saturn':Astronomy.Body.Saturn,'Uranus':Astronomy.Body.Uranus,
-            'Neptune':Astronomy.Body.Neptune,'Pluto':Astronomy.Body.Pluto
-        };
-        if(bodyMap[bodyName]){
-            const eq=Astronomy.Equator(bodyMap[bodyName],date,observer,true,true);
-            const ecl=Astronomy.Ecliptic(eq.vec);
-            return {ra:eq.ra,dec:eq.dec,elon:ecl.elon,elat:ecl.elat,found:true};
-        }
+        const bm={Sun:Astronomy.Body.Sun,Moon:Astronomy.Body.Moon,Mercury:Astronomy.Body.Mercury,Venus:Astronomy.Body.Venus,Mars:Astronomy.Body.Mars,Jupiter:Astronomy.Body.Jupiter,Saturn:Astronomy.Body.Saturn,Uranus:Astronomy.Body.Uranus,Neptune:Astronomy.Body.Neptune,Pluto:Astronomy.Body.Pluto};
+        if(bm[bodyName]){const eq=Astronomy.Equator(bm[bodyName],date,observer,true,true);const ecl=Astronomy.Ecliptic(eq.vec);return{ra:eq.ra,dec:eq.dec,elon:ecl.elon,elat:ecl.elat,found:true};}
     }catch(e){}
-    // For asteroids not in Astronomy Engine, use date-based approximation
-    return approximateBody(bodyName,date);
-}
-
-function approximateBody(bodyName,date){
-    const jd=date.getTime()/86400000+2440587.5;
-    const t=(jd-2451545.0)/36525;
-    // Very rough approximations for Ceres, Eros, Phobos
-    const approx={
-        'Ceres':  (90+t*4.6)%360,
-        'Eros':   (200+t*12)%360,
-        'Phobos': (170+t*8.2)%360
-    };
+    const jd=date.getTime()/86400000+2440587.5;const t=(jd-2451545.0)/36525;
+    const approx={Ceres:(90+t*4.6)%360,Eros:(200+t*12)%360,Phobos:(170+t*8.2)%360};
     const lon=approx[bodyName];
-    if(lon!==undefined)return {ra:0,dec:0,elon:lon,elat:0,found:true,approximate:true};
-    return {ra:0,dec:0,elon:0,elat:0,found:false};
+    if(lon!==undefined)return{ra:0,dec:0,elon:lon,elat:0,found:true,approximate:true};
+    return{ra:0,dec:0,elon:0,elat:0,found:false};
 }
 
-// ══════════════════════════════════════════
-// BUILD SKY STATE
-// ══════════════════════════════════════════
 const BODIES=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Ceres','Eros','Phobos'];
+
 function buildSkyState(){
-    const now=new Date();
-    const state=[];
+    const now=new Date();const state=[];
     BODIES.forEach(name=>{
         const pos=getBodyPosition(name,now);
         if(pos.found){
             const sign=eclipticToSign(pos.elon);
-            const tablet=TABLET[sign];
-            state.push({body:name,lon:pos.elon,sign,glyph:tablet.glyph,olympian:tablet.olympian,arcana:tablet.arcana,celestial:tablet.body,approximate:pos.approximate||false});
+            const deity=CELESTIAL_OLYMPIANS[name];
+            if(deity){
+                state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],constellation:SIGN_CONSTELLATIONS[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,domain:deity.domain,approximate:pos.approximate||false});
+            }
         }
     });
     return state;
 }
 
-// ══════════════════════════════════════════
-// SUNRISE / SUNSET
-// ══════════════════════════════════════════
-function getSolarTimes(){
-    const now=new Date();
-    const times=SunCalc.getTimes(now,40,0);
-    return {sunrise:times.sunrise,sunset:times.sunset,dawnEnd:times.dawn,end:times.dusk};
-}
+function getSolarTimes(){const now=new Date();return SunCalc.getTimes(now,40,-74);}
 
-function getReadingPeriod(){
-    const now=new Date();
-    const times=getSolarTimes();
-    const dawnStart=new Date(times.sunrise.getTime());
-    const dawnEnd=new Date(times.sunrise.getTime()+30*60000);
-    const duskEnd=new Date(times.sunset.getTime()+30*60000);
+// ══════════════════════════════════════════
+// WHISPER GENERATOR
+// ══════════════════════════════════════════
+const WHISPERS = {
+    'Apollo':     ['The light is on you. Create.', 'Everything hidden becomes visible today.', 'Your radiance is not vanity — it is a duty.'],
+    'Artemis':    ['The dark is not your enemy.', 'Sovereignty is forged when no one is watching.', 'The arrow knows the way. Release it.'],
+    'Hermes':     ['Every locked door has a word.', 'The message will arrive. Be ready to translate.', 'Cross the boundary. That is what you were made for.'],
+    'Aphrodite':  ['Love is not the absence of choice.', 'The mirror shows what you desire. It also shows what you are.', 'The pull is real. Decide whether to follow it.'],
+    'Ares':       ['The spear knows where to strike.', 'Tradition is your armor — but armor can become a cage.', 'Charge. But know what you are charging toward.'],
+    'Zeus':       ['Authority is the silence before the storm.', 'The thunder does not ask permission.', 'Order from chaos. But order can become tyranny.'],
+    'Hera':       ['Not all truths are spoken.', 'The covenant holds — but should it?', 'What oath are you keeping that wants to be broken?'],
+    'Hephaestus': ['The fire does not care that you are broken.', 'Keep working. The forge rewards persistence.', 'What you build in the dark will be seen in the light.'],
+    'Poseidon':   ['The wave does not negotiate.', 'What was built on sand cannot stand.', 'Let it fall. The truth was under the rubble.'],
+    'Hades':      ['The darkness holds treasure.', 'What are you holding onto that holds you?', 'The door to the underworld is unlocked. It always was.'],
+    'Demeter':    ['The soil has not forgotten how to grow.', 'What you give to the earth, the earth returns.', 'Grief is seasonal. The harvest will come again.'],
+    'Dionysus':   ['The vine does not ask permission to grow.', 'The only sane response to an insane world is to dance.', 'Leap. The net will appear — or it will not. Either way, you flew.'],
+    'Athena':     ['The battle is won before the sword is drawn.', 'Wisdom whispers. Listen before you strike.', 'Strategy outlives strength. Think.']
+};
 
-    if(now>=dawnStart&&now<=dawnEnd)return'dawn';
-    if(now>=times.sunset&&now<=duskEnd)return'dusk';
-    return null;
+function getWhisper(olympian){
+    const w=WHISPERS[olympian];
+    if(!w)return '';
+    return w[Math.floor(Math.random()*w.length)];
 }
 
 // ══════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════
 let skyState=[];
-function renderSkyTable(){
-    const tbody=document.getElementById('skyTableBody');
-    tbody.innerHTML=skyState.map(s=>`
-        <tr>
-            <td class="body-name">${s.body}${s.approximate?' ◌':''}</td>
-            <td><span class="sign-glyph">${s.glyph}</span>${s.sign}</td>
-            <td class="olympian-cell">${s.olympian}</td>
-            <td class="arcana-cell">${s.arcana}</td>
-            <td>${s.celestial}</td>
-        </tr>`).join('');
+
+function renderDateLine(){
+    const now=new Date();
+    const options={weekday:'long',year:'numeric',month:'long',day:'numeric'};
+    document.getElementById('dateLine').innerHTML=`
+        ${now.toLocaleDateString('en-US',options)}
+        <span>The Celestial Almanac · Who Watches Whom Today</span>`;
 }
 
-function renderCardOfDay(){
-    // Pick the Sun if available, otherwise the body closest to the meridian
+function renderLuminaries(){
     const sun=skyState.find(s=>s.body==='Sun');
-    const card=sun||skyState[0];
-    if(!card)return;
-    document.getElementById('cardDay').innerHTML=`
-        <div class="card-day-label">Today's Celestial Card</div>
-        <div class="card-day-arcana">${card.arcana}</div>
-        <div class="card-day-olympian">${card.olympian} · ${card.sign} ${card.glyph}</div>
-        <div class="card-day-body">through ${card.body}</div>`;
-}
-
-function renderConjunctions(){
-    const container=document.getElementById('conjunctionList');
-    let html='<div class="widget-title">✦ Celestial Conversations</div>';
-    const pairs=[];
-    for(let i=0;i<skyState.length;i++){
-        for(let j=i+1;j<skyState.length;j++){
-            if(skyState[i].sign!==skyState[j].sign){
-                pairs.push({a:skyState[i],b:skyState[j]});
-            }
-        }
-    }
-    // Show up to 8 interesting pairs
-    const shown=pairs.slice(0,8);
-    if(shown.length===0){
-        html+='<div style="color:var(--text-dim);font-style:italic;font-size:0.7rem;">All bodies in harmony. A rare alignment.</div>';
-    }else{
-        shown.forEach(p=>{
-            html+=`<div class="conj-item"><span class="conj-highlight">${p.a.body}</span> in ${p.a.sign} ${p.a.glyph} (${p.a.olympian})<br>↕<br><span class="conj-highlight">${p.b.body}</span> in ${p.b.sign} ${p.b.glyph} (${p.b.olympian})</div>`;
-        });
-    }
-    container.innerHTML=html;
-}
-
-function renderSolarTimes(){
+    const moon=skyState.find(s=>s.body==='Moon');
     const times=getSolarTimes();
-    const fmt=t=>{
-        const d=new Date(t);
-        return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
-    };
-    document.getElementById('sunriseDisplay').textContent=`☀️ Sunrise: ${fmt(times.sunrise)}`;
-    document.getElementById('sunsetDisplay').textContent=`🌙 Sunset: ${fmt(times.sunset)}`;
-
+    const fmt=t=>new Date(t).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
     const now=new Date();
     const moonIllum=SunCalc.getMoonIllumination(now);
-    const phaseNames=['🌑 New','🌒 Waxing Crescent','🌓 First Quarter','🌔 Waxing Gibbous','🌕 Full','🌖 Waning Gibbous','🌗 Last Quarter','🌘 Waning Crescent'];
+    const phaseNames=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
+    const phaseIcons=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
     const phaseIdx=Math.round(moonIllum.phase*8)%8;
-    document.getElementById('moonPhase').textContent=`${phaseNames[phaseIdx]} · ${Math.round(moonIllum.fraction*100)}%`;
 
-    const period=getReadingPeriod();
-    const dot=document.getElementById('periodDot');
-    const label=document.getElementById('periodLabel');
-    if(period==='dawn'){dot.className='status-dot dawn';label.textContent='DAWN READING ACTIVE';}
-    else if(period==='dusk'){dot.className='status-dot dusk';label.textContent='DUSK READING ACTIVE';}
-    else{dot.className='status-dot idle';label.textContent='between readings';}
-}
-
-// ══════════════════════════════════════════
-// AI READING
-// ══════════════════════════════════════════
-const GAIA_API='https://kairos-coder.github.io/gaia/api.html';
-const CACHE_KEY='zodiac_readings';
-
-function getCachedReading(){
-    try{
-        const cache=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}');
-        return cache;
-    }catch(e){return{};}
-}
-
-function setCachedReading(key,text){
-    const cache=getCachedReading();
-    cache[key]={text,time:Date.now()};
-    localStorage.setItem(CACHE_KEY,JSON.stringify(cache));
-}
-
-async function fetchReading(prompt){
-    try{
-        const resp=await fetch(GAIA_API,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({prompt,temperature:0.85})
-        });
-        if(!resp.ok)throw new Error('API error');
-        const data=await resp.json();
-        return data.text||data.response||data.reading||JSON.stringify(data);
-    }catch(e){
-        return null;
+    let html='';
+    if(sun){
+        html+=`
+        <div class="lum-card solar">
+            <div class="lum-icon">☀️</div>
+            <div class="lum-title">THE SUN RISES</div>
+            <div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div>
+            <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${sun.constellation}</div>
+            <div class="lum-reading"><strong>${sun.olympian} watches over ${sun.sign} today.</strong> ${sun.domain}. ${getWhisper(sun.olympian)}</div>
+            <div class="lum-time">☀️ Rise: ${fmt(times.sunrise)} · 🌙 Set: ${fmt(times.sunset)}</div>
+        </div>`;
     }
+    if(moon){
+        html+=`
+        <div class="lum-card lunar">
+            <div class="lum-icon">${phaseIcons[phaseIdx]}</div>
+            <div class="lum-title">THE MOON WATCHES</div>
+            <div class="lum-olympian">${moon.olympian} — ${moon.arcana}</div>
+            <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${moon.constellation}</div>
+            <div class="lum-reading"><strong>${moon.olympian} haunts ${moon.sign} tonight.</strong> ${moon.domain}. ${getWhisper(moon.olympian)}</div>
+            <div class="lum-time">${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${Math.round(moonIllum.fraction*100)}% illuminated</div>
+        </div>`;
+    }
+    document.getElementById('luminaryBox').innerHTML=html;
 }
 
-async function generateSkyReading(){
-    const period=getReadingPeriod();
+function renderWatchers(){
+    const bodies=skyState.filter(s=>s.body!=='Sun'&&s.body!=='Moon');
+    const container=document.getElementById('watchersList');
     const now=new Date();
-    const timeStr=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    const hour=now.getHours();
+    const times=getSolarTimes();
+    const sunriseHour=new Date(times.sunrise).getHours();
+    const sunsetHour=new Date(times.sunset).getHours();
+    const isNight=hour<sunriseHour||hour>=sunsetHour;
 
-    let cacheKey='';
-    if(period==='dawn')cacheKey=`dawn_${now.toDateString()}`;
-    else if(period==='dusk')cacheKey=`dusk_${now.toDateString()}`;
-    else cacheKey=`latest_${now.toDateString()}`;
-
-    // Check cache
-    const cache=getCachedReading();
-    if(cache[cacheKey]&&period!==null){
-        document.getElementById('readingLabel').textContent=`✦ ${period==='dawn'?'DAWN':'DUSK'} Reading · ${timeStr}`;
-        document.getElementById('readingText').innerHTML=cache[cacheKey].text;
-        return;
-    }
-    // If not dawn/dusk, show most recent cached
-    if(!period){
-        const keys=Object.keys(cache);
-        if(keys.length>0){
-            const latest=keys.reduce((a,b)=>cache[a].time>cache[b].time?a:b);
-            const label=latest.startsWith('dawn')?'DAWN':latest.startsWith('dusk')?'DUSK':'Reading';
-            document.getElementById('readingLabel').textContent=`✦ ${label} Reading · ${timeStr}`;
-            document.getElementById('readingText').innerHTML=cache[latest].text;
-            return;
-        }
-    }
-
-    document.getElementById('readingLabel').textContent=`✦ ${period?period.toUpperCase():'Reading'} · ${timeStr}`;
-    document.getElementById('readingText').innerHTML='<span class="reading-loading">The council gathers. Listening to the sky...</span>';
-
-    // Build prompt
-    const bodyList=skyState.map(s=>`${s.body} in ${s.sign} ${s.glyph} (Olympian: ${s.olympian}, Arcana: ${s.arcana})`).join('\n');
-    const conjunctions=[];
-    for(let i=0;i<skyState.length;i++){
-        for(let j=i+1;j<skyState.length;j++){
-            if(skyState[i].sign!==skyState[j].sign){
-                conjunctions.push(`${skyState[i].body} in ${skyState[i].sign} and ${skyState[j].body} in ${skyState[j].sign}`);
-            }
-        }
-    }
-    const cardDay=skyState.find(s=>s.body==='Sun')||skyState[0];
-    const prompt=`You are the Celestial Grimoire of the Ealdforn Republic. Write a ${period||'cosmic'} reading for ${timeStr} on ${now.toDateString()}. 
-
-Current sky:
-${bodyList}
-
-Notable conversations between signs:
-${conjunctions.slice(0,5).join('\n')}
-
-Today's celestial card is ${cardDay.arcana} through ${cardDay.olympian} (${cardDay.body} in ${cardDay.sign}).
-
-Write a 5-7 sentence poetic reading. Reference specific Olympians, Arcana, and the actual positions. 
-Tone: dark, cosmic, ritual. Not a horoscope — a grimoire entry.
-End with a single line of wisdom from ${cardDay.olympian}.`;
-
-    const text=await fetchReading(prompt);
-    if(text){
-        setCachedReading(cacheKey,text);
-        document.getElementById('readingText').innerHTML=text.replace(/\n/g,'<br>');
-    }else{
-        document.getElementById('readingText').innerHTML='<span class="reading-error">The council is listening, but the voice is silent. Try again at dawn.</span>';
-    }
+    container.innerHTML=bodies.map(s=>{
+        const visibility=isNight?'visible in the night sky':'walking the daylight — unseen but present';
+        return `
+        <div class="watcher-entry">
+            <div class="watcher-icon">${s.icon}</div>
+            <div class="watcher-body">
+                <div class="watcher-headline">
+                    <strong>${s.olympian}</strong> — ${s.arcana} — 
+                    watches over <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>
+                </div>
+                <div class="watcher-whisper">${s.domain}. ${getWhisper(s.olympian)}</div>
+                <div class="watcher-meta">${s.body} · ${s.constellation} · ${visibility}${s.approximate?' · approximate':''}</div>
+            </div>
+        </div>`;
+    }).join('');
 }
 
 // ══════════════════════════════════════════
-// BIRTH READING
+// BIRTH READING — which Olympian watches your sign today?
 // ══════════════════════════════════════════
 function populateBirthSelect(){
     const sel=document.getElementById('birthSign');
     SIGNS.forEach(sign=>{
-        const t=TABLET[sign];
-        const opt=document.createElement('option');
-        opt.value=sign;
-        opt.textContent=`${t.glyph} ${sign} — ${t.olympian}`;
-        sel.appendChild(opt);
+        const o=document.createElement('option');
+        o.value=sign;
+        o.textContent=`${SIGN_GLYPHS[sign]} ${sign}`;
+        sel.appendChild(o);
     });
 }
 
-let birthCache={};
-async function birthReading(){
+function birthReading(){
     const sign=document.getElementById('birthSign').value;
-    if(!sign)return;
-    const t=TABLET[sign];
-    document.getElementById('birthReadingText').innerHTML='<span class="reading-loading">Consulting the tablet...</span>';
+    if(!sign){document.getElementById('birthReadingText').textContent='Choose your zodiac sign to see which Olympian watches over you today.';return;}
 
-    if(birthCache[sign]){
-        document.getElementById('birthReadingText').innerHTML=birthCache[sign];
+    // Find which bodies are currently in this sign
+    const watchers=skyState.filter(s=>s.sign===sign);
+
+    if(watchers.length===0){
+        document.getElementById('birthReadingText').innerHTML=`<strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_CONSTELLATIONS[sign]}. No major celestial body occupies your sign today. The constellation stands empty — a rare quiet. The gods are watching elsewhere. This is not abandonment. This is privacy.`;
         return;
     }
 
-    const prompt=`You are the Ealdforn Celestial Grimoire. Write a birth sign reading for ${sign} ${t.glyph}.
+    const primary=watchers[0];
+    let html=`<strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_CONSTELLATIONS[sign]}. `;
 
-This sign is ruled by ${t.olympian}, connected to the Major Arcana card ${t.arcana}, and associated with the celestial body ${t.body}.
-
-Write a 4-5 sentence poetic reading for someone born under this sign. Reference the Olympian, the Arcana card's meaning, and the celestial body.
-Tone: intimate, mythic, empowering. Not a generic horoscope.
-End with: "— ${t.olympian}"`;
-
-    const text=await fetchReading(prompt);
-    if(text){
-        birthCache[sign]=text.replace(/\n/g,'<br>');
-        document.getElementById('birthReadingText').innerHTML=birthCache[sign];
+    if(watchers.length===1){
+        html+=`<strong>${primary.olympian}</strong> watches over you today through ${primary.body}. ${primary.domain}. ${getWhisper(primary.olympian)}`;
     }else{
-        document.getElementById('birthReadingText').innerHTML='<span class="reading-error">The tablet is silent. Try again.</span>';
+        const names=watchers.map(w=>`<strong>${w.olympian}</strong> (through ${w.body})`).join(' and ');
+        html+=`${names} watch over you today. Multiple Olympians in your house — a crowded constellation. ${primary.olympian} speaks loudest: ${getWhisper(primary.olympian)}`;
     }
+
+    document.getElementById('birthReadingText').innerHTML=html;
 }
 
 // ══════════════════════════════════════════
 // REFRESH
 // ══════════════════════════════════════════
-async function refreshReading(){
+function refreshAlmanac(){
     skyState=buildSkyState();
-    renderSkyTable();
-    renderCardOfDay();
-    renderConjunctions();
-    renderSolarTimes();
-
-    // Clear cache for current period to force new reading
-    const period=getReadingPeriod();
-    const now=new Date();
-    let cacheKey='';
-    if(period==='dawn')cacheKey=`dawn_${now.toDateString()}`;
-    else if(period==='dusk')cacheKey=`dusk_${now.toDateString()}`;
-    if(cacheKey){
-        const cache=getCachedReading();
-        delete cache[cacheKey];
-        localStorage.setItem(CACHE_KEY,JSON.stringify(cache));
-    }
-    await generateSkyReading();
-    toast('✦ Sky recalculated. Reading refreshed.');
+    renderDateLine();
+    renderLuminaries();
+    renderWatchers();
+    toast('✦ Celestial Grimoire refreshed.');
 }
 
-function toast(msg){
-    const el=document.getElementById('toast');
-    el.textContent=msg;el.classList.add('show');
-    setTimeout(()=>el.classList.remove('show'),3000);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
 
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-async function init(){
+function init(){
     populateBirthSelect();
     skyState=buildSkyState();
-    renderSkyTable();
-    renderCardOfDay();
-    renderConjunctions();
-    renderSolarTimes();
-    await generateSkyReading();
-    toast('✦ Celestial Grimoire initialized. The sky speaks.');
+    renderDateLine();
+    renderLuminaries();
+    renderWatchers();
+    toast('✦ The Olympians take their positions. The watching begins.');
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
