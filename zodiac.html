@@ -28,41 +28,42 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 .date-line span{color:var(--text-dim);font-size:0.5rem;display:block;margin-top:0.15rem;letter-spacing:0.15em}
 
 .intro-text{text-align:center;max-width:600px;margin:0 auto 2rem;font-style:italic;font-size:0.9rem;line-height:1.7;color:var(--text-mid)}
-.intro-text strong{color:var(--gold-light);font-style:normal}
 
-/* SOLAR + LUNAR */
+/* LUMINARIES */
 .luminary-box{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
 @media(max-width:600px){.luminary-box{grid-template-columns:1fr}}
-.lum-card{border-radius:10px;padding:1.5rem;text-align:center}
+.lum-card{border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
 .lum-card.solar{background:linear-gradient(160deg,rgba(25,15,5,0.9),rgba(15,10,5,0.95));border:1px solid var(--gold)}
 .lum-card.lunar{background:linear-gradient(160deg,rgba(10,10,25,0.9),rgba(5,5,20,0.95));border:1px solid var(--moon)}
-.lum-card .lum-icon{font-size:2.5rem;margin-bottom:0.5rem}
-.lum-card .lum-title{font-family:'Cinzel Decorative',serif;font-size:0.8rem;letter-spacing:0.1em;margin-bottom:0.5rem}
+.lum-card .lum-icon{font-size:2rem;margin-bottom:0.5rem}
+.lum-card .lum-title{font-family:'Cinzel Decorative',serif;font-size:0.7rem;letter-spacing:0.15em;margin-bottom:0.6rem}
 .lum-card.solar .lum-title{color:var(--gold-light)}
 .lum-card.lunar .lum-title{color:var(--moon)}
-.lum-card .lum-olympian{font-size:1.1rem;color:var(--text);font-style:italic;margin-bottom:0.3rem}
-.lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-mid)}
-.lum-card .lum-sign .glyph{font-size:1.3rem}
-.lum-card .lum-reading{font-size:0.85rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
-.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;color:var(--text-dim);margin-top:0.5rem}
+.lum-card .lum-card-img{width:100px;height:auto;border-radius:6px;margin:0 auto 0.6rem;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:block}
+.lum-card .lum-olympian{font-size:1rem;color:var(--text);font-style:italic;margin-bottom:0.3rem}
+.lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--text-mid)}
+.lum-card .lum-sign .glyph{font-size:1.2rem}
+.lum-card .lum-reading{font-size:0.82rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
+.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.5rem}
 
-/* PLANETARY WATCHERS */
+/* WATCHERS */
 .watchers-section{margin:2rem 0}
-.watchers-title{font-family:'Cinzel Decorative',serif;font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;text-align:center;margin-bottom:1.2rem}
-.watchers-title::after{content:'';display:block;width:180px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0.6rem auto 0}
+.watchers-title{font-family:'Cinzel Decorative',serif;font-size:0.7rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin-bottom:1.2rem}
+.watchers-title::after{content:'';display:block;width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0.6rem auto 0}
 
-.watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.3rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:flex-start}
+.watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:center}
 .watcher-entry:hover{border-color:var(--border-gold)}
-.watcher-icon{font-size:1.5rem;flex-shrink:0;width:40px;text-align:center}
-.watcher-body{flex:1}
-.watcher-headline{font-size:0.85rem;line-height:1.5;color:var(--text)}
-.watcher-headline strong{color:var(--gold-light)}
+.watcher-card-img{width:55px;height:auto;border-radius:4px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,0.4)}
+.watcher-body{flex:1;min-width:0}
+.watcher-headline{font-size:0.8rem;line-height:1.4;color:var(--text)}
+.watcher-headline .god-name{color:var(--gold);font-weight:600}
+.watcher-headline .arcana-name{font-size:0.65rem;color:var(--gold-dark)}
 .watcher-headline .sign-name{color:var(--gold-light)}
-.watcher-headline .glyph{font-size:1rem}
+.watcher-headline .glyph{font-size:0.9rem}
 .watcher-whisper{font-size:0.75rem;line-height:1.5;color:var(--text-dim);font-style:italic;margin-top:0.3rem}
-.watcher-meta{font-family:'Cinzel',serif;font-size:0.45rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.4rem}
+.watcher-meta{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.08em;color:var(--text-dim);margin-top:0.3rem}
 
-/* BIRTH WIDGET */
+/* BIRTH */
 .birth-widget{margin:2.5rem 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center}
 .birth-widget select{font-family:'Cinzel',serif;font-size:0.6rem;background:var(--deep);border:1px solid var(--border);color:var(--text);padding:0.6rem 1rem;border-radius:6px;cursor:pointer;margin-bottom:0.8rem;width:260px}
 .birth-widget select:focus{border-color:var(--gold);outline:none}
@@ -104,29 +105,26 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
     </div>
 
     <div class="intro-text">
-        Each day, the celestial bodies move through the constellations. Each body <strong>is</strong> an Olympian. Each Olympian watches over the sign they currently occupy. This is today's report — who is watching whom.
+        The planets do not orbit. They <strong>watch</strong>. Each is an Olympian. Each Olympian claims the constellation they walk through. This is who watches you today.
     </div>
 
-    <!-- SUN + MOON -->
     <div class="luminary-box" id="luminaryBox"></div>
 
-    <!-- PLANETARY WATCHERS -->
     <div class="watchers-section">
-        <div class="watchers-title">✦ The Planetary Watchers ✦</div>
+        <div class="watchers-title">✦ The Watchers ✦</div>
         <div id="watchersList"></div>
     </div>
 
-    <!-- BIRTH WIDGET -->
     <div class="birth-widget">
-        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem;">✦ Your Sign's Watcher Today</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem;">✦ Who Walks Your Sign</div>
         <select id="birthSign" onchange="birthReading()">
             <option value="">— Select your sign —</option>
         </select>
-        <div class="birth-reading" id="birthReadingText">Choose your zodiac sign to see which Olympian watches over you today.</div>
+        <div class="birth-reading" id="birthReadingText">The signs are carved into the sky. Choose yours. The gods will decide if they answer.</div>
     </div>
 
     <div class="btn-row">
-        <button class="ritual-btn btn-gold" onclick="refreshAlmanac()">⟳ Refresh Almanac</button>
+        <button class="ritual-btn btn-gold" onclick="refreshAlmanac()">⟳ Refresh Grimoire</button>
         <a href="index.html" class="ritual-btn btn-dim">← Temple</a>
     </div>
 </div>
@@ -138,28 +136,45 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script>
 // ══════════════════════════════════════════
-// THE TABLET — Celestial Body → Olympian → Arcana
+// CELESTIAL BODY → OLYMPIAN → MAJOR ARCANA → IMAGE
 // ══════════════════════════════════════════
 const CELESTIAL_OLYMPIANS = {
-    'Sun':     {olympian:'Apollo',     arcana:'The Sun (XIX)',       icon:'☀️', domain:'light, radiance, creative fire'},
-    'Moon':    {olympian:'Artemis',    arcana:'The Chariot (VII)',   icon:'🌙', domain:'the hunt, sovereignty, silver stillness'},
-    'Mercury': {olympian:'Hermes',     arcana:'The Magician (I)',    icon:'☿', domain:'messages, translation, the boundary-crosser'},
-    'Venus':   {olympian:'Aphrodite',  arcana:'The Lovers (VI)',     icon:'♀', domain:'love, desire, the pull that binds'},
-    'Mars':    {olympian:'Ares',       arcana:'The Hierophant (V)',  icon:'♂', domain:'conquest, tradition as weapon, the spear'},
-    'Jupiter': {olympian:'Zeus',       arcana:'The Emperor (IV)',    icon:'♃', domain:'authority, structure, the thunder that orders'},
-    'Saturn':  {olympian:'Hera',       arcana:'The High Priestess (II)',icon:'♄', domain:'the covenant, hidden knowledge, the binding oath'},
-    'Uranus':  {olympian:'Hephaestus', arcana:'Strength (XI)',       icon:'♅', domain:'the forge, invisible craft, endurance'},
-    'Neptune': {olympian:'Poseidon',   arcana:'The Tower (XVI)',     icon:'♆', domain:'upheaval, the wave, destruction that reveals'},
-    'Pluto':   {olympian:'Hades',      arcana:'Death (XIII)',        icon:'♇', domain:'the underworld, transformation, hidden wealth'},
-    'Ceres':   {olympian:'Demeter',    arcana:'The Empress (III)',   icon:'⚳', domain:'harvest, abundance, the cultivated earth'},
-    'Eros':    {olympian:'Dionysus',   arcana:'The Fool (0)',        icon:'⚴', domain:'ecstasy, the leap, divine madness'},
-    'Phobos':  {olympian:'Athena',     arcana:'Justice (VIII)',      icon:'⚵', domain:'strategy, the whisper of caution, wisdom before battle'}
+    'Sun':     {olympian:'Apollo',     arcana:'The Sun (XIX)',       icon:'☀️', image:'data/images/major/sun.png'},
+    'Moon':    {olympian:'Artemis',    arcana:'The Chariot (VII)',   icon:'🌙', image:'data/images/artemis-card.jpg'},
+    'Mercury': {olympian:'Hermes',     arcana:'The Magician (I)',    icon:'☿', image:'data/images/major/magician.png'},
+    'Venus':   {olympian:'Aphrodite',  arcana:'The Lovers (VI)',     icon:'♀', image:'data/images/aphrodite-card.jpg'},
+    'Mars':    {olympian:'Ares',       arcana:'The Hierophant (V)',  icon:'♂', image:'data/images/ares-card.jpg'},
+    'Jupiter': {olympian:'Zeus',       arcana:'The Emperor (IV)',    icon:'♃', image:'data/images/zeus-card.jpg'},
+    'Saturn':  {olympian:'Hera',       arcana:'The High Priestess (II)',icon:'♄', image:'data/images/hera-card.jpg'},
+    'Uranus':  {olympian:'Hephaestus', arcana:'Strength (XI)',       icon:'♅', image:'data/images/hephaestus-card.jpg'},
+    'Neptune': {olympian:'Poseidon',   arcana:'The Tower (XVI)',     icon:'♆', image:'data/images/poseidon-card.jpg'},
+    'Pluto':   {olympian:'Hades',      arcana:'Death (XIII)',        icon:'♇', image:'data/images/hades-card.jpg'},
+    'Ceres':   {olympian:'Demeter',    arcana:'The Empress (III)',   icon:'⚳', image:'data/images/demeter-card.jpg'},
+    'Eros':    {olympian:'Dionysus',   arcana:'The Fool (0)',        icon:'⚴', image:'data/images/dionysus-card.jpg'},
+    'Phobos':  {olympian:'Athena',     arcana:'Justice (VIII)',      icon:'⚵', image:'data/images/athena-card.jpg'}
 };
 
-// Zodiac sign info
 const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
 const SIGN_GLYPHS = {'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
 const SIGN_CONSTELLATIONS = {'Aries':'the Ram','Taurus':'the Bull','Gemini':'the Twins','Cancer':'the Crab','Leo':'the Lion','Virgo':'the Maiden','Libra':'the Scales','Scorpio':'the Scorpion','Sagittarius':'the Archer','Capricorn':'the Sea-Goat','Aquarius':'the Water-Bearer','Pisces':'the Fish'};
+
+const WHISPERS = {
+    'Apollo':['Apollo does not ask you to create. He sets you on fire. What will you burn for?','The sun does not negotiate with shadows. Either you stand in the light, or you do not exist.','Your radiance is not a gift. It is a demand. The lyre plays. You must answer.'],
+    'Artemis':['Artemis does not watch. She hunts. The arrow is already in the air. Where are you running?','The moon does not illuminate to be kind. It illuminates so you can see what is chasing you.','Sovereignty is not freedom. It is the silence before the arrow releases.'],
+    'Hermes':['Hermes does not deliver messages. He becomes them. You are the word. Translate yourself.','Every locked door has a key. Every key has a price. Hermes collects both.','The boundary is not a line. It is a wound. Hermes presses his thumb into it.'],
+    'Aphrodite':['Aphrodite does not love. She chooses. The mirror shows what you desire. It also shows what you fear.','Desire is not a feeling. It is a current. Aphrodite is the riptide. Swim or sink.','The lovers are not two. They are one split in half. Aphrodite holds the knife.'],
+    'Ares':['Ares does not fight. He is the fight. The spear knows where to strike because the spear is already there.','Tradition is not armor. It is a scar. Ares wears his proudly. Do you?','War does not ask why. War asks how. Ares respects the how. The why is your problem.'],
+    'Zeus':['Zeus does not rule. He is the rule. The thunder does not ask permission. Neither should you.','Order is not the absence of chaos. Order is chaos held in a fist. Today, it opens.','The crown is not a reward. It is a sentence. Zeus serves his. What sentence are you serving?'],
+    'Hera':['Hera does not speak. She withholds. The truth is not absent. It is waiting. For what?','Covenants are not promises. They are cages. Hera holds the key. She will not tell you where.','The queen does not need to be loved. She needs to be obeyed. Hera watches. Obey or prove her wrong.'],
+    'Hephaestus':['Hephaestus does not build. He endures. The forge does not care that you are broken. It only cares that you are hot.','What you make in the dark will be seen in the light. Hephaestus does not promise beauty. He promises truth.','The hammer falls. The anvil waits. Hephaestus limps between them. So do you.'],
+    'Poseidon':['Poseidon does not destroy. He reveals. What was built on sand cannot stand. Let it fall. The truth was under the rubble.','The wave does not negotiate. It does not hate. It simply arrives. What will you be when the water recedes?','The sea has no memory. That is its mercy. Poseidon offers you the same. Drown. Be new.'],
+    'Hades':['Hades does not take. He waits. The underworld is not a punishment. It is a storage room. What are you storing?','Death is not an ending. It is a pivot. Hades turns the door. Walk through or stand still. Either way, you are moving.','The darkness is not empty. It is full of things that do not need light to be seen. Hades sees you. Do you see yourself?'],
+    'Demeter':['Demeter does not grow. She grieves. The harvest comes from the field she starved. What are you growing from your loss?','The soil does not owe you an answer. It only owes you a season. Demeter holds the calendar. She is not kind. She is patient.','Winter is not a punishment. It is a fallow. Demeter sleeps. So should you.'],
+    'Dionysus':['Dionysus does not dance. He spins. The world is not broken. It is drunk. So are you. Dance or fall.','The vine does not ask permission to grow. Neither should you. Dionysus pours. You drink. The cup is bottomless.','Sanity is a cage. Dionysus holds the key. He will not give it to you. You must swallow it.'],
+    'Athena':['Athena does not advise. She insists. The battle is won before the sword is drawn. You just do not know it yet.','Wisdom is not knowing the answer. Wisdom is knowing which question to ask. Athena asks. You answer.','The owl does not see in the dark. It remembers. Athena remembers everything. Including what you forgot.']
+};
+
+function getWhisper(olympian){const w=WHISPERS[olympian];return w?w[Math.floor(Math.random()*w.length)]:'';}
 
 // ══════════════════════════════════════════
 // STARFIELD
@@ -171,10 +186,9 @@ window.addEventListener('resize',rs);rs();
 (function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.55+0.45*Math.sin(s.tw+t*0.0002));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(232,224,208,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
 
 // ══════════════════════════════════════════
-// ASTRONOMY HELPERS
+// ASTRONOMY
 // ══════════════════════════════════════════
-function eclipticToSign(lonDeg){let lon=((lonDeg%360)+360)%360;const idx=Math.floor(lon/30);return SIGNS[Math.min(idx,11)];}
-
+function eclipticToSign(lonDeg){let lon=((lonDeg%360)+360)%360;return SIGNS[Math.min(Math.floor(lon/30),11)];}
 function getBodyPosition(bodyName,date){
     const observer=new Astronomy.Observer(40,-74,0);
     try{
@@ -187,9 +201,7 @@ function getBodyPosition(bodyName,date){
     if(lon!==undefined)return{ra:0,dec:0,elon:lon,elat:0,found:true,approximate:true};
     return{ra:0,dec:0,elon:0,elat:0,found:false};
 }
-
 const BODIES=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Ceres','Eros','Phobos'];
-
 function buildSkyState(){
     const now=new Date();const state=[];
     BODIES.forEach(name=>{
@@ -197,52 +209,22 @@ function buildSkyState(){
         if(pos.found){
             const sign=eclipticToSign(pos.elon);
             const deity=CELESTIAL_OLYMPIANS[name];
-            if(deity){
-                state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],constellation:SIGN_CONSTELLATIONS[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,domain:deity.domain,approximate:pos.approximate||false});
-            }
+            if(deity){state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],constellation:SIGN_CONSTELLATIONS[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,image:deity.image,approximate:pos.approximate||false});}
         }
     });
     return state;
 }
-
-function getSolarTimes(){const now=new Date();return SunCalc.getTimes(now,40,-74);}
-
-// ══════════════════════════════════════════
-// WHISPER GENERATOR
-// ══════════════════════════════════════════
-const WHISPERS = {
-    'Apollo':     ['The light is on you. Create.', 'Everything hidden becomes visible today.', 'Your radiance is not vanity — it is a duty.'],
-    'Artemis':    ['The dark is not your enemy.', 'Sovereignty is forged when no one is watching.', 'The arrow knows the way. Release it.'],
-    'Hermes':     ['Every locked door has a word.', 'The message will arrive. Be ready to translate.', 'Cross the boundary. That is what you were made for.'],
-    'Aphrodite':  ['Love is not the absence of choice.', 'The mirror shows what you desire. It also shows what you are.', 'The pull is real. Decide whether to follow it.'],
-    'Ares':       ['The spear knows where to strike.', 'Tradition is your armor — but armor can become a cage.', 'Charge. But know what you are charging toward.'],
-    'Zeus':       ['Authority is the silence before the storm.', 'The thunder does not ask permission.', 'Order from chaos. But order can become tyranny.'],
-    'Hera':       ['Not all truths are spoken.', 'The covenant holds — but should it?', 'What oath are you keeping that wants to be broken?'],
-    'Hephaestus': ['The fire does not care that you are broken.', 'Keep working. The forge rewards persistence.', 'What you build in the dark will be seen in the light.'],
-    'Poseidon':   ['The wave does not negotiate.', 'What was built on sand cannot stand.', 'Let it fall. The truth was under the rubble.'],
-    'Hades':      ['The darkness holds treasure.', 'What are you holding onto that holds you?', 'The door to the underworld is unlocked. It always was.'],
-    'Demeter':    ['The soil has not forgotten how to grow.', 'What you give to the earth, the earth returns.', 'Grief is seasonal. The harvest will come again.'],
-    'Dionysus':   ['The vine does not ask permission to grow.', 'The only sane response to an insane world is to dance.', 'Leap. The net will appear — or it will not. Either way, you flew.'],
-    'Athena':     ['The battle is won before the sword is drawn.', 'Wisdom whispers. Listen before you strike.', 'Strategy outlives strength. Think.']
-};
-
-function getWhisper(olympian){
-    const w=WHISPERS[olympian];
-    if(!w)return '';
-    return w[Math.floor(Math.random()*w.length)];
-}
+function getSolarTimes(){return SunCalc.getTimes(new Date(),40,-74);}
 
 // ══════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════
 let skyState=[];
-
 function renderDateLine(){
     const now=new Date();
-    const options={weekday:'long',year:'numeric',month:'long',day:'numeric'};
     document.getElementById('dateLine').innerHTML=`
-        ${now.toLocaleDateString('en-US',options)}
-        <span>The Celestial Almanac · Who Watches Whom Today</span>`;
+        ${now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+        <span>The Celestial Almanac · Who watches whom</span>`;
 }
 
 function renderLuminaries(){
@@ -250,8 +232,7 @@ function renderLuminaries(){
     const moon=skyState.find(s=>s.body==='Moon');
     const times=getSolarTimes();
     const fmt=t=>new Date(t).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
-    const now=new Date();
-    const moonIllum=SunCalc.getMoonIllumination(now);
+    const moonIllum=SunCalc.getMoonIllumination(new Date());
     const phaseNames=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
     const phaseIcons=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
     const phaseIdx=Math.round(moonIllum.phase*8)%8;
@@ -261,10 +242,10 @@ function renderLuminaries(){
         html+=`
         <div class="lum-card solar">
             <div class="lum-icon">☀️</div>
-            <div class="lum-title">THE SUN RISES</div>
+            <img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'">
             <div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div>
             <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${sun.constellation}</div>
-            <div class="lum-reading"><strong>${sun.olympian} watches over ${sun.sign} today.</strong> ${sun.domain}. ${getWhisper(sun.olympian)}</div>
+            <div class="lum-reading">${getWhisper(sun.olympian)}</div>
             <div class="lum-time">☀️ Rise: ${fmt(times.sunrise)} · 🌙 Set: ${fmt(times.sunset)}</div>
         </div>`;
     }
@@ -272,10 +253,10 @@ function renderLuminaries(){
         html+=`
         <div class="lum-card lunar">
             <div class="lum-icon">${phaseIcons[phaseIdx]}</div>
-            <div class="lum-title">THE MOON WATCHES</div>
+            <img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'">
             <div class="lum-olympian">${moon.olympian} — ${moon.arcana}</div>
             <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${moon.constellation}</div>
-            <div class="lum-reading"><strong>${moon.olympian} haunts ${moon.sign} tonight.</strong> ${moon.domain}. ${getWhisper(moon.olympian)}</div>
+            <div class="lum-reading">${getWhisper(moon.olympian)}</div>
             <div class="lum-time">${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${Math.round(moonIllum.fraction*100)}% illuminated</div>
         </div>`;
     }
@@ -284,66 +265,50 @@ function renderLuminaries(){
 
 function renderWatchers(){
     const bodies=skyState.filter(s=>s.body!=='Sun'&&s.body!=='Moon');
-    const container=document.getElementById('watchersList');
-    const now=new Date();
-    const hour=now.getHours();
+    const now=new Date();const hour=now.getHours();
     const times=getSolarTimes();
     const sunriseHour=new Date(times.sunrise).getHours();
     const sunsetHour=new Date(times.sunset).getHours();
     const isNight=hour<sunriseHour||hour>=sunsetHour;
 
-    container.innerHTML=bodies.map(s=>{
-        const visibility=isNight?'visible in the night sky':'walking the daylight — unseen but present';
-        return `
+    document.getElementById('watchersList').innerHTML=bodies.map(s=>`
         <div class="watcher-entry">
-            <div class="watcher-icon">${s.icon}</div>
+            <img class="watcher-card-img" src="${s.image}" alt="${s.olympian}" onerror="this.style.display='none'">
             <div class="watcher-body">
                 <div class="watcher-headline">
-                    <strong>${s.olympian}</strong> — ${s.arcana} — 
-                    watches over <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>
+                    <span class="god-name">${s.olympian}</span>
+                    <span class="arcana-name">· ${s.arcana}</span><br>
+                    through ${s.body} in
+                    <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>
                 </div>
-                <div class="watcher-whisper">${s.domain}. ${getWhisper(s.olympian)}</div>
-                <div class="watcher-meta">${s.body} · ${s.constellation} · ${visibility}${s.approximate?' · approximate':''}</div>
+                <div class="watcher-whisper">${getWhisper(s.olympian)}</div>
+                <div class="watcher-meta">${s.constellation} · ${isNight?'walks the night':'walks the day, unseen'}${s.approximate?' · approximate':''}</div>
             </div>
-        </div>`;
-    }).join('');
+        </div>
+    `).join('');
 }
 
 // ══════════════════════════════════════════
-// BIRTH READING — which Olympian watches your sign today?
+// BIRTH READING
 // ══════════════════════════════════════════
 function populateBirthSelect(){
     const sel=document.getElementById('birthSign');
-    SIGNS.forEach(sign=>{
-        const o=document.createElement('option');
-        o.value=sign;
-        o.textContent=`${SIGN_GLYPHS[sign]} ${sign}`;
-        sel.appendChild(o);
-    });
+    SIGNS.forEach(sign=>{const o=document.createElement('option');o.value=sign;o.textContent=`${SIGN_GLYPHS[sign]} ${sign}`;sel.appendChild(o);});
 }
-
 function birthReading(){
     const sign=document.getElementById('birthSign').value;
-    if(!sign){document.getElementById('birthReadingText').textContent='Choose your zodiac sign to see which Olympian watches over you today.';return;}
-
-    // Find which bodies are currently in this sign
+    if(!sign){document.getElementById('birthReadingText').innerHTML='The signs are carved into the sky. Choose yours. The gods will decide if they answer.';return;}
     const watchers=skyState.filter(s=>s.sign===sign);
-
+    const glyph=SIGN_GLYPHS[sign],constellation=SIGN_CONSTELLATIONS[sign];
     if(watchers.length===0){
-        document.getElementById('birthReadingText').innerHTML=`<strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_CONSTELLATIONS[sign]}. No major celestial body occupies your sign today. The constellation stands empty — a rare quiet. The gods are watching elsewhere. This is not abandonment. This is privacy.`;
+        document.getElementById('birthReadingText').innerHTML=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${constellation}</span><br><br>The house is empty. No Olympian walks your sign today.<br>This is not abandonment. This is <strong>privacy</strong>.<br>The gods are watching elsewhere. What will you do with the silence?`;
         return;
     }
-
-    const primary=watchers[0];
-    let html=`<strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_CONSTELLATIONS[sign]}. `;
-
-    if(watchers.length===1){
-        html+=`<strong>${primary.olympian}</strong> watches over you today through ${primary.body}. ${primary.domain}. ${getWhisper(primary.olympian)}`;
-    }else{
-        const names=watchers.map(w=>`<strong>${w.olympian}</strong> (through ${w.body})`).join(' and ');
-        html+=`${names} watch over you today. Multiple Olympians in your house — a crowded constellation. ${primary.olympian} speaks loudest: ${getWhisper(primary.olympian)}`;
-    }
-
+    const primary=watchers[0];const whisper=getWhisper(primary.olympian);const additional=watchers.slice(1);
+    let html=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${constellation}</span><br><br>`;
+    html+=`<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today, through ${primary.body}.<br>`;
+    html+=`<span style="font-style:italic;">${whisper}</span>`;
+    if(additional.length>0){html+=`<br><br><span style="font-size:0.72rem;color:var(--text-dim)">Also present: ${additional.map(w=>w.olympian).join(', ')}. The house is crowded. The council watches.</span>`;}
     document.getElementById('birthReadingText').innerHTML=html;
 }
 
@@ -352,24 +317,15 @@ function birthReading(){
 // ══════════════════════════════════════════
 function refreshAlmanac(){
     skyState=buildSkyState();
-    renderDateLine();
-    renderLuminaries();
-    renderWatchers();
-    toast('✦ Celestial Grimoire refreshed.');
+    renderDateLine();renderLuminaries();renderWatchers();
+    toast('✦ The Olympians take new positions.');
 }
-
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
-
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
 function init(){
     populateBirthSelect();
     skyState=buildSkyState();
-    renderDateLine();
-    renderLuminaries();
-    renderWatchers();
-    toast('✦ The Olympians take their positions. The watching begins.');
+    renderDateLine();renderLuminaries();renderWatchers();
+    toast('✦ The watching begins.');
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
