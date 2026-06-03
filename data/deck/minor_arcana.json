@@ -258,16 +258,16 @@
       {
         "id": "earth_03",
         "name": "Three of Earth",
-        "title": "Chicomecoatl",
-        "culture": "Aztec",
+        "title": "The Seven Dwarves",
+        "culture": "Norse/Germanic",
         "rank": "three",
         "element": "Earth",
-        "ruling_god": "Demeter",
-        "keywords": ["the first seed", "maize", "the long bet", "investment", "patient growth"],
-        "upright": "Chicomecoatl, goddess of maize, holds the first seed that will feed a civilization. The Seven of Earth is the seed round — the investment that takes seasons to mature. Plant. Wait. The harvest is not tomorrow. The maize does not rush. Neither should you.",
-        "reversed": "The failed crop. The seed that never sprouted. The investment that withered in the field. Was it the seed, or the soil? Or did you stop watering too soon?",
+        "ruling_god": "Hera",
+        "keywords": ["the crew", "shared labor", "teamwork", "the collab", "each brings a gift"],
+        "upright": "Seven dwarves, each with a skill, each with a flaw, working the mine together. The Three of Earth is the collab — the crew that makes the impossible possible. Who is on your team? What does each one bring that no one else can?",
+        "reversed": "The crew that fractures. The dwarves arguing over the gem. The shared labor that became competition. Vet your collaborators. One bad pick breaks the whole mine.",
         "image": "data/images/minor/earth/earth_03.png",
-        "prompt": "Chicomecoatl, Aztec goddess of maize and the sacred first seed of civilization, as tarot card."
+        "prompt": "The Seven Dwarves of Germanic folklore, master craftsmen working the mine together, as tarot card."
       },
       {
         "id": "earth_04",
@@ -314,16 +314,16 @@
       {
         "id": "earth_07",
         "name": "Seven of Earth",
-        "title": "The Seven Dwarves",
-        "culture": "Norse/Germanic",
+        "title": "Chicomecoatl",
+        "culture": "Aztec",
         "rank": "seven",
         "element": "Earth",
-        "ruling_god": "Hera",
-        "keywords": ["the crew", "shared labor", "teamwork", "the collab", "each brings a gift"],
-        "upright": "Seven dwarves, each with a skill, each with a flaw, working the mine together. The Three of Earth is the collab — the crew that makes the impossible possible. Who is on your team? What does each one bring that no one else can?",
-        "reversed": "The crew that fractures. The dwarves arguing over the gem. The shared labor that became competition. Vet your collaborators. One bad pick breaks the whole mine.",
+        "ruling_god": "Demeter",
+        "keywords": ["the first seed", "maize", "the long bet", "investment", "patient growth"],
+        "upright": "Chicomecoatl, goddess of maize, holds the first seed that will feed a civilization. The Seven of Earth is the seed round — the investment that takes seasons to mature. Plant. Wait. The harvest is not tomorrow. The maize does not rush. Neither should you.",
+        "reversed": "The failed crop. The seed that never sprouted. The investment that withered in the field. Was it the seed, or the soil? Or did you stop watering too soon?",
         "image": "data/images/minor/earth/earth_07.png",
-        "prompt": "The Seven Dwarves of Germanic folklore, master craftsmen working the mine together, as tarot card."
+        "prompt": "Chicomecoatl, Aztec goddess of maize and the sacred first seed of civilization, as tarot card."
       },
       {
         "id": "earth_08",
