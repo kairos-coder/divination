@@ -24,6 +24,7 @@
   --text:         #ede5d0;
   --text-mid:     #a89880;
   --text-dim:     #605848;
+  --sage:         #7a9e6a;
 }
 
 html { scroll-behavior: smooth; }
@@ -49,258 +50,100 @@ body::before {
   z-index: 0;
 }
 
+#pontusAmbient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.1;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 70%);
+}
+
 /* ── NAV ── */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 52px;
-  background: rgba(5,5,13,0.9);
-  backdrop-filter: blur(16px);
+  position: fixed; top: 0; left: 0; right: 0; height: 52px;
+  background: rgba(5,5,13,0.9); backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-gold);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; z-index: 200;
 }
-
-.nav-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.nav-brand-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 12px;
-  color: var(--gold);
-  letter-spacing: 1px;
-}
-
-.nav-brand-sub {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 4px;
-  color: var(--gold-dark);
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  gap: 24px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
+.nav-brand { display: flex; flex-direction: column; gap: 1px; }
+.nav-brand-title { font-family: 'Cinzel Decorative', serif; font-size: 12px; color: var(--gold); letter-spacing: 1px; }
+.nav-brand-sub { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; color: var(--gold-dark); text-transform: uppercase; }
+.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
 .nav-links a:hover { color: var(--gold); }
 
 /* ── HERO ── */
 .hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 80px 24px 80px;
-  position: relative;
-  z-index: 1;
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 80px 24px 60px; position: relative; z-index: 1;
 }
+.hero-sigil { font-size: 72px; margin-bottom: 32px; animation: float 6s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(201,168,76,0.3)); cursor: pointer; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.hero-eyebrow { font-family:'Cinzel',serif; font-size:9px; letter-spacing:8px; text-transform:uppercase; color:var(--gold); opacity:0.55; margin-bottom:20px; }
+.hero h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(36px,7vw,80px); font-weight:900; color:var(--gold-light); text-shadow:0 0 80px rgba(201,168,76,0.2),0 0 160px rgba(201,168,76,0.06),0 4px 12px rgba(0,0,0,0.95); line-height:1.0; letter-spacing:2px; }
+.hero-ampersand { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(48px,9vw,110px); color:var(--gold-dark); line-height:0.8; display:block; opacity:0.5; }
+.hero-subtitle { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(18px,3vw,26px); color:var(--text-mid); margin-top:20px; }
+.hero-tagline { font-size:14px; color:var(--text-dim); font-style:italic; margin-top:16px; }
+.hero-rule { width:500px; max-width:80vw; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:40px auto 0; }
+.hero-cta { margin-top:48px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.btn-draw { font-family:'Cinzel',serif; font-size:14px; letter-spacing:4px; text-transform:uppercase; color:var(--void); background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; padding:16px 48px; border-radius:8px; cursor:pointer; text-decoration:none; transition:all 0.3s; box-shadow:0 0 40px rgba(201,168,76,0.2); }
+.btn-draw:hover { box-shadow:0 0 60px rgba(201,168,76,0.4); transform:translateY(-2px); }
+.btn-shrine { font-family:'Cinzel',serif; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--sage); background:transparent; border:1px solid var(--sage); padding:12px 36px; border-radius:8px; cursor:pointer; text-decoration:none; transition:all 0.3s; }
+.btn-shrine:hover { background:rgba(122,158,106,0.1); box-shadow:0 0 30px rgba(122,158,106,0.15); }
+.btn-archive { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); background:transparent; border:1px solid var(--border); padding:8px 24px; border-radius:6px; cursor:pointer; text-decoration:none; transition:all 0.3s; }
+.btn-archive:hover { border-color:var(--text-mid); color:var(--text-mid); }
+.scroll-cue { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); font-family:'Cinzel',serif; font-size:7px; letter-spacing:4px; color:var(--text-dim); text-transform:uppercase; }
 
-.hero-sigil {
-  font-size: 72px;
-  margin-bottom: 32px;
-  animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 0 30px rgba(201,168,76,0.3));
-  cursor: pointer;
-}
+/* ── GALLERY ── */
+.gallery-section { position:relative; z-index:1; padding:60px 24px; max-width:1200px; margin:0 auto; border-top:1px solid rgba(201,168,76,0.06); }
+.gallery-header { text-align:center; margin-bottom:40px; }
+.gallery-eyebrow { font-family:'Cinzel',serif; font-size:8px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); opacity:0.55; margin-bottom:8px; }
+.gallery-title { font-family:'Cinzel Decorative',serif; font-size:clamp(18px,2.5vw,28px); color:var(--gold-light); }
+.gallery-stats { font-size:12px; color:var(--text-dim); font-style:italic; margin-top:8px; }
+.gallery-tabs { display:flex; justify-content:center; gap:4px; margin-bottom:28px; flex-wrap:wrap; }
+.gallery-tab { font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; text-transform:uppercase; padding:7px 16px; border:1px solid transparent; border-radius:5px; background:transparent; color:var(--text-dim); cursor:pointer; transition:all 0.25s; }
+.gallery-tab:hover { color:var(--text-mid); border-color:rgba(201,168,76,0.2); }
+.gallery-tab.active { color:var(--gold-light); border-color:var(--gold); background:rgba(201,168,76,0.06); }
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; min-height:150px; }
+.gallery-card { background:var(--surface); border:1px solid var(--border); border-radius:7px; overflow:hidden; transition:all 0.3s; cursor:pointer; aspect-ratio:2/3; position:relative; }
+.gallery-card:hover { border-color:var(--gold); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 16px rgba(201,168,76,0.08); z-index:2; }
+.gallery-card img { width:100%; height:100%; object-fit:cover; display:block; }
+.gallery-card .card-label { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(5,5,13,0.95) 60%); padding:20px 6px 6px; font-family:'Cinzel',serif; font-size:7px; letter-spacing:1px; color:var(--gold-light); text-align:center; opacity:0; transition:opacity 0.3s; }
+.gallery-card:hover .card-label { opacity:1; }
+.gallery-empty { grid-column:1/-1; text-align:center; padding:40px; color:var(--text-dim); font-style:italic; font-size:13px; }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
+/* ── SUITS ── */
+.suits-section { position:relative; z-index:1; padding:80px 24px; max-width:900px; margin:0 auto; border-top:1px solid rgba(201,168,76,0.06); }
+.suits-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-top:32px; }
+.suit-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px 20px; text-align:center; transition:border-color 0.3s,transform 0.3s; }
+.suit-card:hover { border-color:var(--border-gold); transform:translateY(-3px); }
+.suit-symbol { font-size:36px; margin-bottom:10px; }
+.suit-name { font-family:'Cinzel Decorative',serif; font-size:14px; color:var(--gold-light); margin-bottom:4px; }
+.suit-triad { font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; }
+.suit-domain { font-size:12px; font-style:italic; color:var(--text-mid); margin-top:8px; line-height:1.5; }
 
-.hero-eyebrow {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 8px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.55;
-  margin-bottom: 20px;
-}
-
-.hero h1 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(36px, 7vw, 80px);
-  font-weight: 900;
-  color: var(--gold-light);
-  text-shadow:
-    0 0 80px rgba(201,168,76,0.2),
-    0 0 160px rgba(201,168,76,0.06),
-    0 4px 12px rgba(0,0,0,0.95);
-  line-height: 1.0;
-  letter-spacing: 2px;
-}
-
-.hero-ampersand {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: clamp(48px, 9vw, 110px);
-  color: var(--gold-dark);
-  line-height: 0.8;
-  display: block;
-  opacity: 0.5;
-}
-
-.hero-subtitle {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: clamp(18px, 3vw, 26px);
-  color: var(--text-mid);
-  margin-top: 20px;
-}
-
-.hero-tagline {
-  font-size: 14px;
-  color: var(--text-dim);
-  font-style: italic;
-  margin-top: 16px;
-}
-
-.hero-rule {
-  width: 500px;
-  max-width: 80vw;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: 40px auto 0;
-}
-
-.hero-cta {
-  margin-top: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.btn-draw {
-  font-family: 'Cinzel', serif;
-  font-size: 14px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--void);
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  border: none;
-  padding: 16px 48px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s;
-  box-shadow: 0 0 40px rgba(201,168,76,0.2);
-}
-
-.btn-draw:hover {
-  box-shadow: 0 0 60px rgba(201,168,76,0.4);
-  transform: translateY(-2px);
-}
-
-.scroll-cue {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 4px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-
-/* ── SUITS PREVIEW ── */
-.suits-section {
-  position: relative;
-  z-index: 1;
-  padding: 80px 24px;
-  max-width: 900px;
-  margin: 0 auto;
-  border-top: 1px solid rgba(201,168,76,0.06);
-}
-
-.suits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-top: 32px;
-}
-
-.suit-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px 20px;
-  text-align: center;
-  transition: border-color 0.3s, transform 0.3s;
-}
-
-.suit-card:hover {
-  border-color: var(--border-gold);
-  transform: translateY(-3px);
-}
-
-.suit-symbol { font-size: 36px; margin-bottom: 10px; }
-.suit-name {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 14px;
-  color: var(--gold-light);
-  margin-bottom: 4px;
-}
-.suit-triad {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 2px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-.suit-domain {
-  font-size: 12px;
-  font-style: italic;
-  color: var(--text-mid);
-  margin-top: 8px;
-  line-height: 1.5;
-}
+/* ── LIGHTBOX ── */
+.lightbox { position:fixed; inset:0; background:rgba(5,5,13,0.92); z-index:300; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.35s; }
+.lightbox.active { opacity:1; pointer-events:all; }
+.lightbox-content { background:var(--surface2); border:1px solid var(--gold); border-radius:12px; padding:28px; max-width:460px; width:90%; text-align:center; box-shadow:0 0 80px rgba(201,168,76,0.12); position:relative; }
+.lightbox-close { position:absolute; top:10px; right:14px; font-size:18px; color:var(--text-dim); cursor:pointer; background:none; border:none; }
+.lightbox-close:hover { color:var(--gold); }
+.lightbox img { width:180px; border-radius:6px; margin-bottom:14px; box-shadow:0 6px 24px rgba(0,0,0,0.5); }
+.lightbox-name { font-family:'Cinzel Decorative',serif; font-size:15px; color:var(--gold-light); }
+.lightbox-title { font-style:italic; font-size:18px; color:var(--text-mid); margin:4px 0; }
+.lightbox-culture { font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold-dark); text-transform:uppercase; margin-bottom:10px; }
+.lightbox-keywords { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin-bottom:10px; }
+.lightbox-kw { font-family:'Cinzel',serif; font-size:7px; letter-spacing:1px; padding:3px 8px; border:1px solid var(--border-gold); border-radius:16px; color:var(--gold); background:rgba(201,168,76,0.04); }
 
 /* ── FOOTER ── */
-footer {
-  text-align: center;
-  padding: 60px 24px;
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid rgba(201,168,76,0.06);
-}
-
-.footer-sigil { font-size: 24px; opacity: 0.3; margin-bottom: 10px; }
-.footer-text {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 3px;
-  color: var(--gold-dark);
-  text-transform: uppercase;
-  opacity: 0.5;
-  line-height: 2;
-}
+footer { text-align:center; padding:60px 24px; position:relative; z-index:1; border-top:1px solid rgba(201,168,76,0.06); }
+.footer-sigil { font-size:24px; opacity:0.3; margin-bottom:10px; }
+.footer-text { font-family:'Cinzel',serif; font-size:7px; letter-spacing:3px; color:var(--gold-dark); text-transform:uppercase; opacity:0.5; line-height:2; }
 </style>
 </head>
 <body>
+
+<canvas id="pontusAmbient"></canvas>
 
 <nav>
   <div class="nav-brand">
@@ -309,8 +152,10 @@ footer {
   </div>
   <ul class="nav-links">
     <li><a href="draw.html">Draw Cards</a></li>
-    <li><a href="readme.html">The Pantheon</a></li>
-    <li><a href="https://github.com/kairos-coder/divination">Repository</a></li>
+    <li><a href="daily.html">Earth Shrine</a></li>
+    <li><a href="zodiac.html">Zodiac</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="readme.html">Pantheon</a></li>
   </ul>
 </nav>
 
@@ -324,8 +169,27 @@ footer {
   <div class="hero-rule"></div>
   <div class="hero-cta">
     <a href="draw.html" class="btn-draw">Draw Three Cards</a>
+    <a href="daily.html" class="btn-shrine">🜃 Earth Shrine · Live Drop</a>
+    <a href="archive.html" class="btn-archive">🖼️ Ealdforn Cave Paintings</a>
     <div class="scroll-cue">Past · Present · Future</div>
   </div>
+</section>
+
+<section class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <div class="gallery-eyebrow">The Living Deck</div>
+    <div class="gallery-title">The Cards That Crossed Over</div>
+    <div class="gallery-stats" id="galleryStats">Loading...</div>
+  </div>
+  <div class="gallery-tabs">
+    <button class="gallery-tab active" data-suit="all">All</button>
+    <button class="gallery-tab" data-suit="major">✧ Major Arcana</button>
+    <button class="gallery-tab" data-suit="fire">🔥 Fire</button>
+    <button class="gallery-tab" data-suit="earth">🜃 Earth</button>
+    <button class="gallery-tab" data-suit="water">🌊 Water</button>
+    <button class="gallery-tab" data-suit="air">💨 Air</button>
+  </div>
+  <div class="gallery-grid" id="galleryGrid"></div>
 </section>
 
 <section class="suits-section">
@@ -334,30 +198,10 @@ footer {
     <div style="font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,30px);color:var(--gold-light);">Four Elements · Twelve Olympians</div>
   </div>
   <div class="suits-grid">
-    <div class="suit-card">
-      <div class="suit-symbol">🔥</div>
-      <div class="suit-name">Fire</div>
-      <div class="suit-triad">Apollo · Ares · Hephaestus</div>
-      <div class="suit-domain">Light, conquest, the forge — the burning that creates and commands</div>
-    </div>
-    <div class="suit-card">
-      <div class="suit-symbol">🜃</div>
-      <div class="suit-name">Earth</div>
-      <div class="suit-triad">Demeter · Hera · Artemis</div>
-      <div class="suit-domain">Harvest, covenant, the hunt — the ground that sustains and binds</div>
-    </div>
-    <div class="suit-card">
-      <div class="suit-symbol">🌊</div>
-      <div class="suit-name">Water</div>
-      <div class="suit-triad">Poseidon · Dionysus · Aphrodite</div>
-      <div class="suit-domain">The sea, ecstasy, desire — the depths that move and drown</div>
-    </div>
-    <div class="suit-card">
-      <div class="suit-symbol">💨</div>
-      <div class="suit-name">Air</div>
-      <div class="suit-triad">Zeus · Athena · Hermes</div>
-      <div class="suit-domain">Authority, wisdom, messages — the mind that commands and connects</div>
-    </div>
+    <div class="suit-card"><div class="suit-symbol">🔥</div><div class="suit-name">Fire</div><div class="suit-triad">Apollo · Ares · Hephaestus</div><div class="suit-domain">Light, conquest, the forge — the burning that creates and commands</div></div>
+    <div class="suit-card"><div class="suit-symbol">🜃</div><div class="suit-name">Earth</div><div class="suit-triad">Demeter · Hera · Artemis</div><div class="suit-domain">Harvest, covenant, the hunt — the ground that sustains and binds</div></div>
+    <div class="suit-card"><div class="suit-symbol">🌊</div><div class="suit-name">Water</div><div class="suit-triad">Poseidon · Dionysus · Aphrodite</div><div class="suit-domain">The sea, ecstasy, desire — the depths that move and drown</div></div>
+    <div class="suit-card"><div class="suit-symbol">💨</div><div class="suit-name">Air</div><div class="suit-triad">Zeus · Athena · Hermes</div><div class="suit-domain">Authority, wisdom, messages — the mind that commands and connects</div></div>
   </div>
 </section>
 
@@ -369,7 +213,187 @@ footer {
     Built by kairos-coder with DeepSeek · Order of Olympus
   </div>
 </footer>
-<script data-goatcounter="https://kairos-coder.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lbImg" src="" alt="">
+    <div class="lightbox-name" id="lbName"></div>
+    <div class="lightbox-title" id="lbTitle"></div>
+    <div class="lightbox-culture" id="lbCulture"></div>
+    <div class="lightbox-keywords" id="lbKeywords"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CARD REGISTRY — all cards that exist or will exist
+// ══════════════════════════════════════════
+const MAJOR_CARDS = [
+    {id:"major_00",name:"The Fool",title:"Dionysus",culture:"Greek",keywords:["beginnings","madness","ecstasy"],image:"data/images/dionysus-card.jpg"},
+    {id:"major_01",name:"The Magician",title:"Hermes",culture:"Greek",keywords:["skill","messages","conduit"],image:"data/images/major/magician.png"},
+    {id:"major_02",name:"The High Priestess",title:"Hera",culture:"Greek",keywords:["covenant","hidden","veil"],image:"data/images/hera-card.jpg"},
+    {id:"major_03",name:"The Empress",title:"Demeter",culture:"Greek",keywords:["harvest","abundance","nurturing"],image:"data/images/demeter-card.jpg"},
+    {id:"major_04",name:"The Emperor",title:"Zeus",culture:"Greek",keywords:["authority","structure","order"],image:"data/images/zeus-card.jpg"},
+    {id:"major_05",name:"The Hierophant",title:"Ares",culture:"Greek",keywords:["tradition","conquest","doctrine"],image:"data/images/ares-card.jpg"},
+    {id:"major_06",name:"The Lovers",title:"Aphrodite",culture:"Greek",keywords:["love","choice","union"],image:"data/images/aphrodite-card.jpg"},
+    {id:"major_07",name:"The Chariot",title:"Artemis",culture:"Greek",keywords:["sovereignty","hunt","will"],image:"data/images/artemis-card.jpg"},
+    {id:"major_08",name:"Justice",title:"Athena",culture:"Greek",keywords:["wisdom","strategy","truth"],image:"data/images/athena-card.jpg"},
+    {id:"major_09",name:"The Hermit",title:"Mortal Man",culture:"Greek",keywords:["seeker","solitude","lamp"],image:"data/images/hermit-card.jpg"},
+    {id:"major_10",name:"Wheel of Fortune",title:"The Fates",culture:"Greek",keywords:["spinning","measuring","cutting"],image:"data/images/major/wheel_of_fortune.png"},
+    {id:"major_11",name:"Strength",title:"Hephaestus",culture:"Greek",keywords:["creation","labor","forge"],image:"data/images/hephaestus-card.jpg"},
+    {id:"major_12",name:"The Hanged Man",title:"Prometheus",culture:"Greek",keywords:["sacrifice","surrender","gift"],image:"data/images/prometheus-card.jpg"},
+    {id:"major_13",name:"Death",title:"Thanatos",culture:"Greek",keywords:["transition","release","ending"],image:"data/images/thanatos-card.jpg"},
+    {id:"major_14",name:"Temperance",title:"Hestia",culture:"Greek",keywords:["hearth","moderation","center"],image:"data/images/major/temperance.png"},
+    {id:"major_15",name:"The Devil",title:"Hades",culture:"Greek",keywords:["bondage","shadow","wealth"],image:"data/images/hades-card.jpg"},
+    {id:"major_16",name:"The Tower",title:"Poseidon",culture:"Greek",keywords:["upheaval","destruction","wave"],image:"data/images/poseidon-card.jpg"},
+    {id:"major_17",name:"The Star",title:"Persephone",culture:"Greek",keywords:["hope","return","rebirth"],image:"data/images/persephone-card.jpg"},
+    {id:"major_18",name:"The Moon",title:"Melinoe",culture:"Greek",keywords:["ghosts","madness","veil"],image:"data/images/major/moon.png"},
+    {id:"major_19",name:"The Sun",title:"Apollo",culture:"Greek",keywords:["light","radiance","clarity"],image:"data/images/major/sun.png"},
+    {id:"major_20",name:"Judgement",title:"The Three Judges",culture:"Greek",keywords:["reckoning","awakening","calling"],image:"data/images/major/judgment.png"},
+    {id:"major_21",name:"The World",title:"Gaia",culture:"Greek",keywords:["completion","wholeness","integration"],image:"data/images/major/world.png"}
+];
+const MINOR_FIRE = [
+    {id:"fire_ace",name:"Ace of Fire",title:"Maui",culture:"Polynesian",keywords:["stolen fire","spark","genesis"],image:"data/images/minor/fire/fire_ace.png"},
+    {id:"fire_02",name:"Two of Fire",title:"Castor & Pollux",culture:"Greek",keywords:["partnership","twins","pact"],image:"data/images/minor/fire/fire_02.png"},
+    {id:"fire_03",name:"Three of Fire",title:"Peitho",culture:"Greek",keywords:["persuasion","pitch","charm"],image:"data/images/minor/fire/fire_03.png"},
+    {id:"fire_04",name:"Four of Fire",title:"Icarus",culture:"Greek",keywords:["fall","hubris","burnout"],image:"data/images/minor/fire/fire_04.png"},
+    {id:"fire_05",name:"Five of Fire",title:"Loki",culture:"Norse",keywords:["critic","truth","dissent"],image:"data/images/minor/fire/fire_05.png"},
+    {id:"fire_06",name:"Six of Fire",title:"The Algorithm",culture:"Modern",keywords:["feed","viral","reputation"],image:"data/images/minor/fire/fire_06.png"},
+    {id:"fire_07",name:"Seven of Fire",title:"Talos",culture:"Greek",keywords:["automaton","system","guardian"],image:"data/images/minor/fire/fire_07.png"},
+    {id:"fire_08",name:"Eight of Fire",title:"Huitzilopochtli",culture:"Aztec",keywords:["grind","momentum","sacrifice"],image:"data/images/minor/fire/fire_08.png"},
+    {id:"fire_09",name:"Nine of Fire",title:"Cerberus",culture:"Greek",keywords:["gatekeeper","test","threshold"],image:"data/images/minor/fire/fire_09.png"},
+    {id:"fire_10",name:"Ten of Fire",title:"Surtr",culture:"Norse",keywords:["fall","Ragnarök","exit"],image:"data/images/minor/fire/fire_10.png"},
+    {id:"fire_page",name:"Page of Fire",title:"Agni",culture:"Hindu",keywords:["messenger","beginner","bridge"],image:"data/images/minor/fire/fire_page.png"},
+    {id:"fire_knight",name:"Knight of Fire",title:"Achilles",culture:"Greek",keywords:["conviction","rage","heel"],image:"data/images/minor/fire/fire_knight.png"},
+    {id:"fire_queen",name:"Queen of Fire",title:"Oya",culture:"Yoruba",keywords:["warrior","wind","fire"],image:"data/images/minor/fire/fire_queen.png"},
+    {id:"fire_king",name:"King of Fire",title:"The Founder",culture:"Modern",keywords:["CEO","empire","will"],image:"data/images/minor/fire/fire_king.png"}
+];
+const MINOR_EARTH = [
+    {id:"earth_ace",name:"Ace of Earth",title:"Lakshmi",culture:"Hindu",keywords:["wealth","abundance","lotus"],image:"data/images/minor/earth/earth_ace.png"},
+    {id:"earth_02",name:"Two of Earth",title:"Aristaeus",culture:"Greek",keywords:["beekeeping","craft","balance"],image:"data/images/minor/earth/earth_02.png"},
+    {id:"earth_03",name:"Three of Earth",title:"Seven Dwarves",culture:"Norse",keywords:["teamwork","collab","crew"],image:"data/images/minor/earth/earth_03.png"},
+    {id:"earth_04",name:"Four of Earth",title:"Tantalus",culture:"Greek",keywords:["denied","scarcity","lack"],image:"data/images/minor/earth/earth_04.png"},
+    {id:"earth_05",name:"Five of Earth",title:"Demeter's Grief",culture:"Greek",keywords:["scarcity","loss","winter"],image:"data/images/minor/earth/earth_05.png"},
+    {id:"earth_06",name:"Six of Earth",title:"Anansi",culture:"West African",keywords:["stories","gift","web"],image:"data/images/minor/earth/earth_06.png"},
+    {id:"earth_07",name:"Seven of Earth",title:"Chicomecoatl",culture:"Aztec",keywords:["seed","patience","maize"],image:"data/images/minor/earth/earth_07.png"},
+    {id:"earth_08",name:"Eight of Earth",title:"Ptah",culture:"Egyptian",keywords:["maker","craft","mastery"],image:"data/images/minor/earth/earth_08.png"},
+    {id:"earth_09",name:"Nine of Earth",title:"The Influencer",culture:"Modern",keywords:["self","brand","mirror"],image:"data/images/minor/earth/earth_09.png"},
+    {id:"earth_10",name:"Ten of Earth",title:"House of Atreus",culture:"Greek",keywords:["dynasty","legacy","bloodline"],image:"data/images/minor/earth/earth_10.png"},
+    {id:"earth_page",name:"Page of Earth",title:"Kokopelli",culture:"Indigenous",keywords:["hustler","trader","music"],image:"data/images/minor/earth/earth_page.png"},
+    {id:"earth_knight",name:"Knight of Earth",title:"Croesus",culture:"Greek",keywords:["wealth","conviction","gold"],image:"data/images/minor/earth/earth_knight.png"},
+    {id:"earth_queen",name:"Queen of Earth",title:"Geb",culture:"Egyptian",keywords:["provider","ground","abundance"],image:"data/images/minor/earth/earth_queen.png"},
+    {id:"earth_king",name:"King of Earth",title:"Shennong",culture:"Chinese",keywords:["farmer","sage","knowledge"],image:"data/images/minor/earth/earth_king.png"}
+];
+const MINOR_WATER = [
+    {id:"water_ace",name:"Ace of Water",title:"Oshun",culture:"Yoruba",keywords:["reach","love","mirror"],image:"data/images/minor/water/water_ace.png"},
+    {id:"water_02",name:"Two of Water",title:"Echo & Narcissus",culture:"Greek",keywords:["talking","echo","mismatch"],image:"data/images/minor/water/water_02.png"},
+    {id:"water_03",name:"Three of Water",title:"Sedna",culture:"Inuit",keywords:["deep","desire","projection"],image:"data/images/minor/water/water_03.png"},
+    {id:"water_04",name:"Four of Water",title:"Izanami",culture:"Japanese",keywords:["vanished","silence","ghost"],image:"data/images/minor/water/water_04.png"},
+    {id:"water_05",name:"Five of Water",title:"Calypso",culture:"Greek",keywords:["situationship","loss","island"],image:"data/images/minor/water/water_05.png"},
+    {id:"water_06",name:"Six of Water",title:"Hamlet's Ghost",culture:"Norse/English",keywords:["memory","past","nostalgia"],image:"data/images/minor/water/water_06.png"},
+    {id:"water_07",name:"Seven of Water",title:"Peaches of Immortality",culture:"Chinese",keywords:["escapism","fantasy","dream"],image:"data/images/minor/water/water_07.png"},
+    {id:"water_08",name:"Eight of Water",title:"Aeneas & Dido",culture:"Greek/Roman",keywords:["departure","leaving","duty"],image:"data/images/minor/water/water_08.png"},
+    {id:"water_09",name:"Nine of Water",title:"The Muses",culture:"Greek",keywords:["inspiration","community","harmony"],image:"data/images/minor/water/water_09.png"},
+    {id:"water_10",name:"Ten of Water",title:"Shiva & Parvati",culture:"Hindu",keywords:["union","fulfillment","marriage"],image:"data/images/minor/water/water_10.png"},
+    {id:"water_page",name:"Page of Water",title:"The VTuber",culture:"Modern",keywords:["crush","avatar","screen"],image:"data/images/minor/water/water_page.png"},
+    {id:"water_knight",name:"Knight of Water",title:"Paris",culture:"Greek",keywords:["romantic","gesture","war"],image:"data/images/minor/water/water_knight.png"},
+    {id:"water_queen",name:"Queen of Water",title:"Mami Wata",culture:"African Diaspora",keywords:["spirit","hearing","healer"],image:"data/images/minor/water/water_queen.png"},
+    {id:"water_king",name:"King of Water",title:"Chiron",culture:"Greek",keywords:["wounded","teacher","wisdom"],image:"data/images/minor/water/water_king.png"}
+];
+const MINOR_AIR = [
+    {id:"air_ace",name:"Ace of Air",title:"Thoth",culture:"Egyptian",keywords:["leak","knowledge","writing"],image:"data/images/minor/air/air_ace.png"},
+    {id:"air_02",name:"Two of Air",title:"The Sphinx",culture:"Greek/Egyptian",keywords:["riddles","subtext","question"],image:"data/images/minor/air/air_02.png"},
+    {id:"air_03",name:"Three of Air",title:"The Althing",culture:"Norse",keywords:["consensus","assembly","discourse"],image:"data/images/minor/air/air_03.png"},
+    {id:"air_04",name:"Four of Air",title:"Cassandra",culture:"Greek",keywords:["prophecy","doomscroll","knowing"],image:"data/images/minor/air/air_04.png"},
+    {id:"air_05",name:"Five of Air",title:"The Reply Guy",culture:"Modern",keywords:["challenge","ratio","takedown"],image:"data/images/minor/air/air_05.png"},
+    {id:"air_06",name:"Six of Air",title:"Proteus",culture:"Greek",keywords:["shapeshifter","alt","reinvention"],image:"data/images/minor/air/air_06.png"},
+    {id:"air_07",name:"Seven of Air",title:"Coyote",culture:"Indigenous",keywords:["trickery","gaslight","lesson"],image:"data/images/minor/air/air_07.png"},
+    {id:"air_08",name:"Eight of Air",title:"Ma'at",culture:"Egyptian",keywords:["receipts","evidence","truth"],image:"data/images/minor/air/air_08.png"},
+    {id:"air_09",name:"Nine of Air",title:"Kuebiko",culture:"Japanese",keywords:["3AM","spiral","paralysis"],image:"data/images/minor/air/air_09.png"},
+    {id:"air_10",name:"Ten of Air",title:"The Cancellation",culture:"Modern",keywords:["exile","judgment","ostracism"],image:"data/images/minor/air/air_10.png"},
+    {id:"air_page",name:"Page of Air",title:"Hermod",culture:"Norse",keywords:["lurker","observer","patience"],image:"data/images/minor/air/air_page.png"},
+    {id:"air_knight",name:"Knight of Air",title:"The Shitposter",culture:"Modern",keywords:["satire","mockery","wit"],image:"data/images/minor/air/air_knight.png"},
+    {id:"air_queen",name:"Queen of Air",title:"Saraswati",culture:"Hindu",keywords:["wisdom","strategist","art"],image:"data/images/minor/air/air_queen.png"},
+    {id:"air_king",name:"King of Air",title:"Odysseus",culture:"Greek",keywords:["architect","cunning","long game"],image:"data/images/minor/air/air_king.png"}
+];
+
+const ALL_DECKS = {major:MAJOR_CARDS,fire:MINOR_FIRE,earth:MINOR_EARTH,water:MINOR_WATER,air:MINOR_AIR};
+const ALL_CARDS = {};
+Object.entries(ALL_DECKS).forEach(([suit,cards])=>{cards.forEach(c=>{ALL_CARDS[c.id]={...c,suit};});});
+
+// ══════════════════════════════════════════
+// PONTUS AMBIENT
+// ══════════════════════════════════════════
+const pCvs=document.getElementById('pontusAmbient'),pCtx=pCvs.getContext('2d');
+function rp(){pCvs.width=window.innerWidth;pCvs.height=window.innerHeight;}
+window.addEventListener('resize',rp);rp();
+const TITANS=['Oceanus','Tethys','Pontus','Nereus','Doris','Thaumas','Phorcys','Ceto'];
+const pOff=TITANS.map(()=>Math.random()*Math.PI*2);
+let pTime=0;
+function drawP(){
+    const W=pCvs.width,H=pCvs.height;pTime+=0.012;
+    pCtx.clearRect(0,0,W,H);
+    for(let d=TITANS.length-1;d>=0;d--){
+        pOff[d]+=0.008*(0.6+d*0.07);
+        const baseY=H*0.25+(d*(H*0.095)),amp=5+d*1.4,freq=0.012+d*0.002,b=35+d*10;
+        pCtx.beginPath();pCtx.moveTo(0,H);
+        for(let x=0;x<=W;x+=4){const y=baseY+Math.sin(x*freq+pOff[d])*amp+Math.sin(x*freq*2.3+pOff[d]*0.7)*(amp*0.28);pCtx.lineTo(x,y);}
+        pCtx.lineTo(W,H);pCtx.closePath();
+        pCtx.fillStyle=`rgba(${14+d*3},${48+b},${140+d*8},${0.2+d*0.03})`;pCtx.fill();
+    }
+    requestAnimationFrame(drawP);
+}
+drawP();
+
+// ══════════════════════════════════════════
+// GALLERY
+// ══════════════════════════════════════════
+let activeSuit='all';
+function renderGallery(suit){
+    const grid=document.getElementById('galleryGrid');
+    let cards=[];
+    if(suit==='all'){
+        Object.entries(ALL_DECKS).forEach(([s,cards_])=>{cards=cards.concat(cards_.map(c=>({...c,suit:s})));});
+    }else{
+        cards=(ALL_DECKS[suit]||[]).map(c=>({...c,suit}));
+    }
+
+    // Count how many images likely exist by checking what we have loaded
+    const total=cards.length;
+    document.getElementById('galleryStats').textContent=`${total} cards in the ${suit==='all'?'deck':suit} · Images load as available`;
+
+    grid.innerHTML=cards.map(c=>`
+        <div class="gallery-card" onclick="openLightbox('${c.id}')" title="${c.name} — ${c.title}">
+            <img src="${c.image}" alt="${c.name}" loading="lazy"
+                 onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem;opacity:0.15\\'>${c.suit===\\'major\\'?\\'✧\\':c.suit===\\'fire\\'?\\'🔥\\':c.suit===\\'earth\\'?\\'🜃\\':c.suit===\\'water\\'?\\'🌊\\':\\'💨\\'}</div>'">
+            <div class="card-label">${c.title}</div>
+        </div>
+    `).join('');
+}
+
+document.querySelectorAll('.gallery-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+        document.querySelectorAll('.gallery-tab').forEach(t=>t.classList.remove('active'));
+        tab.classList.add('active');
+        activeSuit=tab.dataset.suit;
+        renderGallery(activeSuit);
+    });
+});
+
+function openLightbox(cardId){
+    const card=ALL_CARDS[cardId];if(!card)return;
+    document.getElementById('lbImg').src=card.image;
+    document.getElementById('lbName').textContent=card.name;
+    document.getElementById('lbTitle').textContent=card.title;
+    document.getElementById('lbCulture').textContent=card.culture;
+    document.getElementById('lbKeywords').innerHTML=card.keywords.map(k=>`<span class="lightbox-kw">${k}</span>`).join('');
+    document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('active');}
+
+renderGallery('all');
+</script>
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
