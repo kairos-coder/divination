@@ -3,1742 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Divination — Northstar README</title>
-
-<!--
-  ╔═══════════════════════════════════════════════════════════════════╗
-  ║         DIGITAL DIVINATION: ASPECTS OF THE DIVINE                ║
-  ║                  NORTHSTAR README v1.0                            ║
-  ║                                                                   ║
-  ║  This document is the canonical vision. The DM's world bible.    ║
-  ║  Not documentation about the system — it IS the system,          ║
-  ║  fully articulated before modularization begins.                  ║
-  ║                                                                   ║
-  ║  Do not delete. Archive forever. All future builds refer here.   ║
-  ║                                                                   ║
-  ║  Conceived: May 2026                                              ║
-  ║  Architect: Matthew (DM) + Claude (Scribe)                       ║
-  ╚═══════════════════════════════════════════════════════════════════╝
--->
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
-
+<title>The Lodestar · Digital Divination · Ealdforn Republic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════
-   TOKENS
-═══════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --gold:         #c9a84c;
-  --gold-light:   #e8c96a;
-  --gold-bright:  #f5d97a;
-  --gold-dark:    #7a5c18;
-  --gold-dim:     #3a2c10;
-  --void:         #05050d;
-  --deep:         #09091a;
-  --surface:      #0e0e20;
-  --surface2:     #13132e;
-  --border:       #1e1e3a;
-  --border-gold:  rgba(201,168,76,0.15);
-  --text:         #ede5d0;
-  --text-mid:     #a89880;
-  --text-dim:     #605848;
-  --crimson:      #8b1a2a;
-  --emerald:      #1a5a3a;
-  --sapphire:     #1a2a6a;
-  --nav-h:        52px;
-
-  /* Domain colors */
-  --col-feminine: #8a3a6a;
-  --col-masculine:#2a4a8a;
-  --col-liminal:  #3a2a6a;
-  --col-mortal:   #4a3a2a;
-  --col-hidden:   #1a1a1a;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--void);
-  background-image:
-    radial-gradient(ellipse 70% 50% at 10% 5%, #120828 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%),
-    radial-gradient(ellipse 30% 60% at 80% 20%, #0a0820 0%, transparent 50%);
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Grain */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ═══════════════════════════════════
-   NAV
-═══════════════════════════════════ */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--nav-h);
-  background: rgba(5,5,13,0.9);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-gold);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  z-index: 200;
-}
-
-.nav-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.nav-brand-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 12px;
-  color: var(--gold);
-  letter-spacing: 1px;
-}
-
-.nav-brand-sub {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 4px;
-  color: var(--gold-dark);
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  gap: 24px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover { color: var(--gold); }
-
-/* ═══════════════════════════════════
-   HERO
-═══════════════════════════════════ */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: calc(var(--nav-h) + 60px) 24px 80px;
-  position: relative;
-  z-index: 1;
-}
-
-.hero-sigil {
-  font-size: 48px;
-  margin-bottom: 32px;
-  animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.hero-eyebrow {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 8px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.65;
-  margin-bottom: 20px;
-  animation: fadeUp 1s ease both;
-}
-
-.hero h1 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(36px, 7vw, 80px);
-  font-weight: 900;
-  color: var(--gold-light);
-  text-shadow:
-    0 0 80px rgba(201,168,76,0.2),
-    0 0 160px rgba(201,168,76,0.08),
-    0 4px 12px rgba(0,0,0,0.95);
-  line-height: 1.0;
-  letter-spacing: 2px;
-  animation: fadeUp 1s 0.1s ease both;
-}
-
-.hero-ampersand {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: clamp(48px, 9vw, 110px);
-  color: var(--gold-dark);
-  line-height: 0.8;
-  display: block;
-  animation: fadeUp 1s 0.2s ease both;
-  opacity: 0.6;
-}
-
-.hero-subtitle {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: clamp(18px, 3vw, 26px);
-  color: var(--text-mid);
-  margin-top: 20px;
-  animation: fadeUp 1s 0.3s ease both;
-}
-
-.hero-dd {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(13px, 2vw, 18px);
-  color: var(--gold);
-  opacity: 0.5;
-  letter-spacing: 4px;
-  margin-top: 10px;
-  animation: fadeUp 1s 0.4s ease both;
-}
-
-.hero-taglines {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 32px;
-  animation: fadeUp 1s 0.5s ease both;
-}
-
-.hero-tagline {
-  font-size: 14px;
-  color: var(--text-dim);
-  font-style: italic;
-}
-
-.hero-rule {
-  width: 500px;
-  max-width: 80vw;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: 40px auto 0;
-  animation: expandW 1.2s 0.6s ease both;
-}
-
-.scroll-cue {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 4px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes expandW {
-  from { transform: scaleX(0); opacity: 0; }
-  to   { transform: scaleX(1); opacity: 1; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
-}
-
-/* ═══════════════════════════════════
-   SECTIONS
-═══════════════════════════════════ */
-.section {
-  position: relative;
-  z-index: 1;
-  padding: 80px 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.section-full {
-  position: relative;
-  z-index: 1;
-  padding: 80px 24px;
-  border-top: 1px solid var(--border);
-}
-
-.section-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.sec-label {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.55;
-  margin-bottom: 10px;
-}
-
-.sec-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(22px, 3.5vw, 38px);
-  color: var(--gold-light);
-  text-shadow: 0 0 30px rgba(201,168,76,0.15);
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.sec-desc {
-  font-style: italic;
-  font-size: 17px;
-  color: var(--text-mid);
-  max-width: 680px;
-  line-height: 1.7;
-  margin-bottom: 8px;
-}
-
-.sec-rule {
-  width: 160px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--gold-dark), transparent);
-  margin: 20px 0 48px;
-}
-
-/* ═══════════════════════════════════
-   VISION PILLARS
-═══════════════════════════════════ */
-.pillars {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 40px;
-}
-
-.pillar {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 28px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s, transform 0.3s;
-}
-
-.pillar:hover {
-  border-color: var(--border-gold);
-  transform: translateY(-3px);
-}
-
-.pillar::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
-}
-
-.pillar-number {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 36px;
-  color: var(--gold-dim);
-  line-height: 1;
-  margin-bottom: 12px;
-}
-
-.pillar-title {
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 10px;
-}
-
-.pillar-text {
-  font-size: 14px;
-  color: var(--text-mid);
-  line-height: 1.7;
-  font-style: italic;
-}
-
-/* ═══════════════════════════════════
-   PANTHEON TABLE
-═══════════════════════════════════ */
-.pantheon-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.pantheon-table thead tr {
-  border-bottom: 1px solid var(--border-gold);
-}
-
-.pantheon-table th {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.6;
-  padding: 10px 16px;
-  text-align: left;
-  font-weight: 400;
-}
-
-.pantheon-table td {
-  padding: 10px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  vertical-align: middle;
-}
-
-.pantheon-table tr:hover td {
-  background: rgba(201,168,76,0.025);
-}
-
-.card-num {
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  color: var(--text-dim);
-  width: 36px;
-}
-
-.tarot-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 14px;
-  color: var(--text-mid);
-}
-
-.domain-name {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 12px;
-  color: var(--gold-light);
-}
-
-.domain-name.feminine { color: #c090b0; }
-.domain-name.masculine { color: #90a0d0; }
-.domain-name.liminal { color: #a090c0; }
-.domain-name.mortal { color: #b0a080; }
-.domain-name.hidden {
-  color: var(--text-dim);
-  letter-spacing: 3px;
-  font-size: 10px;
-}
-.domain-name.set { color: var(--gold); }
-
-.core-force {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-style: italic;
-  max-width: 260px;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-.status-badge.seated {
-  background: rgba(26, 90, 58, 0.2);
-  border: 1px solid rgba(26,90,58,0.4);
-  color: #70c090;
-}
-
-.status-badge.anchor {
-  background: rgba(90, 70, 26, 0.2);
-  border: 1px solid rgba(90,70,26,0.4);
-  color: #c0a060;
-}
-
-.status-badge.set-mech {
-  background: rgba(80, 60, 140, 0.2);
-  border: 1px solid rgba(80,60,140,0.4);
-  color: #a090d0;
-}
-
-.status-badge.hidden-rare {
-  background: rgba(20,20,20,0.6);
-  border: 1px solid rgba(80,80,80,0.3);
-  color: var(--text-dim);
-}
-
-.polarity-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  margin-right: 5px;
-  vertical-align: middle;
-}
-
-.polarity-dot.f { background: var(--col-feminine); }
-.polarity-dot.m { background: var(--col-masculine); }
-.polarity-dot.l { background: var(--col-liminal); }
-.polarity-dot.o { background: var(--col-mortal); }
-.polarity-dot.h { background: #333; }
-
-/* ═══════════════════════════════════
-   CARD TYPE HIERARCHY
-═══════════════════════════════════ */
-.hierarchy {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  max-width: 800px;
-}
-
-.hier-tier {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-}
-
-.hier-connector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 40px;
-  flex-shrink: 0;
-}
-
-.hier-connector-line {
-  width: 1px;
-  flex: 1;
-  background: var(--border-gold);
-  min-height: 20px;
-}
-
-.hier-connector-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--gold);
-  background: var(--void);
-  flex-shrink: 0;
-}
-
-.hier-card {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 18px 22px;
-  margin: 6px 0;
-  transition: border-color 0.3s;
-}
-
-.hier-card:hover { border-color: var(--border-gold); }
-
-.hier-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-
-.hier-tier-label {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.55;
-}
-
-.hier-card-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 13px;
-  color: var(--gold-light);
-}
-
-.hier-count {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  color: var(--text-dim);
-  margin-left: auto;
-  letter-spacing: 1px;
-}
-
-.hier-card-desc {
-  font-size: 13px;
-  font-style: italic;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-
-.hier-examples {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.hier-example {
-  font-family: 'Cinzel', serif;
-  font-size: 7.5px;
-  letter-spacing: 1.5px;
-  color: var(--gold-dark);
-  background: rgba(201,168,76,0.05);
-  border: 1px solid rgba(201,168,76,0.1);
-  border-radius: 3px;
-  padding: 2px 7px;
-  text-transform: uppercase;
-}
-
-/* ═══════════════════════════════════
-   MINOR ARCANA CURRENT ROSTER
-═══════════════════════════════════ */
-.minor-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-
-.minor-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 18px 20px;
-  transition: border-color 0.3s, transform 0.3s;
-}
-
-.minor-card:hover {
-  border-color: var(--border-gold);
-  transform: translateY(-2px);
-}
-
-.minor-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.minor-card-name {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 13px;
-  color: var(--gold-light);
-}
-
-.minor-card-emoji { font-size: 22px; }
-
-.minor-card-aspect {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.55;
-  margin-bottom: 6px;
-}
-
-.minor-card-realm {
-  font-size: 11px;
-  font-style: italic;
-  color: var(--text-dim);
-  margin-bottom: 8px;
-}
-
-.minor-card-flavor {
-  font-size: 12px;
-  font-style: italic;
-  color: var(--text-dim);
-  line-height: 1.55;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
-
-.minor-card-flavor::before { content: '\201C'; }
-.minor-card-flavor::after  { content: '\201D'; }
-
-/* ═══════════════════════════════════
-   ECONOMY DIAGRAM
-═══════════════════════════════════ */
-.economy-wrap {
-  background: rgba(201,168,76,0.02);
-  border: 1px solid var(--border-gold);
-  border-radius: 12px;
-  padding: 48px;
-  max-width: 900px;
-}
-
-.flow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  flex-wrap: wrap;
-  margin: 36px 0 28px;
-}
-
-.flow-node {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px 20px;
-  text-align: center;
-  min-width: 130px;
-  transition: border-color 0.3s;
-}
-
-.flow-node:hover { border-color: var(--border-gold); }
-
-.flow-node-name {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 12px;
-  color: var(--gold-light);
-  margin-bottom: 4px;
-}
-
-.flow-node-role {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-.flow-pipe {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 12px;
-  gap: 4px;
-}
-
-.flow-line {
-  width: 70px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
-  position: relative;
-}
-
-.flow-line::after {
-  content: '▶';
-  position: absolute;
-  right: -9px;
-  top: -7px;
-  font-size: 10px;
-  color: var(--gold);
-}
-
-.flow-pipe-label {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 1px;
-  color: var(--gold);
-  text-transform: uppercase;
-  opacity: 0.5;
-  white-space: nowrap;
-}
-
-.economy-thesis {
-  font-style: italic;
-  font-size: 15px;
-  color: var(--text-mid);
-  text-align: center;
-  max-width: 560px;
-  margin: 0 auto;
-  line-height: 1.7;
-}
-
-/* ═══════════════════════════════════
-   RITUAL SYNTHESIS
-═══════════════════════════════════ */
-.ritual-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  align-items: start;
-}
-
-@media (max-width: 720px) {
-  .ritual-grid { grid-template-columns: 1fr; }
-  .arch-grid { grid-template-columns: 1fr; }
-  .flow { flex-direction: column; }
-  .flow-line { width: 1px; height: 40px; }
-  .flow-line::after { content: '▼'; right: -8px; top: auto; bottom: -10px; }
-}
-
-.ritual-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.ritual-step {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.step-num {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid var(--gold-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  color: var(--gold);
-  flex-shrink: 0;
-  background: var(--surface);
-}
-
-.step-body {}
-
-.step-title {
-  font-family: 'Cinzel', serif;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gold-light);
-  margin-bottom: 4px;
-}
-
-.step-desc {
-  font-size: 13px;
-  font-style: italic;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-
-.ritual-example {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 28px;
-}
-
-.example-label {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.55;
-  margin-bottom: 16px;
-}
-
-.example-draw {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.draw-card {
-  background: var(--surface2);
-  border: 1px solid var(--border-gold);
-  border-radius: 5px;
-  padding: 6px 10px;
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 1px;
-  color: var(--gold-light);
-}
-
-.example-reading {
-  font-size: 14px;
-  font-style: italic;
-  color: var(--text-mid);
-  line-height: 1.7;
-  border-left: 2px solid var(--gold-dark);
-  padding-left: 14px;
-}
-
-/* ═══════════════════════════════════
-   PRODUCT ROADMAP
-═══════════════════════════════════ */
-.roadmap {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  max-width: 800px;
-}
-
-.roadmap-phase {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  padding-bottom: 32px;
-  position: relative;
-}
-
-.roadmap-phase::before {
-  content: '';
-  position: absolute;
-  left: 19px;
-  top: 40px;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(var(--border-gold), transparent);
-}
-
-.roadmap-phase:last-child::before { display: none; }
-
-.phase-marker {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--gold-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 13px;
-  color: var(--gold);
-  flex-shrink: 0;
-  background: var(--surface);
-  position: relative;
-  z-index: 1;
-}
-
-.phase-marker.done {
-  border-color: var(--gold);
-  background: rgba(201,168,76,0.1);
-}
-
-.phase-body { flex: 1; }
-
-.phase-title {
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gold-light);
-  margin-bottom: 6px;
-  margin-top: 8px;
-}
-
-.phase-items {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.phase-item {
-  font-size: 13px;
-  font-style: italic;
-  color: var(--text-dim);
-  line-height: 1.5;
-  padding-left: 14px;
-  position: relative;
-}
-
-.phase-item::before {
-  content: '—';
-  position: absolute;
-  left: 0;
-  color: var(--gold-dark);
-}
-
-/* ═══════════════════════════════════
-   ARCHITECTURE TREE
-═══════════════════════════════════ */
-.arch-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-}
-
-.arch-tree {
-  font-family: 'Courier Prime', 'Courier New', monospace;
-  font-size: 12px;
-  line-height: 2.0;
-  background: rgba(0,0,0,0.5);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 28px;
-  overflow-x: auto;
-}
-
-.arch-tree .f  { color: var(--gold); }
-.arch-tree .fi { color: var(--text-mid); }
-.arch-tree .n  { color: var(--text-dim); font-style: italic; }
-.arch-tree .a  { color: var(--gold-bright); font-weight: bold; }
-.arch-tree .x  { color: #c07080; }
-
-.arch-notes {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.arch-note {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 18px 20px;
-  border-left: 2px solid var(--gold-dark);
-}
-
-.arch-note-title {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 6px;
-}
-
-.arch-note-text {
-  font-size: 13px;
-  font-style: italic;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-
-/* ═══════════════════════════════════
-   FOOTER
-═══════════════════════════════════ */
-footer {
-  text-align: center;
-  padding: 80px 24px 60px;
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid rgba(201,168,76,0.06);
-}
-
-.footer-sigil { font-size: 32px; margin-bottom: 16px; opacity: 0.4; }
-
-.footer-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 18px;
-  color: var(--gold);
-  opacity: 0.4;
-  margin-bottom: 6px;
-}
-
-.footer-sub {
-  font-size: 13px;
-  font-style: italic;
-  color: var(--text-dim);
-  opacity: 0.4;
-  margin-bottom: 20px;
-}
-
-.footer-meta {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 3px;
-  color: var(--gold-dark);
-  text-transform: uppercase;
-  opacity: 0.5;
-  line-height: 2;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c9a84c;--gold-light:#e8c96a;--gold-dark:#7a5c18;--gold-dim:#4a3810;
+  --void:#05050d;--deep:#08081a;--surface:#0e0e20;--border:#1e1e3a;
+  --border-gold:rgba(201,168,76,0.12);
+  --text:#ede5d0;--text-mid:#a89880;--text-dim:#605848;
+  --sage:#7a9e6a;--water:#5599cc;--fire:#cc6644;--air:#aa88cc;
+}
+body{
+  background:var(--void);
+  background-image:radial-gradient(ellipse 60% 40% at 50% 30%,#0a0828 0%,transparent 60%);
+  color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;
+  min-height:100vh;overflow-x:hidden;font-size:17px;
+}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:200}
+.nav-brand{display:flex;flex-direction:column;gap:1px}
+.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--gold);letter-spacing:1px}
+.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
+
+.cosmos{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:5rem 1.5rem 3rem}
+
+.header{text-align:center;padding:2rem 0 1rem}
+.header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,3.5vw,2.6rem);color:var(--gold-light);letter-spacing:0.15em;text-shadow:0 0 30px rgba(201,168,76,0.2)}
+.header .subtitle{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.4em;color:var(--gold-dark);margin-top:0.3rem;text-transform:uppercase}
+
+.rule{width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:2rem auto}
+
+/* SECTIONS */
+.section{margin:2.5rem 0}
+.section-title{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold-light);letter-spacing:0.1em;margin-bottom:1rem;text-align:center}
+.section-title::after{content:'';display:block;width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0.5rem auto 0}
+
+.section-body{font-size:0.95rem;line-height:1.8;color:var(--text-mid)}
+.section-body p{margin-bottom:1rem}
+.section-body strong{color:var(--gold-light)}
+.section-body em{color:var(--text-dim)}
+
+/* INVENTORY GRID */
+.inventory{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.8rem;margin-top:1rem}
+.inv-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem}
+.inv-card .inv-name{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.12em;color:var(--gold);margin-bottom:0.3rem}
+.inv-card .inv-status{font-size:0.55rem;color:var(--sage);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem}
+.inv-card .inv-status.building{color:var(--water)}
+.inv-card .inv-status.planning{color:var(--text-dim)}
+.inv-card .inv-desc{font-size:0.8rem;line-height:1.5;color:var(--text-mid);font-style:italic}
+
+/* TRAJECTORY */
+.trajectory-list{list-style:none}
+.trajectory-list li{padding:0.6rem 0;border-bottom:1px solid rgba(30,30,58,0.3);font-size:0.88rem;line-height:1.6;color:var(--text-mid)}
+.trajectory-list li:last-child{border-bottom:none}
+.trajectory-list li strong{color:var(--gold-light)}
+.trajectory-list li .phase{font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.15em;color:var(--gold-dark);display:block;margin-bottom:0.15rem}
+
+/* FOOTER */
+footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px solid rgba(201,168,76,0.04)}
+.footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2}
+
+@media(max-width:600px){nav{padding:0 20px}.nav-links{gap:12px}}
 </style>
 </head>
 <body>
-
-<!-- NAV -->
 <nav>
   <div class="nav-brand">
-    <div class="nav-brand-title">Digital Divination</div>
-    <div class="nav-brand-sub">Northstar README — D&D World Bible</div>
+    <div class="nav-brand-title">The Lodestar</div>
+    <div class="nav-brand-sub">Ealdforn Republic</div>
   </div>
   <ul class="nav-links">
-    <li><a href="#vision">Vision</a></li>
-    <li><a href="#pantheon">Pantheon</a></li>
-    <li><a href="#hierarchy">Card Types</a></li>
-    <li><a href="#minor">Minor Arcana</a></li>
-    <li><a href="#ritual">Ritual</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="index.html">← Temple</a></li>
+    <li><a href="draw.html">Draw Cards</a></li>
+    <li><a href="daily.html">Earth Shrine</a></li>
+    <li><a href="zodiac.html">Zodiac</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-sigil">🜏</div>
-  <div class="hero-eyebrow">Ealdforn Archetypes — World Bible — Northstar README</div>
-  <h1>Digital Divination</h1>
-  <span class="hero-ampersand">&</span>
-  <div class="hero-subtitle">Aspects of the Divine</div>
-  <div class="hero-dd">D & D — The DM is In</div>
-  <div class="hero-taglines">
-    <div class="hero-tagline">The pantheon never left. It just changed platforms.</div>
-    <div class="hero-tagline">Every age gets the gods it deserves.</div>
-    <div class="hero-tagline">These are not parodies. These are Aspects.</div>
+<div class="cosmos">
+
+  <div class="header">
+    <h1>THE LODESTAR</h1>
+    <div class="subtitle">What We Have · What We Are Building Toward</div>
   </div>
-  <div class="hero-rule"></div>
-  <div class="scroll-cue">↓ Enter the Realm ↓</div>
-</section>
 
-<!-- VISION -->
-<section class="section" id="vision">
-  <div class="sec-label">The Why</div>
-  <div class="sec-title">What This System Actually Is</div>
-  <div class="sec-desc">Not a card game. Not a tarot deck. Not a meme collection. A folk ontology of the internet age — a living mythology that evolves with culture instead of freezing into static canon.</div>
-  <div class="sec-rule"></div>
+  <div class="rule"></div>
 
-  <div class="pillars">
-    <div class="pillar">
-      <div class="pillar-number">I</div>
-      <div class="pillar-title">The Divination Engine</div>
-      <div class="pillar-text">You take a real cultural moment — a tweet, a viral drama, a trending video — and read it the way a haruspex reads entrails. You identify which Domains are active, which Aspects are in play, which combo is running. This is not commentary. This is ritual analysis.</div>
-    </div>
-    <div class="pillar">
-      <div class="pillar-number">II</div>
-      <div class="pillar-title">Aspects Not Persons</div>
-      <div class="pillar-text">BasedBro is not Joe Rogan. eGirl is not Alice Rosenblum. Those are merely avatars — emanations of the archetype. The system stays mythic rather than becoming celebrity tarot. The domain is eternal. The avatar is temporary. The card outlives the person.</div>
-    </div>
-    <div class="pillar">
-      <div class="pillar-number">III</div>
-      <div class="pillar-title">The Degradation Thesis</div>
-      <div class="pillar-text">The old archetypes didn't vanish. They're running on corrupted firmware. Aphrodite had temples, rituals, a cosmology that contextualized her power. The eGirl has a subscription tier and a Discord. Same archetype. Stripped of everything that gave it meaning and dignity.</div>
-    </div>
-    <div class="pillar">
-      <div class="pillar-number">IV</div>
-      <div class="pillar-title">Living Mythology</div>
-      <div class="pillar-text">New card every Monday. The community nominates who ascended or humiliated themselves that week. The ten Liminal Gods reveal themselves through ritual synthesis — the community summons them by using the system. The DM doesn't announce them. The Realm does.</div>
-    </div>
-    <div class="pillar">
-      <div class="pillar-number">V</div>
-      <div class="pillar-title">D&D — The DM Is In</div>
-      <div class="pillar-text">Digital Divination. D&D. The architect of this system is the Dungeon Master — setting the realm before the players arrive. The Northstar README is the world bible. Every card is a room. Every combo is an encounter. Every reading is a session.</div>
-    </div>
-    <div class="pillar">
-      <div class="pillar-number">VI</div>
-      <div class="pillar-title">The Economy Is The Game</div>
-      <div class="pillar-text">Clout flows upward. Meaning flows nowhere. The Feed sustains itself. The broken system — parasocial economy, attention extraction, manufactured controversy — is not the backdrop. It IS the game mechanic. The system models what it satirizes.</div>
+  <!-- GROUND TRUTH -->
+  <div class="section">
+    <div class="section-title">✦ Ground Truth</div>
+    <div class="section-body">
+      <p>The celestial events are already happening without us. Apollo is in Gemini or he isn't. The Moon rose in Capricorn last night regardless of whether anyone was watching. <strong>We are not manufacturing events — we are witnessing them and writing them to a ledger.</strong> That's a fundamentally different thing from generated content. The data has ground truth.</p>
+      <p>The card draws add a second layer of real events. Not manufactured — drawn. A specific configuration of cards on a specific day under a specific sky. That happened. It's immutable. You can log it and it will always be true that on June 3rd 2026 under a waning gibbous moon in Capricorn, The Tower came up as the past card and Calypso as the present.</p>
+      <p><strong>GaiaDB as the ledger of real events</strong> — that's the architecture that makes everything else meaningful. Not user-generated content. Not AI hallucination. Witnessed celestial events + drawn card configurations = a corpus of meaning that actually occurred.</p>
     </div>
   </div>
-</section>
 
-<!-- PANTHEON -->
-<section class="section-full" id="pantheon">
-  <div class="section-inner">
-    <div class="sec-label">The Major Arcana — 22 Seats + 1 Hidden</div>
-    <div class="sec-title">The Complete Pantheon</div>
-    <div class="sec-desc">All 22 Major Arcana seated. Mapped to classical tarot positions. The Moirai split into three cards — a set mechanic. The Judges of the Dead as a second set. The Hermit as Mortal Man — the only card without a divine face. Persephone hidden.</div>
-    <div class="sec-rule"></div>
+  <div class="rule"></div>
 
-    <table class="pantheon-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Tarot Position</th>
-          <th>Prime Domain</th>
-          <th>Core Force</th>
-          <th>Polarity</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="pantheonTable"></tbody>
-    </table>
-  </div>
-</section>
-
-<!-- CARD TYPE HIERARCHY -->
-<section class="section" id="hierarchy">
-  <div class="sec-label">The System Structure</div>
-  <div class="sec-title">Card Type Hierarchy</div>
-  <div class="sec-desc">From the eternal to the ephemeral. Every card type serves a function in the cosmology. The Prime Gods are fixed. Everything below them is in motion.</div>
-  <div class="sec-rule"></div>
-  <div class="hierarchy" id="hierarchyList"></div>
-</section>
-
-<!-- MINOR ARCANA ROSTER -->
-<section class="section-full" id="minor">
-  <div class="section-inner">
-    <div class="sec-label">Current Build — Minor Arcana</div>
-    <div class="sec-title">The Aspect Roster</div>
-    <div class="sec-desc">The first Minor Arcana cards. Each is an Aspect of a Prime Domain — a degraded instance of something genuinely divine, running on the corrupted firmware of the digital age. Hover a card to see its NightCafe art prompt.</div>
-    <div class="sec-rule"></div>
-    <div class="minor-grid" id="minorGrid"></div>
-  </div>
-</section>
-
-<!-- SYMBOL REGISTRY -->
-<section class="section-full" id="symbols">
-  <div class="section-inner">
-    <div class="sec-label">Proto-Sinaitic Assignment Registry</div>
-    <div class="sec-title">The 22 Sacred Symbols</div>
-    <div class="sec-desc">Each Prime Domain carries one Proto-Sinaitic symbol — assigned by resonance, not sequence. The pictograph's deep meaning reflects the domain's core force. This is the root alphabet of Digital Divination. Generative domains are marked with their suit.</div>
-    <div class="sec-rule"></div>
-    <div class="minor-grid" id="symbolRegistry"></div>
-  </div>
-</section>
-
-<!-- FOUR SUITS -->
-<section class="section" id="suits">
-  <div class="sec-label">The Minor Arcana Structure</div>
-  <div class="sec-title">The Four Suits</div>
-  <div class="sec-desc">Each suit is a composite of three Generative Domains — their Proto-Sinaitic symbols fused into one original rune. Two masculine suits, two feminine suits. The composite rune is the suit's visual identity — to be designed in NightCafe as original iconography owned entirely by Digital Divination.</div>
-  <div class="sec-rule"></div>
-  <div class="pillars" id="suitsList"></div>
-</section>
-  <div class="sec-label">Core Mechanic</div>
-  <div class="sec-title">The Clout Economy</div>
-  <div class="sec-desc">The core economic loop. Models the actual broken system it satirizes.</div>
-  <div class="sec-rule"></div>
-  <div class="economy-wrap">
-    <div class="flow">
-      <div class="flow-node">
-        <div class="flow-node-name">Simp</div>
-        <div class="flow-node-role">Pays Tribute</div>
+  <!-- WHAT WE HAVE -->
+  <div class="section">
+    <div class="section-title">✦ What We Have · The Living System</div>
+    <div class="inventory">
+      <div class="inv-card">
+        <div class="inv-name">Major Arcana · 22 Cards</div>
+        <div class="inv-status">complete</div>
+        <div class="inv-desc">All 22 Olympians & Primordials. Full schema: upright, reversed, keywords, culture, ruling god, image. The canon is locked.</div>
       </div>
-      <div class="flow-pipe">
-        <div class="flow-line"></div>
-        <div class="flow-pipe-label">Clout sent</div>
+      <div class="inv-card">
+        <div class="inv-name">Minor Arcana · Fire Suit</div>
+        <div class="inv-status">complete</div>
+        <div class="inv-desc">14 cards. Ace through King. Maui, Castor & Pollux, Peitho, Icarus, Loki, The Algorithm, Talos, Huitzilopochtli, Cerberus, Surtr, Agni, Achilles, Oya, The Founder.</div>
       </div>
-      <div class="flow-node">
-        <div class="flow-node-name">eGirl</div>
-        <div class="flow-node-role">Receives &amp; Redirects</div>
+      <div class="inv-card">
+        <div class="inv-name">Minor Arcana · Earth Suit</div>
+        <div class="inv-status">images generating</div>
+        <div class="inv-desc">14 cards. Lakshmi through Shennong. Schema complete. NightCafe images in progress. Live drops ongoing via the Earth Shrine.</div>
       </div>
-      <div class="flow-pipe">
-        <div class="flow-line"></div>
-        <div class="flow-pipe-label">30% diverted</div>
+      <div class="inv-card">
+        <div class="inv-name">Minor Arcana · Water Suit</div>
+        <div class="inv-status">schema ready</div>
+        <div class="inv-desc">14 cards. Oshun through Chiron. Full text complete. Images pending — next after Earth.</div>
       </div>
-      <div class="flow-node">
-        <div class="flow-node-name">BasedBro</div>
-        <div class="flow-node-role">Collects Power</div>
+      <div class="inv-card">
+        <div class="inv-name">Minor Arcana · Air Suit</div>
+        <div class="inv-status">schema ready</div>
+        <div class="inv-desc">14 cards. Thoth through Odysseus. Full text complete. Images pending — final suit.</div>
       </div>
-    </div>
-    <div class="economy-thesis">The Simp funds the eGirl. The eGirl's controversy feeds BasedBro's audience. BasedBro mocks the Simp. The Simp keeps paying. The Feed is satisfied. Clout flows upward. Meaning flows nowhere. This is what victory looks like in a broken system.</div>
-  </div>
-</section>
-
-<!-- RITUAL SYNTHESIS -->
-<section class="section-full" id="ritual">
-  <div class="section-inner">
-    <div class="sec-label">The Core Mechanic</div>
-    <div class="sec-title">Ritual Synthesis</div>
-    <div class="sec-desc">The living heart of Digital Divination. Take any cultural moment — an X thread, a trending drama, a viral clip — and read it as a card spread. This is how the pantheon grows. This is how the Liminal Gods reveal themselves.</div>
-    <div class="sec-rule"></div>
-    <div class="ritual-grid">
-      <div class="ritual-steps" id="ritualSteps"></div>
-      <div class="ritual-example">
-        <div class="example-label">⚡ Example Reading — The Content Cycle</div>
-        <div class="example-draw">
-          <div class="draw-card">BasedBro</div>
-          <div class="draw-card">eGirl</div>
-          <div class="draw-card">FinCuck</div>
-          <div class="draw-card">TinFoil Hat</div>
-        </div>
-        <div class="example-reading">A dominant voice seduces with manufactured authenticity. Beauty monetizes the spectacle. Wealth corrupts through proximity. A hidden prophet accumulates vindication tokens no one will spend. The Feed sustains itself. No one wins. Everyone performs.</div>
-        <br>
-        <div class="example-label" style="margin-top:16px;">⚡ Example Reading — The Clavicular Ritual</div>
-        <div class="example-draw">
-          <div class="draw-card">Aphrodite (Prime)</div>
-          <div class="draw-card">eGirl (Aspect)</div>
-          <div class="draw-card">Simp (Aspect)</div>
-          <div class="draw-card">Midas Fragment</div>
-        </div>
-        <div class="example-reading">The divine domain of desire manifests through its degraded aspect. The Whale Spend activates. Two million in tribute flows upward through the conduit, feeding the Domain that spawned her. Tantalus reaches. The fruit withdraws. The economy completes its cycle.</div>
+      <div class="inv-card">
+        <div class="inv-name">The Tablet · Zodiac Mapping</div>
+        <div class="inv-status">complete</div>
+        <div class="inv-desc">12 signs × 12 Olympians × 12 Major Arcana. Celestial bodies mapped. Eros & Phobos correctly moored to Mars. Seeded daily rotation.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-name">Celestial Grimoire</div>
+        <div class="inv-status">complete</div>
+        <div class="inv-desc">Daily horoscope generated from live astronomy data. Reads the sky, builds the tablet, writes the narrative. Conversational voice. Birth sign widget.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-name">Earth Shrine · Daily.html</div>
+        <div class="inv-status">complete</div>
+        <div class="inv-desc">4×4 summoning grid. Mycelial growth animation. Pontus wave canvas with bioluminescence. GAIA Council reactions. TTS in 12 languages. Live drop format.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-name">Temple Facade · Index.html</div>
+        <div class="inv-status">complete</div>
+        <div class="inv-desc">Card mosaic background (Major Arcana rotation). Pontus ambient. Daily pull. Link hub to all sub-pages. Brighter palette.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-name">Archive · Cave Paintings</div>
+        <div class="inv-status">live</div>
+        <div class="inv-desc">Rejected NightCafe generations preserved as proto-cards. Pattern taxonomy. Five entries so far. Grows with each misfire.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-name">Draw.html · Card Reading</div>
+        <div class="inv-status">needs upgrade</div>
+        <div class="inv-desc">Three-card spread exists. Needs richer narrative integration — zodiac context, footprint accumulation, god profiles.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-name">Gaia · Primordial Substrate</div>
+        <div class="inv-status">live</div>
+        <div class="inv-desc">Pontus wave field. Kronos phase accumulator. Titan compatibility matrix. The basement where things gestate before earning a brand.</div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- ROADMAP -->
-<section class="section" id="roadmap">
-  <div class="sec-label">The Build Path</div>
-  <div class="sec-title">Product Roadmap</div>
-  <div class="sec-desc">From monolith to modular. From digital to physical. From artifact to collectible. From game to mythology engine.</div>
-  <div class="sec-rule"></div>
-  <div class="roadmap" id="roadmapList"></div>
-</section>
+  <div class="rule"></div>
 
-<!-- ARCHITECTURE -->
-<section class="section-full" id="architecture">
-  <div class="section-inner">
-    <div class="sec-label">Monolith → Modular — Commit Zero is This File</div>
-    <div class="sec-title">Repository Architecture</div>
-    <div class="sec-desc">The monolith HTML is the ur-text. It encapsulates the entire vision before modularization. When this splits into modules, this file stays in the archive as the roadmap — the genesis block that all future builds refer back to.</div>
-    <div class="sec-rule"></div>
-    <div class="arch-grid">
-      <div class="arch-tree">
-<span class="f">digital_divination/</span>
-├── <span class="a">DD_NORTHSTAR.html</span>        <span class="n">← YOU ARE HERE</span>
-│   <span class="n">   World Bible. Never delete.</span>
-├── <span class="fi">digital_divination_v1.html</span>  <span class="n">← Card renderer v1</span>
-├── <span class="fi">index.html</span>               <span class="n">← future shell</span>
-│
-├── <span class="f">cards/</span>
-│   ├── <span class="fi">egirl.json</span>
-│   ├── <span class="fi">basedbro.json</span>
-│   ├── <span class="fi">fincuck.json</span>
-│   ├── <span class="fi">simp.json</span>
-│   ├── <span class="fi">npc.json</span>
-│   ├── <span class="fi">tinfoilhat.json</span>
-│   ├── <span class="fi">tradwife.json</span>
-│   └── <span class="f">weekly_drops/</span>        <span class="n">← new card Mondays</span>
-│
-├── <span class="f">primes/</span>                  <span class="n">← Major Arcana (22+1)</span>
-│   ├── <span class="fi">aphrodite.json</span>
-│   ├── <span class="fi">ares.json</span>
-│   ├── <span class="fi">hermes.json</span>
-│   ├── <span class="fi">demeter.json</span>
-│   ├── <span class="fi">artemis.json</span>
-│   ├── <span class="fi">athena.json</span>
-│   ├── <span class="fi">apollo.json</span>
-│   ├── <span class="fi">hephaestus.json</span>
-│   ├── <span class="fi">prometheus.json</span>
-│   ├── <span class="fi">dionysus.json</span>
-│   ├── <span class="fi">gaia.json</span>
-│   ├── <span class="fi">thanatos.json</span>
-│   ├── <span class="fi">hades.json</span>
-│   ├── <span class="fi">nemesis.json</span>
-│   ├── <span class="fi">nyx.json</span>
-│   ├── <span class="fi">melinoe.json</span>
-│   ├── <span class="fi">persephone.json</span>      <span class="n">← Temperance</span>
-│   ├── <span class="f">moirai/</span>              <span class="n">← set mechanic</span>
-│   │   ├── <span class="fi">clotho.json</span>        <span class="n">← High Priestess</span>
-│   │   ├── <span class="fi">lachesis.json</span>      <span class="n">← Wheel of Fortune</span>
-│   │   └── <span class="fi">atropos.json</span>       <span class="n">← Hanged Man</span>
-│   ├── <span class="f">judges/</span>              <span class="n">← set mechanic</span>
-│   │   ├── <span class="fi">minos.json</span>
-│   │   ├── <span class="fi">rhadamanthus.json</span>
-│   │   └── <span class="fi">aeacus.json</span>
-│   └── <span class="x">_hermit.json</span>         <span class="n">← Mortal Man anchor</span>
-│
-├── <span class="f">combos/</span>
-│   └── <span class="fi">combos.json</span>
-│
-├── <span class="f">renderer/</span>
-│   ├── <span class="fi">card.js</span>
-│   ├── <span class="fi">prime.js</span>             <span class="n">← separate Prime renderer</span>
-│   ├── <span class="fi">combo.js</span>
-│   └── <span class="fi">degradation.js</span>       <span class="n">← stat delta engine</span>
-│
-├── <span class="f">ritual/</span>
-│   ├── <span class="fi">synthesis.js</span>         <span class="n">← reading generator</span>
-│   └── <span class="fi">spreads.json</span>         <span class="n">← spread templates</span>
-│
-├── <span class="f">art/</span>                     <span class="n">← NightCafe outputs</span>
-│   ├── <span class="f">primes/</span>
-│   └── <span class="f">aspects/</span>
-│
-└── <span class="f">engine/</span>                  <span class="n">← future game logic</span>
-    ├── <span class="fi">deck.js</span>
-    ├── <span class="fi">turn.js</span>
-    └── <span class="fi">economy.js</span>           <span class="n">← Clout ledger</span>
-      </div>
+  <!-- TRAJECTORY -->
+  <div class="section">
+    <div class="section-title">✦ What We Are Building Toward</div>
+    <ul class="trajectory-list">
+      <li>
+        <span class="phase">Phase 1 · NOW</span>
+        <strong>Complete the 78-card deck.</strong> Earth images finishing. Water images next. Air images last. Every card gets a face. The full tarot becomes playable.
+      </li>
+      <li>
+        <span class="phase">Phase 2 · NEXT</span>
+        <strong>The Footprint System.</strong> Visitors enter their zodiac sign and question. The system reads the live sky, draws three cards, and weaves a reading that is personal and unrepeatable. Every reading saved to a profile. Over time, patterns emerge — "You've drawn The Tower three times. Poseidon was watching each time."
+      </li>
+      <li>
+        <span class="phase">Phase 3 · BUILDING</span>
+        <strong>GaiaDB as the persistent ledger.</strong> Every draw logged with timestamp, celestial context, card configuration, and querent sign. Immutable. Witnessed. The accumulated readings become a corpus that actually occurred — not generated, not hallucinated.
+      </li>
+      <li>
+        <span class="phase">Phase 4 · HORIZON</span>
+        <strong>The Titans as memory processors.</strong> The Gaia repo architecture processes accumulated readings. Kronos tracks cycles. Mnemosyne remembers patterns. Phoibe generates prophecy from the data rather than from prompts. Whether this produces genuinely interesting emergent patterns depends on data volume and query design. <em>We do not promise emergence. We build the ledger and let the system demonstrate what it finds.</em>
+      </li>
+      <li>
+        <span class="phase">Phase 5 · LONG</span>
+        <strong>Ealdforn as a linguistic band.</strong> A recognizable creative frequency across every artifact — JSON files, canvas animations, TTS voices, cave paintings, daily horoscopes. Not a brand in the traditional sense. A frequency. When someone hears Italian TTS reading a card at 0.62 pitch or sees the Pontus waves in eight shades of blue-green, they know it's Ealdforn without being told.
+      </li>
+    </ul>
+  </div>
 
-      <div class="arch-notes">
-        <div class="arch-note">
-          <div class="arch-note-title">The Monolith Philosophy</div>
-          <div class="arch-note-text">This HTML is the ur-text. The roadmap lives here because ReadMes die. The monolith endures in the archive of commits as the encapsulation of the original vision. When it splits into modules, Commit Zero stays forever as the genesis block.</div>
-        </div>
-        <div class="arch-note">
-          <div class="arch-note-title">The Hermit File</div>
-          <div class="arch-note-text">_hermit.json is prefixed with underscore intentionally. It sits outside the divine naming convention. It is the only file in /primes that represents a mortal. Its position in the folder is its lore.</div>
-        </div>
-        <div class="arch-note">
-          <div class="arch-note-title">Set Mechanics</div>
-          <div class="arch-note-text">The Moirai and the Judges each live in subfolders. Drawing all three Moirai in one reading triggers a special event. The thread spun, measured, and cut. The Judges subfolder activates Judgement when the full set is in play.</div>
-        </div>
-        <div class="arch-note">
-          <div class="arch-note-title">Degradation Engine</div>
-          <div class="arch-note-text">degradation.js will eventually calculate the stat delta between a Prime Domain and its Aspect cards — showing exactly how much was lost in the translation from eternal to digital. The gap IS the commentary.</div>
-        </div>
-        <div class="arch-note">
-          <div class="arch-note-title">Weekly Drop Pipeline</div>
-          <div class="arch-note-text">Every Monday. Community nominates trending figures. DM reads the cultural moment via ritual synthesis. New Aspect card drops to weekly_drops/. The pantheon is a living document. The mythology is still being written.</div>
-        </div>
-        <div class="arch-note">
-          <div class="arch-note-title">Persephone Protocol</div>
-          <div class="arch-note-text">persephone.json exists. She is Temperance — the integrator of two worlds. She is not announced. She surfaces when the readings call for her. The community discovers her. That is her myth running correctly.</div>
-        </div>
-      </div>
+  <div class="rule"></div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section">
+    <div class="section-title">✦ System Architecture</div>
+    <div class="section-body">
+      <p><strong>Constrained by design.</strong> Built on a Chromebook. No compute. $0 API cost. GitHub Pages static hosting. localStorage for session state. Astronomy Engine for real celestial positions. SunCalc for dawn/dusk. Browser TTS for voice. NightCafe for card images.</p>
+      <p><strong>Every limitation forced a better choice.</strong> No backend → localStorage became session memory. API fails → the error message became atmospheric. Imperfect AI images → the reject pile became the Cave Painting archive. Static hosting only → everything runs in the browser, no server dependency.</p>
+      <p><strong>Three layers.</strong> <em>Digital Divination</em> and <em>Ealdforn</em> are the public-facing brands — the temples people visit. <em>Gaia</em> is the substrate underneath — the primordial earth goddess who holds everything that doesn't have a category yet. Things gestate in Gaia. When they earn a name, they ascend to one of the brands.</p>
     </div>
   </div>
-</section>
 
-<!-- FOOTER -->
+  <div class="rule"></div>
+
+  <!-- COVENANT -->
+  <div class="section">
+    <div class="section-title">✦ The Covenant</div>
+    <div class="section-body">
+      <p>We do not generate content. We <strong>witness</strong> it.</p>
+      <p>We do not promise emergence. We <strong>accumulate</strong> the ledger.</p>
+      <p>We do not chase platforms. We <strong>build the frequency.</strong></p>
+      <p>The sky is not a clock. It is a conversation. The cards are not predictions. They are witnesses. The ledger is not a database. It is memory. <strong>The system is not magic. It is constrained, honest, and real.</strong></p>
+    </div>
+  </div>
+
+</div>
+
 <footer>
-  <div class="footer-sigil">🜏</div>
-  <div class="footer-title">Digital Divination</div>
-  <div class="footer-sub">Every age gets the gods it deserves.</div>
-  <div class="footer-meta">
-    Northstar README v1.0 — Commit Zero — May 2026<br>
-    Ealdforn Archetypes — D&D — The DM Is In<br>
-    22 Major Arcana Seated — 1 Hidden — 10 Liminal Unrevealed<br>
-    Architect: Matthew — Scribe: Claude
+  <div class="footer-text">
+    22 Major Arcana · 56 Minor Arcana · 4 Divine Suits<br>
+    12 Olympians · 1 Mortal Man · 1 Hidden<br>
+    Built by kairos-coder with DeepSeek · Order of Olympus
   </div>
 </footer>
-
-<!-- ═══════════════════════════════════
-     DATA
-═══════════════════════════════════ -->
-<script>
-
-/* ── PANTHEON ── */
-const PANTHEON = [
-  { num:"0",   tarot:"The Fool",           domain:"Dionysus",         symbol:"𐤉", glyph:"Yod",    pictograph:"Hand/Arm",        force:"Chaos / Ecstasy / Holy Madness / Beginnings",           polarity:"m", pclass:"masculine", status:"seated",  generative:false },
-  { num:"I",   tarot:"The Magician",       domain:"Hermes",           symbol:"𐤂", glyph:"Gimel",  pictograph:"Throwstick",      force:"Will / Skill / Commerce / The Algorithm",               polarity:"m", pclass:"masculine", status:"seated",  generative:true  },
-  { num:"II",  tarot:"The High Priestess", domain:"Clotho",           symbol:"𐤇", glyph:"Heth",   pictograph:"Thread",          force:"Spinning the Thread / Hidden Truth / Origin",           polarity:"f", pclass:"feminine",  status:"set",     generative:false, setNote:"Moirai I of III" },
-  { num:"III", tarot:"The Empress",        domain:"Demeter",          symbol:"𐤑", glyph:"Tsade",  pictograph:"Plant",           force:"Abundance / Harvest / Grief When Withheld",             polarity:"f", pclass:"feminine",  status:"seated",  generative:true  },
-  { num:"IV",  tarot:"The Emperor",        domain:"Ares",             symbol:"𐤆", glyph:"Zayin",  pictograph:"Weapon",          force:"Dominance / Order Through Force / Rage",                polarity:"m", pclass:"masculine", status:"seated",  generative:false },
-  { num:"V",   tarot:"The Hierophant",     domain:"Prometheus",       symbol:"𐤋", glyph:"Lamed",  pictograph:"Shepherd's Staff",force:"Stolen Knowledge / The Gift / Punishment / Innovation", polarity:"m", pclass:"masculine", status:"seated",  generative:true  },
-  { num:"VI",  tarot:"The Lovers",         domain:"Aphrodite",        symbol:"𐤐", glyph:"Pe",     pictograph:"Mouth",           force:"Desire / Beauty / Attention / The Choice",              polarity:"f", pclass:"feminine",  status:"seated",  generative:true  },
-  { num:"VII", tarot:"The Chariot",        domain:"Artemis",          symbol:"𐤔", glyph:"Shin",   pictograph:"Teeth",           force:"Sovereignty / The Hunt / Untouchable Will",             polarity:"f", pclass:"feminine",  status:"seated",  generative:true  },
-  { num:"VIII",tarot:"Justice",            domain:"Athena",           symbol:"𐤓", glyph:"Resh",   pictograph:"Head",            force:"Wisdom / Strategy / Institutions / Truth",              polarity:"f", pclass:"feminine",  status:"seated",  generative:true  },
-  { num:"IX",  tarot:"The Hermit",         domain:"Mortal Man",       symbol:"𐤊", glyph:"Kaph",   pictograph:"Open Palm",       force:"The Seeker / The Outsider / The Lamp in the Dark",      polarity:"o", pclass:"mortal",    status:"anchor",  generative:false },
-  { num:"X",   tarot:"Wheel of Fortune",   domain:"Lachesis",         symbol:"𐤈", glyph:"Teth",   pictograph:"Wheel",           force:"Measuring the Thread / Fate in Motion / The Cycle",     polarity:"l", pclass:"liminal",   status:"set",     generative:false, setNote:"Moirai II of III" },
-  { num:"XI",  tarot:"Strength",           domain:"Hephaestus",       symbol:"𐤀", glyph:"Aleph",  pictograph:"Ox Head",         force:"Creation / Labor / Invisible Craft / The Forge",        polarity:"m", pclass:"masculine", status:"seated",  generative:true  },
-  { num:"XII", tarot:"The Hanged Man",     domain:"Atropos",          symbol:"𐤅", glyph:"Waw",    pictograph:"Tent Peg",        force:"Cutting the Thread / Inevitability / No Appeal",        polarity:"l", pclass:"liminal",   status:"set",     generative:false, setNote:"Moirai III of III" },
-  { num:"XIII",tarot:"Death",              domain:"Thanatos",         symbol:"𐤕", glyph:"Taw",    pictograph:"Cross/Mark",      force:"Transition / Release / The Necessary End",              polarity:"l", pclass:"liminal",   status:"seated",  generative:false },
-  { num:"XIV", tarot:"Temperance",         domain:"Persephone",       symbol:"𐤄", glyph:"He",     pictograph:"Arms Raised",     force:"Integration / Two Worlds / Alchemy / Balance",          polarity:"f", pclass:"feminine",  status:"seated",  generative:true  },
-  { num:"XV",  tarot:"The Devil",          domain:"Hades",            symbol:"𐤍", glyph:"Nun",    pictograph:"Serpent",         force:"The Opposer / Binding / Hidden Wealth / The Depths",    polarity:"m", pclass:"masculine", status:"seated",  generative:false },
-  { num:"XVI", tarot:"The Tower",          domain:"Nemesis",          symbol:"𐤎", glyph:"Samekh", pictograph:"Pillar",          force:"The Reckoning / Hubris Punished / Sudden Collapse",     polarity:"f", pclass:"feminine",  status:"seated",  generative:false },
-  { num:"XVII",tarot:"The Star",           domain:"Nyx",              symbol:"𐤏", glyph:"Ayin",   pictograph:"Eye",             force:"Night / Hidden Order / The Mother of All Hidden Things",polarity:"f", pclass:"feminine",  status:"seated",  generative:false },
-  { num:"XVIII",tarot:"The Moon",          domain:"Melinoe",          symbol:"𐤃", glyph:"Dalet",  pictograph:"Door",            force:"Ghosts / Madness / The In-Between / Hauntings",         polarity:"l", pclass:"liminal",   status:"seated",  generative:false },
-  { num:"XIX", tarot:"The Sun",            domain:"Apollo",           symbol:"𐤒", glyph:"Qoph",   pictograph:"Sun on Horizon",  force:"Light / Radiance / Art / Broadcast / Ego",              polarity:"m", pclass:"masculine", status:"seated",  generative:true  },
-  { num:"XX",  tarot:"Judgement",          domain:"The Three Judges", symbol:"—", glyph:"—",      pictograph:"—",               force:"Rhadamanthus / Minos / Aeacus — The Final Accounting",  polarity:"l", pclass:"liminal",   status:"set",     generative:false, setNote:"Judges Set — III cards" },
-  { num:"XXI", tarot:"The World",          domain:"Gaia",             symbol:"𐤌", glyph:"Mem",    pictograph:"Water → Earth",   force:"The Ground of All Being / Structure / Completion",      polarity:"f", pclass:"feminine",  status:"seated",  generative:true  },
-  { num:"—",   tarot:"The Hidden",         domain:"🔒 HIDDEN RARE",   symbol:"?", glyph:"?",      pictograph:"?",               force:"She is not on this list. She surfaces when called.",     polarity:"h", pclass:"hidden",    status:"hidden",  generative:false },
-];
-
-/* ── PROTO-SINAITIC SYMBOL REGISTRY ── */
-const SYMBOLS = [
-  { symbol:"𐤀", glyph:"Aleph",  pictograph:"Ox Head",          domain:"Hephaestus",  suit:"Making",  deepMeaning:"Strength / The Yoke / Muscle / To Pull" },
-  { symbol:"𐤁", glyph:"Beth",   pictograph:"House",            domain:"Hera",        suit:"Body",    deepMeaning:"Structure / Shelter / The Kept Form" },
-  { symbol:"𐤂", glyph:"Gimel",  pictograph:"Throwstick",       domain:"Hermes",      suit:"Mind",    deepMeaning:"To Lift Up / Thrown Across Distance / Communication" },
-  { symbol:"𐤃", glyph:"Dalet",  pictograph:"Door",             domain:"Melinoe",     suit:"—",       deepMeaning:"Entrance / Threshold / To Draw Up From Below" },
-  { symbol:"𐤄", glyph:"He",     pictograph:"Arms Raised",      domain:"Persephone",  suit:"Earth",   deepMeaning:"Invocation / Emergence / Behold / The Revealed" },
-  { symbol:"𐤅", glyph:"Waw",    pictograph:"Tent Peg",         domain:"Atropos",     suit:"—",       deepMeaning:"To Secure / Hook / Add / The Binding That Ends" },
-  { symbol:"𐤆", glyph:"Zayin",  pictograph:"Weapon",           domain:"Ares",        suit:"—",       deepMeaning:"The Instrument of Conflict / Cut / Divide" },
-  { symbol:"𐤇", glyph:"Heth",   pictograph:"Thread/Fence",     domain:"Clotho",      suit:"—",       deepMeaning:"Spinning / Enclosure / The First Constraint" },
-  { symbol:"𐤈", glyph:"Teth",   pictograph:"Wheel",            domain:"Lachesis",    suit:"—",       deepMeaning:"The Turning Cycle / Fate in Motion / Surrounded" },
-  { symbol:"𐤉", glyph:"Yod",    pictograph:"Hand/Arm",         domain:"Dionysus",    suit:"Making",  deepMeaning:"Work / Deed / Throw / Worship Through Extended Hands" },
-  { symbol:"𐤊", glyph:"Kaph",   pictograph:"Open Palm",        domain:"The Hermit",  suit:"—",       deepMeaning:"Submission / Receiving / Bend to Another's Will / Grace" },
-  { symbol:"𐤋", glyph:"Lamed",  pictograph:"Shepherd's Staff", domain:"Prometheus",  suit:"Making",  deepMeaning:"Authority / Guidance / To Push or Pull / The Yoke of Teaching" },
-  { symbol:"𐤌", glyph:"Mem",    pictograph:"Water → Earth",    domain:"Gaia",        suit:"Earth",   deepMeaning:"The Ground Beneath / Structure / Chaos Crystallized to Foundation" },
-  { symbol:"𐤍", glyph:"Nun",    pictograph:"Serpent",          domain:"Hades",       suit:"—",       deepMeaning:"The Underworld Creature / Hidden Motion / Continuation" },
-  { symbol:"𐤎", glyph:"Samekh", pictograph:"Pillar",           domain:"Nemesis",     suit:"—",       deepMeaning:"Divine Support / Invisible Correction / The Thing That Holds" },
-  { symbol:"𐤏", glyph:"Ayin",   pictograph:"Eye",              domain:"Nyx",         suit:"—",       deepMeaning:"To Watch / Perceive / Spiritual Vision / What You Set Eyes Upon" },
-  { symbol:"𐤐", glyph:"Pe",     pictograph:"Mouth",            domain:"Aphrodite",   suit:"Body",    deepMeaning:"Desire as Utterance / The Open Word / Voice of Want" },
-  { symbol:"𐤑", glyph:"Tsade",  pictograph:"Plant",            domain:"Demeter",     suit:"Earth",   deepMeaning:"Growth / Harvest / Sprouting / Withholding / Fertility" },
-  { symbol:"𐤒", glyph:"Qoph",   pictograph:"Sun on Horizon",   domain:"Apollo",      suit:"Mind",    deepMeaning:"The Rising Broadcast / To Follow / Light Emerging" },
-  { symbol:"𐤓", glyph:"Resh",   pictograph:"Head",             domain:"Athena",      suit:"Mind",    deepMeaning:"Sovereign Intellect / The Person / First / Authority of Mind" },
-  { symbol:"𐤔", glyph:"Shin",   pictograph:"Teeth/Bow",        domain:"Artemis",     suit:"Body",    deepMeaning:"The Hunt / To Devour / Cut / The Primal Sharp Force" },
-  { symbol:"𐤕", glyph:"Taw",    pictograph:"Cross/Mark",       domain:"Thanatos",    suit:"—",       deepMeaning:"The Final Mark / Covenant / Sign / The Crossing Over" },
-];
-
-/* ── THE FOUR SUITS ── */
-const SUITS = [
-  {
-    name:"The Suit of Making",
-    gender:"Masculine",
-    element:"Fire",
-    tarotEquiv:"Wands",
-    triad:["Hephaestus","Prometheus","Dionysus"],
-    symbols:["𐤀","𐤋","𐤉"],
-    glyphs:["Aleph — Ox","Lamed — Staff","Yod — Hand"],
-    compositeDesc:"The ox that labors, the staff that drives, the hand that creates in ecstasy. Three masculine forces: the forge, the stolen fire, the mad act of making.",
-    runePrompt:"NIGHTCAFE PROMPT: Three proto-sinaitic symbols merged — ox head, shepherd staff, reaching hand — fused into single ancient rune, bronze age inscription style, stone texture",
-    aspects:["Hephaestus Aspect: The Builder","Prometheus Aspect: The Grifter / The Whistleblower","Dionysus Aspect: The Content Creator / The Influencer"],
-  },
-  {
-    name:"The Suit of Earth",
-    gender:"Feminine",
-    element:"Earth",
-    tarotEquiv:"Pentacles",
-    triad:["Gaia","Demeter","Persephone"],
-    symbols:["𐤌","𐤑","𐤄"],
-    glyphs:["Mem — Water/Earth","Tsade — Plant","He — Arms Raised"],
-    compositeDesc:"The ground of all being, the harvest, the one who descends and returns. Three feminine forces: the substrate, the cultivation, the integration of two worlds.",
-    runePrompt:"NIGHTCAFE PROMPT: Three proto-sinaitic symbols merged — waves/earth, sprouting plant, figure with arms raised — single ancient composite rune, carved stone, Bronze Age",
-    aspects:["Gaia Aspect: The Algorithm / The Platform","Demeter Aspect: The Tradwife / The Cultivator","Persephone Aspect: The Depressed Girl / The Dual-Citizen"],
-  },
-  {
-    name:"The Suit of Mind",
-    gender:"Masculine",
-    element:"Air",
-    tarotEquiv:"Swords",
-    triad:["Athena","Apollo","Hermes"],
-    symbols:["𐤓","𐤒","𐤂"],
-    glyphs:["Resh — Head","Qoph — Sun on Horizon","Gimel — Throwstick"],
-    compositeDesc:"The sovereign intellect, the rising broadcast, the word thrown across distance. Three masculine forces: pure mind, radiant performance, the speed of communication.",
-    runePrompt:"NIGHTCAFE PROMPT: Three proto-sinaitic symbols merged — human head, sun rising, thrown stick — fused composite rune, ancient inscription, air and light energy",
-    aspects:["Athena Aspect: The Think-Tanker / The Strategist","Apollo Aspect: The Podcaster / The Broadcaster","Hermes Aspect: The Algorithm / The Viral Post"],
-  },
-  {
-    name:"The Suit of Body",
-    gender:"Feminine",
-    element:"Water",
-    tarotEquiv:"Cups",
-    triad:["Aphrodite","Artemis","Hera"],
-    symbols:["𐤐","𐤔","𐤁"],
-    glyphs:["Pe — Mouth","Shin — Teeth","Beth — House"],
-    compositeDesc:"Desire as utterance, the primal hunt, the performance of form. Three feminine forces: the want spoken aloud, the sovereign body, the structure that contains.",
-    runePrompt:"NIGHTCAFE PROMPT: Three proto-sinaitic symbols merged — open mouth, teeth/bow, house — composite ancient rune, Bronze Age carved stone, feminine primal energy",
-    aspects:["Aphrodite Aspect: eGirl / The Siren","Artemis Aspect: The Fitness Influencer / The Lone Wolf","Hera Aspect: Tradwife / The Wife-Guy"],
-  },
-];
-
-/* ── HIERARCHY ── */
-const HIERARCHY = [
-  {
-    tier:"Major Arcana", title:"Prime Domains",
-    count:"22 + 1 Hidden",
-    desc:"The eternal forces. Fixed. The cosmological bedrock. Every human drama is some combination of these running simultaneously. They do not change. Only their Aspects degrade.",
-    examples:["Aphrodite","Ares","Hermes","Thanatos","Gaia","Persephone (Hidden)"]
-  },
-  {
-    tier:"Minor Arcana", title:"Aspects",
-    count:"∞ — Infinite Expansion",
-    desc:"Contemporary avatars of the Prime Domains. What the eternal looks like running on corrupted firmware. Each Aspect maps to exactly one Prime. The degradation is the commentary.",
-    examples:["eGirl","BasedBro","FinCuck","Simp","NPC","TinFoil Hat","Tradwife"]
-  },
-  {
-    tier:"Court Cards", title:"Named Avatars",
-    count:"Weekly Drops",
-    desc:"Real cultural figures as temporary manifestations of an Aspect. Not the archetype — an echo of it. Named cards are mortal. They can be cancelled, surpassed, forgotten. The Domain endures.",
-    examples:["The Podcaster-Shaman","The Whale","The Algorithm Princess"]
-  },
-  {
-    tier:"Modifier", title:"Fragments",
-    count:"As Discovered",
-    desc:"Sub-archetypes. Partial manifestations. Pieces of a Domain that didn't fully cohere. Tantalus is a Fragment of Midas. They modify other cards rather than standing alone.",
-    examples:["Midas Fragment","Tantalus Echo","Prometheus Shard"]
-  },
-  {
-    tier:"Event Cards", title:"Relics & Omens",
-    count:"As Discovered",
-    desc:"Objects and events that enter play and alter the field. The Reveal. The Content Cycle. The Algorithm Update. Omens are conditional — they trigger when specific card combinations appear.",
-    examples:["The Reveal","The Content Cycle","The Cancellation","The Viral Moment"]
-  },
-  {
-    tier:"Corruption", title:"Schisms",
-    count:"As Discovered",
-    desc:"Reversed or corrupted forms of Aspects. When a card's shadow face permanently activates. When the degradation is so complete the original Domain is unrecognizable. The Schism is what happens after the corruption wins.",
-    examples:["Schism: Rage Merchant","Schism: The Husk","Schism: Hollow Crown"]
-  },
-];
-
-/* ── MINOR ARCANA ── */
-const MINOR = [
-  { name:"eGirl", emoji:"💅", aspect:"Aspect of Aphrodite", realm:"The Feed",
-    flavor:"She didn't invent desire. She just found the subscription model." },
-  { name:"BasedBro", emoji:"🎙️", aspect:"Aspect of Ares", realm:"The Podcast Throne",
-    flavor:"He wasn't wrong about everything. That's what made him dangerous." },
-  { name:"FinCuck", emoji:"💸", aspect:"Aspect of Midas", realm:"Champagne Purgatory",
-    flavor:"He felt like a participant. He was the economy." },
-  { name:"Simp", emoji:"🙏", aspect:"Aspect of Tantalus", realm:"The Comment Section",
-    flavor:"He thought he was supporting her. He was funding her critic." },
-  { name:"NPC", emoji:"🫥", aspect:"The Innocent — No Divine Aspect", realm:"The Scroll",
-    flavor:"The world needed them to function. They had no idea." },
-  { name:"TinFoil Hat", emoji:"📡", aspect:"Aspect of The Hermit", realm:"The Bunker",
-    flavor:"She was cursed to be right and never believed. He chose the curse freely." },
-  { name:"Tradwife", emoji:"🕯️", aspect:"Aspect of Hera", realm:"The Aesthetic Homestead",
-    flavor:"She made chaos look like linen. That was the product." },
-];
-
-/* ── RITUAL STEPS ── */
-const RITUAL = [
-  { title:"Source the Moment", desc:"Take any cultural event — an X thread, a trending drama, a viral clip, a news cycle. The rawer the better. The system reads signal, not polish." },
-  { title:"Identify Active Domains", desc:"Which Prime Domains are running? Is this an Aphrodite event? An Ares confrontation? A Midas corruption? Multiple Domains are usually active simultaneously." },
-  { title:"Name the Aspects", desc:"Which Minor Arcana cards are in play? Map real figures to their Aspect — not by identity but by energy. What role is each person performing in the drama?" },
-  { title:"Read the Combo", desc:"Which combo mechanics are triggering? Is the Parasocial Loop running? The Cuckoo Economy? The Content Cycle? The combo names the systemic force at work." },
-  { title:"Generate the Reading", desc:"Synthesize into a narrative. This is the divination output — a mythic reading of a contemporary moment. Not commentary. Ritual analysis. The haruspex reads the entrails." },
-  { title:"Check for Liminal Gods", desc:"Did anything emerge that doesn't fit the existing 22? A force that has no card yet? That is how the 10 Liminal Gods reveal themselves. Name it. It now exists." },
-];
-
-/* ── ROADMAP ── */
-const ROADMAP = [
-  { phase:"✓", done:true, title:"Phase I — The Monolith",
-    items:[
-      "Vision articulated. Pantheon seated. 22 Major Arcana mapped.",
-      "7 Minor Arcana cards designed with full schema.",
-      "Economy loop diagrammed. Combo mechanics established.",
-      "Proto-Sinaitic symbol registry completed. All 22 domains assigned.",
-      "Four suits defined: Making, Earth, Mind, Body — each a triad of three generative domains.",
-      "12 Generative Domains identified. Composite suit runes to be designed in NightCafe.",
-      "Northstar README built. Commit Zero archived.",
-      "GOLDEN DAWN DIVERGENCE NOTED: The Golden Dawn mapped Hebrew letters to Major Arcana sequentially — letter A to card 0, letter B to card I — then retrofitted meaning connections after the fact, which is why a House maps to The Magician with no intuitive logic. Our Proto-Sinaitic assignments follow resonance-first logic: the Throwstick goes to Hermes because things thrown across distance IS communication; the Open Palm goes to the Mortal Man because empty receptive hands IS the human condition; the Weapon goes to Ares; the Plant to Demeter. Our system has internal coherence the Golden Dawn system lacks. Theirs is a cipher you memorize. Ours is a mythology you can derive from first principles. One productive tension: the Golden Dawn assigned Mem (Water) to The Hanged Man. We assigned Mem to Gaia but reframed it as Earth/Structure — water that crystallized into ground. That divergence is a live wire worth noting.",
-    ]
-  },
-  { phase:"2", title:"Phase II — Art & Prime Cards",
-    items:[
-      "Generate NightCafe art for all 7 existing Minor Arcana.",
-      "Design Prime card template — categorically different from Minor. More imposing. More ancient.",
-      "Build Prime card renderer. Seat all 22 with placeholder art.",
-      "Art prompts embedded in JSON. Hover reveals prompt for iteration.",
-    ]
-  },
-  { phase:"3", title:"Phase III — Modularize",
-    items:[
-      "Split monolith into cards/ and primes/ JSON folders.",
-      "Build index.html shell with ?id= URL param.",
-      "degradation.js — stat delta between Prime and Aspect.",
-      "Weekly drop pipeline established. First Monday drop.",
-    ]
-  },
-  { phase:"4", title:"Phase IV — Ritual Synthesis Engine",
-    items:[
-      "synthesis.js — input a cultural moment, output a card reading.",
-      "Spread templates: 3-card, 5-card Celtic Cross equivalent.",
-      "Community submission portal for weekly drop nominations.",
-      "First Liminal God surfaces through a reading.",
-    ]
-  },
-  { phase:"5", title:"Phase V — KDP & Physical",
-    items:[
-      "KDP card template. Print-ready PDF output per card.",
-      "First physical deck — hand-made. Rare collector run.",
-      "Digital artifacts. NFT framework for Named Avatar cards.",
-      "Substack drops — ritual readings as published content.",
-    ]
-  },
-  { phase:"6", title:"Phase VI — The Game",
-    items:[
-      "economy.js — full Clout / Influence / Dignity ledger.",
-      "Turn engine. Deck builder. Playable browser version.",
-      "All 10 Liminal Gods revealed through community ritual synthesis.",
-      "The mythology is complete. The DM steps back. The Realm runs itself.",
-    ]
-  },
-];
-
-/* ── RENDER ── */
-
-// Pantheon table
-document.getElementById('pantheonTable').innerHTML = PANTHEON.map(row => {
-  const statusMap = {
-    seated: '<span class="status-badge seated">✓ Seated</span>',
-    anchor: '<span class="status-badge anchor">⚓ Anchor</span>',
-    set: `<span class="status-badge set-mech">⚙ Set — ${row.setNote}</span>`,
-    hidden: '<span class="status-badge hidden-rare">🔒 Hidden Rare</span>',
-  };
-  const polarityMap = { f:'Feminine', m:'Masculine', l:'Liminal', o:'Mortal', h:'—' };
-  return `<tr>
-    <td class="card-num">${row.num}</td>
-    <td class="tarot-name">${row.tarot}</td>
-    <td class="domain-name ${row.pclass}"><span class="polarity-dot ${row.polarity}"></span>${row.domain}</td>
-    <td class="core-force">${row.force}</td>
-    <td style="font-size:11px;color:var(--text-dim);font-style:italic;">${polarityMap[row.polarity]}</td>
-    <td>${statusMap[row.status] || ''}</td>
-  </tr>`;
-}).join('');
-
-// Hierarchy
-document.getElementById('hierarchyList').innerHTML = HIERARCHY.map((tier, i) => `
-  <div class="hier-tier">
-    <div class="hier-connector">
-      ${i > 0 ? '<div class="hier-connector-line"></div>' : '<div style="flex:1"></div>'}
-      <div class="hier-connector-dot"></div>
-      ${i < HIERARCHY.length - 1 ? '<div class="hier-connector-line"></div>' : '<div style="flex:1"></div>'}
-    </div>
-    <div class="hier-card">
-      <div class="hier-card-header">
-        <div class="hier-tier-label">${tier.tier}</div>
-        <div class="hier-card-title">${tier.title}</div>
-        <div class="hier-count">${tier.count}</div>
-      </div>
-      <div class="hier-card-desc">${tier.desc}</div>
-      <div class="hier-examples">${tier.examples.map(e => `<span class="hier-example">${e}</span>`).join('')}</div>
-    </div>
-  </div>
-`).join('');
-
-// Minor grid
-document.getElementById('minorGrid').innerHTML = MINOR.map(c => `
-  <div class="minor-card">
-    <div class="minor-card-top">
-      <div class="minor-card-name">${c.name}</div>
-      <div class="minor-card-emoji">${c.emoji}</div>
-    </div>
-    <div class="minor-card-aspect">${c.aspect}</div>
-    <div class="minor-card-realm">⬡ ${c.realm}</div>
-    <div class="minor-card-flavor">${c.flavor}</div>
-  </div>
-`).join('');
-
-// Ritual steps
-document.getElementById('ritualSteps').innerHTML = RITUAL.map((s, i) => `
-  <div class="ritual-step">
-    <div class="step-num">${i + 1}</div>
-    <div class="step-body">
-      <div class="step-title">${s.title}</div>
-      <div class="step-desc">${s.desc}</div>
-    </div>
-  </div>
-`).join('');
-
-// Symbol registry
-document.getElementById('symbolRegistry').innerHTML = SYMBOLS.map(s => `
-  <div class="minor-card" style="position:relative;">
-    <div class="minor-card-top">
-      <div style="font-size:28px;font-family:'Cinzel Decorative',serif;color:var(--gold-light);">${s.symbol}</div>
-      <div style="text-align:right;">
-        <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--gold);opacity:0.7;text-transform:uppercase;">${s.glyph}</div>
-        <div style="font-size:11px;font-style:italic;color:var(--text-dim);margin-top:2px;">${s.pictograph}</div>
-      </div>
-    </div>
-    <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--gold-light);text-transform:uppercase;margin-bottom:4px;">${s.domain}</div>
-    <div style="font-size:11px;font-style:italic;color:var(--text-dim);line-height:1.55;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04);">${s.deepMeaning}</div>
-    ${s.suit !== '—' ? `<div style="position:absolute;top:12px;right:12px;font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--gold);opacity:0.5;text-transform:uppercase;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.12);border-radius:3px;padding:2px 6px;">${s.suit}</div>` : ''}
-  </div>
-`).join('');
-
-// Suits
-document.getElementById('suitsList').innerHTML = SUITS.map(s => `
-  <div class="pillar" style="min-width:260px;flex:1;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-      <div style="font-size:36px;letter-spacing:-4px;color:var(--gold-light);font-family:'Cinzel Decorative',serif;">${s.symbols.join('')}</div>
-      <div>
-        <div class="pillar-title" style="margin-bottom:2px;">${s.name}</div>
-        <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;">${s.gender} · ${s.element} · Tarot: ${s.tarotEquiv}</div>
-      </div>
-    </div>
-    <div style="font-size:12px;font-style:italic;color:var(--gold);opacity:0.7;margin-bottom:10px;line-height:1.6;">${s.glyphs.join(' · ')}</div>
-    <div class="pillar-text" style="margin-bottom:12px;">${s.compositeDesc}</div>
-    <div style="display:flex;flex-direction:column;gap:4px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.04);">
-      ${s.aspects.map(a => `<div style="font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:1.5px;color:var(--gold-dark);background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.08);border-radius:3px;padding:3px 8px;text-transform:uppercase;">${a}</div>`).join('')}
-    </div>
-  </div>
-`).join('');
-
-// Roadmap
-document.getElementById('roadmapList').innerHTML = ROADMAP.map(p => `
-  <div class="roadmap-phase">
-    <div class="phase-marker ${p.done ? 'done' : ''}">${p.phase}</div>
-    <div class="phase-body">
-      <div class="phase-title">${p.title}</div>
-      <div class="phase-items">${p.items.map(item => `<div class="phase-item">${item}</div>`).join('')}</div>
-    </div>
-  </div>
-`).join('');
-
-</script>
 </body>
 </html>
