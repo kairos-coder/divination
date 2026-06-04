@@ -10,9 +10,9 @@
 
 :root{
   --gold:#d4a840;--gold-light:#f0d878;--gold-dark:#8a6518;--gold-dim:#4a3510;
-  --void:#060610;--deep:#0a0a1c;--surface:#101028;--surface2:#181838;
-  --border:#222244;--border-gold:rgba(212,168,64,0.18);
-  --text:#f0ead8;--text-mid:#c8b898;--text-dim:#887860;
+  --void:#060610;--deep:#0c0c1e;--surface:#181838;--surface2:#202048;
+  --border:#2a2a4a;--border-gold:rgba(212,168,64,0.2);
+  --text:#f0ead8;--text-mid:#d0c0a0;--text-dim:#988870;
   --sage:#8ab87a;--water:#66aacc;--fire:#cc7755;--air:#aa88cc;--ember:#aa4a2a;
 }
 
@@ -20,6 +20,10 @@ html{scroll-behavior:smooth}
 
 body{
   background:var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 5%,#120828 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%,#081420 0%,transparent 55%),
+    radial-gradient(ellipse 30% 60% at 80% 20%,#0a0820 0%,transparent 50%);
   font-family:'Cormorant Garamond',Georgia,serif;
   color:var(--text);
   min-height:100vh;
@@ -31,24 +35,20 @@ body{
 #cardMosaic{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   display:grid;grid-template-columns:repeat(6,1fr);
-  opacity:0.08;transition:opacity 0.5s;
+  opacity:0.18;
 }
 #cardMosaic img{
   width:100%;aspect-ratio:2/3;object-fit:cover;
-  filter:sepia(0.3) brightness(0.7);
+  filter:sepia(0.15) brightness(0.9);
   transition:transform 0.5s;
 }
 #cardMosaic img:hover{transform:scale(1.02);}
 
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 60% 40% at 50% 30%,rgba(10,8,30,0.4) 0%,transparent 60%);
-}
-
+/* ── PONTUS AMBIENT ── */
 #pontusAmbient{
-  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.07;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 20%,transparent 70%);
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 20%,transparent 70%);
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.04;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 15%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 15%,transparent 70%);
 }
 
 /* ── CONTENT LAYER ── */
@@ -57,7 +57,7 @@ body::before{
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;height:56px;
-  background:rgba(6,6,16,0.92);backdrop-filter:blur(20px);
+  background:rgba(8,8,20,0.88);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border-gold);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 48px;z-index:200;
@@ -124,7 +124,7 @@ nav{
 .hub-section{position:relative;z-index:2;padding:80px 24px;max-width:1000px;margin:0 auto;border-top:1px solid rgba(212,168,64,0.06)}
 .hub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:36px}
 .hub-card{
-  background:rgba(16,16,40,0.7);border:1px solid var(--border);
+  background:rgba(24,24,56,0.6);border:1px solid var(--border);
   border-radius:12px;padding:28px 22px;text-align:center;
   transition:all 0.3s;cursor:pointer;text-decoration:none;display:block;
 }
@@ -137,7 +137,7 @@ nav{
 .daily-card-section{position:relative;z-index:2;padding:80px 24px;max-width:600px;margin:0 auto;text-align:center;border-top:1px solid rgba(212,168,64,0.06)}
 .daily-card-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px}
 .daily-card-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,26px);color:var(--gold-light);margin-bottom:24px}
-.daily-card-display{background:rgba(16,16,40,0.6);border:1px solid var(--border-gold);border-radius:14px;padding:28px;display:inline-block}
+.daily-card-display{background:rgba(24,24,56,0.55);border:1px solid var(--border-gold);border-radius:14px;padding:28px;display:inline-block}
 .daily-card-display img{width:160px;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.5);margin-bottom:14px}
 .daily-card-name{font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--gold-light)}
 .daily-card-figure{font-style:italic;font-size:18px;color:var(--text-mid);margin:4px 0}
@@ -148,7 +148,7 @@ nav{
 /* ── SUITS ── */
 .suits-section{position:relative;z-index:2;padding:80px 24px;max-width:900px;margin:0 auto;border-top:1px solid rgba(212,168,64,0.06)}
 .suits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:36px}
-.suit-card{background:rgba(16,16,40,0.5);border:1px solid var(--border);border-radius:12px;padding:28px 22px;text-align:center;transition:all 0.3s}
+.suit-card{background:rgba(24,24,56,0.45);border:1px solid var(--border);border-radius:12px;padding:28px 22px;text-align:center;transition:all 0.3s}
 .suit-card:hover{border-color:var(--border-gold);transform:translateY(-3px)}
 .suit-symbol{font-size:40px;margin-bottom:12px}
 .suit-name{font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--gold-light);margin-bottom:4px}
@@ -159,11 +159,13 @@ nav{
 footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-top:1px solid rgba(212,168,64,0.06)}
 .footer-sigil{font-size:24px;opacity:0.25;margin-bottom:10px}
 .footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2}
+
+@media(max-width:600px){nav{padding:0 20px}.nav-links{gap:14px}.hero{padding:80px 16px 60px}}
 </style>
 </head>
 <body>
 
-<!-- CARD MOSAIC BACKGROUND -->
+<!-- CARD MOSAIC BACKGROUND — Major Arcana focused -->
 <div id="cardMosaic"></div>
 
 <!-- PONTUS AMBIENT -->
@@ -265,9 +267,9 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
 
 <script>
 // ══════════════════════════════════════════
-// CARD REGISTRY — all cards with images
+// CARD REGISTRY — Major Arcana (all 22) + available minors
 // ══════════════════════════════════════════
-const MAJOR_CARDS=[
+const MAJOR_ARCANA = [
     {id:"major_00",name:"The Fool",title:"Dionysus",culture:"Greek",keywords:["beginnings","madness","ecstasy"],image:"data/images/dionysus-card.jpg"},
     {id:"major_01",name:"The Magician",title:"Hermes",culture:"Greek",keywords:["skill","messages","conduit"],image:"data/images/major/magician.png"},
     {id:"major_02",name:"The High Priestess",title:"Hera",culture:"Greek",keywords:["covenant","hidden","veil"],image:"data/images/hera-card.jpg"},
@@ -277,54 +279,61 @@ const MAJOR_CARDS=[
     {id:"major_06",name:"The Lovers",title:"Aphrodite",culture:"Greek",keywords:["love","choice","union"],image:"data/images/aphrodite-card.jpg"},
     {id:"major_07",name:"The Chariot",title:"Artemis",culture:"Greek",keywords:["sovereignty","hunt","will"],image:"data/images/artemis-card.jpg"},
     {id:"major_08",name:"Justice",title:"Athena",culture:"Greek",keywords:["wisdom","strategy","truth"],image:"data/images/athena-card.jpg"},
+    {id:"major_09",name:"The Hermit",title:"Mortal Man",culture:"Greek",keywords:["seeker","solitude","lamp"],image:"data/images/hermit-card.jpg"},
+    {id:"major_10",name:"Wheel of Fortune",title:"The Fates",culture:"Greek",keywords:["spinning","measuring","cutting"],image:"data/images/major/wheel_of_fortune.png"},
     {id:"major_11",name:"Strength",title:"Hephaestus",culture:"Greek",keywords:["creation","labor","forge"],image:"data/images/hephaestus-card.jpg"},
+    {id:"major_12",name:"The Hanged Man",title:"Prometheus",culture:"Greek",keywords:["sacrifice","surrender","gift"],image:"data/images/prometheus-card.jpg"},
+    {id:"major_13",name:"Death",title:"Thanatos",culture:"Greek",keywords:["transition","release","ending"],image:"data/images/thanatos-card.jpg"},
+    {id:"major_14",name:"Temperance",title:"Hestia",culture:"Greek",keywords:["hearth","moderation","center"],image:"data/images/major/temperance.png"},
     {id:"major_15",name:"The Devil",title:"Hades",culture:"Greek",keywords:["bondage","shadow","wealth"],image:"data/images/hades-card.jpg"},
-    {id:"major_16",name:"The Tower",title:"Poseidon",culture:"Greek",keywords:["upheaval","destruction","wave"],image:"data/images/poseidon-card.jpg"}
+    {id:"major_16",name:"The Tower",title:"Poseidon",culture:"Greek",keywords:["upheaval","destruction","wave"],image:"data/images/poseidon-card.jpg"},
+    {id:"major_17",name:"The Star",title:"Persephone",culture:"Greek",keywords:["hope","return","rebirth"],image:"data/images/persephone-card.jpg"},
+    {id:"major_18",name:"The Moon",title:"Melinoe",culture:"Greek",keywords:["ghosts","madness","veil"],image:"data/images/major/moon.png"},
+    {id:"major_19",name:"The Sun",title:"Apollo",culture:"Greek",keywords:["light","radiance","clarity"],image:"data/images/major/sun.png"},
+    {id:"major_20",name:"Judgement",title:"The Three Judges",culture:"Greek",keywords:["reckoning","awakening","calling"],image:"data/images/major/judgment.png"},
+    {id:"major_21",name:"The World",title:"Gaia",culture:"Greek",keywords:["completion","wholeness","integration"],image:"data/images/major/world.png"}
 ];
-const MINOR_FIRE=[
+
+const MINOR_CARDS = [
     {id:"fire_ace",name:"Ace of Fire",title:"Maui",culture:"Polynesian",keywords:["stolen fire","spark","genesis"],image:"data/images/minor/fire/fire_ace.png"},
     {id:"fire_02",name:"Two of Fire",title:"Castor & Pollux",culture:"Greek",keywords:["partnership","twins","pact"],image:"data/images/minor/fire/fire_02.png"},
     {id:"fire_03",name:"Three of Fire",title:"Peitho",culture:"Greek",keywords:["persuasion","pitch","charm"],image:"data/images/minor/fire/fire_03.png"},
     {id:"fire_04",name:"Four of Fire",title:"Icarus",culture:"Greek",keywords:["fall","hubris","burnout"],image:"data/images/minor/fire/fire_04.png"},
     {id:"fire_05",name:"Five of Fire",title:"Loki",culture:"Norse",keywords:["critic","truth","dissent"],image:"data/images/minor/fire/fire_05.png"},
-    {id:"fire_06",name:"Six of Fire",title:"The Algorithm",culture:"Modern",keywords:["feed","viral","reputation"],image:"data/images/minor/fire/fire_06.png"}
-];
-const MINOR_EARTH=[
+    {id:"fire_06",name:"Six of Fire",title:"The Algorithm",culture:"Modern",keywords:["feed","viral","reputation"],image:"data/images/minor/fire/fire_06.png"},
     {id:"earth_ace",name:"Ace of Earth",title:"Lakshmi",culture:"Hindu",keywords:["wealth","abundance","lotus"],image:"data/images/minor/earth/earth_ace.png"},
     {id:"earth_02",name:"Two of Earth",title:"Aristaeus",culture:"Greek",keywords:["beekeeping","craft","balance"],image:"data/images/minor/earth/earth_02.png"},
     {id:"earth_03",name:"Three of Earth",title:"Seven Dwarves",culture:"Norse",keywords:["teamwork","collab","crew"],image:"data/images/minor/earth/earth_03.png"},
-    {id:"earth_04",name:"Four of Earth",title:"Tantalus",culture:"Greek",keywords:["denied","scarcity","lack"],image:"data/images/minor/earth/earth_04.png"}
-];
-const MINOR_WATER=[
+    {id:"earth_04",name:"Four of Earth",title:"Tantalus",culture:"Greek",keywords:["denied","scarcity","lack"],image:"data/images/minor/earth/earth_04.png"},
     {id:"water_ace",name:"Ace of Water",title:"Oshun",culture:"Yoruba",keywords:["reach","love","mirror"],image:"data/images/minor/water/water_ace.png"},
-    {id:"water_02",name:"Two of Water",title:"Echo & Narcissus",culture:"Greek",keywords:["talking","echo","mismatch"],image:"data/images/minor/water/water_02.png"}
-];
-const MINOR_AIR=[
+    {id:"water_02",name:"Two of Water",title:"Echo & Narcissus",culture:"Greek",keywords:["talking","echo","mismatch"],image:"data/images/minor/water/water_02.png"},
     {id:"air_ace",name:"Ace of Air",title:"Thoth",culture:"Egyptian",keywords:["leak","knowledge","writing"],image:"data/images/minor/air/air_ace.png"}
 ];
 
-const ALL_CARDS=[...MAJOR_CARDS,...MINOR_FIRE,...MINOR_EARTH,...MINOR_WATER,...MINOR_AIR];
+// Mosaic pool: 70% Major Arcana (they're all generated), 30% minors for variety
+const MOSAIC_POOL = [...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MINOR_CARDS];
+const ALL_CARDS = [...MAJOR_ARCANA, ...MINOR_CARDS];
 
 // ══════════════════════════════════════════
-// CARD MOSAIC BACKGROUND
+// CARD MOSAIC BACKGROUND — 6×6 grid
 // ══════════════════════════════════════════
 function buildMosaic(){
     const mosaic=document.getElementById('cardMosaic');
-    // Use 36 cells (6x6 grid) — pick random cards to fill
     const cells=[];
     for(let i=0;i<36;i++){
-        const card=ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+        const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];
         cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
     }
     mosaic.innerHTML=cells.join('');
 }
 buildMosaic();
+
 // Rotate a few random cells every 8 seconds
 setInterval(()=>{
     const imgs=document.querySelectorAll('#cardMosaic img');
     if(imgs.length===0)return;
     const idx=Math.floor(Math.random()*imgs.length);
-    const card=ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+    const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];
     imgs[idx].src=card.image;
 },8000);
 
@@ -346,20 +355,20 @@ function drawP(){
         pCtx.beginPath();pCtx.moveTo(0,H);
         for(let x=0;x<=W;x+=4){const y=baseY+Math.sin(x*freq+pOff[d])*amp+Math.sin(x*freq*2.3+pOff[d]*0.7)*(amp*0.28);pCtx.lineTo(x,y);}
         pCtx.lineTo(W,H);pCtx.closePath();
-        pCtx.fillStyle=`rgba(${14+d*3},${48+b},${140+d*8},${0.18+d*0.03})`;pCtx.fill();
+        pCtx.fillStyle=`rgba(${14+d*3},${48+b},${140+d*8},${0.16+d*0.03})`;pCtx.fill();
     }
     requestAnimationFrame(drawP);
 }
 drawP();
 
 // ══════════════════════════════════════════
-// TODAY'S PULL — cached daily card
+// TODAY'S PULL — daily card from Major Arcana
 // ══════════════════════════════════════════
 function getTodayCard(){
     const today=new Date().toDateString();
     const cache=JSON.parse(localStorage.getItem('ealdforn_daily_card')||'{}');
     if(cache.date===today&&cache.card)return cache.card;
-    const card=ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+    const card=MAJOR_ARCANA[Math.floor(Math.random()*MAJOR_ARCANA.length)];
     localStorage.setItem('ealdforn_daily_card',JSON.stringify({date:today,card}));
     return card;
 }
