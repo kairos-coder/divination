@@ -31,7 +31,6 @@ body{
   position:relative;
 }
 
-/* ── CARD MOSAIC BACKGROUND ── */
 #cardMosaic{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   display:grid;grid-template-columns:repeat(6,1fr);
@@ -44,17 +43,14 @@ body{
 }
 #cardMosaic img:hover{transform:scale(1.02);}
 
-/* ── PONTUS AMBIENT ── */
 #pontusAmbient{
   position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.04;
   mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 15%,transparent 70%);
   -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 15%,transparent 70%);
 }
 
-/* ── CONTENT LAYER ── */
 .content-layer{position:relative;z-index:2}
 
-/* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;height:56px;
   background:rgba(8,8,20,0.88);backdrop-filter:blur(20px);
@@ -69,7 +65,6 @@ nav{
 .nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
 .nav-links a:hover{color:var(--gold-light)}
 
-/* ── HERO ── */
 .hero{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;
@@ -100,14 +95,14 @@ nav{
 }
 .btn-primary:hover{box-shadow:0 0 70px rgba(212,168,64,0.45);transform:translateY(-3px)}
 
-.btn-secondary{
+.btn-dashboard{
   font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--sage);
-  background:transparent;border:1px solid var(--sage);
+  text-transform:uppercase;color:var(--water);
+  background:transparent;border:1px solid var(--water);
   padding:14px 40px;border-radius:10px;
   cursor:pointer;text-decoration:none;transition:all 0.3s;
 }
-.btn-secondary:hover{background:rgba(138,184,122,0.08);box-shadow:0 0 35px rgba(138,184,122,0.18)}
+.btn-dashboard:hover{background:rgba(102,170,204,0.08);box-shadow:0 0 35px rgba(102,170,204,0.18)}
 
 .btn-tertiary{
   font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;
@@ -120,7 +115,6 @@ nav{
 
 .scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;color:var(--text-dim);text-transform:uppercase}
 
-/* ── LINK HUB ── */
 .hub-section{position:relative;z-index:2;padding:80px 24px;max-width:1000px;margin:0 auto;border-top:1px solid rgba(212,168,64,0.06)}
 .hub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:36px}
 .hub-card{
@@ -133,7 +127,6 @@ nav{
 .hub-title{font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--gold-light);margin-bottom:6px}
 .hub-desc{font-size:13px;color:var(--text-dim);font-style:italic;line-height:1.5}
 
-/* ── TODAY'S CARD ── */
 .daily-card-section{position:relative;z-index:2;padding:80px 24px;max-width:600px;margin:0 auto;text-align:center;border-top:1px solid rgba(212,168,64,0.06)}
 .daily-card-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px}
 .daily-card-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,26px);color:var(--gold-light);margin-bottom:24px}
@@ -145,7 +138,6 @@ nav{
 .daily-card-keywords{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .daily-card-kw{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--border-gold);border-radius:16px;color:var(--gold);background:rgba(212,168,64,0.04)}
 
-/* ── SUITS ── */
 .suits-section{position:relative;z-index:2;padding:80px 24px;max-width:900px;margin:0 auto;border-top:1px solid rgba(212,168,64,0.06)}
 .suits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:36px}
 .suit-card{background:rgba(24,24,56,0.45);border:1px solid var(--border);border-radius:12px;padding:28px 22px;text-align:center;transition:all 0.3s}
@@ -155,7 +147,6 @@ nav{
 .suit-triad{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
 .suit-domain{font-size:13px;font-style:italic;color:var(--text-mid);margin-top:10px;line-height:1.5}
 
-/* ── FOOTER ── */
 footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-top:1px solid rgba(212,168,64,0.06)}
 .footer-sigil{font-size:24px;opacity:0.25;margin-bottom:10px}
 .footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2}
@@ -165,10 +156,7 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
 </head>
 <body>
 
-<!-- CARD MOSAIC BACKGROUND — Major Arcana focused -->
 <div id="cardMosaic"></div>
-
-<!-- PONTUS AMBIENT -->
 <canvas id="pontusAmbient"></canvas>
 
 <div class="content-layer">
@@ -180,10 +168,10 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
   </div>
   <ul class="nav-links">
     <li><a href="draw.html">Draw</a></li>
-    <li><a href="daily.html">Earth Shrine</a></li>
+    <li><a href="daily.html">Dashboard</a></li>
     <li><a href="zodiac.html">Zodiac</a></li>
     <li><a href="archive.html">Archive</a></li>
-    <li><a href="readme.html">Pantheon</a></li>
+    <li><a href="readme.html">Lodestar</a></li>
   </ul>
 </nav>
 
@@ -197,13 +185,12 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
   <div class="hero-rule"></div>
   <div class="hero-cta">
     <a href="draw.html" class="btn-primary">Draw Three Cards</a>
-    <a href="daily.html" class="btn-secondary">🜃 Earth Shrine · Live Drop</a>
+    <a href="daily.html" class="btn-dashboard">🌊 Live Dashboard · Drop Zone</a>
     <a href="zodiac.html" class="btn-tertiary">✦ Celestial Grimoire</a>
   </div>
   <div class="scroll-cue">Past · Present · Future</div>
 </section>
 
-<!-- LINK HUB -->
 <section class="hub-section">
   <div style="text-align:center;">
     <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px;">Enter the Sanctuary</div>
@@ -216,31 +203,34 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
       <div class="hub-desc">Three-card spread · Past, Present, Future · The ritual awaits</div>
     </a>
     <a href="daily.html" class="hub-card">
-      <div class="hub-icon">🏔️</div>
-      <div class="hub-title">Earth Shrine</div>
-      <div class="hub-desc">Live card drops · Mycelial grid · Council reactions</div>
+      <div class="hub-icon">🌊</div>
+      <div class="hub-title">Live Dashboard</div>
+      <div class="hub-desc">Card drop control room · Pontus wave field · Oracle auto-draw · Council reactions</div>
     </a>
     <a href="zodiac.html" class="hub-card">
       <div class="hub-icon">✦</div>
       <div class="hub-title">Celestial Grimoire</div>
-      <div class="hub-desc">Daily horoscope · Planet watchers · Who walks your sign</div>
+      <div class="hub-desc">Daily horoscope · Planet watchers · Who walks your sign today</div>
     </a>
     <a href="archive.html" class="hub-card">
       <div class="hub-icon">🖼️</div>
       <div class="hub-title">Cave Paintings</div>
-      <div class="hub-desc">Rejected artifacts · The misfit children · What almost was</div>
+      <div class="hub-desc">Rejected artifacts · The misfit children · Proto-card archive</div>
+    </a>
+    <a href="readme.html" class="hub-card">
+      <div class="hub-icon">✦</div>
+      <div class="hub-title">The Lodestar</div>
+      <div class="hub-desc">What we have · What we are building toward · The covenant</div>
     </a>
   </div>
 </section>
 
-<!-- TODAY'S CARD -->
 <section class="daily-card-section" id="dailyCardSection">
   <div class="daily-card-eyebrow">Today's Pull</div>
   <div class="daily-card-title">The Deck Speaks Daily</div>
   <div class="daily-card-display" id="dailyCardDisplay"></div>
 </section>
 
-<!-- SUITS -->
 <section class="suits-section">
   <div style="text-align:center;">
     <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px;">The Divine Suits</div>
@@ -266,9 +256,6 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// CARD REGISTRY — Major Arcana (all 22) + available minors
-// ══════════════════════════════════════════
 const MAJOR_ARCANA = [
     {id:"major_00",name:"The Fool",title:"Dionysus",culture:"Greek",keywords:["beginnings","madness","ecstasy"],image:"data/images/dionysus-card.jpg"},
     {id:"major_01",name:"The Magician",title:"Hermes",culture:"Greek",keywords:["skill","messages","conduit"],image:"data/images/major/magician.png"},
@@ -293,7 +280,6 @@ const MAJOR_ARCANA = [
     {id:"major_20",name:"Judgement",title:"The Three Judges",culture:"Greek",keywords:["reckoning","awakening","calling"],image:"data/images/major/judgment.png"},
     {id:"major_21",name:"The World",title:"Gaia",culture:"Greek",keywords:["completion","wholeness","integration"],image:"data/images/major/world.png"}
 ];
-
 const MINOR_CARDS = [
     {id:"fire_ace",name:"Ace of Fire",title:"Maui",culture:"Polynesian",keywords:["stolen fire","spark","genesis"],image:"data/images/minor/fire/fire_ace.png"},
     {id:"fire_02",name:"Two of Fire",title:"Castor & Pollux",culture:"Greek",keywords:["partnership","twins","pact"],image:"data/images/minor/fire/fire_02.png"},
@@ -309,37 +295,18 @@ const MINOR_CARDS = [
     {id:"water_02",name:"Two of Water",title:"Echo & Narcissus",culture:"Greek",keywords:["talking","echo","mismatch"],image:"data/images/minor/water/water_02.png"},
     {id:"air_ace",name:"Ace of Air",title:"Thoth",culture:"Egyptian",keywords:["leak","knowledge","writing"],image:"data/images/minor/air/air_ace.png"}
 ];
+const MOSAIC_POOL=[...MAJOR_ARCANA,...MAJOR_ARCANA,...MAJOR_ARCANA,...MINOR_CARDS];
+const ALL_CARDS=[...MAJOR_ARCANA,...MINOR_CARDS];
 
-// Mosaic pool: 70% Major Arcana (they're all generated), 30% minors for variety
-const MOSAIC_POOL = [...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MINOR_CARDS];
-const ALL_CARDS = [...MAJOR_ARCANA, ...MINOR_CARDS];
-
-// ══════════════════════════════════════════
-// CARD MOSAIC BACKGROUND — 6×6 grid
-// ══════════════════════════════════════════
 function buildMosaic(){
     const mosaic=document.getElementById('cardMosaic');
     const cells=[];
-    for(let i=0;i<36;i++){
-        const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];
-        cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
-    }
+    for(let i=0;i<36;i++){const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);}
     mosaic.innerHTML=cells.join('');
 }
 buildMosaic();
+setInterval(()=>{const imgs=document.querySelectorAll('#cardMosaic img');if(imgs.length===0)return;const idx=Math.floor(Math.random()*imgs.length);imgs[idx].src=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)].image;},8000);
 
-// Rotate a few random cells every 8 seconds
-setInterval(()=>{
-    const imgs=document.querySelectorAll('#cardMosaic img');
-    if(imgs.length===0)return;
-    const idx=Math.floor(Math.random()*imgs.length);
-    const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];
-    imgs[idx].src=card.image;
-},8000);
-
-// ══════════════════════════════════════════
-// PONTUS AMBIENT
-// ══════════════════════════════════════════
 const pCvs=document.getElementById('pontusAmbient'),pCtx=pCvs.getContext('2d');
 function rp(){pCvs.width=window.innerWidth;pCvs.height=window.innerHeight;}
 window.addEventListener('resize',rp);rp();
@@ -349,21 +316,11 @@ let pTime=0;
 function drawP(){
     const W=pCvs.width,H=pCvs.height;pTime+=0.012;
     pCtx.clearRect(0,0,W,H);
-    for(let d=TITANS.length-1;d>=0;d--){
-        pOff[d]+=0.008*(0.6+d*0.07);
-        const baseY=H*0.25+(d*(H*0.095)),amp=5+d*1.4,freq=0.012+d*0.002,b=35+d*10;
-        pCtx.beginPath();pCtx.moveTo(0,H);
-        for(let x=0;x<=W;x+=4){const y=baseY+Math.sin(x*freq+pOff[d])*amp+Math.sin(x*freq*2.3+pOff[d]*0.7)*(amp*0.28);pCtx.lineTo(x,y);}
-        pCtx.lineTo(W,H);pCtx.closePath();
-        pCtx.fillStyle=`rgba(${14+d*3},${48+b},${140+d*8},${0.16+d*0.03})`;pCtx.fill();
-    }
+    for(let d=TITANS.length-1;d>=0;d--){pOff[d]+=0.008*(0.6+d*0.07);const baseY=H*0.25+(d*(H*0.095)),amp=5+d*1.4,freq=0.012+d*0.002,b=35+d*10;pCtx.beginPath();pCtx.moveTo(0,H);for(let x=0;x<=W;x+=4){const y=baseY+Math.sin(x*freq+pOff[d])*amp+Math.sin(x*freq*2.3+pOff[d]*0.7)*(amp*0.28);pCtx.lineTo(x,y);}pCtx.lineTo(W,H);pCtx.closePath();pCtx.fillStyle=`rgba(${14+d*3},${48+b},${140+d*8},${0.16+d*0.03})`;pCtx.fill();}
     requestAnimationFrame(drawP);
 }
 drawP();
 
-// ══════════════════════════════════════════
-// TODAY'S PULL — daily card from Major Arcana
-// ══════════════════════════════════════════
 function getTodayCard(){
     const today=new Date().toDateString();
     const cache=JSON.parse(localStorage.getItem('ealdforn_daily_card')||'{}');
@@ -374,12 +331,7 @@ function getTodayCard(){
 }
 function renderDailyCard(){
     const card=getTodayCard();
-    document.getElementById('dailyCardDisplay').innerHTML=`
-        <img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'">
-        <div class="daily-card-name">${card.name}</div>
-        <div class="daily-card-figure">${card.title}</div>
-        <div class="daily-card-culture">${card.culture}</div>
-        <div class="daily-card-keywords">${card.keywords.map(k=>`<span class="daily-card-kw">${k}</span>`).join('')}</div>`;
+    document.getElementById('dailyCardDisplay').innerHTML=`<img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'"><div class="daily-card-name">${card.name}</div><div class="daily-card-figure">${card.title}</div><div class="daily-card-culture">${card.culture}</div><div class="daily-card-keywords">${card.keywords.map(k=>`<span class="daily-card-kw">${k}</span>`).join('')}</div>`;
 }
 renderDailyCard();
 </script>
