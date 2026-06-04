@@ -3,386 +3,443 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Divination — Aspects of the Divine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<title>Zodiac · Celestial Grimoire · Ealdforn Republic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --gold:#d4a840;--gold-light:#f0d878;--gold-dark:#8a6518;--gold-dim:#4a3510;
-  --void:#060610;--deep:#0c0c1e;--surface:#181838;--surface2:#202048;
-  --border:#2a2a4a;--border-gold:rgba(212,168,64,0.2);
-  --text:#f0ead8;--text-mid:#d0c0a0;--text-dim:#988870;
-  --sage:#8ab87a;--water:#66aacc;--fire:#cc7755;--air:#aa88cc;--ember:#aa4a2a;
+  --gold:#c9a84c;--gold-light:#e8c96a;--gold-dark:#7a5c18;--gold-dim:#4a3810;
+  --void:#05050d;--deep:#08081a;--surface:#0e0e20;--border:#1e1e3a;
+  --border-gold:rgba(201,168,76,0.12);
+  --text:#ede5d0;--text-mid:#a89880;--text-dim:#605848;
+  --sage:#7a9e6a;--water:#5599cc;--fire:#cc6644;--air:#aa88cc;
+  --moon:#8899bb;
 }
+body{background:var(--void);background-image:radial-gradient(ellipse 60% 40% at 50% 30%,#0a0828 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 80% 80%,#081420 0%,transparent 55%);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;font-size:17px}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.75}
 
-html{scroll-behavior:smooth}
-
-body{
-  background:var(--void);
-  background-image:
-    radial-gradient(ellipse 70% 50% at 10% 5%,#120828 0%,transparent 55%),
-    radial-gradient(ellipse 50% 40% at 90% 95%,#081420 0%,transparent 55%),
-    radial-gradient(ellipse 30% 60% at 80% 20%,#0a0820 0%,transparent 50%);
-  font-family:'Cormorant Garamond',Georgia,serif;
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-  position:relative;
-}
-
-/* ── CARD MOSAIC BACKGROUND ── */
-#cardMosaic{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  display:grid;grid-template-columns:repeat(6,1fr);
-  opacity:0.18;
-}
-#cardMosaic img{
-  width:100%;aspect-ratio:2/3;object-fit:cover;
-  filter:sepia(0.15) brightness(0.9);
-  transition:transform 0.5s;
-}
-#cardMosaic img:hover{transform:scale(1.02);}
-
-/* ── PONTUS AMBIENT ── */
-#pontusAmbient{
-  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.04;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 15%,transparent 70%);
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 15%,transparent 70%);
-}
-
-/* ── CONTENT LAYER ── */
-.content-layer{position:relative;z-index:2}
-
-/* ── NAV ── */
-nav{
-  position:fixed;top:0;left:0;right:0;height:56px;
-  background:rgba(8,8,20,0.88);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border-gold);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 48px;z-index:200;
-}
+nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:200}
 .nav-brand{display:flex;flex-direction:column;gap:1px}
-.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--gold);letter-spacing:1.5px}
-.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;color:var(--gold-dark);text-transform:uppercase}
-.nav-links{display:flex;gap:28px;list-style:none}
-.nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
-.nav-links a:hover{color:var(--gold-light)}
+.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--gold);letter-spacing:1px}
+.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
 
-/* ── HERO ── */
-.hero{
-  min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;
-  padding:100px 24px 80px;
-}
-.hero-sigil{
-  font-size:80px;margin-bottom:28px;
-  animation:float 6s ease-in-out infinite;
-  filter:drop-shadow(0 0 40px rgba(212,168,64,0.35));
-  cursor:pointer;
-}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-.hero-eyebrow{font-family:'Cinzel',serif;font-size:10px;letter-spacing:10px;text-transform:uppercase;color:var(--gold);opacity:0.6;margin-bottom:24px}
-.hero h1{font-family:'Cinzel Decorative',serif;font-size:clamp(40px,8vw,90px);font-weight:900;color:var(--gold-light);text-shadow:0 0 100px rgba(212,168,64,0.25),0 0 200px rgba(212,168,64,0.08),0 4px 16px rgba(0,0,0,0.9);line-height:1.0;letter-spacing:3px}
-.hero-ampersand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(52px,10vw,120px);color:var(--gold-dark);line-height:0.7;display:block;opacity:0.45}
-.hero-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,3.5vw,30px);color:var(--text-mid);margin-top:24px}
-.hero-tagline{font-size:15px;color:var(--text-dim);font-style:italic;margin-top:18px}
-.hero-rule{width:500px;max-width:80vw;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:44px auto 0}
-.hero-cta{margin-top:52px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.cosmos{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:5rem 1.5rem 3rem}
 
-.btn-primary{
-  font-family:'Cinzel',serif;font-size:15px;letter-spacing:5px;
-  text-transform:uppercase;color:#0a0a0a;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  border:none;padding:18px 56px;border-radius:10px;
-  cursor:pointer;text-decoration:none;transition:all 0.3s;
-  box-shadow:0 0 50px rgba(212,168,64,0.25);
-}
-.btn-primary:hover{box-shadow:0 0 70px rgba(212,168,64,0.45);transform:translateY(-3px)}
+.header{text-align:center;padding:1.5rem 0 0.5rem}
+.header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,2.4rem);color:var(--gold-light);letter-spacing:0.12em;text-shadow:0 0 30px rgba(201,168,76,0.2)}
+.date-line{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold);margin-top:0.3rem}
+.date-line span{color:var(--text-dim);font-size:0.5rem;display:block;margin-top:0.15rem;letter-spacing:0.15em}
 
-.btn-secondary{
-  font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--sage);
-  background:transparent;border:1px solid var(--sage);
-  padding:14px 40px;border-radius:10px;
-  cursor:pointer;text-decoration:none;transition:all 0.3s;
-}
-.btn-secondary:hover{background:rgba(138,184,122,0.08);box-shadow:0 0 35px rgba(138,184,122,0.18)}
+.section-rule{display:flex;align-items:center;gap:1rem;margin:2rem 0 1.2rem;opacity:0.5}
+.section-rule::before,.section-rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent)}
+.section-rule span{font-family:'Cinzel Decorative',serif;font-size:0.6rem;color:var(--gold-dim);letter-spacing:0.2em;white-space:nowrap}
 
-.btn-tertiary{
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--text-dim);
-  background:transparent;border:1px solid var(--border);
-  padding:10px 28px;border-radius:8px;
-  cursor:pointer;text-decoration:none;transition:all 0.3s;
-}
-.btn-tertiary:hover{border-color:var(--text-mid);color:var(--text-mid)}
+/* NARRATIVE */
+.narrative{background:linear-gradient(160deg,rgba(20,15,8,0.92),rgba(10,10,20,0.92));border:1px solid var(--gold);border-radius:12px;padding:2rem 2.2rem;margin:1.5rem 0;box-shadow:0 0 40px rgba(201,168,76,0.06)}
+.narrative .narr-title{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin-bottom:1.5rem}
+.narr-headline{font-size:1.05rem;line-height:1.75;color:var(--text);margin-bottom:1.2rem;text-align:center}
+.narr-headline strong{color:var(--gold-light)}
+.narr-body{font-size:0.95rem;line-height:1.8;color:var(--text-mid);font-style:italic;margin-bottom:0.7rem}
+.narr-body strong{color:var(--gold-light);font-style:normal}
+.narr-body .sign-address{color:var(--gold);font-style:normal;font-weight:600}
+.narr-whisper{font-size:0.82rem;line-height:1.6;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem;padding-left:1rem;border-left:2px solid rgba(201,168,76,0.15)}
+.narr-empty{font-size:0.9rem;line-height:1.75;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem}
+.narr-closing{font-size:0.85rem;line-height:1.6;color:var(--text-dim);font-style:italic;text-align:center;margin-top:1.5rem;border-top:1px solid rgba(201,168,76,0.1);padding-top:1.2rem}
 
-.scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;color:var(--text-dim);text-transform:uppercase}
+/* TABLET */
+.luminary-box{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
+@media(max-width:600px){.luminary-box{grid-template-columns:1fr}}
+.lum-card{border-radius:12px;padding:1.5rem;text-align:center}
+.lum-card.solar{background:linear-gradient(160deg,rgba(25,15,5,0.9),rgba(15,10,5,0.95));border:1px solid var(--gold)}
+.lum-card.lunar{background:linear-gradient(160deg,rgba(10,10,25,0.9),rgba(5,5,20,0.95));border:1px solid var(--moon)}
+.lum-card .lum-icon{font-size:2rem;margin-bottom:0.5rem}
+.lum-card .lum-card-img{width:100px;height:auto;border-radius:6px;margin:0 auto 0.6rem;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:block}
+.lum-card .lum-olympian{font-size:1rem;color:var(--text);font-style:italic;margin-bottom:0.3rem}
+.lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--text-mid)}
+.lum-card .lum-sign .glyph{font-size:1.2rem}
+.lum-card .lum-reading{font-size:0.82rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
+.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.5rem}
 
-/* ── LINK HUB ── */
-.hub-section{position:relative;z-index:2;padding:80px 24px;max-width:1000px;margin:0 auto;border-top:1px solid rgba(212,168,64,0.06)}
-.hub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:36px}
-.hub-card{
-  background:rgba(24,24,56,0.6);border:1px solid var(--border);
-  border-radius:12px;padding:28px 22px;text-align:center;
-  transition:all 0.3s;cursor:pointer;text-decoration:none;display:block;
-}
-.hub-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.4),0 0 20px rgba(212,168,64,0.08)}
-.hub-icon{font-size:40px;margin-bottom:12px}
-.hub-title{font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--gold-light);margin-bottom:6px}
-.hub-desc{font-size:13px;color:var(--text-dim);font-style:italic;line-height:1.5}
+/* WATCHERS */
+.watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:center}
+.watcher-entry:hover{border-color:var(--border-gold)}
+.watcher-entry.attendant-entry{border-left:3px solid rgba(201,168,76,0.2);margin-left:1.5rem}
+.watcher-card-img{width:55px;height:auto;border-radius:4px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,0.4)}
+.watcher-body{flex:1;min-width:0}
+.watcher-headline{font-size:0.8rem;line-height:1.4;color:var(--text)}
+.watcher-headline .god-name{color:var(--gold);font-weight:600}
+.watcher-headline .arcana-name{font-size:0.65rem;color:var(--gold-dark)}
+.watcher-headline .sign-name{color:var(--gold-light)}
+.watcher-headline .glyph{font-size:0.9rem}
+.watcher-whisper{font-size:0.78rem;line-height:1.55;color:var(--text-dim);font-style:italic;margin-top:0.3rem}
+.watcher-meta{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.08em;color:var(--text-dim);margin-top:0.3rem}
+.watcher-attendant-label{color:var(--gold-dark);font-style:italic}
 
-/* ── TODAY'S CARD ── */
-.daily-card-section{position:relative;z-index:2;padding:80px 24px;max-width:600px;margin:0 auto;text-align:center;border-top:1px solid rgba(212,168,64,0.06)}
-.daily-card-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px}
-.daily-card-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,26px);color:var(--gold-light);margin-bottom:24px}
-.daily-card-display{background:rgba(24,24,56,0.55);border:1px solid var(--border-gold);border-radius:14px;padding:28px;display:inline-block}
-.daily-card-display img{width:160px;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.5);margin-bottom:14px}
-.daily-card-name{font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--gold-light)}
-.daily-card-figure{font-style:italic;font-size:18px;color:var(--text-mid);margin:4px 0}
-.daily-card-culture{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--gold-dark);text-transform:uppercase;margin-bottom:10px}
-.daily-card-keywords{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.daily-card-kw{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--border-gold);border-radius:16px;color:var(--gold);background:rgba(212,168,64,0.04)}
+/* BIRTH */
+.birth-widget{margin:2.5rem 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center}
+.birth-widget-label{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem}
+.birth-widget select{font-family:'Cinzel',serif;font-size:0.6rem;background:var(--deep);border:1px solid var(--border);color:var(--text);padding:0.6rem 1rem;border-radius:6px;cursor:pointer;margin-bottom:0.8rem;width:260px}
+.birth-widget select:focus{border-color:var(--gold);outline:none}
+.birth-reading{font-size:0.9rem;line-height:1.8;color:var(--text-mid);font-style:italic;min-height:50px;max-width:560px;margin:0 auto}
 
-/* ── SUITS ── */
-.suits-section{position:relative;z-index:2;padding:80px 24px;max-width:900px;margin:0 auto;border-top:1px solid rgba(212,168,64,0.06)}
-.suits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:36px}
-.suit-card{background:rgba(24,24,56,0.45);border:1px solid var(--border);border-radius:12px;padding:28px 22px;text-align:center;transition:all 0.3s}
-.suit-card:hover{border-color:var(--border-gold);transform:translateY(-3px)}
-.suit-symbol{font-size:40px;margin-bottom:12px}
-.suit-name{font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--gold-light);margin-bottom:4px}
-.suit-triad{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
-.suit-domain{font-size:13px;font-style:italic;color:var(--text-mid);margin-top:10px;line-height:1.5}
+.btn-row{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.ritual-btn{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.12em;padding:0.5rem 1.2rem;border-radius:4px;cursor:pointer;transition:all 0.2s;background:transparent;border:1px solid;text-transform:uppercase;text-decoration:none;display:inline-block}
+.btn-gold{border-color:var(--gold-dark);color:var(--gold)}.btn-gold:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
+.btn-dim{border-color:var(--border);color:var(--text-dim)}.btn-dim:hover{border-color:var(--text-dim);color:var(--text-mid)}
 
-/* ── FOOTER ── */
-footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-top:1px solid rgba(212,168,64,0.06)}
-.footer-sigil{font-size:24px;opacity:0.25;margin-bottom:10px}
-.footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2}
-
-@media(max-width:600px){nav{padding:0 20px}.nav-links{gap:14px}.hero{padding:80px 16px 60px}}
+footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px solid rgba(201,168,76,0.04)}
+.footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4}
+#toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:rgba(8,8,18,0.94);border:1px solid var(--gold-dark);border-radius:4px;padding:0.5rem 1.2rem;font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);z-index:300;opacity:0;transition:opacity 0.4s;pointer-events:none}
+#toast.show{opacity:1}
 </style>
 </head>
 <body>
-
-<!-- CARD MOSAIC BACKGROUND — Major Arcana focused -->
-<div id="cardMosaic"></div>
-
-<!-- PONTUS AMBIENT -->
-<canvas id="pontusAmbient"></canvas>
-
-<div class="content-layer">
+<canvas id="starfield"></canvas>
 
 <nav>
   <div class="nav-brand">
-    <div class="nav-brand-title">Digital Divination</div>
-    <div class="nav-brand-sub">Aspects of the Divine</div>
+    <div class="nav-brand-title">Celestial Grimoire</div>
+    <div class="nav-brand-sub">Ealdforn Republic</div>
   </div>
   <ul class="nav-links">
-    <li><a href="draw.html">Draw</a></li>
+    <li><a href="index.html">← Temple</a></li>
+    <li><a href="draw.html">Draw Cards</a></li>
     <li><a href="daily.html">Earth Shrine</a></li>
-    <li><a href="zodiac.html">Zodiac</a></li>
     <li><a href="archive.html">Archive</a></li>
-    <li><a href="readme.html">Pantheon</a></li>
   </ul>
 </nav>
 
-<section class="hero">
-  <div class="hero-sigil" onclick="location.href='draw.html'" title="Enter the Reading">🜏</div>
-  <div class="hero-eyebrow">The Deck Is Shuffled</div>
-  <h1>Digital Divination</h1>
-  <span class="hero-ampersand">&</span>
-  <div class="hero-subtitle">Aspects of the Divine</div>
-  <div class="hero-tagline">Every age gets the gods it deserves.</div>
-  <div class="hero-rule"></div>
-  <div class="hero-cta">
-    <a href="draw.html" class="btn-primary">Draw Three Cards</a>
-    <a href="daily.html" class="btn-secondary">🜃 Earth Shrine · Live Drop</a>
-    <a href="zodiac.html" class="btn-tertiary">✦ Celestial Grimoire</a>
-  </div>
-  <div class="scroll-cue">Past · Present · Future</div>
-</section>
+<div class="cosmos">
 
-<!-- LINK HUB -->
-<section class="hub-section">
-  <div style="text-align:center;">
-    <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px;">Enter the Sanctuary</div>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,28px);color:var(--gold-light);">The Ealdforn Nexus</div>
+  <div class="header">
+    <h1>ZODIAC · CELESTIAL GRIMOIRE</h1>
+    <div class="date-line" id="dateLine"></div>
   </div>
-  <div class="hub-grid">
-    <a href="draw.html" class="hub-card">
-      <div class="hub-icon">🜏</div>
-      <div class="hub-title">Draw Cards</div>
-      <div class="hub-desc">Three-card spread · Past, Present, Future · The ritual awaits</div>
-    </a>
-    <a href="daily.html" class="hub-card">
-      <div class="hub-icon">🏔️</div>
-      <div class="hub-title">Earth Shrine</div>
-      <div class="hub-desc">Live card drops · Mycelial grid · Council reactions</div>
-    </a>
-    <a href="zodiac.html" class="hub-card">
-      <div class="hub-icon">✦</div>
-      <div class="hub-title">Celestial Grimoire</div>
-      <div class="hub-desc">Daily horoscope · Planet watchers · Who walks your sign</div>
-    </a>
-    <a href="archive.html" class="hub-card">
-      <div class="hub-icon">🖼️</div>
-      <div class="hub-title">Cave Paintings</div>
-      <div class="hub-desc">Rejected artifacts · The misfit children · What almost was</div>
-    </a>
-  </div>
-</section>
 
-<!-- TODAY'S CARD -->
-<section class="daily-card-section" id="dailyCardSection">
-  <div class="daily-card-eyebrow">Today's Pull</div>
-  <div class="daily-card-title">The Deck Speaks Daily</div>
-  <div class="daily-card-display" id="dailyCardDisplay"></div>
-</section>
+  <div class="narrative" id="narrative"></div>
 
-<!-- SUITS -->
-<section class="suits-section">
-  <div style="text-align:center;">
-    <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px;">The Divine Suits</div>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,28px);color:var(--gold-light);">Four Elements · Twelve Olympians</div>
-  </div>
-  <div class="suits-grid">
-    <div class="suit-card"><div class="suit-symbol">🔥</div><div class="suit-name">Fire</div><div class="suit-triad">Apollo · Ares · Hephaestus</div><div class="suit-domain">Light, conquest, the forge — the burning that creates and commands</div></div>
-    <div class="suit-card"><div class="suit-symbol">🜃</div><div class="suit-name">Earth</div><div class="suit-triad">Demeter · Hera · Artemis</div><div class="suit-domain">Harvest, covenant, the hunt — the ground that sustains and binds</div></div>
-    <div class="suit-card"><div class="suit-symbol">🌊</div><div class="suit-name">Water</div><div class="suit-triad">Poseidon · Dionysus · Aphrodite</div><div class="suit-domain">The sea, ecstasy, desire — the depths that move and drown</div></div>
-    <div class="suit-card"><div class="suit-symbol">💨</div><div class="suit-name">Air</div><div class="suit-triad">Zeus · Athena · Hermes</div><div class="suit-domain">Authority, wisdom, messages — the mind that commands and connects</div></div>
-  </div>
-</section>
+  <div class="section-rule"><span>✦ The Tablet ✦</span></div>
+  <div class="luminary-box" id="luminaryBox"></div>
 
-<footer>
-  <div class="footer-sigil">🜏</div>
-  <div class="footer-text">
-    22 Major Arcana · 56 Minor Arcana · 4 Divine Suits<br>
-    12 Olympians · 1 Mortal Man · 1 Hidden<br>
-    Built by kairos-coder with DeepSeek · Order of Olympus
+  <div class="section-rule"><span>✦ The Watchers ✦</span></div>
+  <div id="watchersList"></div>
+
+  <div class="birth-widget">
+    <div class="birth-widget-label">✦ Who Walks Your Sign</div>
+    <select id="birthSign" onchange="birthReading()">
+      <option value="">— Select your sign —</option>
+    </select>
+    <div class="birth-reading" id="birthReadingText">The signs are carved into the sky. Choose yours.</div>
   </div>
-</footer>
+
+  <div class="btn-row">
+    <button class="ritual-btn btn-gold" onclick="refreshAlmanac()">⟳ Refresh Grimoire</button>
+    <a href="index.html" class="ritual-btn btn-dim">← Temple</a>
+  </div>
 
 </div>
 
+<div id="toast"></div>
+<footer><div class="footer-text">Celestial Grimoire · Ealdforn Republic · The Sky Is The Source Code</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script>
 // ══════════════════════════════════════════
-// CARD REGISTRY — Major Arcana (all 22) + available minors
+// OLYMPIAN MAP
+// Eros & Phobos = moons of Mars = attendants of Ares
 // ══════════════════════════════════════════
-const MAJOR_ARCANA = [
-    {id:"major_00",name:"The Fool",title:"Dionysus",culture:"Greek",keywords:["beginnings","madness","ecstasy"],image:"data/images/dionysus-card.jpg"},
-    {id:"major_01",name:"The Magician",title:"Hermes",culture:"Greek",keywords:["skill","messages","conduit"],image:"data/images/major/magician.png"},
-    {id:"major_02",name:"The High Priestess",title:"Hera",culture:"Greek",keywords:["covenant","hidden","veil"],image:"data/images/hera-card.jpg"},
-    {id:"major_03",name:"The Empress",title:"Demeter",culture:"Greek",keywords:["harvest","abundance","nurturing"],image:"data/images/demeter-card.jpg"},
-    {id:"major_04",name:"The Emperor",title:"Zeus",culture:"Greek",keywords:["authority","structure","order"],image:"data/images/zeus-card.jpg"},
-    {id:"major_05",name:"The Hierophant",title:"Ares",culture:"Greek",keywords:["tradition","conquest","doctrine"],image:"data/images/ares-card.jpg"},
-    {id:"major_06",name:"The Lovers",title:"Aphrodite",culture:"Greek",keywords:["love","choice","union"],image:"data/images/aphrodite-card.jpg"},
-    {id:"major_07",name:"The Chariot",title:"Artemis",culture:"Greek",keywords:["sovereignty","hunt","will"],image:"data/images/artemis-card.jpg"},
-    {id:"major_08",name:"Justice",title:"Athena",culture:"Greek",keywords:["wisdom","strategy","truth"],image:"data/images/athena-card.jpg"},
-    {id:"major_09",name:"The Hermit",title:"Mortal Man",culture:"Greek",keywords:["seeker","solitude","lamp"],image:"data/images/hermit-card.jpg"},
-    {id:"major_10",name:"Wheel of Fortune",title:"The Fates",culture:"Greek",keywords:["spinning","measuring","cutting"],image:"data/images/major/wheel_of_fortune.png"},
-    {id:"major_11",name:"Strength",title:"Hephaestus",culture:"Greek",keywords:["creation","labor","forge"],image:"data/images/hephaestus-card.jpg"},
-    {id:"major_12",name:"The Hanged Man",title:"Prometheus",culture:"Greek",keywords:["sacrifice","surrender","gift"],image:"data/images/prometheus-card.jpg"},
-    {id:"major_13",name:"Death",title:"Thanatos",culture:"Greek",keywords:["transition","release","ending"],image:"data/images/thanatos-card.jpg"},
-    {id:"major_14",name:"Temperance",title:"Hestia",culture:"Greek",keywords:["hearth","moderation","center"],image:"data/images/major/temperance.png"},
-    {id:"major_15",name:"The Devil",title:"Hades",culture:"Greek",keywords:["bondage","shadow","wealth"],image:"data/images/hades-card.jpg"},
-    {id:"major_16",name:"The Tower",title:"Poseidon",culture:"Greek",keywords:["upheaval","destruction","wave"],image:"data/images/poseidon-card.jpg"},
-    {id:"major_17",name:"The Star",title:"Persephone",culture:"Greek",keywords:["hope","return","rebirth"],image:"data/images/persephone-card.jpg"},
-    {id:"major_18",name:"The Moon",title:"Melinoe",culture:"Greek",keywords:["ghosts","madness","veil"],image:"data/images/major/moon.png"},
-    {id:"major_19",name:"The Sun",title:"Apollo",culture:"Greek",keywords:["light","radiance","clarity"],image:"data/images/major/sun.png"},
-    {id:"major_20",name:"Judgement",title:"The Three Judges",culture:"Greek",keywords:["reckoning","awakening","calling"],image:"data/images/major/judgment.png"},
-    {id:"major_21",name:"The World",title:"Gaia",culture:"Greek",keywords:["completion","wholeness","integration"],image:"data/images/major/world.png"}
-];
+const CELESTIAL_OLYMPIANS = {
+  'Sun':     { olympian:'Apollo',     arcana:'The Sun (XIX)',              icon:'☉', image:'data/images/major/sun.png' },
+  'Moon':    { olympian:'Artemis',    arcana:'The Chariot (VII)',          icon:'☽', image:'data/images/artemis-card.jpg',
+               moonShadow:'Melinoe',  moonShadowArcana:'The Moon (XVIII)' },
+  'Mercury': { olympian:'Hermes',     arcana:'The Magician (I)',           icon:'☿', image:'data/images/major/magician.png' },
+  'Venus':   { olympian:'Aphrodite',  arcana:'The Lovers (VI)',            icon:'♀', image:'data/images/aphrodite-card.jpg' },
+  'Mars':    { olympian:'Ares',       arcana:'The Hierophant (V)',         icon:'♂', image:'data/images/ares-card.jpg' },
+  'Jupiter': { olympian:'Zeus',       arcana:'The Emperor (IV)',           icon:'♃', image:'data/images/zeus-card.jpg' },
+  'Saturn':  { olympian:'Hera',       arcana:'The High Priestess (II)',    icon:'♄', image:'data/images/hera-card.jpg' },
+  'Uranus':  { olympian:'Hephaestus', arcana:'Strength (XI)',              icon:'♅', image:'data/images/hephaestus-card.jpg' },
+  'Neptune': { olympian:'Poseidon',   arcana:'The Tower (XVI)',            icon:'♆', image:'data/images/poseidon-card.jpg' },
+  'Pluto':   { olympian:'Hades',      arcana:'Death (XIII)',               icon:'♇', image:'data/images/hades-card.jpg' },
+  'Ceres':   { olympian:'Demeter',    arcana:'The Empress (III)',          icon:'⚳', image:'data/images/demeter-card.jpg' },
+  'Eros':    { olympian:'Dionysus',   arcana:'The Fool (0)',               icon:'⚴', image:'data/images/dionysus-card.jpg',
+               attendant:'Ares', attendantRole:'Desire follows the spear — where Ares strikes, Dionysus pours.' },
+  'Phobos':  { olympian:'Athena',     arcana:'Justice (VIII)',             icon:'⚵', image:'data/images/athena-card.jpg',
+               attendant:'Ares', attendantRole:'Strategic fear — Athena rides with Ares so the war god remembers what victory costs.' }
+};
 
-const MINOR_CARDS = [
-    {id:"fire_ace",name:"Ace of Fire",title:"Maui",culture:"Polynesian",keywords:["stolen fire","spark","genesis"],image:"data/images/minor/fire/fire_ace.png"},
-    {id:"fire_02",name:"Two of Fire",title:"Castor & Pollux",culture:"Greek",keywords:["partnership","twins","pact"],image:"data/images/minor/fire/fire_02.png"},
-    {id:"fire_03",name:"Three of Fire",title:"Peitho",culture:"Greek",keywords:["persuasion","pitch","charm"],image:"data/images/minor/fire/fire_03.png"},
-    {id:"fire_04",name:"Four of Fire",title:"Icarus",culture:"Greek",keywords:["fall","hubris","burnout"],image:"data/images/minor/fire/fire_04.png"},
-    {id:"fire_05",name:"Five of Fire",title:"Loki",culture:"Norse",keywords:["critic","truth","dissent"],image:"data/images/minor/fire/fire_05.png"},
-    {id:"fire_06",name:"Six of Fire",title:"The Algorithm",culture:"Modern",keywords:["feed","viral","reputation"],image:"data/images/minor/fire/fire_06.png"},
-    {id:"earth_ace",name:"Ace of Earth",title:"Lakshmi",culture:"Hindu",keywords:["wealth","abundance","lotus"],image:"data/images/minor/earth/earth_ace.png"},
-    {id:"earth_02",name:"Two of Earth",title:"Aristaeus",culture:"Greek",keywords:["beekeeping","craft","balance"],image:"data/images/minor/earth/earth_02.png"},
-    {id:"earth_03",name:"Three of Earth",title:"Seven Dwarves",culture:"Norse",keywords:["teamwork","collab","crew"],image:"data/images/minor/earth/earth_03.png"},
-    {id:"earth_04",name:"Four of Earth",title:"Tantalus",culture:"Greek",keywords:["denied","scarcity","lack"],image:"data/images/minor/earth/earth_04.png"},
-    {id:"water_ace",name:"Ace of Water",title:"Oshun",culture:"Yoruba",keywords:["reach","love","mirror"],image:"data/images/minor/water/water_ace.png"},
-    {id:"water_02",name:"Two of Water",title:"Echo & Narcissus",culture:"Greek",keywords:["talking","echo","mismatch"],image:"data/images/minor/water/water_02.png"},
-    {id:"air_ace",name:"Ace of Air",title:"Thoth",culture:"Egyptian",keywords:["leak","knowledge","writing"],image:"data/images/minor/air/air_ace.png"}
-];
-
-// Mosaic pool: 70% Major Arcana (they're all generated), 30% minors for variety
-const MOSAIC_POOL = [...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MINOR_CARDS];
-const ALL_CARDS = [...MAJOR_ARCANA, ...MINOR_CARDS];
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_GLYPHS = {Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',Aquarius:'♒',Pisces:'♓'};
+const SIGN_NAMES  = {Aries:'the Ram',Taurus:'the Bull',Gemini:'the Twins',Cancer:'the Crab',Leo:'the Lion',Virgo:'the Maiden',Libra:'the Scales',Scorpio:'the Scorpion',Sagittarius:'the Archer',Capricorn:'the Sea-Goat',Aquarius:'the Water-Bearer',Pisces:'the Fish'};
 
 // ══════════════════════════════════════════
-// CARD MOSAIC BACKGROUND — 6×6 grid
+// WHISPERS — seeded daily rotation
 // ══════════════════════════════════════════
-function buildMosaic(){
-    const mosaic=document.getElementById('cardMosaic');
-    const cells=[];
-    for(let i=0;i<36;i++){
-        const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];
-        cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
+const WHISPERS = {
+  Apollo:    ['The sun does not negotiate with shadows. It simply rises.','Your radiance is not an offering. It is a demand on the world.','Apollo does not wait for permission to set the sky on fire.'],
+  Artemis:   ['Sovereignty begins the moment you stop waiting to be chosen.','The arrow is already in flight. The question is whether you aimed true.','Artemis hunts alone — not because she is lonely, but because she is complete.'],
+  Melinoe:   ['The ghosts are not haunting you. They are trying to finish something.','Not all visions are prophecy, but not all are fear. Learn the difference.','The madness is a message. Translate it before it translates you.'],
+  Hermes:    ['Every locked door has a word that opens it. Find the word.','You are the conduit. What passes through you is changed by passing through you.','The boundary is not a wall. It is a threshold.'],
+  Aphrodite: ['Desire is a current. The question is whether you swim or drown.','The mirror shows what you want. It also shows what you are afraid to want.','Aphrodite was born from violence and became the goddess of love. So can you.'],
+  Ares:      ['The spear knows where to strike. Does the hand that holds it?','Every tradition was once a fresh wound. Ask what this one is still protecting.','War asks only one question: what are you willing to destroy to protect what matters?'],
+  Zeus:      ['Authority is not claimed. It is demonstrated in the silence before the thunder.','The crown is a sentence. Read the terms before you accept it.','Order made from chaos requires that you first understand what chaos was protecting.'],
+  Hera:      ['Not all truths are spoken. Some are kept — that is not weakness, that is covenant.','The veil is not a lie. It is a boundary. Honor it.','What you guard in silence, you are also fed by in silence.'],
+  Hephaestus:['The forge does not care that you were cast out. It only cares that you returned.','What you build in the dark will be recognized by the light eventually.','The lame god built thrones for those who exiled him. That is not forgiveness. That is power.'],
+  Poseidon:  ['What was built on sand will not be saved by argument. Only by rebuilding.','The wave does not negotiate. It arrives. So does the truth.','The sea has swallowed cities that believed themselves permanent.'],
+  Hades:     ['The underworld is not a punishment. It is where things go when they are finished.','Everything you have buried is still down there. Hades keeps meticulous records.','The door to the underworld is unlocked. It always was.'],
+  Demeter:   ['The harvest comes from the field she starved. Even grief is a season.','The soil does not owe you an answer. Only a cycle. Trust the cycle.','The earth does not rush. Neither should the thing you are growing.'],
+  Dionysus:  ['The vine does not ask the wall for permission to climb it.','Where Ares burns, Dionysus pours. One destroys. One transforms.','Madness is not the absence of wisdom. Sometimes it is wisdom with the lid off.'],
+  Athena:    ['The battle is already won or lost in the mind. The sword only confirms it.','Wisdom is knowing which question to ask before you move.','Phobos is not cowardice. It is the intelligence of fear — the kind that keeps you alive.']
+};
+
+function dailySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
+function seededInt(seed,max){let s=(seed*1664525+1013904223)&0xffffffff;return Math.abs(s)%max;}
+function getWhisper(god,offset=0){const w=WHISPERS[god];if(!w)return'';return w[seededInt(dailySeed()+god.charCodeAt(0)*31+offset,w.length)];}
+
+// ══════════════════════════════════════════
+// STARFIELD
+// ══════════════════════════════════════════
+const sc=document.getElementById('starfield'),sctx=sc.getContext('2d');
+const stars=Array.from({length:220},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.2,a:Math.random()*0.45+0.05,tw:Math.random()*Math.PI*2}));
+function rs(){sc.width=window.innerWidth;sc.height=window.innerHeight;}
+window.addEventListener('resize',rs);rs();
+(function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.55+0.45*Math.sin(s.tw+t*0.0002));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(232,224,208,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
+
+// ══════════════════════════════════════════
+// ASTRONOMY
+// ══════════════════════════════════════════
+function eclipticToSign(lonDeg){let lon=((lonDeg%360)+360)%360;return SIGNS[Math.min(Math.floor(lon/30),11)];}
+function getBodyPosition(bodyName,date){
+  const observer=new Astronomy.Observer(40,-74,0);
+  try{
+    const bm={Sun:Astronomy.Body.Sun,Moon:Astronomy.Body.Moon,Mercury:Astronomy.Body.Mercury,Venus:Astronomy.Body.Venus,Mars:Astronomy.Body.Mars,Jupiter:Astronomy.Body.Jupiter,Saturn:Astronomy.Body.Saturn,Uranus:Astronomy.Body.Uranus,Neptune:Astronomy.Body.Neptune,Pluto:Astronomy.Body.Pluto};
+    if(bm[bodyName]){const eq=Astronomy.Equator(bm[bodyName],date,observer,true,true);const ecl=Astronomy.Ecliptic(eq.vec);return{elon:ecl.elon,found:true};}
+  }catch(e){}
+  const jd=date.getTime()/86400000+2440587.5;const t=(jd-2451545.0)/36525;
+  const approx={Ceres:(90+t*4.6)%360};
+  const lon=approx[bodyName];
+  if(lon!==undefined)return{elon:lon,found:true,approximate:true};
+  return{elon:0,found:false};
+}
+const INDEPENDENT_BODIES=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Ceres'];
+
+function buildSkyState(){
+  const now=new Date();const state=[];
+  INDEPENDENT_BODIES.forEach(name=>{
+    const pos=getBodyPosition(name,now);if(!pos.found)return;
+    const sign=eclipticToSign(pos.elon);const deity=CELESTIAL_OLYMPIANS[name];if(!deity)return;
+    state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],signName:SIGN_NAMES[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,image:deity.image,moonShadow:deity.moonShadow||null,moonShadowArcana:deity.moonShadowArcana||null,approximate:pos.approximate||false,attendant:null});
+  });
+  const mars=state.find(s=>s.body==='Mars');
+  if(mars){
+    ['Eros','Phobos'].forEach(moonName=>{
+      const d=CELESTIAL_OLYMPIANS[moonName];
+      state.push({body:moonName,lon:mars.lon,sign:mars.sign,glyph:mars.glyph,signName:mars.signName,olympian:d.olympian,arcana:d.arcana,icon:d.icon,image:d.image,moonShadow:null,moonShadowArcana:null,approximate:true,attendant:'Ares',attendantRole:d.attendantRole});
+    });
+  }
+  return state;
+}
+function getSolarTimes(){return SunCalc.getTimes(new Date(),40,-74);}
+
+// ══════════════════════════════════════════
+// NARRATIVE GENERATOR — conversational voice
+// ══════════════════════════════════════════
+function generateNarrative(skyState){
+  const signGroups={};
+  skyState.forEach(s=>{if(!signGroups[s.sign])signGroups[s.sign]=[];signGroups[s.sign].push(s);});
+  const sorted=Object.entries(signGroups).sort((a,b)=>b[1].length-a[1].length);
+  const empty=SIGNS.filter(s=>!signGroups[s]);
+  const sun=skyState.find(s=>s.body==='Sun');
+  const moon=skyState.find(s=>s.body==='Moon');
+  const ares=skyState.find(s=>s.body==='Mars');
+  const moonIllum=SunCalc.getMoonIllumination(new Date());
+  const phaseNames=['new moon','waxing crescent','first quarter','waxing gibbous','full moon','waning gibbous','last quarter','waning crescent'];
+  const phaseIdx=Math.round(moonIllum.phase*8)%8;
+  const phaseName=phaseNames[phaseIdx];
+
+  let html=`<div class="narr-title">✦ Today's Horoscope ✦</div>`;
+
+  // ── HEADLINE: most crowded sign ──
+  if(sorted.length>0){
+    const [sign,watchers]=sorted[0];
+    const count=watchers.length;
+    const glyph=SIGN_GLYPHS[sign];
+    const names=watchers.map(w=>`<strong>${w.olympian}</strong>`);
+    const attendants=watchers.filter(w=>w.attendant);
+
+    if(count>=4){
+      html+=`<p class="narr-headline">There are ${count} celestial bodies in <strong>${sign} ${glyph}</strong> today. ${names.slice(0,-1).join(', ')} and ${names[names.length-1]} all align with you, <span class="sign-address">${sign}</span>! I feel like you're probably very busy?!?</p>`;
+    }else if(count===3){
+      html+=`<p class="narr-headline">Three gods walk <strong>${sign} ${glyph}</strong> today — ${names.join(', ')}. That's a council, <span class="sign-address">${sign}</span>.`;
+      if(attendants.length>0)html+=` Two of them followed Ares here.`;
+      html+=`</p>`;
+    }else if(count===2){
+      html+=`<p class="narr-headline">${names[0]} and ${names[1]} share <strong>${sign} ${glyph}</strong> today. Two currents in the ${SIGN_NAMES[sign].replace('the ','')}, <span class="sign-address">${sign}</span>.`;
+      if(attendants.length>0)html+=` One followed the other.`;
+      html+=`</p>`;
+    }else{
+      html+=`<p class="narr-headline">${names[0]} walks <strong>${sign} ${glyph}</strong> alone. A private audience, <span class="sign-address">${sign}</span>.</p>`;
     }
-    mosaic.innerHTML=cells.join('');
-}
-buildMosaic();
+  }
 
-// Rotate a few random cells every 8 seconds
-setInterval(()=>{
-    const imgs=document.querySelectorAll('#cardMosaic img');
-    if(imgs.length===0)return;
-    const idx=Math.floor(Math.random()*imgs.length);
-    const card=MOSAIC_POOL[Math.floor(Math.random()*MOSAIC_POOL.length)];
-    imgs[idx].src=card.image;
-},8000);
+  // ── SUN ──
+  if(sun){
+    html+=`<p class="narr-body">The Sun rose in <strong>${sun.sign} ${sun.glyph}</strong>, so <strong>${sun.olympian}</strong> blesses the ${sun.signName}... it's your time to shine, <span class="sign-address">${sun.sign}</span>!</p>`;
+    html+=`<p class="narr-whisper">${getWhisper('Apollo',1)}</p>`;
+  }
 
-// ══════════════════════════════════════════
-// PONTUS AMBIENT
-// ══════════════════════════════════════════
-const pCvs=document.getElementById('pontusAmbient'),pCtx=pCvs.getContext('2d');
-function rp(){pCvs.width=window.innerWidth;pCvs.height=window.innerHeight;}
-window.addEventListener('resize',rp);rp();
-const TITANS=['Oceanus','Tethys','Pontus','Nereus','Doris','Thaumas','Phorcys','Ceto'];
-const pOff=TITANS.map(()=>Math.random()*Math.PI*2);
-let pTime=0;
-function drawP(){
-    const W=pCvs.width,H=pCvs.height;pTime+=0.012;
-    pCtx.clearRect(0,0,W,H);
-    for(let d=TITANS.length-1;d>=0;d--){
-        pOff[d]+=0.008*(0.6+d*0.07);
-        const baseY=H*0.25+(d*(H*0.095)),amp=5+d*1.4,freq=0.012+d*0.002,b=35+d*10;
-        pCtx.beginPath();pCtx.moveTo(0,H);
-        for(let x=0;x<=W;x+=4){const y=baseY+Math.sin(x*freq+pOff[d])*amp+Math.sin(x*freq*2.3+pOff[d]*0.7)*(amp*0.28);pCtx.lineTo(x,y);}
-        pCtx.lineTo(W,H);pCtx.closePath();
-        pCtx.fillStyle=`rgba(${14+d*3},${48+b},${140+d*8},${0.16+d*0.03})`;pCtx.fill();
+  // ── MOON ──
+  if(moon){
+    html+=`<p class="narr-body">The Moon rises in <strong>${moon.sign} ${moon.glyph}</strong> under a ${phaseName}. `;
+    if(moon.moonShadow){
+      html+=`Will your Moon Aspect be <strong>${moon.olympian}</strong> or <strong>${moon.moonShadow}</strong>? Will the goddess of the hunt find you tonight? Or will the goddess of madness haunt you, <span class="sign-address">${moon.sign}</span>?</p>`;
+    }else{
+      html+=`<strong>${moon.olympian}</strong> watches the house of ${SIGN_NAMES[moon.sign].replace('the ','')} tonight.</p>`;
     }
-    requestAnimationFrame(drawP);
+    const shadowGod=moon.moonShadow&&seededInt(dailySeed()+77,2)===0?moon.moonShadow:moon.olympian;
+    html+=`<p class="narr-whisper">${getWhisper(shadowGod,2)}</p>`;
+  }
+
+  // ── ARES TRIAD ──
+  if(ares){
+    const eros=skyState.find(s=>s.body==='Eros');
+    const phobos=skyState.find(s=>s.body==='Phobos');
+    const hasBoth=eros&&phobos;
+    if(hasBoth){
+      html+=`<p class="narr-body"><strong>Ares</strong> moves through <strong>${ares.sign} ${ares.glyph}</strong> today, and he brought company. <strong>Dionysus</strong> rides as Eros — desire that follows the spear. <strong>Athena</strong> rides as Phobos — not cowardice, but the intelligence of fear. The war god, the vine, and the strategist all in ${SIGN_NAMES[ares.sign]}. That's a very specific dinner party, <span class="sign-address">${ares.sign}</span>.</p>`;
+    }else{
+      html+=`<p class="narr-body"><strong>Ares</strong> walks <strong>${ares.sign} ${ares.glyph}</strong> today. The war god in ${SIGN_NAMES[ares.sign]}. ${getWhisper('Ares',5)}</p>`;
+    }
+  }
+
+  // ── OTHER GROUPINGS ──
+  const otherGroups=sorted.filter(([sign,watchers])=>{
+    if(watchers.filter(w=>!w.attendant).length<2)return false;
+    if(sign===ares?.sign)return false;
+    return true;
+  });
+  otherGroups.forEach(([sign,watchers])=>{
+    const names=watchers.filter(w=>!w.attendant).map(w=>`<strong>${w.olympian}</strong>`);
+    const last=names.pop();
+    const nameStr=names.length?names.join(', ')+' and '+last:last;
+    html+=`<p class="narr-body">${nameStr} share <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_NAMES[sign]} holds more than one current today, <span class="sign-address">${sign}</span>.</p>`;
+  });
+
+  // ── SOLO TRAVELERS ──
+  const solos=sorted.filter(([sign,watchers])=>{
+    const nonAtt=watchers.filter(w=>!w.attendant);
+    if(nonAtt.length!==1)return false;
+    const w=nonAtt[0];
+    if(w.body==='Sun'||w.body==='Moon'||w.body==='Mars')return false;
+    return true;
+  });
+  if(solos.length>0){
+    solos.forEach(([sign,watchers])=>{
+      const w=watchers.find(w=>!w.attendant);
+      html+=`<p class="narr-body"><strong>${w.olympian}</strong> walks <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> alone — a private audience with ${SIGN_NAMES[sign]}, <span class="sign-address">${sign}</span>.</p>`;
+      html+=`<p class="narr-whisper">${getWhisper(w.olympian,10+solos.indexOf([sign,watchers]))}</p>`;
+    });
+  }
+
+  // ── EMPTY HOUSES ──
+  if(empty.length>0){
+    if(empty.length<=3){
+      empty.forEach(sign=>{
+        html+=`<p class="narr-empty"><span class="sign-address">${sign} ${SIGN_GLYPHS[sign]}</span> — the house is empty tonight. No Olympian walks your sign. This is not abandonment. This is <strong>privacy</strong>. The gods are watching elsewhere. What will you do with the silence?</p>`;
+      });
+    }else{
+      const listed=empty.slice(0,3).map(s=>`<span class="sign-address">${s}</span>`).join(', ');
+      html+=`<p class="narr-empty">${listed} and ${empty.length-3} other houses stand empty tonight. The gods are concentrated, not dispersed. The quiet signs have the luxury of their own counsel.</p>`;
+    }
+  }
+
+  // ── CLOSING ──
+  html+=`<p class="narr-closing">There are more divinations at <strong>Digital Divination: Aspects of the Divine</strong> — draw your cards, check the Earth Shrine, or wander the archive of misfit children. The sky is not a clock. It is a conversation.</p>`;
+  return html;
 }
-drawP();
 
 // ══════════════════════════════════════════
-// TODAY'S PULL — daily card from Major Arcana
+// RENDER
 // ══════════════════════════════════════════
-function getTodayCard(){
-    const today=new Date().toDateString();
-    const cache=JSON.parse(localStorage.getItem('ealdforn_daily_card')||'{}');
-    if(cache.date===today&&cache.card)return cache.card;
-    const card=MAJOR_ARCANA[Math.floor(Math.random()*MAJOR_ARCANA.length)];
-    localStorage.setItem('ealdforn_daily_card',JSON.stringify({date:today,card}));
-    return card;
+let skyState=[];
+function renderDateLine(){
+  const now=new Date();
+  document.getElementById('dateLine').innerHTML=`${now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}<span>The Celestial Almanac · Who watches whom</span>`;
 }
-function renderDailyCard(){
-    const card=getTodayCard();
-    document.getElementById('dailyCardDisplay').innerHTML=`
-        <img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'">
-        <div class="daily-card-name">${card.name}</div>
-        <div class="daily-card-figure">${card.title}</div>
-        <div class="daily-card-culture">${card.culture}</div>
-        <div class="daily-card-keywords">${card.keywords.map(k=>`<span class="daily-card-kw">${k}</span>`).join('')}</div>`;
+function renderNarrative(){document.getElementById('narrative').innerHTML=generateNarrative(skyState);}
+function renderLuminaries(){
+  const sun=skyState.find(s=>s.body==='Sun'),moon=skyState.find(s=>s.body==='Moon');
+  const times=getSolarTimes();
+  const fmt=t=>new Date(t).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const moonIllum=SunCalc.getMoonIllumination(new Date());
+  const phaseNames=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
+  const phaseIcons=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+  const phaseIdx=Math.round(moonIllum.phase*8)%8;
+  let html='';
+  if(sun)html+=`<div class="lum-card solar"><div class="lum-icon">☀️</div><img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'"><div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div><div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${SIGN_NAMES[sun.sign]}</div><div class="lum-reading">${getWhisper('Apollo',1)}</div><div class="lum-time">☀️ Rise: ${fmt(times.sunrise)} · Set: ${fmt(times.sunset)}</div></div>`;
+  if(moon){
+    const shadowGod=moon.moonShadow&&seededInt(dailySeed()+77,2)===0?moon.moonShadow:moon.olympian;
+    html+=`<div class="lum-card lunar"><div class="lum-icon">${phaseIcons[phaseIdx]}</div><img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'"><div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow?` / ${moon.moonShadow} — ${moon.moonShadowArcana}`:''}</div><div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${SIGN_NAMES[moon.sign]}</div><div class="lum-reading">${getWhisper(shadowGod,2)}</div><div class="lum-time">${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${Math.round(moonIllum.fraction*100)}% illuminated</div></div>`;
+  }
+  document.getElementById('luminaryBox').innerHTML=html;
 }
-renderDailyCard();
+function renderWatchers(){
+  const bodies=skyState.filter(s=>s.body!=='Sun'&&s.body!=='Moon');
+  const now=new Date();const times=getSolarTimes();
+  const isNight=now<times.sunrise||now>times.sunset;
+  document.getElementById('watchersList').innerHTML=bodies.map(s=>`
+    <div class="watcher-entry${s.attendant?' attendant-entry':''}">
+      <img class="watcher-card-img" src="${s.image}" alt="${s.olympian}" onerror="this.style.display='none'">
+      <div class="watcher-body">
+        <div class="watcher-headline">
+          <span class="god-name">${s.olympian}</span><span class="arcana-name"> · ${s.arcana}</span><br>
+          as ${s.body} in <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>, ${SIGN_NAMES[s.sign]}
+        </div>
+        <div class="watcher-whisper">${getWhisper(s.olympian,bodies.indexOf(s))}</div>
+        <div class="watcher-meta">${isNight?'walks the night':'walks the day, unseen'}${s.approximate?' · approximate':''}${s.attendant?`<span class="watcher-attendant-label"> · attends ${s.attendant} — ${s.attendantRole}</span>`:''}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// BIRTH READING
+// ══════════════════════════════════════════
+function populateBirthSelect(){
+  const sel=document.getElementById('birthSign');
+  SIGNS.forEach(sign=>{const o=document.createElement('option');o.value=sign;o.textContent=`${SIGN_GLYPHS[sign]} ${sign}`;sel.appendChild(o);});
+}
+function birthReading(){
+  const sign=document.getElementById('birthSign').value;
+  if(!sign){document.getElementById('birthReadingText').innerHTML='The signs are carved into the sky. Choose yours.';return;}
+  const watchers=skyState.filter(s=>s.sign===sign);
+  const glyph=SIGN_GLYPHS[sign],name=SIGN_NAMES[sign];
+  if(watchers.length===0){
+    document.getElementById('birthReadingText').innerHTML=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>The house is empty. No Olympian walks your sign today.<br>This is not abandonment. This is <strong>privacy</strong>.<br>The gods are watching elsewhere. What will you do with the silence?`;
+    return;
+  }
+  const primary=watchers.find(w=>!w.attendant)||watchers[0];
+  const attendants=watchers.filter(w=>w.attendant);
+  const others=watchers.filter(w=>w!==primary&&!w.attendant);
+  let html=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>`;
+  html+=`<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today as ${primary.body}.<br>`;
+  html+=`<em>${getWhisper(primary.olympian,50)}</em>`;
+  if(others.length>0){const names=others.map(w=>`<strong>${w.olympian}</strong>`).join(' and ');html+=`<br><br>${names} also walk ${sign} ${glyph} today. The house is crowded.`;}
+  if(attendants.length>0){const attNames=attendants.map(w=>`<strong>${w.olympian}</strong>`).join(' and ');html+=`<br><br>${attNames} follow Ares here — ${attendants.length===2?'desire and strategic fear, both':'an attendant force'} riding with the war god.`;}
+  document.getElementById('birthReadingText').innerHTML=html;
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
+function refreshAlmanac(){skyState=buildSkyState();renderAll();toast('✦ The Olympians take new positions.');}
+function renderAll(){renderDateLine();renderNarrative();renderLuminaries();renderWatchers();}
+function init(){populateBirthSelect();skyState=buildSkyState();renderAll();toast('✦ The watching begins.');}
+document.addEventListener('DOMContentLoaded',init);
 </script>
-<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
