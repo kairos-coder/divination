@@ -22,23 +22,33 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 
 .cosmos{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:5rem 1.5rem 3rem}
 
-.header{text-align:center;padding:1.5rem 0 1rem}
+.header{text-align:center;padding:1.5rem 0 0.5rem}
 .header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,2.4rem);color:var(--gold-light);letter-spacing:0.12em;text-shadow:0 0 30px rgba(201,168,76,0.2)}
 .date-line{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold);margin-top:0.3rem}
 .date-line span{color:var(--text-dim);font-size:0.5rem;display:block;margin-top:0.15rem;letter-spacing:0.15em}
 
-.intro-text{text-align:center;max-width:600px;margin:0 auto 2rem;font-style:italic;font-size:0.9rem;line-height:1.7;color:var(--text-mid)}
+/* NARRATIVE */
+.narrative{background:linear-gradient(160deg,rgba(20,15,8,0.92),rgba(10,10,20,0.92));border:1px solid var(--gold);border-radius:12px;padding:2rem;margin:1.5rem 0;box-shadow:0 0 40px rgba(201,168,76,0.06)}
+.narrative .narr-title{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin-bottom:1.5rem}
+.narrative .narr-block{margin-bottom:1rem}
+.narrative .narr-block p{font-size:0.9rem;line-height:1.7;color:var(--text-mid);font-style:italic;margin-bottom:0.5rem}
+.narrative .narr-block p strong{color:var(--gold-light);font-style:normal}
+.narrative .narr-block .sign-address{color:var(--gold);font-weight:600}
+.narrative .narr-headline{font-size:1.05rem;line-height:1.6;color:var(--text);margin-bottom:1rem;text-align:center}
+.narrative .narr-headline strong{color:var(--gold-light)}
+.narrative .narr-closing{font-size:0.85rem;line-height:1.6;color:var(--text-dim);font-style:italic;text-align:center;margin-top:1.5rem;border-top:1px solid rgba(201,168,76,0.1);padding-top:1.2rem}
 
-/* LUMINARIES */
+/* TABLET */
+.tablet-section{margin:2rem 0}
+.tablet-section .tablet-title{font-family:'Cinzel Decorative',serif;font-size:0.7rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin-bottom:1.2rem}
+.tablet-section .tablet-title::after{content:'';display:block;width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0.6rem auto 0}
+
 .luminary-box{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
 @media(max-width:600px){.luminary-box{grid-template-columns:1fr}}
-.lum-card{border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+.lum-card{border-radius:12px;padding:1.5rem;text-align:center}
 .lum-card.solar{background:linear-gradient(160deg,rgba(25,15,5,0.9),rgba(15,10,5,0.95));border:1px solid var(--gold)}
 .lum-card.lunar{background:linear-gradient(160deg,rgba(10,10,25,0.9),rgba(5,5,20,0.95));border:1px solid var(--moon)}
 .lum-card .lum-icon{font-size:2rem;margin-bottom:0.5rem}
-.lum-card .lum-title{font-family:'Cinzel Decorative',serif;font-size:0.7rem;letter-spacing:0.15em;margin-bottom:0.6rem}
-.lum-card.solar .lum-title{color:var(--gold-light)}
-.lum-card.lunar .lum-title{color:var(--moon)}
 .lum-card .lum-card-img{width:100px;height:auto;border-radius:6px;margin:0 auto 0.6rem;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:block}
 .lum-card .lum-olympian{font-size:1rem;color:var(--text);font-style:italic;margin-bottom:0.3rem}
 .lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--text-mid)}
@@ -46,11 +56,8 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 .lum-card .lum-reading{font-size:0.82rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
 .lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.5rem}
 
-/* WATCHERS */
-.watchers-section{margin:2rem 0}
-.watchers-title{font-family:'Cinzel Decorative',serif;font-size:0.7rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin-bottom:1.2rem}
+.watchers-title{font-family:'Cinzel Decorative',serif;font-size:0.7rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin:1.5rem 0 1rem}
 .watchers-title::after{content:'';display:block;width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0.6rem auto 0}
-
 .watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:center}
 .watcher-entry:hover{border-color:var(--border-gold)}
 .watcher-card-img{width:55px;height:auto;border-radius:4px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,0.4)}
@@ -63,7 +70,6 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 .watcher-whisper{font-size:0.75rem;line-height:1.5;color:var(--text-dim);font-style:italic;margin-top:0.3rem}
 .watcher-meta{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.08em;color:var(--text-dim);margin-top:0.3rem}
 
-/* BIRTH */
 .birth-widget{margin:2.5rem 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center}
 .birth-widget select{font-family:'Cinzel',serif;font-size:0.6rem;background:var(--deep);border:1px solid var(--border);color:var(--text);padding:0.6rem 1rem;border-radius:6px;cursor:pointer;margin-bottom:0.8rem;width:260px}
 .birth-widget select:focus{border-color:var(--gold);outline:none}
@@ -76,7 +82,6 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 
 footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px solid rgba(201,168,76,0.04)}
 .footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4}
-
 #toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:rgba(8,8,18,0.94);border:1px solid var(--gold-dim);border-radius:4px;padding:0.5rem 1.2rem;font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);z-index:100;opacity:0;transition:opacity 0.4s}
 #toast.show{opacity:1}
 </style>
@@ -104,17 +109,20 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
         <div class="date-line" id="dateLine"></div>
     </div>
 
-    <div class="intro-text">
-        The planets do not orbit. They <strong>watch</strong>. Each is an Olympian. Each Olympian claims the constellation they walk through. This is who watches you today.
+    <!-- NARRATIVE HOROSCOPE — generated from the tablet -->
+    <div class="narrative" id="narrative"></div>
+
+    <!-- TABLET: Sun + Moon -->
+    <div class="tablet-section">
+        <div class="tablet-title">✦ The Tablet ✦</div>
+        <div class="luminary-box" id="luminaryBox"></div>
     </div>
 
-    <div class="luminary-box" id="luminaryBox"></div>
+    <!-- WATCHERS -->
+    <div class="watchers-title">✦ The Watchers ✦</div>
+    <div id="watchersList"></div>
 
-    <div class="watchers-section">
-        <div class="watchers-title">✦ The Watchers ✦</div>
-        <div id="watchersList"></div>
-    </div>
-
+    <!-- BIRTH -->
     <div class="birth-widget">
         <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem;">✦ Who Walks Your Sign</div>
         <select id="birthSign" onchange="birthReading()">
@@ -136,11 +144,11 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script>
 // ══════════════════════════════════════════
-// CELESTIAL BODY → OLYMPIAN → MAJOR ARCANA → IMAGE
+// CELESTIAL BODY → OLYMPIAN → IMAGE
 // ══════════════════════════════════════════
 const CELESTIAL_OLYMPIANS = {
     'Sun':     {olympian:'Apollo',     arcana:'The Sun (XIX)',       icon:'☀️', image:'data/images/major/sun.png'},
-    'Moon':    {olympian:'Artemis',    arcana:'The Chariot (VII)',   icon:'🌙', image:'data/images/artemis-card.jpg'},
+    'Moon':    {olympian:'Artemis',    arcana:'The Chariot (VII)',   icon:'🌙', image:'data/images/artemis-card.jpg', moonShadow:'Melinoe', moonShadowArcana:'The Moon (XVIII)'},
     'Mercury': {olympian:'Hermes',     arcana:'The Magician (I)',    icon:'☿', image:'data/images/major/magician.png'},
     'Venus':   {olympian:'Aphrodite',  arcana:'The Lovers (VI)',     icon:'♀', image:'data/images/aphrodite-card.jpg'},
     'Mars':    {olympian:'Ares',       arcana:'The Hierophant (V)',  icon:'♂', image:'data/images/ares-card.jpg'},
@@ -156,25 +164,26 @@ const CELESTIAL_OLYMPIANS = {
 
 const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
 const SIGN_GLYPHS = {'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
-const SIGN_CONSTELLATIONS = {'Aries':'the Ram','Taurus':'the Bull','Gemini':'the Twins','Cancer':'the Crab','Leo':'the Lion','Virgo':'the Maiden','Libra':'the Scales','Scorpio':'the Scorpion','Sagittarius':'the Archer','Capricorn':'the Sea-Goat','Aquarius':'the Water-Bearer','Pisces':'the Fish'};
+const SIGN_NAMES = {'Aries':'Ram','Taurus':'Bull','Gemini':'Twins','Cancer':'Crab','Leo':'Lion','Virgo':'Maiden','Libra':'Scales','Scorpio':'Scorpion','Sagittarius':'Archer','Capricorn':'Sea-Goat','Aquarius':'Water-Bearer','Pisces':'Fish'};
 
 const WHISPERS = {
-    'Apollo':['Apollo does not ask you to create. He sets you on fire. What will you burn for?','The sun does not negotiate with shadows. Either you stand in the light, or you do not exist.','Your radiance is not a gift. It is a demand. The lyre plays. You must answer.'],
-    'Artemis':['Artemis does not watch. She hunts. The arrow is already in the air. Where are you running?','The moon does not illuminate to be kind. It illuminates so you can see what is chasing you.','Sovereignty is not freedom. It is the silence before the arrow releases.'],
-    'Hermes':['Hermes does not deliver messages. He becomes them. You are the word. Translate yourself.','Every locked door has a key. Every key has a price. Hermes collects both.','The boundary is not a line. It is a wound. Hermes presses his thumb into it.'],
-    'Aphrodite':['Aphrodite does not love. She chooses. The mirror shows what you desire. It also shows what you fear.','Desire is not a feeling. It is a current. Aphrodite is the riptide. Swim or sink.','The lovers are not two. They are one split in half. Aphrodite holds the knife.'],
-    'Ares':['Ares does not fight. He is the fight. The spear knows where to strike because the spear is already there.','Tradition is not armor. It is a scar. Ares wears his proudly. Do you?','War does not ask why. War asks how. Ares respects the how. The why is your problem.'],
-    'Zeus':['Zeus does not rule. He is the rule. The thunder does not ask permission. Neither should you.','Order is not the absence of chaos. Order is chaos held in a fist. Today, it opens.','The crown is not a reward. It is a sentence. Zeus serves his. What sentence are you serving?'],
-    'Hera':['Hera does not speak. She withholds. The truth is not absent. It is waiting. For what?','Covenants are not promises. They are cages. Hera holds the key. She will not tell you where.','The queen does not need to be loved. She needs to be obeyed. Hera watches. Obey or prove her wrong.'],
-    'Hephaestus':['Hephaestus does not build. He endures. The forge does not care that you are broken. It only cares that you are hot.','What you make in the dark will be seen in the light. Hephaestus does not promise beauty. He promises truth.','The hammer falls. The anvil waits. Hephaestus limps between them. So do you.'],
-    'Poseidon':['Poseidon does not destroy. He reveals. What was built on sand cannot stand. Let it fall. The truth was under the rubble.','The wave does not negotiate. It does not hate. It simply arrives. What will you be when the water recedes?','The sea has no memory. That is its mercy. Poseidon offers you the same. Drown. Be new.'],
-    'Hades':['Hades does not take. He waits. The underworld is not a punishment. It is a storage room. What are you storing?','Death is not an ending. It is a pivot. Hades turns the door. Walk through or stand still. Either way, you are moving.','The darkness is not empty. It is full of things that do not need light to be seen. Hades sees you. Do you see yourself?'],
-    'Demeter':['Demeter does not grow. She grieves. The harvest comes from the field she starved. What are you growing from your loss?','The soil does not owe you an answer. It only owes you a season. Demeter holds the calendar. She is not kind. She is patient.','Winter is not a punishment. It is a fallow. Demeter sleeps. So should you.'],
-    'Dionysus':['Dionysus does not dance. He spins. The world is not broken. It is drunk. So are you. Dance or fall.','The vine does not ask permission to grow. Neither should you. Dionysus pours. You drink. The cup is bottomless.','Sanity is a cage. Dionysus holds the key. He will not give it to you. You must swallow it.'],
-    'Athena':['Athena does not advise. She insists. The battle is won before the sword is drawn. You just do not know it yet.','Wisdom is not knowing the answer. Wisdom is knowing which question to ask. Athena asks. You answer.','The owl does not see in the dark. It remembers. Athena remembers everything. Including what you forgot.']
+    'Apollo':['Apollo does not ask you to create. He sets you on fire.','The sun does not negotiate with shadows.','Your radiance is not a gift. It is a demand.'],
+    'Artemis':['Artemis does not watch. She hunts.','The arrow is already in the air. Where are you running?','Sovereignty is the silence before the arrow releases.'],
+    'Melinoe':['Melinoe walks with ghosts. She brings what the dead need to say.','The madness is the message. Listen carefully.','Not all visions are false — but not all are true.'],
+    'Hermes':['Every locked door has a key. Hermes collects both.','The boundary is not a line. It is a wound.','You are the message. Translate yourself.'],
+    'Aphrodite':['Desire is a current. Aphrodite is the riptide.','The mirror shows what you desire. It also shows what you fear.','The lovers are one split in half. Aphrodite holds the knife.'],
+    'Ares':['The spear knows where to strike.','Tradition is not armor. It is a scar.','War does not ask why. War asks how.'],
+    'Zeus':['The thunder does not ask permission.','Order is chaos held in a fist. Today, it opens.','The crown is a sentence. What sentence are you serving?'],
+    'Hera':['Hera does not speak. She withholds.','Covenants are cages. Hera holds the key.','The truth is not absent. It is waiting.'],
+    'Hephaestus':['The forge does not care that you are broken.','What you make in the dark will be seen in the light.','The hammer falls. The anvil waits.'],
+    'Poseidon':['What was built on sand cannot stand.','The wave does not negotiate. It simply arrives.','The sea has no memory. That is its mercy.'],
+    'Hades':['The underworld is not a punishment. It is a storage room.','Death is a pivot. Walk through or stand still.','The darkness is full of things that do not need light.'],
+    'Demeter':['The harvest comes from the field she starved.','Winter is not punishment. It is fallow.','The soil does not owe you an answer. Only a season.'],
+    'Dionysus':['The vine does not ask permission.','Sanity is a cage. Dionysus holds the key.','The world is drunk. So are you. Dance or fall.'],
+    'Athena':['The battle is won before the sword is drawn.','Wisdom is knowing which question to ask.','The owl remembers everything. Including what you forgot.']
 };
 
-function getWhisper(olympian){const w=WHISPERS[olympian];return w?w[Math.floor(Math.random()*w.length)]:'';}
+function getWhisper(god){const w=WHISPERS[god];return w?w[Math.floor(Math.random()*w.length)]:'';}
 
 // ══════════════════════════════════════════
 // STARFIELD
@@ -209,12 +218,116 @@ function buildSkyState(){
         if(pos.found){
             const sign=eclipticToSign(pos.elon);
             const deity=CELESTIAL_OLYMPIANS[name];
-            if(deity){state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],constellation:SIGN_CONSTELLATIONS[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,image:deity.image,approximate:pos.approximate||false});}
+            if(deity){state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],signName:SIGN_NAMES[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,image:deity.image,moonShadow:deity.moonShadow||null,moonShadowArcana:deity.moonShadowArcana||null,approximate:pos.approximate||false});}
         }
     });
     return state;
 }
 function getSolarTimes(){return SunCalc.getTimes(new Date(),40,-74);}
+
+// ══════════════════════════════════════════
+// NARRATIVE GENERATOR — reads the tablet, writes the story
+// ══════════════════════════════════════════
+function generateNarrative(skyState){
+    // Group by sign
+    const signGroups={};
+    skyState.forEach(s=>{
+        if(!signGroups[s.sign])signGroups[s.sign]=[];
+        signGroups[s.sign].push(s);
+    });
+
+    // Sort signs by crowd size (most gods first)
+    const sorted=Object.entries(signGroups).sort((a,b)=>b[1].length-a[1].length);
+    const empty=SIGNS.filter(s=>!signGroups[s]);
+
+    let html='<div class="narr-title">✦ Today\'s Horoscope ✦</div>';
+
+    // HEADLINE: most crowded sign
+    if(sorted.length>0){
+        const [sign,watchers]=sorted[0];
+        const count=watchers.length;
+        const glyph=SIGN_GLYPHS[sign];
+        const names=watchers.map(w=>`<strong>${w.olympian}</strong>`);
+
+        if(count>=4){
+            html+=`<div class="narr-headline">There are ${count} celestial bodies in <strong>${sign} ${glyph}</strong> today. `;
+            html+=`${names.slice(0,-1).join(', ')} and ${names[names.length-1]} all align with you, <span class="sign-address">${sign}</span>! I feel like you're probably very busy?!?</div>`;
+        }else if(count===3){
+            html+=`<div class="narr-headline">Three gods walk <strong>${sign} ${glyph}</strong> today — `;
+            html+=`${names.join(', ')}. That's a quorum, <span class="sign-address">${sign}</span>. The ${SIGN_NAMES[sign]} is hosting a triad.</div>`;
+        }else if(count===2){
+            html+=`<div class="narr-headline">${names[0]} and ${names[1]} share <strong>${sign} ${glyph}</strong> today. `;
+            html+=`Two gods in the ${SIGN_NAMES[sign]}, <span class="sign-address">${sign}</span>. Are they allies or rivals? That depends on what you do with their attention.</div>`;
+        }else{
+            html+=`<div class="narr-headline">${names[0]} walks <strong>${sign} ${glyph}</strong> alone today. `;
+            html+=`A private audience with the ${SIGN_NAMES[sign]}, <span class="sign-address">${sign}</span>. No distractions. Just one god and you.</div>`;
+        }
+    }
+
+    // SUN
+    const sun=skyState.find(s=>s.body==='Sun');
+    if(sun){
+        html+=`<div class="narr-block"><p>The Sun rose in <strong>${sun.sign} ${sun.glyph}</strong>, so <strong>${sun.olympian}</strong> blesses the ${sun.signName}... `;
+        html+=`it's your time to shine, <span class="sign-address">${sun.sign}</span>! ${getWhisper(sun.olympian)}</p></div>`;
+    }
+
+    // MOON
+    const moon=skyState.find(s=>s.body==='Moon');
+    if(moon){
+        const moonIllum=SunCalc.getMoonIllumination(new Date());
+        const phaseNames=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
+        const phaseIdx=Math.round(moonIllum.phase*8)%8;
+        const phaseName=phaseNames[phaseIdx];
+
+        html+=`<div class="narr-block"><p>The Moon rises in <strong>${moon.sign} ${moon.glyph}</strong> under a ${phaseName.toLowerCase()}... `;
+        if(moon.moonShadow){
+            html+=`will your Moon Aspect be <strong>${moon.olympian}</strong> or <strong>${moon.moonShadow}</strong>? Will the goddess of the hunt find you tonight? Or will the goddess of madness haunt you, <span class="sign-address">${moon.sign}</span>? `;
+        }
+        html+=`${getWhisper(moon.olympian)}</p></div>`;
+    }
+
+    // OTHER CROWDED SIGNS (2+ gods, not Sun/Moon signs unless they're the crowded ones)
+    const crowded= sorted.filter(([sign,watchers])=>{
+        if(watchers.length<2)return false;
+        if(sign===sun?.sign&&watchers.length<=1)return false;
+        if(sign===moon?.sign&&watchers.length<=1)return false;
+        return true;
+    });
+
+    // If the headline already covered the most crowded, skip it here
+    const skipFirst=crowded.length>0&&crowded[0][1].length===sorted[0][1].length;
+    const remaining=skipFirst?crowded.slice(1):crowded;
+
+    if(remaining.length>0){
+        html+=`<div class="narr-block"><p>`;
+        const parts=remaining.map(([sign,watchers])=>{
+            const names=watchers.map(w=>`<strong>${w.olympian}</strong>`).join(' and ');
+            return `${names} walk <span class="sign-address">${sign} ${SIGN_GLYPHS[sign]}</span>`;
+        });
+        html+=parts.join('. ')+'.</p></div>';
+    }
+
+    // SOLO OCCUPANTS (signs with exactly 1 god, not Sun/Moon)
+    const solos=sorted.filter(([sign,watchers])=>watchers.length===1&&sign!==sun?.sign&&sign!==moon?.sign);
+    if(solos.length>0){
+        html+=`<div class="narr-block"><p>`;
+        const parts=solos.map(([sign,watchers])=>{
+            const w=watchers[0];
+            return `<strong>${w.olympian}</strong> walks the ${SIGN_NAMES[sign]} alone, <span class="sign-address">${sign}</span>`;
+        });
+        html+=parts.join('. ')+'.</p></div>';
+    }
+
+    // EMPTY SIGNS
+    if(empty.length>0){
+        const emptyNames=empty.map(s=>`<span class="sign-address">${s} ${SIGN_GLYPHS[s]}</span>`).join(', ');
+        html+=`<div class="narr-block"><p>${emptyNames} — the house is empty tonight. No Olympian walks your sign. This is not abandonment. This is <strong>privacy</strong>. The gods are watching elsewhere. What will you do with the silence?</p></div>`;
+    }
+
+    html+=`<div class="narr-closing">There are more divinations at <strong>Digital Divination: Aspects of the Divine</strong> — draw your cards, check the Earth Shrine, or wander the archive of misfit children. The sky is not a clock. It is a conversation.</div>`;
+
+    return html;
+}
 
 // ══════════════════════════════════════════
 // RENDER
@@ -225,6 +338,10 @@ function renderDateLine(){
     document.getElementById('dateLine').innerHTML=`
         ${now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
         <span>The Celestial Almanac · Who watches whom</span>`;
+}
+
+function renderNarrative(){
+    document.getElementById('narrative').innerHTML=generateNarrative(skyState);
 }
 
 function renderLuminaries(){
@@ -244,7 +361,7 @@ function renderLuminaries(){
             <div class="lum-icon">☀️</div>
             <img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'">
             <div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div>
-            <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${sun.constellation}</div>
+            <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, the ${sun.signName}</div>
             <div class="lum-reading">${getWhisper(sun.olympian)}</div>
             <div class="lum-time">☀️ Rise: ${fmt(times.sunrise)} · 🌙 Set: ${fmt(times.sunset)}</div>
         </div>`;
@@ -254,9 +371,9 @@ function renderLuminaries(){
         <div class="lum-card lunar">
             <div class="lum-icon">${phaseIcons[phaseIdx]}</div>
             <img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'">
-            <div class="lum-olympian">${moon.olympian} — ${moon.arcana}</div>
-            <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${moon.constellation}</div>
-            <div class="lum-reading">${getWhisper(moon.olympian)}</div>
+            <div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow?` / ${moon.moonShadow} — ${moon.moonShadowArcana}`:''}</div>
+            <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, the ${moon.signName}</div>
+            <div class="lum-reading">${getWhisper(moon.moonShadow&&Math.random()<0.5?moon.moonShadow:moon.olympian)}</div>
             <div class="lum-time">${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${Math.round(moonIllum.fraction*100)}% illuminated</div>
         </div>`;
     }
@@ -278,11 +395,11 @@ function renderWatchers(){
                 <div class="watcher-headline">
                     <span class="god-name">${s.olympian}</span>
                     <span class="arcana-name">· ${s.arcana}</span><br>
-                    through ${s.body} in
+                    as ${s.body} in
                     <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>
                 </div>
                 <div class="watcher-whisper">${getWhisper(s.olympian)}</div>
-                <div class="watcher-meta">${s.constellation} · ${isNight?'walks the night':'walks the day, unseen'}${s.approximate?' · approximate':''}</div>
+                <div class="watcher-meta">the ${s.signName} · ${isNight?'walks the night':'walks the day, unseen'}${s.approximate?' · approximate':''}</div>
             </div>
         </div>
     `).join('');
@@ -299,14 +416,14 @@ function birthReading(){
     const sign=document.getElementById('birthSign').value;
     if(!sign){document.getElementById('birthReadingText').innerHTML='The signs are carved into the sky. Choose yours. The gods will decide if they answer.';return;}
     const watchers=skyState.filter(s=>s.sign===sign);
-    const glyph=SIGN_GLYPHS[sign],constellation=SIGN_CONSTELLATIONS[sign];
+    const glyph=SIGN_GLYPHS[sign],name=SIGN_NAMES[sign];
     if(watchers.length===0){
-        document.getElementById('birthReadingText').innerHTML=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${constellation}</span><br><br>The house is empty. No Olympian walks your sign today.<br>This is not abandonment. This is <strong>privacy</strong>.<br>The gods are watching elsewhere. What will you do with the silence?`;
+        document.getElementById('birthReadingText').innerHTML=`<span style="color:var(--gold-light)">${sign} ${glyph} · the ${name}</span><br><br>The house is empty. No Olympian walks your sign today.<br>This is not abandonment. This is <strong>privacy</strong>.<br>The gods are watching elsewhere. What will you do with the silence?`;
         return;
     }
     const primary=watchers[0];const whisper=getWhisper(primary.olympian);const additional=watchers.slice(1);
-    let html=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${constellation}</span><br><br>`;
-    html+=`<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today, through ${primary.body}.<br>`;
+    let html=`<span style="color:var(--gold-light)">${sign} ${glyph} · the ${name}</span><br><br>`;
+    html+=`<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today as ${primary.body}.<br>`;
     html+=`<span style="font-style:italic;">${whisper}</span>`;
     if(additional.length>0){html+=`<br><br><span style="font-size:0.72rem;color:var(--text-dim)">Also present: ${additional.map(w=>w.olympian).join(', ')}. The house is crowded. The council watches.</span>`;}
     document.getElementById('birthReadingText').innerHTML=html;
@@ -317,14 +434,17 @@ function birthReading(){
 // ══════════════════════════════════════════
 function refreshAlmanac(){
     skyState=buildSkyState();
-    renderDateLine();renderLuminaries();renderWatchers();
+    renderAll();
     toast('✦ The Olympians take new positions.');
+}
+function renderAll(){
+    renderDateLine();renderNarrative();renderLuminaries();renderWatchers();
 }
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
 function init(){
     populateBirthSelect();
     skyState=buildSkyState();
-    renderDateLine();renderLuminaries();renderWatchers();
+    renderAll();
     toast('✦ The watching begins.');
 }
 document.addEventListener('DOMContentLoaded',init);
