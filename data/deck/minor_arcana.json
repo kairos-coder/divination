@@ -510,19 +510,19 @@
         "prompt": "The ghost of Hamlet's father, armored and ethereal on the battlements of Elsinore, demanding to be remembered, as tarot card."
       },
       {
-        "id": "water_07",
-        "name": "Seven of Water",
-        "title": "The Peaches of Immortality",
-        "culture": "Chinese",
-        "rank": "seven",
-        "element": "Water",
-        "ruling_god": "Dionysus",
-        "keywords": ["escapism", "fantasy", "the daydream", "the unlived life", "the peach garden"],
-        "upright": "In the garden of the Queen Mother of the West, the peaches of immortality ripen once every three thousand years. Sun Wukong ate them all and became ungovernable. The Seven of Water is the daydream — the fantasy so sweet it becomes an island. Dream the alternate life. Then choose this one — or steal the peach and become a legend.",
-        "reversed": "The peaches eaten. Waking from the dream. The fantasy that was paradise revealed as theft. Sun Wukong punished under a mountain for five hundred years. The escape became a cage.",
-        "image": "data/images/minor/water/water_07.png",
-        "prompt": "The Peaches of Immortality in the celestial garden of Xi Wangmu, glowing with divine light, stolen by Sun Wukong, as tarot card."
-      },
+  "id": "water_07",
+  "name": "Seven of Water",
+  "title": "Njord",
+  "culture": "Norse",
+  "rank": "seven",
+  "element": "Water",
+  "ruling_god": "Poseidon",
+  "keywords": ["the fantasy of enough", "safe harbor", "prosperity", "the marriage that couldn't work", "the dream of home"],
+  "upright": "Njord rules the sea, the ships, the nets that come back full. He is the fantasy of enough — the harbor where everything arrives and nothing is lost. The Seven of Water is the dream of stability: the boat that never sinks, the trade route that never fails, the partner who loves the sea as much as you do. Njord married Skadi. She left for the mountains. The harbor is safe. But is it *home*?",
+  "reversed": "The nets empty. Skadi walking toward the peaks. Njord alone by the water, watching her go. The fantasy of enough becomes the reality of *enough is not enough*. What did you trade for stability? What did the sea cost you that the mountains could have given?",
+  "image": "data/images/minor/water/water_07.png",
+  "prompt": "Njord, Norse god of the sea, ships, and prosperous harbors — standing at the water's edge, watching Skadi leave for the mountains behind him, as tarot card."
+}
       {
         "id": "water_08",
         "name": "Eight of Water",
