@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Draw — Digital Divination</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
@@ -37,7 +37,7 @@ body {
   background: var(--void);
   background-image:
     radial-gradient(ellipse 70% 50% at 10% 5%,  #120828 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 90% 95%,  #081420 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%),
     radial-gradient(ellipse 30% 60% at 80% 20%,  #0a0820 0%, transparent 50%);
   font-family: 'Cormorant Garamond', Georgia, serif;
   color: var(--text);
@@ -84,7 +84,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  padding: 0 24px;
   z-index: 200;
 }
 
@@ -92,13 +92,13 @@ nav {
 .nav-brand-title { font-family: 'Cinzel Decorative', serif; font-size: 13px; color: var(--gold); letter-spacing: 1.5px; }
 .nav-brand-sub { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px; color: var(--gold-dark); text-transform: uppercase; }
 
-.nav-links { display: flex; gap: 28px; list-style: none; }
-.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; justify-content: flex-end; }
+.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; padding: 4px 0; }
 .nav-links a:hover { color: var(--gold-light); }
 
 .table-container {
-  padding: 100px 24px 40px;
-  max-width: 1100px;
+  padding: 80px 16px 40px;
+  max-width: 700px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
@@ -106,12 +106,12 @@ nav {
 
 .table-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .table-header h1 {
   font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(24px, 4vw, 40px);
+  font-size: clamp(20px, 4vw, 32px);
   color: var(--gold-light);
   text-shadow: 0 0 60px rgba(212,168,64,0.2);
 }
@@ -119,14 +119,14 @@ nav {
 .table-subtitle {
   font-style: italic;
   color: var(--text-mid);
-  margin-top: 8px;
-  font-size: 16px;
+  margin-top: 6px;
+  font-size: 15px;
 }
 
 /* Sky badge */
 .sky-badge {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   font-family: 'Cinzel', serif;
   font-size: 0.6rem;
   letter-spacing: 0.12em;
@@ -143,9 +143,22 @@ nav {
 .sky-badge .period-dot.sun  { background: var(--gold);  box-shadow: 0 0 8px var(--gold); }
 .sky-badge .period-dot.moon { background: var(--water); box-shadow: 0 0 8px var(--water); }
 
+/* DB Status */
+.db-status {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 0.5rem;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+.db-status.connected { color: var(--sage); }
+.db-status.offline   { color: var(--fire); }
+
 .question-area {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .question-input {
@@ -154,11 +167,11 @@ nav {
   border-radius: 8px;
   color: var(--text);
   font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
+  font-size: 17px;
   font-style: italic;
-  padding: 14px 20px;
+  padding: 12px 18px;
   width: 100%;
-  max-width: 500px;
+  max-width: 460px;
   text-align: center;
   transition: border-color 0.3s;
   backdrop-filter: blur(8px);
@@ -177,7 +190,7 @@ nav {
 /* Sign selector */
 .sign-selector {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .sign-selector select {
@@ -192,6 +205,9 @@ nav {
   max-width: 260px;
   width: 100%;
   backdrop-filter: blur(8px);
+  -webkit-appearance: none;
+  appearance: none;
+  text-align: center;
 }
 
 .sign-selector select:focus {
@@ -208,20 +224,56 @@ nav {
   margin-bottom: 6px;
 }
 
+/* Deck selector */
+.deck-selector {
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.deck-option {
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: rgba(24,24,56,0.6);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deck-option:hover { border-color: var(--border-gold); color: var(--text-mid); }
+
+.deck-option.active                  { border-color: var(--gold);  color: var(--gold);  background: rgba(212,168,64,0.08); }
+.deck-option.suit-fire.active        { border-color: var(--fire);  color: var(--fire);  background: rgba(201,74,42,0.08); }
+.deck-option.suit-water.active       { border-color: var(--water); color: var(--water); background: rgba(102,170,204,0.08); }
+.deck-option.suit-earth.active       { border-color: var(--earth); color: var(--earth); background: rgba(106,138,58,0.08); }
+.deck-option.suit-air.active         { border-color: var(--air);   color: var(--air);   background: rgba(170,136,204,0.08); }
+
+/* Spread */
 .spread {
   display: flex;
-  gap: 24px;
+  gap: 16px;
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
-  margin-bottom: 48px;
-  min-height: 420px;
+  margin-bottom: 32px;
+  min-height: 300px;
 }
 
 .card-slot {
   flex: 1;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 140px;
+  max-width: 220px;
   perspective: 1000px;
 }
 
@@ -256,8 +308,8 @@ nav {
 }
 
 .card-back-design { text-align: center; }
-.card-back-sigil  { font-size: 48px; opacity: 0.6; }
-.card-back-text   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-top: 8px; opacity: 0.5; }
+.card-back-sigil  { font-size: 36px; opacity: 0.6; }
+.card-back-text   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-top: 6px; opacity: 0.5; }
 
 .card-front {
   background: var(--surface);
@@ -268,29 +320,78 @@ nav {
 
 .card-front img {
   width: 100%;
-  height: 60%;
+  height: 55%;
   object-fit: cover;
   border-bottom: 1px solid var(--border-gold);
   background: var(--surface2);
 }
 
 .card-front .card-info {
-  padding: 14px 16px;
+  padding: 10px 12px;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.card-position { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); opacity: 0.6; margin-bottom: 4px; }
-.card-name     { font-family: 'Cinzel Decorative', serif; font-size: 14px; color: var(--gold-light); line-height: 1.2; }
-.card-domain   { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-top: 4px; }
-.card-overlay  { font-size: 11px; font-style: italic; color: var(--text-mid); margin-top: 6px; line-height: 1.4; }
+.card-position { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.6; margin-bottom: 2px; }
+.card-name     { font-family: 'Cinzel Decorative', serif; font-size: 12px; color: var(--gold-light); line-height: 1.2; }
+.card-domain   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; }
+.card-overlay  { font-size: 10px; font-style: italic; color: var(--text-mid); margin-top: 4px; line-height: 1.4; }
 
+/* Buttons */
+.button-row { text-align: center; margin-bottom: 32px; }
+
+.btn-reveal {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(212,168,64,0.2);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-reveal:hover {
+  box-shadow: 0 0 50px rgba(212,168,64,0.45);
+  transform: translateY(-2px);
+}
+
+.btn-reveal:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-new {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-new:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Reading result */
 .reading-area {
-  max-width: 700px;
-  margin: 0 auto 60px;
-  padding: 32px;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  padding: 24px 20px;
   background: rgba(24,24,56,0.75);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -308,145 +409,72 @@ nav {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.reading-header   { font-family: 'Cinzel Decorative', serif; font-size: 18px; color: var(--gold-light); text-align: center; margin-bottom: 24px; }
-.reading-block    { margin-bottom: 20px; padding-left: 16px; border-left: 2px solid var(--border-gold); }
-.reading-position { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-.reading-text     { font-size: 15px; font-style: italic; color: var(--text-mid); line-height: 1.7; }
+.reading-header   { font-family: 'Cinzel Decorative', serif; font-size: 16px; color: var(--gold-light); text-align: center; margin-bottom: 20px; }
+.reading-sky      { text-align: center; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 16px; font-style: italic; }
+.reading-block    { margin-bottom: 16px; padding-left: 14px; border-left: 2px solid var(--border-gold); }
+.reading-position { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.reading-text     { font-size: 14px; font-style: italic; color: var(--text-mid); line-height: 1.7; }
 
 .reading-synthesis {
-  margin-top: 24px;
-  padding-top: 20px;
+  margin-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid var(--border-gold);
-  font-size: 16px;
+  font-size: 15px;
   font-style: italic;
   color: var(--text);
   line-height: 1.8;
   text-align: center;
 }
 
-.button-row { text-align: center; margin-bottom: 40px; }
-
-.btn-reveal {
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: #0a0a0a;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  border: none;
-  padding: 14px 40px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 0 30px rgba(212,168,64,0.2);
-}
-
-.btn-reveal:hover {
-  box-shadow: 0 0 50px rgba(212,168,64,0.45);
-  transform: translateY(-2px);
-}
-
-.btn-reveal:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-new {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 10px 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 12px;
-}
-
-.btn-new:hover { border-color: var(--gold); color: var(--gold); }
-
-.element-fire  { color: var(--fire); }
-.element-earth { color: var(--earth); }
-.element-water { color: var(--water); }
-.element-air   { color: var(--air); }
-
-.img-placeholder {
-  width: 100%; height: 60%;
-  background: var(--surface2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px; opacity: 0.3;
-  border-bottom: 1px solid var(--border-gold);
-}
-
-/* ── DECK SELECTOR ── */
-.deck-selector {
+.saved-indicator {
   text-align: center;
-  margin-bottom: 24px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.deck-option {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: rgba(24,24,56,0.6);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
   color: var(--text-dim);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  backdrop-filter: blur(6px);
+  margin-top: 12px;
 }
+.saved-indicator.cloud { color: var(--sage); }
 
-.deck-option:hover { border-color: var(--border-gold); color: var(--text-mid); }
-
-.deck-option.active                  { border-color: var(--gold);  color: var(--gold);  background: rgba(212,168,64,0.08); }
-.deck-option.suit-fire.active        { border-color: var(--fire);  color: var(--fire);  background: rgba(201,74,42,0.08); }
-.deck-option.suit-water.active       { border-color: var(--water); color: var(--water); background: rgba(102,170,204,0.08); }
-.deck-option.suit-earth.active       { border-color: var(--earth); color: var(--earth); background: rgba(106,138,58,0.08); }
-.deck-option.suit-air.active         { border-color: var(--air);   color: var(--air);   background: rgba(170,136,204,0.08); }
-
-.deck-divider { width: 1px; background: var(--border); margin: 0 4px; }
-
-/* Memory stats */
-.memory-stats {
+/* Stats */
+.gaia-stats {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 16px;
   font-family: 'Cinzel', serif;
   font-size: 0.5rem;
   letter-spacing: 0.1em;
   color: var(--text-dim);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
-@media (max-width: 720px) {
-  nav { padding: 0 20px; }
-  .nav-links { gap: 14px; }
-  .spread { flex-direction: column; align-items: center; }
-  .card-slot { max-width: 220px; }
-  .deck-divider { display: none; }
+.img-placeholder {
+  width: 100%; height: 55%;
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; opacity: 0.3;
+  border-bottom: 1px solid var(--border-gold);
+}
+
+@media (max-width: 600px) {
+  nav { padding: 0 12px; }
+  .nav-links { gap: 10px; }
+  .nav-links a { font-size: 7px; letter-spacing: 2px; }
+  .spread { flex-direction: column; align-items: center; gap: 12px; }
+  .card-slot { max-width: 180px; }
+  .deck-option { font-size: 6px; padding: 6px 10px; }
+  .table-container { padding: 70px 10px 30px; }
 }
 </style>
 </head>
 <body>
 
-<!-- 6×6 card mosaic (from Temple) -->
+<!-- 6×6 card mosaic -->
 <div id="cardMosaic"></div>
 
-<!-- Pontus ambient wave canvas (from Temple) -->
+<!-- Pontus ambient wave canvas -->
 <canvas id="pontusAmbient"></canvas>
 
-<!-- Darkening overlay so the UI stays readable over the mosaic -->
+<!-- Darkening overlay -->
 <div id="drawOverlay"></div>
 
 <nav>
@@ -455,9 +483,9 @@ nav {
     <div class="nav-brand-sub">Aspects of the Divine</div>
   </div>
   <ul class="nav-links">
-    <li><a href="index.html">← Temple</a></li>
-    <li><a href="daily.html">Dashboard</a></li>
+    <li><a href="index.html">Temple</a></li>
     <li><a href="zodiac.html">Zodiac</a></li>
+    <li><a href="daily.html">Daily</a></li>
     <li><a href="archive.html">Archive</a></li>
   </ul>
 </nav>
@@ -468,6 +496,9 @@ nav {
     <h1>🜏 Draw Three Cards</h1>
     <div class="table-subtitle">Past · Present · Future</div>
   </div>
+
+  <!-- DivineDB status -->
+  <div class="db-status" id="dbStatus"></div>
 
   <!-- Sky badge -->
   <div class="sky-badge" id="skyBadge"></div>
@@ -490,12 +521,10 @@ nav {
   <!-- Deck selector -->
   <div class="deck-selector">
     <button class="deck-option active"    data-deck="major" onclick="App.setMode('major')">Major Arcana</button>
-    <span class="deck-divider"></span>
     <button class="deck-option suit-fire"  data-deck="fire"  onclick="App.setMode('fire')">🔥 Fire</button>
     <button class="deck-option suit-water" data-deck="water" onclick="App.setMode('water')">🌊 Water</button>
     <button class="deck-option suit-earth" data-deck="earth" onclick="App.setMode('earth')">🜃 Earth</button>
     <button class="deck-option suit-air"   data-deck="air"   onclick="App.setMode('air')">💨 Air</button>
-    <span class="deck-divider"></span>
     <button class="deck-option"            data-deck="full"  onclick="App.setMode('full')">Full Deck</button>
   </div>
 
@@ -544,67 +573,74 @@ nav {
     </div>
   </div>
 
-  <!-- Reading -->
+  <!-- Reading result -->
   <div class="reading-area" id="readingArea"></div>
 
-  <!-- Memory stats -->
-  <div class="memory-stats" id="memoryStats"></div>
+  <!-- Gaia stats -->
+  <div class="gaia-stats" id="gaiaStats"></div>
 
 </div>
 
-<!-- Tetrad scripts -->
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- DivineDB -->
+<script src="js/supabase.js"></script>
+
+<!-- Astronomy -->
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+
+<!-- Core modules -->
 <script src="js/observe.js"></script>
 <script src="js/weight.js"></script>
 <script src="js/divine.js"></script>
 <script src="js/deal.js"></script>
 
-<!-- ── MOSAIC + PONTUS (from Temple) ── -->
+<!-- ── MOSAIC + PONTUS ── -->
 <script>
 const MAJOR_ARCANA = [
-  {id:"major_00",name:"The Fool",title:"Dionysus",culture:"Greek",keywords:["beginnings","madness","ecstasy"],image:"data/images/dionysus-card.jpg"},
-  {id:"major_01",name:"The Magician",title:"Hermes",culture:"Greek",keywords:["skill","messages","conduit"],image:"data/images/major/magician.png"},
-  {id:"major_02",name:"The High Priestess",title:"Hera",culture:"Greek",keywords:["covenant","hidden","veil"],image:"data/images/hera-card.jpg"},
-  {id:"major_03",name:"The Empress",title:"Demeter",culture:"Greek",keywords:["harvest","abundance","nurturing"],image:"data/images/demeter-card.jpg"},
-  {id:"major_04",name:"The Emperor",title:"Zeus",culture:"Greek",keywords:["authority","structure","order"],image:"data/images/zeus-card.jpg"},
-  {id:"major_05",name:"The Hierophant",title:"Ares",culture:"Greek",keywords:["tradition","conquest","doctrine"],image:"data/images/ares-card.jpg"},
-  {id:"major_06",name:"The Lovers",title:"Aphrodite",culture:"Greek",keywords:["love","choice","union"],image:"data/images/aphrodite-card.jpg"},
-  {id:"major_07",name:"The Chariot",title:"Artemis",culture:"Greek",keywords:["sovereignty","hunt","will"],image:"data/images/artemis-card.jpg"},
-  {id:"major_08",name:"Justice",title:"Athena",culture:"Greek",keywords:["wisdom","strategy","truth"],image:"data/images/athena-card.jpg"},
-  {id:"major_09",name:"The Hermit",title:"Mortal Man",culture:"Greek",keywords:["seeker","solitude","lamp"],image:"data/images/hermit-card.jpg"},
-  {id:"major_10",name:"Wheel of Fortune",title:"The Fates",culture:"Greek",keywords:["spinning","measuring","cutting"],image:"data/images/major/wheel_of_fortune.png"},
-  {id:"major_11",name:"Strength",title:"Hephaestus",culture:"Greek",keywords:["creation","labor","forge"],image:"data/images/hephaestus-card.jpg"},
-  {id:"major_12",name:"The Hanged Man",title:"Prometheus",culture:"Greek",keywords:["sacrifice","surrender","gift"],image:"data/images/prometheus-card.jpg"},
-  {id:"major_13",name:"Death",title:"Thanatos",culture:"Greek",keywords:["transition","release","ending"],image:"data/images/thanatos-card.jpg"},
-  {id:"major_14",name:"Temperance",title:"Hestia",culture:"Greek",keywords:["hearth","moderation","center"],image:"data/images/major/temperance.png"},
-  {id:"major_15",name:"The Devil",title:"Hades",culture:"Greek",keywords:["bondage","shadow","wealth"],image:"data/images/hades-card.jpg"},
-  {id:"major_16",name:"The Tower",title:"Poseidon",culture:"Greek",keywords:["upheaval","destruction","wave"],image:"data/images/poseidon-card.jpg"},
-  {id:"major_17",name:"The Star",title:"Persephone",culture:"Greek",keywords:["hope","return","rebirth"],image:"data/images/persephone-card.jpg"},
-  {id:"major_18",name:"The Moon",title:"Melinoe",culture:"Greek",keywords:["ghosts","madness","veil"],image:"data/images/major/moon.png"},
-  {id:"major_19",name:"The Sun",title:"Apollo",culture:"Greek",keywords:["light","radiance","clarity"],image:"data/images/major/sun.png"},
-  {id:"major_20",name:"Judgement",title:"The Three Judges",culture:"Greek",keywords:["reckoning","awakening","calling"],image:"data/images/major/judgment.png"},
-  {id:"major_21",name:"The World",title:"Gaia",culture:"Greek",keywords:["completion","wholeness","integration"],image:"data/images/major/world.png"}
+  {id:"major_00",name:"The Fool",image:"data/images/dionysus-card.jpg"},
+  {id:"major_01",name:"The Magician",image:"data/images/major/magician.png"},
+  {id:"major_02",name:"The High Priestess",image:"data/images/hera-card.jpg"},
+  {id:"major_03",name:"The Empress",image:"data/images/demeter-card.jpg"},
+  {id:"major_04",name:"The Emperor",image:"data/images/zeus-card.jpg"},
+  {id:"major_05",name:"The Hierophant",image:"data/images/ares-card.jpg"},
+  {id:"major_06",name:"The Lovers",image:"data/images/aphrodite-card.jpg"},
+  {id:"major_07",name:"The Chariot",image:"data/images/artemis-card.jpg"},
+  {id:"major_08",name:"Justice",image:"data/images/athena-card.jpg"},
+  {id:"major_09",name:"The Hermit",image:"data/images/hermit-card.jpg"},
+  {id:"major_10",name:"Wheel of Fortune",image:"data/images/major/wheel_of_fortune.png"},
+  {id:"major_11",name:"Strength",image:"data/images/hephaestus-card.jpg"},
+  {id:"major_12",name:"The Hanged Man",image:"data/images/prometheus-card.jpg"},
+  {id:"major_13",name:"Death",image:"data/images/thanatos-card.jpg"},
+  {id:"major_14",name:"Temperance",image:"data/images/major/temperance.png"},
+  {id:"major_15",name:"The Devil",image:"data/images/hades-card.jpg"},
+  {id:"major_16",name:"The Tower",image:"data/images/poseidon-card.jpg"},
+  {id:"major_17",name:"The Star",image:"data/images/persephone-card.jpg"},
+  {id:"major_18",name:"The Moon",image:"data/images/major/moon.png"},
+  {id:"major_19",name:"The Sun",image:"data/images/major/sun.png"},
+  {id:"major_20",name:"Judgement",image:"data/images/major/judgment.png"},
+  {id:"major_21",name:"The World",image:"data/images/major/world.png"}
 ];
 const MINOR_CARDS = [
-  {id:"fire_ace",name:"Ace of Fire",title:"Maui",culture:"Polynesian",keywords:["stolen fire","spark","genesis"],image:"data/images/minor/fire/fire_ace.png"},
-  {id:"fire_02",name:"Two of Fire",title:"Castor & Pollux",culture:"Greek",keywords:["partnership","twins","pact"],image:"data/images/minor/fire/fire_02.png"},
-  {id:"fire_03",name:"Three of Fire",title:"Peitho",culture:"Greek",keywords:["persuasion","pitch","charm"],image:"data/images/minor/fire/fire_03.png"},
-  {id:"fire_04",name:"Four of Fire",title:"Icarus",culture:"Greek",keywords:["fall","hubris","burnout"],image:"data/images/minor/fire/fire_04.png"},
-  {id:"fire_05",name:"Five of Fire",title:"Loki",culture:"Norse",keywords:["critic","truth","dissent"],image:"data/images/minor/fire/fire_05.png"},
-  {id:"fire_06",name:"Six of Fire",title:"The Algorithm",culture:"Modern",keywords:["feed","viral","reputation"],image:"data/images/minor/fire/fire_06.png"},
-  {id:"earth_ace",name:"Ace of Earth",title:"Lakshmi",culture:"Hindu",keywords:["wealth","abundance","lotus"],image:"data/images/minor/earth/earth_ace.png"},
-  {id:"earth_02",name:"Two of Earth",title:"Aristaeus",culture:"Greek",keywords:["beekeeping","craft","balance"],image:"data/images/minor/earth/earth_02.png"},
-  {id:"earth_03",name:"Three of Earth",title:"Seven Dwarves",culture:"Norse",keywords:["teamwork","collab","crew"],image:"data/images/minor/earth/earth_03.png"},
-  {id:"earth_04",name:"Four of Earth",title:"Tantalus",culture:"Greek",keywords:["denied","scarcity","lack"],image:"data/images/minor/earth/earth_04.png"},
-  {id:"water_ace",name:"Ace of Water",title:"Oshun",culture:"Yoruba",keywords:["reach","love","mirror"],image:"data/images/minor/water/water_ace.png"},
-  {id:"water_02",name:"Two of Water",title:"Echo & Narcissus",culture:"Greek",keywords:["talking","echo","mismatch"],image:"data/images/minor/water/water_02.png"},
-  {id:"air_ace",name:"Ace of Air",title:"Thoth",culture:"Egyptian",keywords:["leak","knowledge","writing"],image:"data/images/minor/air/air_ace.png"}
+  {id:"fire_ace",name:"Ace of Fire",image:"data/images/minor/fire/fire_ace.png"},
+  {id:"fire_02",name:"Two of Fire",image:"data/images/minor/fire/fire_02.png"},
+  {id:"fire_03",name:"Three of Fire",image:"data/images/minor/fire/fire_03.png"},
+  {id:"fire_04",name:"Four of Fire",image:"data/images/minor/fire/fire_04.png"},
+  {id:"fire_05",name:"Five of Fire",image:"data/images/minor/fire/fire_05.png"},
+  {id:"fire_06",name:"Six of Fire",image:"data/images/minor/fire/fire_06.png"},
+  {id:"earth_ace",name:"Ace of Earth",image:"data/images/minor/earth/earth_ace.png"},
+  {id:"earth_02",name:"Two of Earth",image:"data/images/minor/earth/earth_02.png"},
+  {id:"earth_03",name:"Three of Earth",image:"data/images/minor/earth/earth_03.png"},
+  {id:"earth_04",name:"Four of Earth",image:"data/images/minor/earth/earth_04.png"},
+  {id:"water_ace",name:"Ace of Water",image:"data/images/minor/water/water_ace.png"},
+  {id:"water_02",name:"Two of Water",image:"data/images/minor/water/water_02.png"},
+  {id:"air_ace",name:"Ace of Air",image:"data/images/minor/air/air_ace.png"}
 ];
 
 const MOSAIC_POOL = [...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MINOR_CARDS];
 
-// ── Build 6×6 mosaic ──
 function buildMosaic() {
   const mosaic = document.getElementById('cardMosaic');
   const cells = [];
@@ -616,7 +652,6 @@ function buildMosaic() {
 }
 buildMosaic();
 
-// Slow cell rotation — one random swap every 8s
 setInterval(() => {
   const imgs = document.querySelectorAll('#cardMosaic img');
   if (imgs.length === 0) return;
@@ -624,7 +659,7 @@ setInterval(() => {
   imgs[idx].src = MOSAIC_POOL[Math.floor(Math.random() * MOSAIC_POOL.length)].image;
 }, 8000);
 
-// ── Pontus ambient wave animation ──
+// ── Pontus ambient ──
 const pCvs = document.getElementById('pontusAmbient');
 const pCtx = pCvs.getContext('2d');
 
@@ -665,16 +700,17 @@ function drawPontus() {
 drawPontus();
 </script>
 
-<!-- App controller -->
+<!-- ── APP CONTROLLER ── -->
 <script>
 const App = (() => {
   let mode = 'major';
-  let currentDraw = null;
+  let currentReading = null;
 
   const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
   const SIGN_GLYPHS = {'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
 
   async function init() {
+    // Populate sign selector
     const sel = document.getElementById('birthSign');
     SIGNS.forEach(sign => {
       const o = document.createElement('option');
@@ -682,8 +718,11 @@ const App = (() => {
       o.textContent = `${SIGN_GLYPHS[sign]} ${sign}`;
       sel.appendChild(o);
     });
+
     updateSkyBadge();
-    updateMemoryStats();
+    updateDBStatus();
+    updateGaiaStats();
+    
     try { await Divine.loadDecks(); } catch(e) { console.warn('Deck preload failed:', e.message); }
   }
 
@@ -694,17 +733,37 @@ const App = (() => {
       const moonAspect = Observe.getMoonAspect();
       const dotClass   = period === 'SUN' ? 'sun' : 'moon';
       const label      = period === 'SUN' ? 'Solar Reading' : 'Lunar Reading';
-      badge.innerHTML  = `<span class="period-dot ${dotClass}"></span> ${label} · Moon aspect: ${moonAspect}`;
+      badge.innerHTML  = `<span class="period-dot ${dotClass}"></span> ${label} · Moon: ${moonAspect}`;
     } catch(e) {
       badge.innerHTML = 'Sky unavailable · offline reading';
     }
   }
 
-  function updateMemoryStats() {
-    const stats = Deal.getStats();
-    const el    = document.getElementById('memoryStats');
-    if (!stats) { el.textContent = 'No readings yet. Be the first.'; return; }
-    el.textContent = `${stats.totalReadings} readings in memory · ${stats.solarReadings} solar · ${stats.lunarReadings} lunar`;
+  function updateDBStatus() {
+    const el = document.getElementById('dbStatus');
+    if (typeof Gaia !== 'undefined' && Gaia.isConnected) {
+      el.className = 'db-status connected';
+      el.textContent = '📖 Connected to DivineDB';
+    } else {
+      el.className = 'db-status offline';
+      el.textContent = '💾 Offline — readings saved locally';
+    }
+  }
+
+  async function updateGaiaStats() {
+    const el = document.getElementById('gaiaStats');
+    try {
+      if (typeof Gaia !== 'undefined' && Gaia.isConnected) {
+        const stats = await Gaia.getStats();
+        if (stats) {
+          el.textContent = `📖 ${stats.totalReadings || 0} readings in DivineDB`;
+          return;
+        }
+      }
+      el.textContent = '';
+    } catch(e) {
+      el.textContent = '';
+    }
   }
 
   function setMode(newMode) {
@@ -728,29 +787,41 @@ const App = (() => {
       const birthSign = document.getElementById('birthSign').value || null;
 
       const pool = mode === 'major' ? Divine.getMajorDeck() :
-                   ['fire','water','earth','air'].includes(mode) ? Divine.getMinorDeck().filter(c => c.element && c.element.toLowerCase() === mode) :
+                   ['fire','water','earth','air'].includes(mode) ? 
+                     Divine.getMinorDeck().filter(c => c.element && c.element.toLowerCase() === mode) :
                    Divine.getFullDeck();
 
       if (pool.length === 0) throw new Error('No cards in selected deck');
 
+      // Draw past and present
       const [past, present] = Divine.uniformDraw(pool, 2);
 
-      let future;
+      // Use Deal.perform for weighted future draw + DivineDB save
+      let future, savedToCloud = false;
+      
       try {
-        const skyState = await Observe.getSkyState();
-        skyState.moonAspect = Observe.getMoonAspect();
-        const allCards = Divine.getFullDeck();
-        const weights  = Weight.calculate(skyState, past, present, allCards);
-        const futureDraw = Divine.weightedDraw(allCards, 1, weights);
-        future = futureDraw[0];
+        const result = await Deal.perform(past.id, present.id, question);
+        currentReading = result;
+        future = {
+          ...pool.find(c => c.id === result.cards.future.id) || result.cards.future,
+          isReversed: result.cards.future.isReversed,
+          meaning: result.cards.future.meaning
+        };
+        savedToCloud = result.savedToCloud || false;
       } catch(e) {
-        console.warn('Weighted draw failed, using uniform:', e.message);
+        console.warn('Deal.perform failed, using uniform draw:', e.message);
         const futurePool = pool.filter(c => c.id !== past.id && c.id !== present.id);
-        future = Divine.uniformDraw(futurePool.length > 0 ? futurePool : pool, 1)[0];
+        const [uniformFuture] = Divine.uniformDraw(futurePool.length > 0 ? futurePool : pool, 1);
+        future = uniformFuture;
+        currentReading = {
+          cards: { past, present, future },
+          question: question || 'The unspoken question',
+          skyContext: {},
+          savedToCloud: false
+        };
       }
 
-      currentDraw = { past, present, future };
-
+      // Render cards
       document.getElementById('frontPast').innerHTML    = Divine.renderCard(past,    'past');
       document.getElementById('frontPresent').innerHTML = Divine.renderCard(present, 'present');
       document.getElementById('frontFuture').innerHTML  = Divine.renderCard(future,  'future');
@@ -769,34 +840,73 @@ const App = (() => {
       setTimeout(() => cardFuture.classList.add('flipped'),  700);
 
       setTimeout(() => {
-        const reading = {
-          cards: { past, present, future },
-          question: question || 'The unspoken question',
-          skyContext: {}
-        };
-        try {
-          reading.skyContext = Observe.getCurrentPeriod ? { period: Observe.getCurrentPeriod(), moonPhase: { name: '' }, planets: {} } : {};
-        } catch(e) {}
-
-        const readingArea = document.getElementById('readingArea');
-        readingArea.innerHTML = Divine.renderReading(reading);
-        readingArea.classList.add('visible');
-        readingArea.scrollIntoView({ behavior: 'smooth' });
-
+        renderReadingResult(currentReading, savedToCloud);
         btn.textContent = originalText;
         btn.disabled = false;
-        updateMemoryStats();
+        updateGaiaStats();
       }, 1200);
 
     } catch(err) {
       console.error('Reveal failed:', err);
-      btn.textContent = 'Error — Check Console';
+      btn.textContent = 'Error — Try Again';
       btn.disabled = false;
     }
   }
 
+  function renderReadingResult(reading, savedToCloud) {
+    const area = document.getElementById('readingArea');
+    const past    = reading.cards.past;
+    const present = reading.cards.present;
+    const future  = reading.cards.future;
+    const sky     = reading.skyContext || {};
+    const question = reading.question || 'The unspoken question';
+
+    let html = '';
+
+    // Header
+    html += `<div class="reading-header">✦ The Reading ✦</div>`;
+
+    // Sky context
+    if (sky.sunIn || sky.moonIn) {
+      html += `<div class="reading-sky">
+        ☀️ ${sky.sunIn || '?'} · 🌙 ${sky.moonIn || '?'} 
+        ${sky.moonPhase ? '(' + sky.moonPhase + ')' : ''}
+      </div>`;
+    }
+
+    // Question
+    html += `<div style="text-align:center;font-style:italic;color:var(--text-dim);margin-bottom:20px;font-size:14px;">
+      Asked: "${question}"
+    </div>`;
+
+    // Card meanings
+    [{pos:'past', card:past}, {pos:'present', card:present}, {pos:'future', card:future}].forEach(({pos, card}) => {
+      const meaning = card.meaning || card.upright || card.reversed || '';
+      const reversedMark = card.isReversed ? ' ⥮ Reversed' : '';
+      html += `<div class="reading-block">
+        <div class="reading-position">${pos} · ${card.name}${reversedMark}</div>
+        <div class="reading-text">${meaning || 'The meaning unfolds in time.'}</div>
+      </div>`;
+    });
+
+    // Synthesis (if Deal returned one)
+    if (reading.synthesis) {
+      html += `<div class="reading-synthesis">${reading.synthesis.synthesis || reading.synthesis}</div>`;
+    }
+
+    // Saved indicator
+    html += `<div class="saved-indicator ${savedToCloud ? 'cloud' : ''}">
+      ${savedToCloud ? '📖 Saved to DivineDB' : '💾 Saved locally'}
+      ${reading.savedId ? ' · ID: ' + reading.savedId : ''}
+    </div>`;
+
+    area.innerHTML = html;
+    area.classList.add('visible');
+    area.scrollIntoView({ behavior: 'smooth' });
+  }
+
   function reset() {
-    currentDraw = null;
+    currentReading = null;
     ['cardPast','cardPresent','cardFuture'].forEach(id => {
       document.getElementById(id).classList.remove('flipped');
     });
