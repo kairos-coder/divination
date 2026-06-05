@@ -2,455 +2,632 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zodiac · Celestial Grimoire · Ealdforn Republic</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Zodiac · Celestial Grimoire — Digital Divination</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#c9a84c;--gold-light:#e8c96a;--gold-dark:#7a5c18;--gold-dim:#4a3810;
-  --void:#05050d;--deep:#08081a;--surface:#0e0e20;--border:#1e1e3a;
-  --border-gold:rgba(201,168,76,0.12);
-  --text:#ede5d0;--text-mid:#a89880;--text-dim:#605848;
-  --sage:#7a9e6a;--water:#5599cc;--fire:#cc6644;--air:#aa88cc;
-  --moon:#8899bb;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:         #d4a840;
+  --gold-light:   #f0d878;
+  --gold-dark:    #8a6518;
+  --void:         #060610;
+  --deep:         #0c0c1e;
+  --surface:      #181838;
+  --surface2:     #202048;
+  --border:       #2a2a4a;
+  --border-gold:  rgba(212,168,64,0.2);
+  --text:         #f0ead8;
+  --text-mid:     #d0c0a0;
+  --text-dim:     #988870;
+  --fire:         #c94a2a;
+  --earth:        #6a8a3a;
+  --water:        #66aacc;
+  --air:          #aa88cc;
+  --sage:         #8ab87a;
 }
-body{background:var(--void);background-image:radial-gradient(ellipse 60% 40% at 50% 30%,#0a0828 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 80% 80%,#081420 0%,transparent 55%);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;font-size:17px}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
-#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.75}
 
-nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:200}
-.nav-brand{display:flex;flex-direction:column;gap:1px}
-.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--gold);letter-spacing:1px}
-.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase}
-.nav-links{display:flex;gap:24px;list-style:none}
-.nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
-.nav-links a:hover{color:var(--gold)}
+html { scroll-behavior: smooth; }
 
-.cosmos{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:5rem 1.5rem 3rem}
+body {
+  background: var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 5%, #120828 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%),
+    radial-gradient(circle at 50% 50%, #0a0820 0%, var(--void) 100%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-.header{text-align:center;padding:1.5rem 0 0.5rem}
-.header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,2.4rem);color:var(--gold-light);letter-spacing:0.12em;text-shadow:0 0 30px rgba(201,168,76,0.2)}
-.date-line{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold);margin-top:0.3rem}
-.date-line span{color:var(--text-dim);font-size:0.5rem;display:block;margin-top:0.15rem;letter-spacing:0.15em}
+/* Ambient stars */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: twinkle 4s infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.1; transform: scale(1); }
+  100% { opacity: 0.6; transform: scale(1.2); }
+}
 
-.section-rule{display:flex;align-items:center;gap:1rem;margin:2rem 0 1.2rem;opacity:0.5}
-.section-rule::before,.section-rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent)}
-.section-rule span{font-family:'Cinzel Decorative',serif;font-size:0.6rem;color:var(--gold-dim);letter-spacing:0.2em;white-space:nowrap}
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: rgba(8,8,20,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  z-index: 200;
+}
 
-/* NARRATIVE */
-.narrative{background:linear-gradient(160deg,rgba(20,15,8,0.92),rgba(10,10,20,0.92));border:1px solid var(--gold);border-radius:12px;padding:2rem 2.2rem;margin:1.5rem 0;box-shadow:0 0 40px rgba(201,168,76,0.06)}
-.narrative .narr-title{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold-light);letter-spacing:0.12em;text-align:center;margin-bottom:1.5rem}
-.narr-headline{font-size:1.05rem;line-height:1.75;color:var(--text);margin-bottom:1.2rem;text-align:center}
-.narr-headline strong{color:var(--gold-light)}
-.narr-body{font-size:0.95rem;line-height:1.8;color:var(--text-mid);font-style:italic;margin-bottom:0.7rem}
-.narr-body strong{color:var(--gold-light);font-style:normal}
-.narr-body .sign-address{color:var(--gold);font-style:normal;font-weight:600}
-.narr-whisper{font-size:0.82rem;line-height:1.6;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem;padding-left:1rem;border-left:2px solid rgba(201,168,76,0.15)}
-.narr-empty{font-size:0.9rem;line-height:1.75;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem}
-.narr-closing{font-size:0.85rem;line-height:1.6;color:var(--text-dim);font-style:italic;text-align:center;margin-top:1.5rem;border-top:1px solid rgba(201,168,76,0.1);padding-top:1.2rem}
+.nav-brand { display: flex; flex-direction: column; gap: 1px; }
+.nav-brand-title { font-family: 'Cinzel Decorative', serif; font-size: 13px; color: var(--gold); letter-spacing: 1.5px; }
+.nav-brand-sub { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px; color: var(--gold-dark); text-transform: uppercase; }
 
-/* TABLET */
-.luminary-box{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
-@media(max-width:600px){.luminary-box{grid-template-columns:1fr}}
-.lum-card{border-radius:12px;padding:1.5rem;text-align:center}
-.lum-card.solar{background:linear-gradient(160deg,rgba(25,15,5,0.9),rgba(15,10,5,0.95));border:1px solid var(--gold)}
-.lum-card.lunar{background:linear-gradient(160deg,rgba(10,10,25,0.9),rgba(5,5,20,0.95));border:1px solid var(--moon)}
-.lum-card .lum-icon{font-size:2rem;margin-bottom:0.5rem}
-.lum-card .lum-card-img{width:100px;height:auto;border-radius:6px;margin:0 auto 0.6rem;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:block}
-.lum-card .lum-olympian{font-size:1rem;color:var(--text);font-style:italic;margin-bottom:0.3rem}
-.lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--text-mid)}
-.lum-card .lum-sign .glyph{font-size:1.2rem}
-.lum-card .lum-reading{font-size:0.82rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
-.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.5rem;line-height:1.8}
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--gold-light); }
 
-/* WATCHERS */
-.watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:center}
-.watcher-entry:hover{border-color:var(--border-gold)}
-.watcher-entry.attendant-entry{border-left:3px solid rgba(201,168,76,0.2);margin-left:1.5rem}
-.watcher-card-img{width:55px;height:auto;border-radius:4px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,0.4)}
-.watcher-body{flex:1;min-width:0}
-.watcher-headline{font-size:0.8rem;line-height:1.4;color:var(--text)}
-.watcher-headline .god-name{color:var(--gold);font-weight:600}
-.watcher-headline .arcana-name{font-size:0.65rem;color:var(--gold-dark)}
-.watcher-headline .sign-name{color:var(--gold-light)}
-.watcher-headline .glyph{font-size:0.9rem}
-.watcher-whisper{font-size:0.78rem;line-height:1.55;color:var(--text-dim);font-style:italic;margin-top:0.3rem}
-.watcher-meta{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.08em;color:var(--text-dim);margin-top:0.3rem;line-height:1.6}
-.watcher-attendant-label{color:var(--gold-dark);font-style:italic}
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px 60px;
+}
 
-/* BIRTH */
-.birth-widget{margin:2.5rem 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center}
-.birth-widget-label{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem}
-.birth-widget select{font-family:'Cinzel',serif;font-size:0.6rem;background:var(--deep);border:1px solid var(--border);color:var(--text);padding:0.6rem 1rem;border-radius:6px;cursor:pointer;margin-bottom:0.8rem;width:260px}
-.birth-widget select:focus{border-color:var(--gold);outline:none}
-.birth-reading{font-size:0.9rem;line-height:1.8;color:var(--text-mid);font-style:italic;min-height:50px;max-width:560px;margin:0 auto}
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  color: var(--gold-light);
+  letter-spacing: 3px;
+}
+.header .subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: var(--gold-dark);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+.header .date {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
 
-.btn-row{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.ritual-btn{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.12em;padding:0.5rem 1.2rem;border-radius:4px;cursor:pointer;transition:all 0.2s;background:transparent;border:1px solid;text-transform:uppercase;text-decoration:none;display:inline-block}
-.btn-gold{border-color:var(--gold-dark);color:var(--gold)}.btn-gold:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
-.btn-dim{border-color:var(--border);color:var(--text-dim)}.btn-dim:hover{border-color:var(--text-dim);color:var(--text-mid)}
+/* ─── SKY DIAGRAM (CSS CIRCULAR ZODIAC) ─── */
+.sky-diagram {
+  position: relative;
+  width: min(500px, 85vw);
+  height: min(500px, 85vw);
+  margin: 0 auto 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(10,8,32,0.6), rgba(6,6,16,0.95));
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 0 60px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.3);
+}
 
-footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px solid rgba(201,168,76,0.04)}
-.footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4}
-#toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:rgba(8,8,18,0.94);border:1px solid var(--gold-dark);border-radius:4px;padding:0.5rem 1.2rem;font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);z-index:300;opacity:0;transition:opacity 0.4s;pointer-events:none}
-#toast.show{opacity:1}
+.zodiac-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.zodiac-sign {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  transform-origin: center;
+  text-align: center;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 22px;
+  color: var(--gold-dim);
+  transition: all 0.3s;
+}
+.zodiac-sign.active {
+  color: var(--gold-light);
+  text-shadow: 0 0 10px var(--gold);
+  transform: scale(1.1);
+}
+.zodiac-sign .sign-name {
+  font-size: 8px;
+  letter-spacing: 2px;
+  margin-top: -5px;
+  display: block;
+}
+
+/* Sign positions around the circle */
+.sign-0  { top: -15px; left: 50%; transform: translateX(-50%); }
+.sign-1  { top: 12%; right: 12%; transform: translate(50%, -50%); }
+.sign-2  { top: 50%; right: -15px; transform: translateY(-50%); }
+.sign-3  { bottom: 12%; right: 12%; transform: translate(50%, 50%); }
+.sign-4  { bottom: -15px; left: 50%; transform: translateX(-50%); }
+.sign-5  { bottom: 12%; left: 12%; transform: translate(-50%, 50%); }
+.sign-6  { top: 50%; left: -15px; transform: translateY(-50%); }
+.sign-7  { top: 12%; left: 12%; transform: translate(-50%, -50%); }
+.sign-8  { top: 25%; right: 0; transform: translate(50%, -50%); }
+.sign-9  { top: 75%; right: 0; transform: translate(50%, 50%); }
+.sign-10 { bottom: 25%; left: 0; transform: translate(-50%, 50%); }
+.sign-11 { top: 75%; left: 0; transform: translate(-50%, 50%); }
+
+/* Center sun/moon indicator */
+.center-sky {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+}
+.period-symbol {
+  font-size: 48px;
+  filter: drop-shadow(0 0 15px rgba(212,168,64,0.5));
+}
+.period-symbol.sun { color: var(--gold); }
+.period-symbol.moon { color: var(--water); }
+.period-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* Planet markers on the wheel */
+.planet-marker {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: 0 0 8px currentColor;
+  z-index: 20;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.planet-marker:hover {
+  transform: translate(-50%, -50%) scale(1.3);
+}
+.planet-marker .tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 10px;
+  white-space: nowrap;
+  font-family: 'Cinzel', serif;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 8px;
+}
+.planet-marker:hover .tooltip {
+  opacity: 1;
+}
+
+/* Runes for planets */
+.rune-sun { background: rgba(212,168,64,0.8); color: #1a1a2a; box-shadow: 0 0 10px var(--gold); }
+.rune-moon { background: rgba(102,170,204,0.8); color: #1a1a2a; box-shadow: 0 0 10px var(--water); }
+.rune-mercury { background: rgba(170,136,204,0.8); color: #1a1a2a; }
+.rune-venus { background: rgba(212,168,64,0.7); color: #1a1a2a; }
+.rune-mars { background: rgba(201,74,42,0.8); color: #1a1a2a; }
+.rune-jupiter { background: rgba(138,184,122,0.8); color: #1a1a2a; }
+.rune-saturn { background: rgba(100,100,120,0.8); color: #1a1a2a; }
+
+/* Rest of content */
+.grimoire-card {
+  background: rgba(24,24,56,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.grimoire-card h2 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 16px;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+.horoscope-text {
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+.planet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.planet-card {
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.planet-card .rune {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 16px;
+}
+.planet-card .info {
+  flex: 1;
+}
+.planet-card .name {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.planet-card .sign {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 16px;
+  color: var(--gold-light);
+}
+.planet-card .degree {
+  font-size: 10px;
+  color: var(--text-mid);
+}
+
+.sign-selector {
+  text-align: center;
+  margin-top: 24px;
+  padding: 20px;
+  border-top: 1px solid var(--border-gold);
+}
+.sign-selector select {
+  font-family: 'Cinzel', serif;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 40px;
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: var(--gold-dark);
+  border-top: 1px solid var(--border-gold);
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  nav { padding: 0 20px; }
+  .nav-links { gap: 14px; }
+  .sky-diagram { width: 90vw; height: 90vw; }
+  .zodiac-sign { font-size: 16px; width: 45px; height: 45px; }
+  .zodiac-sign .sign-name { font-size: 6px; }
+  .planet-marker { width: 20px; height: 20px; font-size: 10px; }
+}
 </style>
 </head>
 <body>
-<canvas id="starfield"></canvas>
+
+<div class="stars" id="stars"></div>
 
 <nav>
   <div class="nav-brand">
-    <div class="nav-brand-title">Celestial Grimoire</div>
-    <div class="nav-brand-sub">Ealdforn Republic</div>
+    <div class="nav-brand-title">Digital Divination</div>
+    <div class="nav-brand-sub">Aspects of the Divine</div>
   </div>
   <ul class="nav-links">
-    <li><a href="index.html">← Temple</a></li>
-    <li><a href="draw.html">Draw Cards</a></li>
-    <li><a href="daily.html">Dashboard</a></li>
+    <li><a href="index.html">Temple</a></li>
+    <li><a href="draw.html">Draw</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="archive.html">Archive</a></li>
+    <li><a href="readme.html">Lodestar</a></li>
   </ul>
 </nav>
 
-<div class="cosmos">
-
+<div class="container">
   <div class="header">
-    <h1>ZODIAC · CELESTIAL GRIMOIRE</h1>
-    <div class="date-line" id="dateLine"></div>
+    <h1>✦ Celestial Grimoire ✦</h1>
+    <div class="subtitle">The Sky Is The Source Code</div>
+    <div class="date" id="currentDate"></div>
   </div>
 
-  <div class="narrative" id="narrative"></div>
+  <!-- CSS Sky Diagram -->
+  <div class="sky-diagram" id="skyDiagram">
+    <div class="zodiac-ring">
+      <div class="zodiac-sign sign-0" data-sign="Aries">♈<span class="sign-name">Aries</span></div>
+      <div class="zodiac-sign sign-1" data-sign="Taurus">♉<span class="sign-name">Taurus</span></div>
+      <div class="zodiac-sign sign-2" data-sign="Gemini">♊<span class="sign-name">Gemini</span></div>
+      <div class="zodiac-sign sign-3" data-sign="Cancer">♋<span class="sign-name">Cancer</span></div>
+      <div class="zodiac-sign sign-4" data-sign="Leo">♌<span class="sign-name">Leo</span></div>
+      <div class="zodiac-sign sign-5" data-sign="Virgo">♍<span class="sign-name">Virgo</span></div>
+      <div class="zodiac-sign sign-6" data-sign="Libra">♎<span class="sign-name">Libra</span></div>
+      <div class="zodiac-sign sign-7" data-sign="Scorpio">♏<span class="sign-name">Scorpio</span></div>
+      <div class="zodiac-sign sign-8" data-sign="Sagittarius">♐<span class="sign-name">Sagittarius</span></div>
+      <div class="zodiac-sign sign-9" data-sign="Capricorn">♑<span class="sign-name">Capricorn</span></div>
+      <div class="zodiac-sign sign-10" data-sign="Aquarius">♒<span class="sign-name">Aquarius</span></div>
+      <div class="zodiac-sign sign-11" data-sign="Pisces">♓<span class="sign-name">Pisces</span></div>
+    </div>
+    <div class="center-sky" id="centerSky">
+      <div class="period-symbol sun">☀️</div>
+      <div class="period-label">SOLAR READING</div>
+    </div>
+    <div id="planetMarkers"></div>
+  </div>
 
-  <div class="section-rule"><span>✦ The Tablet ✦</span></div>
-  <div class="luminary-box" id="luminaryBox"></div>
+  <!-- Horoscope Section -->
+  <div class="grimoire-card">
+    <h2>✦ Today's Horoscope ✦</h2>
+    <div class="horoscope-text" id="horoscopeText">The sky is speaking. The planets are watching.</div>
+  </div>
 
-  <div class="section-rule"><span>✦ The Watchers ✦</span></div>
-  <div id="watchersList"></div>
+  <!-- Planet Watchers -->
+  <div class="grimoire-card">
+    <h2>✦ The Watchers ✦</h2>
+    <div class="planet-grid" id="planetGrid"></div>
+  </div>
 
-  <div class="birth-widget">
-    <div class="birth-widget-label">✦ Who Walks Your Sign</div>
-    <select id="birthSign" onchange="birthReading()">
+  <!-- Sign Selector -->
+  <div class="sign-selector">
+    <label for="birthSign">✦ Who Walks Your Sign ✦</label>
+    <select id="birthSign">
       <option value="">— Select your sign —</option>
     </select>
-    <div class="birth-reading" id="birthReadingText">The signs are carved into the sky. Choose yours.</div>
+    <div style="margin-top: 16px; font-size: 12px; font-style: italic; color: var(--text-dim);" id="signMessage"></div>
   </div>
 
-  <div class="btn-row">
-    <button class="ritual-btn btn-gold" onclick="refreshAlmanac()">⟳ Refresh Grimoire</button>
-    <a href="index.html" class="ritual-btn btn-dim">← Temple</a>
-  </div>
-
+  <footer>
+    CELESTIAL GRIMOIRE · EALDFORN REPUBLIC · THE SKY IS THE SOURCE CODE
+  </footer>
 </div>
 
-<div id="toast"></div>
-<footer><div class="footer-text">Celestial Grimoire · Ealdforn Republic · The Sky Is The Source Code</div></footer>
-
-<!-- Dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
-
-<!-- Application Modules -->
 <script src="js/observe.js"></script>
-<script src="js/almanac.js"></script>
 
-<!-- Page Controller -->
 <script>
-// ══════════════════════════════════════════
-// ZODIAC PAGE CONTROLLER
-// Uses: Observe.js, Almanac.js
-// ══════════════════════════════════════════
-
-// ─── STARFIELD ─────────────────────────────
-const sc = document.getElementById('starfield');
-const sctx = sc.getContext('2d');
-const stars = Array.from({length: 220}, () => ({
-  x: Math.random(),
-  y: Math.random(), 
-  r: Math.random() * 1.2, 
-  a: Math.random() * 0.45 + 0.05, 
-  tw: Math.random() * Math.PI * 2
-}));
-
-function resizeStarfield() {
-  sc.width = window.innerWidth;
-  sc.height = window.innerHeight;
+// ─── GENERATE STARS ─────────────────────────
+function generateStars() {
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.width = Math.random() * 2 + 1 + 'px';
+    star.style.height = star.style.width;
+    star.style.animationDelay = Math.random() * 4 + 's';
+    star.style.animationDuration = Math.random() * 3 + 2 + 's';
+    starsContainer.appendChild(star);
+  }
 }
-window.addEventListener('resize', resizeStarfield);
-resizeStarfield();
+generateStars();
 
-(function animateStars(t) {
-  sctx.clearRect(0, 0, sc.width, sc.height);
-  stars.forEach(s => {
-    const a = s.a * (0.55 + 0.45 * Math.sin(s.tw + t * 0.0002));
-    sctx.beginPath();
-    sctx.arc(s.x * sc.width, s.y * sc.height, s.r, 0, Math.PI * 2);
-    sctx.fillStyle = `rgba(232,224,208,${a})`;
-    sctx.fill();
+// ─── RUNESET ─────────────────────────────────
+const RUNES = {
+  'sun': '☀️', 'moon': '🌙', 'mercury': '☿', 'venus': '♀', 'mars': '♂',
+  'jupiter': '♃', 'saturn': '♄', 'uranus': '⛢', 'neptune': '♆', 'pluto': '♇'
+};
+
+const RUNE_CLASS = {
+  'sun': 'rune-sun', 'moon': 'rune-moon', 'mercury': 'rune-mercury',
+  'venus': 'rune-venus', 'mars': 'rune-mars', 'jupiter': 'rune-jupiter',
+  'saturn': 'rune-saturn'
+};
+
+function getRune(planet) { return RUNES[planet.toLowerCase()] || '✦'; }
+function getRuneClass(planet) { return RUNE_CLASS[planet.toLowerCase()] || 'rune-sun'; }
+
+// ─── SIGNS ───────────────────────────────────
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_GLYPHS = {'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
+
+// Get angle for a sign (0° Aries at top)
+function getAngleForSign(sign) {
+  const index = SIGNS.indexOf(sign);
+  // Aries at -90° (top), then rotate
+  return (index * 30) - 90;
+}
+
+// Get position on circle for a given angle and radius
+function getPosition(angleDeg, radius) {
+  const rad = (angleDeg * Math.PI) / 180;
+  const x = 50 + radius * Math.cos(rad);
+  const y = 50 + radius * Math.sin(rad);
+  return { x, y };
+}
+
+// Update sky diagram with planet markers
+function updateSkyDiagram(planets) {
+  const container = document.getElementById('planetMarkers');
+  const diagram = document.getElementById('skyDiagram');
+  const rect = diagram.getBoundingClientRect();
+  const radius = 42; // percentage from center
+  
+  container.innerHTML = '';
+  
+  for (const [name, data] of Object.entries(planets)) {
+    if (!data || !data.sign) continue;
+    const signIndex = SIGNS.indexOf(data.sign);
+    if (signIndex === -1) continue;
+    
+    const angle = (signIndex * 30) + (data.degree / 30 * 30) - 90;
+    const { x, y } = getPosition(angle, radius);
+    const rune = getRune(name);
+    const runeClass = getRuneClass(name);
+    
+    const marker = document.createElement('div');
+    marker.className = `planet-marker ${runeClass}`;
+    marker.style.left = `${x}%`;
+    marker.style.top = `${y}%`;
+    marker.innerHTML = `${rune}<span class="tooltip">${name.toUpperCase()} in ${data.sign} ${Math.floor(data.degree)}°</span>`;
+    container.appendChild(marker);
+  }
+  
+  // Highlight signs that have planets
+  document.querySelectorAll('.zodiac-sign').forEach(el => {
+    el.classList.remove('active');
+    const sign = el.dataset.sign;
+    if (planets && Object.values(planets).some(p => p && p.sign === sign)) {
+      el.classList.add('active');
+    }
   });
-  requestAnimationFrame(animateStars);
-})(0);
-
-// ─── STATE ─────────────────────────────────
-let skyState = [];
-let rawSky = null;
-let dailyTracking = null;
-
-// ─── TOAST ─────────────────────────────────
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-// ─── RENDER: DATE LINE ─────────────────────
-function renderDateLine() {
-  const now = new Date();
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  document.getElementById('dateLine').innerHTML = 
-    `${now.toLocaleDateString('en-US', options)}<span>The Celestial Almanac · Daily Readings</span>`;
+// Update center period display
+function updateCenterSky(period) {
+  const center = document.getElementById('centerSky');
+  const isSun = period === 'SUN';
+  center.innerHTML = `
+    <div class="period-symbol ${isSun ? 'sun' : 'moon'}">${isSun ? '☀️' : '🌙'}</div>
+    <div class="period-label">${isSun ? 'SOLAR READING' : 'LUNAR READING'}</div>
+  `;
 }
 
-// ─── RENDER: NARRATIVE ─────────────────────
-function renderNarrative() {
-  document.getElementById('narrative').innerHTML = 
-    Almanac.generateNarrative(skyState, rawSky, dailyTracking);
-}
-
-// ─── RENDER: LUMINARIES ────────────────────
-function renderLuminaries() {
-  const sun = skyState.find(s => s.body === 'sun');
-  const moon = skyState.find(s => s.body === 'moon');
-  if (!rawSky || !dailyTracking) return;
-
-  const fmt = t => {
-    if (!t) return '—';
-    return new Date(t).toLocaleTimeString('en-US', { 
-      hour: '2-digit', minute: '2-digit', hour12: true 
-    });
-  };
-  
-  const phaseNames = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 
-                      'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
-  const phaseIcons = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
-  const phaseIdx = Math.round(rawSky.moonPhase.phase * 8) % 8;
-
-  let html = '';
-  
-  // SUN CARD
-  if (sun && dailyTracking.sun) {
-    const rise = fmt(dailyTracking.sun.rise);
-    const set = fmt(dailyTracking.sun.set);
-    const zenith = dailyTracking.sun.zenith;
-    const zenithTime = zenith?.time ? fmt(zenith.time) : null;
-    const zenithAlt = zenith?.altitude ? Math.round(zenith.altitude) : null;
-    
-    html += `<div class="lum-card solar">
-      <div class="lum-icon">☀️</div>
-      <img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'">
-      <div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div>
-      <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${Almanac.SIGN_NAMES[sun.sign] || sun.sign}</div>
-      <div class="lum-reading">${Almanac.getWhisper('Apollo', 1)}</div>
-      <div class="lum-time">
-        ☀️ Rise: ${rise}<br>
-        ⬆️ Zenith: ${zenithTime || '—'} ${zenithAlt ? 'at ' + zenithAlt + '°' : ''}<br>
-        🌇 Set: ${set}
-        ${dailyTracking.sun.dawn ? '<br>🌅 Dawn: ' + fmt(dailyTracking.sun.dawn) : ''}
-        ${dailyTracking.sun.dusk ? '<br>🌆 Dusk: ' + fmt(dailyTracking.sun.dusk) : ''}
-      </div>
-    </div>`;
-  }
-  
-  // MOON CARD
-  if (moon && dailyTracking.moon) {
-    const moonRise = dailyTracking.moon.rise ? fmt(dailyTracking.moon.rise) : 'No rise today';
-    const moonSet = dailyTracking.moon.set ? fmt(dailyTracking.moon.set) : 'No set today';
-    const moonZenith = dailyTracking.moon.zenith;
-    const moonZenithTime = moonZenith?.time ? fmt(moonZenith.time) : null;
-    const moonZenithAlt = moonZenith?.altitude ? Math.round(moonZenith.altitude) : null;
-    
-    const shadowGod = moon.moonShadow && 
-      Almanac.seededInt(Almanac.dailySeed() + 77, 2) === 0 
-      ? moon.moonShadow : moon.olympian;
-    
-    html += `<div class="lum-card lunar">
-      <div class="lum-icon">${phaseIcons[phaseIdx]}</div>
-      <img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'">
-      <div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow ? ' / ' + moon.moonShadow + ' — ' + moon.moonShadowArcana : ''}</div>
-      <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${Almanac.SIGN_NAMES[moon.sign] || moon.sign}</div>
-      <div class="lum-reading">${Almanac.getWhisper(shadowGod, 2)}</div>
-      <div class="lum-time">
-        ${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${rawSky.moonPhase.illumination}% illuminated<br>
-        🌙 Rise: ${moonRise}<br>
-        ⬆️ Zenith: ${moonZenithTime || '—'} ${moonZenithAlt ? 'at ' + moonZenithAlt + '°' : ''}<br>
-        🌑 Set: ${moonSet}
-      </div>
-    </div>`;
-  }
-  
-  document.getElementById('luminaryBox').innerHTML = html || '<p style="color:var(--text-dim);text-align:center">Loading luminaries...</p>';
-}
-
-// ─── RENDER: WATCHERS ──────────────────────
-function renderWatchers() {
-  const bodies = skyState.filter(s => s.body !== 'sun' && s.body !== 'moon');
-  if (!rawSky) return;
-  
-  const now = new Date();
-  const isNight = now < new Date(rawSky.solar.sunrise) || now > new Date(rawSky.solar.sunset);
-  
-  if (bodies.length === 0) {
-    document.getElementById('watchersList').innerHTML = 
-      '<p style="color:var(--text-dim);text-align:center;padding:2rem;">The watchers are hidden. Consult the Tablet above for the Sun and Moon.</p>';
-    return;
-  }
-  
-  document.getElementById('watchersList').innerHTML = bodies.map((s, idx) => {
-    const visibility = s.aboveHorizon ? 'above horizon' : 'below horizon';
-    const trackingData = dailyTracking?.planets[s.body];
-    const zenithInfo = trackingData?.zenith?.time 
-      ? ` · Zenith: ${new Date(trackingData.zenith.time).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`
-      : '';
-    const altitudeInfo = trackingData?.altitude !== undefined 
-      ? ` · Alt: ${Math.round(trackingData.altitude)}°` 
-      : '';
-    
-    return `
-    <div class="watcher-entry${s.attendant ? ' attendant-entry' : ''}">
-      <img class="watcher-card-img" src="${s.image}" alt="${s.olympian}" onerror="this.style.display='none'">
-      <div class="watcher-body">
-        <div class="watcher-headline">
-          <span class="god-name">${s.olympian}</span><span class="arcana-name"> · ${s.arcana}</span><br>
-          as ${s.body} in <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>, ${Almanac.SIGN_NAMES[s.sign] || s.sign}
-        </div>
-        <div class="watcher-whisper">${Almanac.getWhisper(s.olympian, idx)}</div>
-        <div class="watcher-meta">
-          ${isNight ? 'walks the night' : 'walks the day'} · ${visibility}${zenithInfo}${altitudeInfo}
-          ${s.approximate ? ' · approximate' : ''}
-          ${s.attendant ? `<br><span class="watcher-attendant-label">attends ${s.attendant} — ${s.attendantRole}</span>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ─── BIRTH READING ─────────────────────────
-function populateBirthSelect() {
+// Populate sign selector
+function populateSignSelector() {
   const sel = document.getElementById('birthSign');
-  Almanac.SIGNS.forEach(sign => {
+  SIGNS.forEach(sign => {
     const o = document.createElement('option');
     o.value = sign;
-    o.textContent = `${Almanac.SIGN_GLYPHS[sign]} ${sign}`;
+    o.textContent = `${SIGN_GLYPHS[sign]} ${sign}`;
     sel.appendChild(o);
   });
 }
 
-function birthReading() {
-  const sign = document.getElementById('birthSign').value;
-  if (!sign) { 
-    document.getElementById('birthReadingText').innerHTML = 
-      'The signs are carved into the sky. Choose yours.'; 
-    return; 
+// Render planet grid
+function renderPlanetGrid(planets) {
+  const grid = document.getElementById('planetGrid');
+  let html = '';
+  for (const [name, data] of Object.entries(planets)) {
+    if (!data) continue;
+    const rune = getRune(name);
+    const runeClass = getRuneClass(name);
+    html += `
+      <div class="planet-card">
+        <div class="rune ${runeClass}">${rune}</div>
+        <div class="info">
+          <div class="name">${name.toUpperCase()}</div>
+          <div class="sign">${data.sign}</div>
+          <div class="degree">${Math.floor(data.degree)}°</div>
+        </div>
+      </div>
+    `;
   }
-  
-  const watchers = skyState.filter(s => s.sign === sign);
-  const glyph = Almanac.SIGN_GLYPHS[sign];
-  const name = Almanac.SIGN_NAMES[sign];
-  
-  if (watchers.length === 0) {
-    document.getElementById('birthReadingText').innerHTML = 
-      `<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>
-      The house is empty. No Olympian walks your sign today.<br>
-      This is not abandonment. This is <strong>privacy</strong>.<br>
-      The gods are watching elsewhere. What will you do with the silence?`;
-    return;
-  }
-  
-  const primary = watchers.find(w => !w.attendant) || watchers[0];
-  const attendants = watchers.filter(w => w.attendant);
-  const others = watchers.filter(w => w !== primary && !w.attendant);
-  
-  let html = `<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>`;
-  html += `<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today as ${primary.body}.<br>`;
-  html += `<em>${Almanac.getWhisper(primary.olympian, 50)}</em>`;
-  
-  if (others.length > 0) {
-    const names = others.map(w => `<strong>${w.olympian}</strong>`).join(' and ');
-    html += `<br><br>${names} also walk ${sign} ${glyph} today. The house is crowded.`;
-  }
-  
-  if (attendants.length > 0) {
-    const attNames = attendants.map(w => `<strong>${w.olympian}</strong>`).join(' and ');
-    html += `<br><br>${attNames} follow Ares here — ${attendants.length === 2 ? 'desire and strategic fear, both' : 'an attendant force'} riding with the war god.`;
-  }
-  
-  document.getElementById('birthReadingText').innerHTML = html;
+  grid.innerHTML = html;
 }
 
-// ─── DATA PIPELINE ─────────────────────────
-async function buildSkyState() {
-  console.log('🔭 Observing sky...');
+// Generate horoscope text based on sky state
+function generateHoroscope(planets, period) {
+  const sunSign = planets.sun?.sign || 'unknown';
+  const moonSign = planets.moon?.sign || 'unknown';
+  const activeSigns = Object.values(planets).filter(p => p).map(p => p.sign).filter((v,i,a)=>a.indexOf(v)===i);
   
-  const raw = await Observe.getSkyState();
-  console.log('Raw sky state planets:', Object.keys(raw.planets));
+  if (activeSigns.length === 0) {
+    return `The sky is quiet. No planets walk the signs today. The gods are in council. Listen for the silence.`;
+  }
   
-  const tracking = Observe.getDailyTracking();
-  console.log('Daily tracking sun:', tracking.sun?.currentSign);
-  console.log('Daily tracking moon:', tracking.moon?.currentSign);
-  console.log('Daily tracking planets:', Object.keys(tracking.planets));
-  
-  const state = Almanac.buildSkyState(raw);
-  console.log('Built sky state count:', state.length);
-  console.log('State bodies:', state.map(s => s.body + ':' + s.sign));
-  
-  return { state, raw, tracking };
+  const periodText = period === 'SUN' ? 'Sun' : 'Moon';
+  return `${periodText} rises in ${sunSign}. The Moon walks ${moonSign}. ${activeSigns.slice(0,3).join(', ')} ${activeSigns.length > 3 ? 'and others' : ''} hold the gates. The arrow is already in flight. The question is whether you aimed true.`;
 }
 
-// ─── MAIN RENDER ───────────────────────────
-function renderAll() {
-  renderDateLine();
-  renderNarrative();
-  renderLuminaries();
-  renderWatchers();
-}
-
-// ─── REFRESH ───────────────────────────────
-async function refreshAlmanac() {
+// Main load function
+async function loadZodiac() {
   try {
-    toast('✦ Consulting the stars...');
-    const result = await buildSkyState();
-    skyState = result.state;
-    rawSky = result.raw;
-    dailyTracking = result.tracking;
-    renderAll();
-    toast('✦ The Olympians take new positions.');
-  } catch (e) {
-    console.error('Failed to refresh almanac:', e);
-    toast('⚠ The sky is clouded. Try again.');
+    const sky = await Observe.getSkyState();
+    const period = sky.period;
+    const planets = sky.planets;
+    
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    
+    updateCenterSky(period);
+    updateSkyDiagram(planets);
+    renderPlanetGrid(planets);
+    
+    const horoscope = generateHoroscope(planets, period);
+    document.getElementById('horoscopeText').textContent = horoscope;
+    
+    // Sign selector handler
+    document.getElementById('birthSign').onchange = (e) => {
+      const sign = e.target.value;
+      if (sign) {
+        const planetInSign = Object.entries(planets).find(([_, data]) => data && data.sign === sign);
+        if (planetInSign) {
+          document.getElementById('signMessage').innerHTML = `${SIGN_GLYPHS[sign]} ${sign} — ${planetInSign[0].toUpperCase()} walks here. ${planetInSign[0]} brings ${getPlanetMessage(planetInSign[0])}`;
+        } else {
+          document.getElementById('signMessage').innerHTML = `${SIGN_GLYPHS[sign]} ${sign} — The house is empty. No Olympian walks your sign today. This is not abandonment. This is privacy.`;
+        }
+      } else {
+        document.getElementById('signMessage').innerHTML = '';
+      }
+    };
+    
+  } catch (err) {
+    console.error('Zodiac load failed:', err);
+    document.getElementById('horoscopeText').textContent = 'The sky is cloudy. Cannot read the stars.';
   }
 }
 
-// ─── INIT ──────────────────────────────────
-async function init() {
-  populateBirthSelect();
-  try {
-    const result = await buildSkyState();
-    skyState = result.state;
-    rawSky = result.raw;
-    dailyTracking = result.tracking;
-    renderAll();
-    toast('✦ The watching begins.');
-  } catch (e) {
-    console.error('Failed to initialize:', e);
-    document.getElementById('narrative').innerHTML = 
-      '<div class="narr-title">✦ The Sky is Clouded ✦</div>' +
-      '<p class="narr-body">The celestial grimoire cannot read the stars at this moment. ' +
-      'Please check that the astronomy libraries are loaded and try again.</p>';
-  }
+function getPlanetMessage(planet) {
+  const messages = {
+    sun: 'radiance and clarity.',
+    moon: 'intuition and the tide.',
+    mercury: 'messages and thresholds.',
+    venus: 'love and reflection.',
+    mars: 'action and the spear.',
+    jupiter: 'expansion and authority.',
+    saturn: 'time and the grind.'
+  };
+  return messages[planet.toLowerCase()] || 'its presence.';
 }
 
-document.addEventListener('DOMContentLoaded', init);
+populateSignSelector();
+loadZodiac();
 </script>
+
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
