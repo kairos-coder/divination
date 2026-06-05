@@ -1,17 +1,13 @@
 /**
- * OBSERVE.JS — Sky State Reader
+ * OBSERVE.JS — Enhanced Sky State Reader
  * Digital Divination · Ealdforn Republic
  * 
  * Reads real astronomical data using Astronomy Engine + SunCalc.
- * Pure observation. No interpretation. No narrative.
+ * Tracks daily movement, rise/set/zenith, and sign transits.
  * 
  * Dependencies:
  *   - Astronomy Engine (astronomy.browser.min.js)
  *   - SunCalc (suncalc.min.js)
- * 
- * Usage:
- *   const sky = await Observe.getSkyState();
- *   // { period: 'SUN', sun: { sign: 'Gemini', degree: 15, ... }, moon: { ... }, planets: [...] }
  */
 
 const Observe = (() => {
@@ -73,34 +69,178 @@ const Observe = (() => {
     if (!body) return null;
 
     try {
-      // Use geocentric equatorial coordinates (observer at Earth center)
-      // This is correct for zodiac sign calculation
       const eq = Astronomy.Equator(body, date, undefined, true, false);
       const ecl = Astronomy.Ecliptic(eq);
       
       let lon = ecl.elon * 180 / Math.PI;
       
       // Add precession correction (tropical coordinates)
-      // Epoch J2000.0 to current date
       const daysSinceJ2000 = (date - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24);
       const centuries = daysSinceJ2000 / 36525;
-      const precession = (0.01397 * centuries) * 360; // degrees
+      const precession = (0.01397 * centuries) * 360;
       
       lon = (lon + precession) % 360;
       
       const sign = eclipticToSign(lon);
       const degree = getDegreeInSign(lon);
 
+      // Calculate altitude and azimuth for visibility
+      const hor = Astronomy.Horizon(date, CONFIG.latitude, CONFIG.longitude, body);
+      
       return {
         sign,
         glyph: SIGN_GLYPHS[sign],
         degree: Math.round(degree * 100) / 100,
-        longitude: Math.round(lon * 100) / 100
+        longitude: Math.round(lon * 100) / 100,
+        altitude: Math.round(hor.altitude * 180 / Math.PI * 100) / 100,
+        azimuth: Math.round(hor.azimuth * 180 / Math.PI * 100) / 100,
+        aboveHorizon: hor.altitude > 0
       };
     } catch (e) {
       console.warn(`Failed to get ${bodyName} position:`, e.message);
       return null;
     }
+  }
+
+  // ─── CALCULATE ZENITH TIME ──────────────
+  function getZenithTime(bodyName, date) {
+    const bodyMap = {
+      'Sun': Astronomy.Body.Sun,
+      'Moon': Astronomy.Body.Moon,
+      'Mercury': Astronomy.Body.Mercury,
+      'Venus': Astronomy.Body.Venus,
+      'Mars': Astronomy.Body.Mars,
+      'Jupiter': Astronomy.Body.Jupiter,
+      'Saturn': Astronomy.Body.Saturn,
+      'Uranus': Astronomy.Body.Uranus,
+      'Neptune': Astronomy.Body.Neptune,
+      'Pluto': Astronomy.Body.Pluto
+    };
+
+    const body = bodyMap[bodyName];
+    if (!body) return null;
+
+    try {
+      const searchDate = new Date(date);
+      searchDate.setHours(0, 0, 0, 0);
+      
+      // Search for transit (highest point) in the next 24 hours
+      const transit = Astronomy.SearchHourAngle(body, searchDate, 0);
+      if (transit) {
+        return {
+          time: transit.time,
+          altitude: transit.altitude * 180 / Math.PI
+        };
+      }
+    } catch (e) {
+      console.warn(`Failed to calculate zenith for ${bodyName}:`, e.message);
+    }
+    return null;
+  }
+
+  // ─── GET SIGN TRANSITS ──────────────────
+  function getSignTransits(bodyName, date) {
+    // Calculate when a body enters/exits signs during the day
+    // This is computationally intensive, so we approximate
+    const positions = [];
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    // Sample every 2 hours to track sign changes
+    for (let h = 0; h < 24; h += 2) {
+      const sampleDate = new Date(startOfDay.getTime() + h * 3600000);
+      const pos = getPlanetPosition(bodyName, sampleDate);
+      if (pos) {
+        positions.push({
+          time: sampleDate,
+          sign: pos.sign,
+          glyph: pos.glyph,
+          degree: pos.degree
+        });
+      }
+    }
+    
+    // Detect sign changes
+    const transits = [];
+    for (let i = 1; i < positions.length; i++) {
+      if (positions[i].sign !== positions[i-1].sign) {
+        transits.push({
+          from: positions[i-1].sign,
+          to: positions[i].sign,
+          approximateTime: positions[i].time
+        });
+      }
+    }
+    
+    return transits;
+  }
+
+  // ─── DAILY TRACKING ─────────────────────
+  function getDailyTracking(date = new Date()) {
+    const tracking = {
+      date: date.toISOString().split('T')[0],
+      sun: null,
+      moon: null,
+      planets: {},
+      events: []
+    };
+
+    // Sun tracking
+    const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
+    const sunPositions = {
+      dawn: getPlanetPosition('Sun', new Date(times.dawn)),
+      sunrise: getPlanetPosition('Sun', times.sunrise),
+      noon: getPlanetPosition('Sun', new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0)),
+      sunset: getPlanetPosition('Sun', times.sunset),
+      dusk: getPlanetPosition('Sun', new Date(times.dusk))
+    };
+
+    tracking.sun = {
+      rise: times.sunrise.toISOString(),
+      set: times.sunset.toISOString(),
+      dawn: times.dawn?.toISOString() || null,
+      dusk: times.dusk?.toISOString() || null,
+      zenith: getZenithTime('Sun', date),
+      positions: sunPositions,
+      currentSign: sunPositions.noon?.sign || 'Unknown',
+      currentGlyph: sunPositions.noon?.glyph || '☉'
+    };
+
+    // Moon tracking
+    const moonTimes = SunCalc.getMoonTimes(date, CONFIG.latitude, CONFIG.longitude);
+    const moonIllum = SunCalc.getMoonIllumination(date);
+    
+    tracking.moon = {
+      rise: moonTimes.rise?.toISOString() || null,
+      set: moonTimes.set?.toISOString() || null,
+      phase: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
+      illumination: Math.round(moonIllum.fraction * 100),
+      phaseValue: Math.round(moonIllum.phase * 100) / 100,
+      zenith: getZenithTime('Moon', date),
+      currentSign: getPlanetPosition('Moon', date)?.sign || 'Unknown',
+      currentGlyph: getPlanetPosition('Moon', date)?.glyph || '☽'
+    };
+
+    // Track sign changes
+    tracking.events.push(...getSignTransits('Sun', date));
+    tracking.events.push(...getSignTransits('Moon', date));
+
+    // Planet tracking
+    PLANETS.filter(p => p !== 'Sun' && p !== 'Moon').forEach(planet => {
+      const pos = getPlanetPosition(planet, date);
+      if (pos) {
+        tracking.planets[planet.toLowerCase()] = {
+          sign: pos.sign,
+          glyph: pos.glyph,
+          degree: pos.degree,
+          altitude: pos.altitude,
+          aboveHorizon: pos.aboveHorizon,
+          zenith: getZenithTime(planet, date)
+        };
+      }
+    });
+
+    return tracking;
   }
 
   // ─── GET SKY STATE ──────────────────────
@@ -112,8 +252,7 @@ const Observe = (() => {
     const isDaytime = now >= times.sunrise && now <= times.sunset;
     const period = isDaytime ? 'SUN' : 'MOON';
 
-    // Calculate ascendant (rising sign) — simplified but corrected
-    // Based on local sidereal time approximation
+    // Calculate ascendant (rising sign)
     const gmt = now.getUTCHours() + now.getUTCMinutes() / 60;
     const jd = (now - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24) + 2451545.0;
     const lst = (100.46 + 0.985647 * jd + CONFIG.longitude + 15 * gmt) % 360;
@@ -169,14 +308,21 @@ const Observe = (() => {
     const now = new Date();
     const moonIllum = SunCalc.getMoonIllumination(now);
     const phaseIdx = Math.round(moonIllum.phase * 8) % 8;
-    // New moon or waning crescent = Melinoe (shadow/madness)
-    // Otherwise = Artemis (huntress/sovereignty)
     return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
   }
 
-  // ─── TEST FUNCTION (call from console) ───
+  // ─── UPDATE CONFIG ──────────────────────
+  function setLocation(lat, lon, elev = 0) {
+    CONFIG.latitude = lat;
+    CONFIG.longitude = lon;
+    CONFIG.elevation = elev;
+  }
+
+  // ─── TEST FUNCTION ──────────────────────
   async function testSkyState() {
     const state = await getSkyState();
+    const tracking = getDailyTracking();
+    
     console.log('\n=== DIGITAL DIVINATION SKY STATE ===');
     console.log(`Period: ${state.period}`);
     console.log(`Ascendant: ${state.ascendant.sign} ${state.ascendant.glyph}`);
@@ -185,8 +331,21 @@ const Observe = (() => {
     Object.entries(state.planets).forEach(([name, data]) => {
       console.log(`  ${name.toUpperCase()}: ${data.sign} ${data.glyph} ${data.degree}°`);
     });
+    
+    console.log('\n=== DAILY TRACKING ===');
+    console.log(`Sun rises: ${new Date(tracking.sun.rise).toLocaleTimeString()}`);
+    console.log(`Sun sets: ${new Date(tracking.sun.set).toLocaleTimeString()}`);
+    console.log(`Sun zenith: ${tracking.sun.zenith?.time?.toLocaleTimeString()}`);
+    console.log(`Moon rises: ${tracking.moon.rise ? new Date(tracking.moon.rise).toLocaleTimeString() : 'No rise today'}`);
+    console.log(`Moon sets: ${tracking.moon.set ? new Date(tracking.moon.set).toLocaleTimeString() : 'No set today'}`);
+    if (tracking.events.length > 0) {
+      console.log('\nSign Transits Today:');
+      tracking.events.forEach(e => {
+        console.log(`  ${e.from} → ${e.to} around ${e.approximateTime.toLocaleTimeString()}`);
+      });
+    }
     console.log('===================================\n');
-    return state;
+    return { state, tracking };
   }
 
   // ─── PUBLIC API ─────────────────────────
@@ -194,7 +353,15 @@ const Observe = (() => {
     getSkyState,
     getCurrentPeriod,
     getMoonAspect,
+    getDailyTracking,
+    getSignTransits,
+    getPlanetPosition,
+    getZenithTime,
+    setLocation,
     testSkyState,
-    CONFIG
+    CONFIG,
+    SIGNS,
+    SIGN_GLYPHS,
+    MOON_PHASES
   };
 })();
