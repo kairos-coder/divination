@@ -46,7 +46,6 @@ body {
   position: relative;
 }
 
-/* ── MOSAIC BACKGROUND ── */
 #cardMosaic {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   display: grid; grid-template-columns: repeat(6, 1fr);
@@ -59,14 +58,12 @@ body {
 }
 #cardMosaic img:hover { transform: scale(1.02); }
 
-/* ── PONTUS AMBIENT CANVAS ── */
 #pontusAmbient {
   position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.04;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 15%, transparent 70%);
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 15%, transparent 70%);
 }
 
-/* ── SHADED OVERLAY ── */
 #drawOverlay {
   position: fixed; inset: 0; z-index: 1; pointer-events: none;
   background:
@@ -123,7 +120,6 @@ nav {
   font-size: 15px;
 }
 
-/* Sky badge */
 .sky-badge {
   text-align: center;
   margin-bottom: 16px;
@@ -143,7 +139,6 @@ nav {
 .sky-badge .period-dot.sun  { background: var(--gold);  box-shadow: 0 0 8px var(--gold); }
 .sky-badge .period-dot.moon { background: var(--water); box-shadow: 0 0 8px var(--water); }
 
-/* DB Status */
 .db-status {
   text-align: center;
   margin-bottom: 12px;
@@ -187,7 +182,6 @@ nav {
   opacity: 0.5;
 }
 
-/* Sign selector */
 .sign-selector {
   text-align: center;
   margin-bottom: 16px;
@@ -224,7 +218,6 @@ nav {
   margin-bottom: 6px;
 }
 
-/* Deck selector */
 .deck-selector {
   text-align: center;
   margin-bottom: 20px;
@@ -259,7 +252,6 @@ nav {
 .deck-option.suit-earth.active       { border-color: var(--earth); color: var(--earth); background: rgba(106,138,58,0.08); }
 .deck-option.suit-air.active         { border-color: var(--air);   color: var(--air);   background: rgba(170,136,204,0.08); }
 
-/* Spread */
 .spread {
   display: flex;
   gap: 16px;
@@ -339,7 +331,6 @@ nav {
 .card-domain   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; }
 .card-overlay  { font-size: 10px; font-style: italic; color: var(--text-mid); margin-top: 4px; line-height: 1.4; }
 
-/* Buttons */
 .button-row { text-align: center; margin-bottom: 32px; }
 
 .btn-reveal {
@@ -387,7 +378,6 @@ nav {
 
 .btn-new:hover { border-color: var(--gold); color: var(--gold); }
 
-/* Reading result */
 .reading-area {
   max-width: 600px;
   margin: 0 auto 40px;
@@ -436,7 +426,6 @@ nav {
 }
 .saved-indicator.cloud { color: var(--sage); }
 
-/* Stats */
 .gaia-stats {
   text-align: center;
   margin-top: 16px;
@@ -468,13 +457,8 @@ nav {
 </head>
 <body>
 
-<!-- 6×6 card mosaic -->
 <div id="cardMosaic"></div>
-
-<!-- Pontus ambient wave canvas -->
 <canvas id="pontusAmbient"></canvas>
-
-<!-- Darkening overlay -->
 <div id="drawOverlay"></div>
 
 <nav>
@@ -497,13 +481,9 @@ nav {
     <div class="table-subtitle">Past · Present · Future</div>
   </div>
 
-  <!-- DivineDB status -->
   <div class="db-status" id="dbStatus"></div>
-
-  <!-- Sky badge -->
   <div class="sky-badge" id="skyBadge"></div>
 
-  <!-- Birth sign -->
   <div class="sign-selector">
     <label>Your Sign</label>
     <select id="birthSign">
@@ -511,14 +491,12 @@ nav {
     </select>
   </div>
 
-  <!-- Question -->
   <div class="question-area">
     <input type="text" class="question-input" id="questionInput"
            placeholder="What question do you bring to the cards?"
            maxlength="200">
   </div>
 
-  <!-- Deck selector -->
   <div class="deck-selector">
     <button class="deck-option active"    data-deck="major" onclick="App.setMode('major')">Major Arcana</button>
     <button class="deck-option suit-fire"  data-deck="fire"  onclick="App.setMode('fire')">🔥 Fire</button>
@@ -528,13 +506,11 @@ nav {
     <button class="deck-option"            data-deck="full"  onclick="App.setMode('full')">Full Deck</button>
   </div>
 
-  <!-- Buttons -->
   <div class="button-row">
     <button class="btn-reveal" id="revealBtn" onclick="App.reveal()">▸ Reveal</button>
     <button class="btn-new" onclick="App.reset()">New Reading</button>
   </div>
 
-  <!-- Card spread -->
   <div class="spread" id="spread">
     <div class="card-slot" id="slotPast">
       <div class="card-inner" id="cardPast">
@@ -573,32 +549,28 @@ nav {
     </div>
   </div>
 
-  <!-- Reading result -->
   <div class="reading-area" id="readingArea"></div>
-
-  <!-- Gaia stats -->
   <div class="gaia-stats" id="gaiaStats"></div>
 
 </div>
 
-<!-- Supabase CDN -->
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-<!-- DivineDB -->
-<script src="js/supabase.js"></script>
-
-<!-- Astronomy -->
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
-<!-- Core modules -->
 <script src="js/observe.js"></script>
 <script src="js/weight.js"></script>
 <script src="js/divine.js"></script>
 <script src="js/deal.js"></script>
+<script src="js/supabase.js"></script>
 
-<!-- ── MOSAIC + PONTUS ── -->
 <script>
+// ─── SUPABASE CONFIG ─────────────────────────
+const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
+
+// ─── MOSAIC BACKGROUND ───────────────────────
 const MAJOR_ARCANA = [
   {id:"major_00",name:"The Fool",image:"data/images/dionysus-card.jpg"},
   {id:"major_01",name:"The Magician",image:"data/images/major/magician.png"},
@@ -659,7 +631,7 @@ setInterval(() => {
   imgs[idx].src = MOSAIC_POOL[Math.floor(Math.random() * MOSAIC_POOL.length)].image;
 }, 8000);
 
-// ── Pontus ambient ──
+// ─── PONTUS AMBIENT ─────────────────────────
 const pCvs = document.getElementById('pontusAmbient');
 const pCtx = pCvs.getContext('2d');
 
@@ -698,19 +670,90 @@ function drawPontus() {
   requestAnimationFrame(drawPontus);
 }
 drawPontus();
-</script>
 
-<!-- ── APP CONTROLLER ── -->
-<script>
+// ─── APP CONTROLLER ─────────────────────────
 const App = (() => {
   let mode = 'major';
   let currentReading = null;
+  let supabaseClient = null;
 
   const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
   const SIGN_GLYPHS = {'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
 
+  function initSupabase() {
+    if (window.supabase && !supabaseClient) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('DivineDB client ready');
+    }
+  }
+
+  async function saveReadingToDivineDB(readingData) {
+    if (!supabaseClient) {
+      initSupabase();
+      if (!supabaseClient) return null;
+    }
+
+    try {
+      const record = {
+        id: crypto.randomUUID(),
+        timestamp: new Date().toISOString(),
+        period: readingData.period || 'UNKNOWN',
+        past_card: readingData.past?.name || readingData.cards?.past?.name,
+        present_card: readingData.present?.name || readingData.cards?.present?.name,
+        future_card: readingData.future?.name || readingData.cards?.future?.name,
+        reading_text: readingData.synthesis || readingData.reading_text,
+        user_question: readingData.question,
+        deck_mode: mode,
+        birth_sign: readingData.birthSign
+      };
+
+      const { data, error } = await supabaseClient.from('readings').insert([record]);
+      if (error) {
+        console.warn('DivineDB save failed:', error.message);
+        return null;
+      }
+      console.log('✅ Reading saved to DivineDB, ID:', data[0].id);
+      updateGaiaStats();
+      return data[0];
+    } catch (err) {
+      console.warn('DivineDB save exception:', err.message);
+      return null;
+    }
+  }
+
+  async function updateGaiaStats() {
+    const el = document.getElementById('gaiaStats');
+    if (!supabaseClient) {
+      initSupabase();
+      if (!supabaseClient) return;
+    }
+    try {
+      const { count, error } = await supabaseClient
+        .from('readings')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      if (el) el.textContent = `📚 ${count || 0} readings in DivineDB`;
+    } catch(e) {
+      if (el) el.textContent = '';
+    }
+  }
+
+  function updateDBStatus() {
+    const el = document.getElementById('dbStatus');
+    if (supabaseClient) {
+      el.className = 'db-status connected';
+      el.textContent = '📖 Connected to DivineDB';
+    } else {
+      el.className = 'db-status offline';
+      el.textContent = '💾 Offline — readings saved locally';
+    }
+  }
+
   async function init() {
-    // Populate sign selector
+    initSupabase();
+    updateDBStatus();
+    updateGaiaStats();
+
     const sel = document.getElementById('birthSign');
     SIGNS.forEach(sign => {
       const o = document.createElement('option');
@@ -720,49 +763,28 @@ const App = (() => {
     });
 
     updateSkyBadge();
-    updateDBStatus();
-    updateGaiaStats();
-    
     try { await Divine.loadDecks(); } catch(e) { console.warn('Deck preload failed:', e.message); }
   }
 
   function updateSkyBadge() {
     const badge = document.getElementById('skyBadge');
     try {
-      const period     = Observe.getCurrentPeriod();
+      const period = Observe.getCurrentPeriod();
       const moonAspect = Observe.getMoonAspect();
-      const dotClass   = period === 'SUN' ? 'sun' : 'moon';
-      const label      = period === 'SUN' ? 'Solar Reading' : 'Lunar Reading';
-      badge.innerHTML  = `<span class="period-dot ${dotClass}"></span> ${label} · Moon: ${moonAspect}`;
+      const dotClass = period === 'SUN' ? 'sun' : 'moon';
+      const label = period === 'SUN' ? 'Solar Reading' : 'Lunar Reading';
+      badge.innerHTML = `<span class="period-dot ${dotClass}"></span> ${label} · Moon: ${moonAspect}`;
     } catch(e) {
       badge.innerHTML = 'Sky unavailable · offline reading';
     }
   }
 
-  function updateDBStatus() {
-    const el = document.getElementById('dbStatus');
-    if (typeof Gaia !== 'undefined' && Gaia.isConnected) {
-      el.className = 'db-status connected';
-      el.textContent = '📖 Connected to DivineDB';
-    } else {
-      el.className = 'db-status offline';
-      el.textContent = '💾 Offline — readings saved locally';
-    }
-  }
-
-  async function updateGaiaStats() {
-    const el = document.getElementById('gaiaStats');
+  async function getCurrentPeriod() {
     try {
-      if (typeof Gaia !== 'undefined' && Gaia.isConnected) {
-        const stats = await Gaia.getStats();
-        if (stats) {
-          el.textContent = `📖 ${stats.totalReadings || 0} readings in DivineDB`;
-          return;
-        }
-      }
-      el.textContent = '';
+      const sky = await Observe.getSkyState();
+      return sky.period;
     } catch(e) {
-      el.textContent = '';
+      return Observe.getCurrentPeriod();
     }
   }
 
@@ -783,67 +805,92 @@ const App = (() => {
     try {
       await Divine.loadDecks();
 
-      const question  = document.getElementById('questionInput').value.trim() || null;
+      const question = document.getElementById('questionInput').value.trim() || null;
       const birthSign = document.getElementById('birthSign').value || null;
+      const period = await getCurrentPeriod();
 
       const pool = mode === 'major' ? Divine.getMajorDeck() :
-                   ['fire','water','earth','air'].includes(mode) ? 
+                   ['fire','water','earth','air'].includes(mode) ?
                      Divine.getMinorDeck().filter(c => c.element && c.element.toLowerCase() === mode) :
                    Divine.getFullDeck();
 
       if (pool.length === 0) throw new Error('No cards in selected deck');
 
-      // Draw past and present
       const [past, present] = Divine.uniformDraw(pool, 2);
 
-      // Use Deal.perform for weighted future draw + DivineDB save
-      let future, savedToCloud = false;
-      
+      let future;
       try {
-        const result = await Deal.perform(past.id, present.id, question);
-        currentReading = result;
-        future = {
-          ...pool.find(c => c.id === result.cards.future.id) || result.cards.future,
-          isReversed: result.cards.future.isReversed,
-          meaning: result.cards.future.meaning
-        };
-        savedToCloud = result.savedToCloud || false;
+        const skyState = await Observe.getSkyState();
+        skyState.moonAspect = Observe.getMoonAspect();
+        const allCards = Divine.getFullDeck();
+        const weights = Weight.calculate(skyState, past, present, allCards);
+        const futureDraw = Divine.weightedDraw(allCards, 1, weights);
+        future = futureDraw[0];
       } catch(e) {
-        console.warn('Deal.perform failed, using uniform draw:', e.message);
+        console.warn('Weighted draw failed, using uniform:', e.message);
         const futurePool = pool.filter(c => c.id !== past.id && c.id !== present.id);
-        const [uniformFuture] = Divine.uniformDraw(futurePool.length > 0 ? futurePool : pool, 1);
-        future = uniformFuture;
-        currentReading = {
-          cards: { past, present, future },
-          question: question || 'The unspoken question',
-          skyContext: {},
-          savedToCloud: false
-        };
+        future = Divine.uniformDraw(futurePool.length > 0 ? futurePool : pool, 1)[0];
       }
 
-      // Render cards
-      document.getElementById('frontPast').innerHTML    = Divine.renderCard(past,    'past');
-      document.getElementById('frontPresent').innerHTML = Divine.renderCard(present, 'present');
-      document.getElementById('frontFuture').innerHTML  = Divine.renderCard(future,  'future');
+      currentReading = { past, present, future, question, period, birthSign };
 
-      const cardPast    = document.getElementById('cardPast');
+      document.getElementById('frontPast').innerHTML = Divine.renderCard(past, 'past');
+      document.getElementById('frontPresent').innerHTML = Divine.renderCard(present, 'present');
+      document.getElementById('frontFuture').innerHTML = Divine.renderCard(future, 'future');
+
+      const cardPast = document.getElementById('cardPast');
       const cardPresent = document.getElementById('cardPresent');
-      const cardFuture  = document.getElementById('cardFuture');
+      const cardFuture = document.getElementById('cardFuture');
 
       cardPast.classList.remove('flipped');
       cardPresent.classList.remove('flipped');
       cardFuture.classList.remove('flipped');
       void cardPast.offsetWidth;
 
-      setTimeout(() => cardPast.classList.add('flipped'),    100);
+      setTimeout(() => cardPast.classList.add('flipped'), 100);
       setTimeout(() => cardPresent.classList.add('flipped'), 400);
-      setTimeout(() => cardFuture.classList.add('flipped'),  700);
+      setTimeout(() => cardFuture.classList.add('flipped'), 700);
 
-      setTimeout(() => {
-        renderReadingResult(currentReading, savedToCloud);
+      setTimeout(async () => {
+        const reading = {
+          cards: { past, present, future },
+          question: question || 'The unspoken question',
+          skyContext: {},
+          synthesis: ''
+        };
+
+        try {
+          const skyState = Observe.getCurrentPeriod ? {
+            period: Observe.getCurrentPeriod(),
+            moonPhase: { name: '' },
+            planets: {}
+          } : reading.skyContext;
+          reading.skyContext = skyState;
+        } catch(e) {}
+
+        const readingHtml = Divine.renderReading(reading);
+        const readingArea = document.getElementById('readingArea');
+        readingArea.innerHTML = readingHtml;
+        readingArea.classList.add('visible');
+        readingArea.scrollIntoView({ behavior: 'smooth' });
+
+        // Extract synthesis text for DB
+        const synthesisMatch = readingHtml.match(/<div class="reading-synthesis">(.*?)<\/div>/s);
+        const synthesis = synthesisMatch ? synthesisMatch[1].replace(/<[^>]*>/g, '') : '';
+
+        const readingForDB = {
+          period: period,
+          past: past,
+          present: present,
+          future: future,
+          synthesis: synthesis,
+          question: question,
+          birthSign: birthSign
+        };
+        await saveReadingToDivineDB(readingForDB);
+
         btn.textContent = originalText;
         btn.disabled = false;
-        updateGaiaStats();
       }, 1200);
 
     } catch(err) {
@@ -851,58 +898,6 @@ const App = (() => {
       btn.textContent = 'Error — Try Again';
       btn.disabled = false;
     }
-  }
-
-  function renderReadingResult(reading, savedToCloud) {
-    const area = document.getElementById('readingArea');
-    const past    = reading.cards.past;
-    const present = reading.cards.present;
-    const future  = reading.cards.future;
-    const sky     = reading.skyContext || {};
-    const question = reading.question || 'The unspoken question';
-
-    let html = '';
-
-    // Header
-    html += `<div class="reading-header">✦ The Reading ✦</div>`;
-
-    // Sky context
-    if (sky.sunIn || sky.moonIn) {
-      html += `<div class="reading-sky">
-        ☀️ ${sky.sunIn || '?'} · 🌙 ${sky.moonIn || '?'} 
-        ${sky.moonPhase ? '(' + sky.moonPhase + ')' : ''}
-      </div>`;
-    }
-
-    // Question
-    html += `<div style="text-align:center;font-style:italic;color:var(--text-dim);margin-bottom:20px;font-size:14px;">
-      Asked: "${question}"
-    </div>`;
-
-    // Card meanings
-    [{pos:'past', card:past}, {pos:'present', card:present}, {pos:'future', card:future}].forEach(({pos, card}) => {
-      const meaning = card.meaning || card.upright || card.reversed || '';
-      const reversedMark = card.isReversed ? ' ⥮ Reversed' : '';
-      html += `<div class="reading-block">
-        <div class="reading-position">${pos} · ${card.name}${reversedMark}</div>
-        <div class="reading-text">${meaning || 'The meaning unfolds in time.'}</div>
-      </div>`;
-    });
-
-    // Synthesis (if Deal returned one)
-    if (reading.synthesis) {
-      html += `<div class="reading-synthesis">${reading.synthesis.synthesis || reading.synthesis}</div>`;
-    }
-
-    // Saved indicator
-    html += `<div class="saved-indicator ${savedToCloud ? 'cloud' : ''}">
-      ${savedToCloud ? '📖 Saved to DivineDB' : '💾 Saved locally'}
-      ${reading.savedId ? ' · ID: ' + reading.savedId : ''}
-    </div>`;
-
-    area.innerHTML = html;
-    area.classList.add('visible');
-    area.scrollIntoView({ behavior: 'smooth' });
   }
 
   function reset() {
