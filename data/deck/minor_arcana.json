@@ -284,19 +284,19 @@
         "prompt": "Tantalus, the cursed Greek king who starves surrounded by food and water forever just out of reach, as tarot card."
       },
       {
-  "id": "earth_05",
-  "name": "Five of Earth",
-  "title": "Bhumi",
-  "culture": "Hindu",
-  "rank": "five",
-  "element": "Earth",
-  "ruling_god": "Demeter",
-  "keywords": ["the neglected ground", "depletion", "patience exhausted", "the field taken for granted", "quiet withdrawal"],
-  "upright": "Bhumi bears everything and asks for nothing — and that is exactly how she has been treated. The Five of Earth is the resource that was always there until it wasn't. The ground does not rage when it is depleted. It simply stops giving. What have you been drawing from without returning to? The earth is patient. It is not infinite.",
-  "reversed": "Bhumi lifted from the depths. Vishnu descended as the boar and carried her back to the surface — the restoration of what was nearly lost. The soil remembers how to grow. The depletion is not permanent if the neglect ends now. Return something to the ground.",
-  "image": "data/images/minor/earth/earth_05.png",
-  "prompt": "Bhumi, Hindu goddess of the Earth, patient and vast, the ground that bears all things, lifted from the cosmic ocean by Vishnu as the boar Varaha, as tarot card."
-},
+        "id": "earth_05",
+        "name": "Five of Earth",
+        "title": "Bhumi",
+        "culture": "Hindu",
+        "rank": "five",
+        "element": "Earth",
+        "ruling_god": "Demeter",
+        "keywords": ["the neglected ground", "depletion", "patience exhausted", "the field taken for granted", "quiet withdrawal"],
+        "upright": "Bhumi bears everything and asks for nothing — and that is exactly how she has been treated. The Five of Earth is the resource that was always there until it wasn't. The ground does not rage when it is depleted. It simply stops giving. What have you been drawing from without returning to? The earth is patient. It is not infinite.",
+        "reversed": "Bhumi lifted from the depths. Vishnu descended as the boar and carried her back to the surface — the restoration of what was nearly lost. The soil remembers how to grow. The depletion is not permanent if the neglect ends now. Return something to the ground.",
+        "image": "data/images/minor/earth/earth_05.png",
+        "prompt": "Bhumi, Hindu goddess of the Earth, patient and vast, the ground that bears all things, lifted from the cosmic ocean by Vishnu as the boar Varaha, as tarot card."
+      },
       {
         "id": "earth_06",
         "name": "Six of Earth",
@@ -353,20 +353,20 @@
         "image": "data/images/minor/earth/earth_09.png",
         "prompt": "The Influencer, modern archetype of Narcissus reborn under the ring light — the curated self as brand, as tarot card."
       },
-{
-  "id": "earth_10",
-  "name": "Ten of Earth",
-  "title": "Enki",
-  "culture": "Sumerian",
-  "rank": "ten",
-  "element": "Earth",
-  "ruling_god": "Hera",
-  "keywords": ["civilizational inheritance", "the accumulated gift", "deep wisdom", "what passes down", "the founding systems"],
-  "upright": "Enki gave humanity the me — writing, kingship, craft, music, law. Not as charity but as architecture. The Ten of Earth is everything you were handed without knowing it: the language you think in, the systems you move through, the knowledge that arrived before you did. You are downstream of something vast. Honor the source.",
-  "reversed": "The me scattered. Inanna stole them drunk from Enki's table and he couldn't take them back — the knowledge already loose in the world, already corrupting, already being misused. The inheritance weaponized. The gift that became a burden passed to people who didn't know its weight.",
-  "image": "data/images/minor/earth/earth_10.png",
-  "prompt": "Enki, Sumerian god of wisdom and fresh water, keeper of the me — the sacred laws of civilization — seated in the abzu, his underwater domain, as tarot card."
-}
+      {
+        "id": "earth_10",
+        "name": "Ten of Earth",
+        "title": "Enki",
+        "culture": "Sumerian",
+        "rank": "ten",
+        "element": "Earth",
+        "ruling_god": "Hera",
+        "keywords": ["civilizational inheritance", "the accumulated gift", "deep wisdom", "what passes down", "the founding systems"],
+        "upright": "Enki gave humanity the me — writing, kingship, craft, music, law. Not as charity but as architecture. The Ten of Earth is everything you were handed without knowing it: the language you think in, the systems you move through, the knowledge that arrived before you did. You are downstream of something vast. Honor the source.",
+        "reversed": "The me scattered. Inanna stole them drunk from Enki's table and he couldn't take them back — the knowledge already loose in the world, already corrupting, already being misused. The inheritance weaponized. The gift that became a burden passed to people who didn't know its weight.",
+        "image": "data/images/minor/earth/earth_10.png",
+        "prompt": "Enki, Sumerian god of wisdom and fresh water, keeper of the me — the sacred laws of civilization — seated in the abzu, his underwater domain, as tarot card."
+      },
       {
         "id": "earth_page",
         "name": "Page of Earth",
@@ -510,19 +510,19 @@
         "prompt": "The ghost of Hamlet's father, armored and ethereal on the battlements of Elsinore, demanding to be remembered, as tarot card."
       },
       {
-  "id": "water_07",
-  "name": "Seven of Water",
-  "title": "Njord",
-  "culture": "Norse",
-  "rank": "seven",
-  "element": "Water",
-  "ruling_god": "Poseidon",
-  "keywords": ["the fantasy of enough", "safe harbor", "prosperity", "the marriage that couldn't work", "the dream of home"],
-  "upright": "Njord rules the sea, the ships, the nets that come back full. He is the fantasy of enough — the harbor where everything arrives and nothing is lost. The Seven of Water is the dream of stability: the boat that never sinks, the trade route that never fails, the partner who loves the sea as much as you do. Njord married Skadi. She left for the mountains. The harbor is safe. But is it *home*?",
-  "reversed": "The nets empty. Skadi walking toward the peaks. Njord alone by the water, watching her go. The fantasy of enough becomes the reality of *enough is not enough*. What did you trade for stability? What did the sea cost you that the mountains could have given?",
-  "image": "data/images/minor/water/water_07.png",
-  "prompt": "Njord, Norse god of the sea, ships, and prosperous harbors — standing at the water's edge, watching Skadi leave for the mountains behind him, as tarot card."
-}
+        "id": "water_07",
+        "name": "Seven of Water",
+        "title": "Njord",
+        "culture": "Norse",
+        "rank": "seven",
+        "element": "Water",
+        "ruling_god": "Poseidon",
+        "keywords": ["the fantasy of enough", "safe harbor", "prosperity", "the marriage that couldn't work", "the dream of home"],
+        "upright": "Njord rules the sea, the ships, the nets that come back full. He is the fantasy of enough — the harbor where everything arrives and nothing is lost. The Seven of Water is the dream of stability: the boat that never sinks, the trade route that never fails, the partner who loves the sea as much as you do. Njord married Skadi. She left for the mountains. The harbor is safe. But is it *home*?",
+        "reversed": "The nets empty. Skadi walking toward the peaks. Njord alone by the water, watching her go. The fantasy of enough becomes the reality of *enough is not enough*. What did you trade for stability? What did the sea cost you that the mountains could have given?",
+        "image": "data/images/minor/water/water_07.png",
+        "prompt": "Njord, Norse god of the sea, ships, and prosperous harbors — standing at the water's edge, watching Skadi leave for the mountains behind him, as tarot card."
+      },
       {
         "id": "water_08",
         "name": "Eight of Water",
