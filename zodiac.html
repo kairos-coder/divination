@@ -224,9 +224,12 @@ function renderLuminaries() {
   const moon = skyState.find(s => s.body === 'moon');
   if (!rawSky || !dailyTracking) return;
 
-  const fmt = t => new Date(t).toLocaleTimeString('en-US', { 
-    hour: '2-digit', minute: '2-digit', hour12: true 
-  });
+  const fmt = t => {
+    if (!t) return '—';
+    return new Date(t).toLocaleTimeString('en-US', { 
+      hour: '2-digit', minute: '2-digit', hour12: true 
+    });
+  };
   
   const phaseNames = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 
                       'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
@@ -247,7 +250,7 @@ function renderLuminaries() {
       <div class="lum-icon">☀️</div>
       <img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'">
       <div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div>
-      <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${Almanac.SIGN_NAMES[sun.sign]}</div>
+      <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${Almanac.SIGN_NAMES[sun.sign] || sun.sign}</div>
       <div class="lum-reading">${Almanac.getWhisper('Apollo', 1)}</div>
       <div class="lum-time">
         ☀️ Rise: ${rise}<br>
@@ -275,7 +278,7 @@ function renderLuminaries() {
       <div class="lum-icon">${phaseIcons[phaseIdx]}</div>
       <img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'">
       <div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow ? ' / ' + moon.moonShadow + ' — ' + moon.moonShadowArcana : ''}</div>
-      <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${Almanac.SIGN_NAMES[moon.sign]}</div>
+      <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${Almanac.SIGN_NAMES[moon.sign] || moon.sign}</div>
       <div class="lum-reading">${Almanac.getWhisper(shadowGod, 2)}</div>
       <div class="lum-time">
         ${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${rawSky.moonPhase.illumination}% illuminated<br>
@@ -286,7 +289,7 @@ function renderLuminaries() {
     </div>`;
   }
   
-  document.getElementById('luminaryBox').innerHTML = html;
+  document.getElementById('luminaryBox').innerHTML = html || '<p style="color:var(--text-dim);text-align:center">Loading luminaries...</p>';
 }
 
 // ─── RENDER: WATCHERS ──────────────────────
@@ -296,6 +299,12 @@ function renderWatchers() {
   
   const now = new Date();
   const isNight = now < new Date(rawSky.solar.sunrise) || now > new Date(rawSky.solar.sunset);
+  
+  if (bodies.length === 0) {
+    document.getElementById('watchersList').innerHTML = 
+      '<p style="color:var(--text-dim);text-align:center;padding:2rem;">The watchers are hidden. Consult the Tablet above for the Sun and Moon.</p>';
+    return;
+  }
   
   document.getElementById('watchersList').innerHTML = bodies.map((s, idx) => {
     const visibility = s.aboveHorizon ? 'above horizon' : 'below horizon';
@@ -313,7 +322,7 @@ function renderWatchers() {
       <div class="watcher-body">
         <div class="watcher-headline">
           <span class="god-name">${s.olympian}</span><span class="arcana-name"> · ${s.arcana}</span><br>
-          as ${s.body} in <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>, ${Almanac.SIGN_NAMES[s.sign]}
+          as ${s.body} in <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>, ${Almanac.SIGN_NAMES[s.sign] || s.sign}
         </div>
         <div class="watcher-whisper">${Almanac.getWhisper(s.olympian, idx)}</div>
         <div class="watcher-meta">
@@ -381,9 +390,20 @@ function birthReading() {
 
 // ─── DATA PIPELINE ─────────────────────────
 async function buildSkyState() {
+  console.log('🔭 Observing sky...');
+  
   const raw = await Observe.getSkyState();
+  console.log('Raw sky state planets:', Object.keys(raw.planets));
+  
   const tracking = Observe.getDailyTracking();
+  console.log('Daily tracking sun:', tracking.sun?.currentSign);
+  console.log('Daily tracking moon:', tracking.moon?.currentSign);
+  console.log('Daily tracking planets:', Object.keys(tracking.planets));
+  
   const state = Almanac.buildSkyState(raw);
+  console.log('Built sky state count:', state.length);
+  console.log('State bodies:', state.map(s => s.body + ':' + s.sign));
+  
   return { state, raw, tracking };
 }
 
@@ -398,6 +418,7 @@ function renderAll() {
 // ─── REFRESH ───────────────────────────────
 async function refreshAlmanac() {
   try {
+    toast('✦ Consulting the stars...');
     const result = await buildSkyState();
     skyState = result.state;
     rawSky = result.raw;
