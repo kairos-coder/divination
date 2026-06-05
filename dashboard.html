@@ -114,7 +114,7 @@ nav {
   .dashboard-grid { grid-template-columns: 1fr; }
 }
 
-/* Cards */
+/* Panels */
 .panel {
   background: rgba(24,24,56,0.65);
   backdrop-filter: blur(12px);
@@ -141,6 +141,32 @@ nav {
 }
 .panel-title .glyph { font-size: 20px; }
 
+/* ── EALDFORN RUNESET ── */
+.rune {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-family: monospace;
+  background: rgba(0,0,0,0.4);
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.rune-sun { background: rgba(212,168,64,0.35); color: var(--gold); box-shadow: 0 0 6px var(--gold); }
+.rune-moon { background: rgba(102,170,204,0.35); color: var(--water); box-shadow: 0 0 6px var(--water); }
+.rune-mercury { background: rgba(170,136,204,0.35); color: var(--air); }
+.rune-venus { background: rgba(212,168,64,0.25); color: var(--gold-light); }
+.rune-mars { background: rgba(201,74,42,0.35); color: var(--fire); }
+.rune-jupiter { background: rgba(138,184,122,0.35); color: var(--sage); }
+.rune-saturn { background: rgba(100,100,120,0.35); color: var(--text-mid); }
+.rune-uranus { background: rgba(80,150,120,0.35); color: #6abb9a; }
+.rune-neptune { background: rgba(50,100,140,0.35); color: #5a9acc; }
+.rune-pluto { background: rgba(80,40,60,0.35); color: #cc88aa; }
+
 /* Sky panel */
 .sky-grid {
   display: grid;
@@ -151,22 +177,30 @@ nav {
   background: rgba(0,0,0,0.3);
   border-radius: 10px;
   padding: 8px 12px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.sky-item .planet {
+.sky-item .planet-info {
+  flex: 1;
+}
+.sky-item .planet-name {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 2px;
   color: var(--text-dim);
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .sky-item .sign {
   font-family: 'Cinzel Decorative', serif;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--gold-light);
 }
 .sky-item .degree {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-mid);
 }
 .period-badge {
@@ -205,13 +239,13 @@ nav {
   transform: scale(1.02);
 }
 .shrine-cell .card-name-small {
-  font-size: 8px;
+  font-size: 7px;
   text-align: center;
   font-family: 'Cinzel', serif;
   color: var(--text-mid);
 }
 .shrine-cell .card-suit {
-  font-size: 16px;
+  font-size: 18px;
 }
 .shrine-cell.empty {
   opacity: 0.3;
@@ -239,6 +273,10 @@ nav {
 .feed-item .cards {
   color: var(--gold-light);
   margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 .feed-item .question {
   font-style: italic;
@@ -259,6 +297,7 @@ nav {
   padding: 6px;
   text-align: center;
   font-size: 10px;
+  font-family: 'Cinzel', serif;
 }
 .gaia-cell.harmonic { background: rgba(138,184,122,0.2); color: var(--sage); }
 .gaia-cell.coherent { background: rgba(212,168,64,0.15); color: var(--gold); }
@@ -326,6 +365,19 @@ footer {
   letter-spacing: 2px;
   color: var(--text-dim);
   border-top: 1px solid var(--border-gold);
+}
+
+/* Scrollbar */
+.feed-list::-webkit-scrollbar {
+  width: 4px;
+}
+.feed-list::-webkit-scrollbar-track {
+  background: var(--border);
+  border-radius: 4px;
+}
+.feed-list::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 4px;
 }
 </style>
 </head>
@@ -441,6 +493,41 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 let supabaseClient = null;
 let currentReadings = [];
 
+// ─── EALDFORN RUNESET ────────────────────────
+const RUNES = {
+  'sun': '☀️',
+  'moon': '🌙',
+  'mercury': '☿',
+  'venus': '♀',
+  'mars': '♂',
+  'jupiter': '♃',
+  'saturn': '♄',
+  'uranus': '⛢',
+  'neptune': '♆',
+  'pluto': '♇'
+};
+
+const RUNE_CLASS = {
+  'sun': 'rune-sun',
+  'moon': 'rune-moon',
+  'mercury': 'rune-mercury',
+  'venus': 'rune-venus',
+  'mars': 'rune-mars',
+  'jupiter': 'rune-jupiter',
+  'saturn': 'rune-saturn',
+  'uranus': 'rune-uranus',
+  'neptune': 'rune-neptune',
+  'pluto': 'rune-pluto'
+};
+
+function getRune(planetName) {
+  return RUNES[planetName.toLowerCase()] || '✦';
+}
+
+function getRuneClass(planetName) {
+  return RUNE_CLASS[planetName.toLowerCase()] || 'rune';
+}
+
 // ─── INIT SUPABASE ──────────────────────────
 function initSupabase() {
   if (window.supabase && !supabaseClient) {
@@ -498,11 +585,16 @@ async function loadSkyState() {
     for (const p of planets) {
       const data = state.planets[p];
       if (data) {
+        const rune = getRune(p);
+        const runeClass = getRuneClass(p);
         html += `
           <div class="sky-item">
-            <div class="planet">${p.toUpperCase()}</div>
-            <div class="sign">${data.sign}</div>
-            <div class="degree">${data.degree}°</div>
+            <div class="rune ${runeClass}">${rune}</div>
+            <div class="planet-info">
+              <div class="planet-name">${p.toUpperCase()}</div>
+              <div class="sign">${data.sign}</div>
+              <div class="degree">${data.degree}°</div>
+            </div>
           </div>
         `;
       }
@@ -552,7 +644,9 @@ function updateFeed() {
     html += `
       <div class="feed-item">
         <div class="timestamp">${timeStr} · ${r.period || 'UNKNOWN'}</div>
-        <div class="cards">${r.past_card || '?'} → ${r.present_card || '?'} → ${r.future_card || '?'}</div>
+        <div class="cards">
+          ${r.past_card || '?'} → ${r.present_card || '?'} → ${r.future_card || '?'}
+        </div>
         ${r.user_question ? `<div class="question">"${r.user_question.substring(0, 60)}${r.user_question.length > 60 ? '...' : ''}"</div>` : ''}
       </div>
     `;
@@ -622,7 +716,6 @@ function loadGaiaMatrix() {
   const container = document.getElementById('titanMatrix');
   let html = '';
   
-  // Show first 10 titans with simulated harmony
   for (let i = 0; i < 10; i++) {
     const harmony = Math.random();
     let status = 'stable';
@@ -634,7 +727,6 @@ function loadGaiaMatrix() {
   }
   container.innerHTML = html;
   
-  // Simulate K-value based on reading count
   const k = Math.min(0.8 + (currentReadings.length / 100), 1.5);
   document.getElementById('kValue').innerText = k.toFixed(2);
 }
@@ -653,7 +745,6 @@ async function init() {
   await loadReadings();
   loadGaiaMatrix();
   
-  // Auto-refresh every 60 seconds
   setInterval(() => {
     loadSkyState();
     loadReadings();
