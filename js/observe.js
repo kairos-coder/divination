@@ -31,24 +31,6 @@ const Observe = (() => {
     'Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'
   ];
 
-  // Create a reusable observer for Earth's center (geocentric)
-  let _earthObserver = null;
-  function getEarthObserver() {
-    if (!_earthObserver && Astronomy.Observer) {
-      _earthObserver = new Astronomy.Observer(0, 0, 0); // Earth's center
-    }
-    return _earthObserver;
-  }
-  
-  // Create observer for configured location
-  let _locationObserver = null;
-  function getLocationObserver() {
-    if (!_locationObserver && Astronomy.Observer) {
-      _locationObserver = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
-    }
-    return _locationObserver;
-  }
-
   function getAstronomyBody(bodyName) {
     if (typeof Astronomy === 'undefined' || !Astronomy.Body) {
       return null;
@@ -86,15 +68,11 @@ const Observe = (() => {
 
     try {
       // Use Earth-center observer for ecliptic coordinates
-      const observer = getEarthObserver();
-      if (!observer) return null;
-      
-      // Equator(body, time, observer, ofdate=true, aberration=true)
-      const eq = Astronomy.Equator(body, date, observer, true, true);
+      const earthObserver = new Astronomy.Observer(0, 0, 0);
+      const eq = Astronomy.Equator(body, date, earthObserver, true, true);
       
       if (!eq || eq.elon === undefined) return null;
       
-      // elon is ecliptic longitude in degrees
       let lon = eq.elon;
       
       // Precession correction
@@ -114,17 +92,15 @@ const Observe = (() => {
       let aboveHorizon = false;
       
       try {
-        const locObserver = getLocationObserver();
-        if (locObserver) {
-          const hor = Astronomy.Horizon(date, locObserver, body);
-          if (hor && hor.altitude !== undefined) {
-            altitude = hor.altitude;
-            azimuth = hor.azimuth || 0;
-            aboveHorizon = altitude > 0;
-          }
+        const locObserver = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
+        const hor = Astronomy.Horizon(date, locObserver, body);
+        if (hor && typeof hor.altitude === 'number') {
+          altitude = hor.altitude;
+          azimuth = hor.azimuth || 0;
+          aboveHorizon = altitude > 0;
         }
       } catch (e) {
-        // Optional
+        // Optional - position data is still valid without horizon data
       }
       
       return {
@@ -147,9 +123,9 @@ const Observe = (() => {
     if (!body) return null;
 
     try {
-      const observer = getLocationObserver();
-      if (!observer) return null;
+      const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
       
+      // Search for highest altitude by sampling every 15 minutes
       const searchDate = new Date(date);
       searchDate.setHours(0, 0, 0, 0);
       
@@ -160,12 +136,15 @@ const Observe = (() => {
         const sampleTime = new Date(searchDate.getTime() + minutes * 60000);
         
         try {
+          // v2.x Horizon: Astronomy.Horizon(time, observer, body)
           const hor = Astronomy.Horizon(sampleTime, observer, body);
-          if (hor && hor.altitude !== undefined && hor.altitude > bestAltitude) {
+          
+          if (hor && typeof hor.altitude === 'number' && hor.altitude > bestAltitude) {
             bestAltitude = hor.altitude;
             bestTime = sampleTime;
           }
         } catch (e) {
+          // Skip failed calculations
           continue;
         }
       }
@@ -177,7 +156,7 @@ const Observe = (() => {
         };
       }
     } catch (e) {
-      console.warn(`Zenith calculation failed for ${bodyName}:`, e.message || e);
+      // Silent fail - zenith is optional
     }
     return null;
   }
@@ -232,10 +211,21 @@ const Observe = (() => {
         set: times.sunset?.toISOString() || null,
         dawn: times.dawn?.toISOString() || null,
         dusk: times.dusk?.toISOString() || null,
-        zenith: getZenithTime('Sun', date),
-        currentSign: getPlanetPosition('Sun', date)?.sign || 'Unknown',
-        currentGlyph: getPlanetPosition('Sun', date)?.glyph || '☉'
+        zenith: null,
+        currentSign: 'Unknown',
+        currentGlyph: '☉'
       };
+      
+      // Try to get zenith, but don't fail if it doesn't work
+      try {
+        tracking.sun.zenith = getZenithTime('Sun', date);
+      } catch (e) {}
+      
+      const sunPos = getPlanetPosition('Sun', date);
+      if (sunPos) {
+        tracking.sun.currentSign = sunPos.sign;
+        tracking.sun.currentGlyph = sunPos.glyph;
+      }
     } catch (e) {
       console.warn('Sun tracking failed:', e);
     }
@@ -250,10 +240,20 @@ const Observe = (() => {
         phase: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
         illumination: Math.round(moonIllum.fraction * 100),
         phaseValue: Math.round(moonIllum.phase * 100) / 100,
-        zenith: getZenithTime('Moon', date),
-        currentSign: getPlanetPosition('Moon', date)?.sign || 'Unknown',
-        currentGlyph: getPlanetPosition('Moon', date)?.glyph || '☽'
+        zenith: null,
+        currentSign: 'Unknown',
+        currentGlyph: '☽'
       };
+      
+      try {
+        tracking.moon.zenith = getZenithTime('Moon', date);
+      } catch (e) {}
+      
+      const moonPos = getPlanetPosition('Moon', date);
+      if (moonPos) {
+        tracking.moon.currentSign = moonPos.sign;
+        tracking.moon.currentGlyph = moonPos.glyph;
+      }
     } catch (e) {
       console.warn('Moon tracking failed:', e);
     }
@@ -274,8 +274,12 @@ const Observe = (() => {
           degree: pos.degree,
           altitude: pos.altitude,
           aboveHorizon: pos.aboveHorizon,
-          zenith: getZenithTime(planet, date)
+          zenith: null
         };
+        
+        try {
+          tracking.planets[planet.toLowerCase()].zenith = getZenithTime(planet, date);
+        } catch (e) {}
       }
     });
 
@@ -361,19 +365,6 @@ const Observe = (() => {
     CONFIG.latitude = lat;
     CONFIG.longitude = lon;
     CONFIG.elevation = elev;
-    // Reset cached observers
-    _earthObserver = null;
-    _locationObserver = null;
-  }
-
-  async function testSkyState() {
-    console.log('=== TESTING ===');
-    const state = await getSkyState();
-    console.log('Planets found:', Object.keys(state.planets));
-    if (state.planets.sun) {
-      console.log('Sun:', state.planets.sun.sign, state.planets.sun.glyph);
-    }
-    return state;
   }
 
   return {
@@ -385,7 +376,6 @@ const Observe = (() => {
     getPlanetPosition,
     getZenithTime,
     setLocation,
-    testSkyState,
     CONFIG,
     SIGNS,
     SIGN_GLYPHS,
