@@ -12,7 +12,7 @@ const Gaia = (() => {
   // DIVINEDB CONNECTION
   // ══════════════════════════════════════════
   const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';  // ← Your URL
-  const SUPABASE_ANON_KEY = 'sb_publishable_saeUHGocDah-T2_709M6Fg_g26JtLXw';                   // ← Your anon key
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';                   // ← Your anon key
 
   let supabase = null;
   let initialized = false;
