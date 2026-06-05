@@ -1,252 +1,119 @@
 /**
  * DEAL.JS — The Ritual Conductor
- * Digital Divination · Ealdforn Republic
+ * DivineDB · Ealdforn Republic
  * 
- * Orchestrates the full divination pipeline:
- *   observe → weight → divine
- * 
- * Steps:
- *   1. Read the sky (Observe)
- *   2. Get past + present cards
- *   3. Calculate probability weights (Weight)
- *   4. Weighted draw for future card (Divine)
- *   5. Generate reading
- *   6. Persist to memory (localStorage)
- * 
- * Usage:
- *   const result = await Deal.perform(pastCardId, presentCardId, question);
- *   // { past, present, future, skyState, reading, timestamp }
- * 
- * Dependencies:
- *   - Observe (js/observe.js)
- *   - Weight (js/weight.js)  
- *   - Divine (divine.js)
+ * Orchestrates: observe → weight → divine → DivineDB
  */
 
 const Deal = (() => {
-  // ─── MEMORY ─────────────────────────────
-  const MEMORY_KEY = 'gaia_memory';
-  const MAX_MEMORY = 1000;
-
-  function loadMemory() {
-    try {
-      const stored = localStorage.getItem(MEMORY_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveMemory(entry) {
-    const memory = loadMemory();
-    memory.push(entry);
-    // Auto-prune to MAX_MEMORY
-    if (memory.length > MAX_MEMORY) {
-      memory.splice(0, memory.length - MAX_MEMORY);
-    }
-    localStorage.setItem(MEMORY_KEY, JSON.stringify(memory));
-  }
-
-  // ─── WEIGHTED DRAW ──────────────────────
-  function weightedDraw(allCards, weights) {
-    // Build cumulative distribution
-    const entries = [];
-    let cumulative = 0;
-
-    allCards.forEach(card => {
-      const w = weights[card.id] || 0;
-      if (w > 0) {
-        cumulative += w;
-        entries.push({ card, cumulative });
-      }
-    });
-
-    // Normalize
-    const total = cumulative;
-    if (total <= 0) {
-      // Fallback: uniform random
-      return allCards[Math.floor(Math.random() * allCards.length)];
-    }
-
-    // Weighted random selection
-    const rand = Math.random() * total;
-    for (const entry of entries) {
-      if (rand <= entry.cumulative) {
-        return entry.card;
-      }
-    }
-
-    // Fallback
-    return entries[entries.length - 1].card;
-  }
-
-  // ─── FIND CARD BY ID ────────────────────
-  function findCard(cardId, allCards) {
-    return allCards.find(c => c.id === cardId) || null;
-  }
-
-  // ─── BUILD READING ──────────────────────
-  function buildReading(past, present, future, skyState, question) {
-    const period = skyState.period === 'SUN' ? 'solar' : 'lunar';
-    const sunSign = skyState.planets?.sun?.sign || 'unknown';
-    const moonSign = skyState.planets?.moon?.sign || 'unknown';
-    const moonPhase = skyState.moonPhase?.name || 'unknown phase';
-
-    const reading = {
-      // Sky context
-      skyContext: {
-        period,
-        sunIn: `${sunSign} ${skyState.planets?.sun?.glyph || ''}`,
-        moonIn: `${moonSign} ${skyState.planets?.moon?.glyph || ''}`,
-        moonPhase: moonPhase.toLowerCase(),
-        moonIllumination: skyState.moonPhase?.illumination || 0
-      },
-      // Card positions
-      cards: {
-        past: {
-          id: past.id,
-          name: past.name,
-          title: past.title || past.domain || '',
-          element: past.element || null,
-          keywords: past.keywords || [],
-          meaning: past.upright || '',
-          isReversed: past.isReversed || false,
-          image: past.image || null
-        },
-        present: {
-          id: present.id,
-          name: present.name,
-          title: present.title || present.domain || '',
-          element: present.element || null,
-          keywords: present.keywords || [],
-          meaning: present.upright || '',
-          isReversed: present.isReversed || false,
-          image: present.image || null
-        },
-        future: {
-          id: future.id,
-          name: future.name,
-          title: future.title || future.domain || '',
-          element: future.element || null,
-          keywords: future.keywords || [],
-          meaning: future.upright || '',
-          isReversed: future.isReversed || false,
-          image: future.image || null
-        }
-      },
-      question: question || 'The unspoken question',
-      timestamp: new Date().toISOString()
-    };
-
-    return reading;
-  }
-
-  // ─── PERFORM ────────────────────────────
   async function perform(pastCardId, presentCardId, question) {
-    // 1. Observe the sky
+    // 1. Sky
     let skyState;
     try {
       skyState = await Observe.getSkyState();
-      // Add moon aspect for weight calculation
       skyState.moonAspect = Observe.getMoonAspect();
     } catch (e) {
-      console.warn('Sky observation failed, using fallback:', e.message);
       skyState = {
-        period: 'SUN',
-        moonAspect: 'Artemis',
-        planets: {},
+        period: 'SUN', moonAspect: 'Artemis', planets: {},
         moonPhase: { name: 'Full Moon', illumination: 100 },
         timestamp: new Date().toISOString()
       };
     }
 
-    // 2. Load the full deck
-    await Divine._loadDecks();
-    const allCards = [...Divine._getMajorDeck(), ...Divine._getMinorDeck()];
+    // 2. Deck
+    await Divine.loadDecks();
+    const allCards = [...Divine.getMajorDeck(), ...Divine.getMinorDeck()];
 
-    // 3. Find past and present cards
-    const pastCard = findCard(pastCardId, allCards);
-    const presentCard = findCard(presentCardId, allCards);
+    // 3. Cards
+    const pastCard = allCards.find(c => c.id === pastCardId);
+    const presentCard = allCards.find(c => c.id === presentCardId);
+    if (!pastCard || !presentCard) throw new Error('Card not found');
 
-    if (!pastCard || !presentCard) {
-      throw new Error('Past or present card not found in deck');
-    }
-
-    // 4. Calculate weights
+    // 4. Weights
     const weights = Weight.calculate(skyState, pastCard, presentCard, allCards);
 
-    // 5. Weighted draw for future card
+    // 5. Draw
     const futureCard = weightedDraw(allCards, weights);
-    
-    // Add reversal chance
     futureCard.isReversed = Math.random() < 0.3;
 
     // 6. Build reading
     const reading = buildReading(pastCard, presentCard, futureCard, skyState, question);
 
-    // 7. Persist to memory
-    const memoryEntry = {
-      timestamp: reading.timestamp,
-      skyState: {
-        period: skyState.period,
-        sunSign: skyState.planets?.sun?.sign || null,
-        moonSign: skyState.planets?.moon?.sign || null,
-        moonPhase: skyState.moonPhase?.name || null,
-        moonAspect: skyState.moonAspect || 'Artemis'
+    // 7. Save to DivineDB (Supabase)
+    let savedToCloud = false;
+    if (Gaia.isConnected) {
+      try {
+        await Gaia.saveReading(reading);
+        savedToCloud = true;
+        console.log('📖 Saved to DivineDB');
+      } catch (e) {
+        console.warn('DivineDB save failed:', e.message);
+      }
+    }
+
+    // 8. Local backup
+    saveLocally(reading);
+
+    return { ...reading, savedToCloud };
+  }
+
+  function weightedDraw(allCards, weights) {
+    const entries = [];
+    let cumulative = 0;
+    allCards.forEach(card => {
+      const w = weights[card.id] || 0;
+      if (w > 0) { cumulative += w; entries.push({ card, cumulative }); }
+    });
+    if (cumulative <= 0) return allCards[Math.floor(Math.random() * allCards.length)];
+    const rand = Math.random() * cumulative;
+    for (const e of entries) { if (rand <= e.cumulative) return e.card; }
+    return entries[entries.length - 1].card;
+  }
+
+  function buildReading(past, present, future, skyState, question) {
+    return {
+      id: `reading_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      skyContext: {
+        period: skyState.period === 'SUN' ? 'solar' : 'lunar',
+        sunIn: `${skyState.planets?.sun?.sign || '?'} ${skyState.planets?.sun?.glyph || ''}`,
+        moonIn: `${skyState.planets?.moon?.sign || '?'} ${skyState.planets?.moon?.glyph || ''}`,
+        moonPhase: skyState.moonPhase?.name?.toLowerCase() || 'unknown',
+        moonIllumination: skyState.moonPhase?.illumination || 0,
+        ascendant: skyState.ascendant?.sign || 'Unknown'
       },
       cards: {
-        past: pastCard.id,
-        present: presentCard.id,
-        future: futureCard.id
+        past: cardSnapshot(past),
+        present: cardSnapshot(present),
+        future: cardSnapshot(future)
       },
-      question: question || null,
-      futureWeight: weights[futureCard.id] || null
+      question: question || 'The unspoken question',
+      timestamp: new Date().toISOString()
     };
-    saveMemory(memoryEntry);
-
-    return reading;
   }
 
-  // ─── GET MEMORY ─────────────────────────
-  function getMemory(limit = 10) {
-    const memory = loadMemory();
-    return memory.slice(-limit).reverse();
-  }
-
-  // ─── GET STATS ──────────────────────────
-  function getStats() {
-    const memory = loadMemory();
-    if (memory.length === 0) return null;
-
-    const stats = {
-      totalReadings: memory.length,
-      solarReadings: memory.filter(m => m.skyState?.period === 'SUN').length,
-      lunarReadings: memory.filter(m => m.skyState?.period === 'MOON').length,
-      mostDrawnFuture: {},
-      recentReadings: memory.slice(-5).reverse()
+  function cardSnapshot(card) {
+    return {
+      id: card.id, name: card.name,
+      title: card.title || card.domain || '',
+      element: card.element || null,
+      suit: card.suit || null,
+      keywords: card.keywords || [],
+      meaning: card.isReversed ? (card.reversed || card.upright || '') : (card.upright || ''),
+      isReversed: card.isReversed || false,
+      image: card.image || null,
+      type: card.id?.startsWith('major') ? 'major' : 'minor'
     };
-
-    // Count most drawn future cards
-    memory.forEach(m => {
-      const id = m.cards?.future;
-      if (id) {
-        stats.mostDrawnFuture[id] = (stats.mostDrawnFuture[id] || 0) + 1;
-      }
-    });
-
-    return stats;
   }
 
-  // ─── CLEAR MEMORY ───────────────────────
-  function clearMemory() {
-    localStorage.removeItem(MEMORY_KEY);
+  function saveLocally(reading) {
+    try {
+      const key = 'divinedb_local';
+      const stored = JSON.parse(localStorage.getItem(key) || '[]');
+      stored.push({ id: reading.id, timestamp: reading.timestamp, question: reading.question });
+      if (stored.length > 100) stored.splice(0, stored.length - 100);
+      localStorage.setItem(key, JSON.stringify(stored));
+    } catch (e) {}
   }
 
-  // ─── PUBLIC API ─────────────────────────
-  return {
-    perform,
-    getMemory,
-    getStats,
-    clearMemory
-  };
+  return { perform };
 })();
