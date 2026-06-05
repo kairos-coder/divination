@@ -17,8 +17,8 @@
 const Observe = (() => {
   // ─── CONFIG ─────────────────────────────
   const CONFIG = {
-    latitude: 40,
-    longitude: -74,
+    latitude: 40.7128,
+    longitude: -74.0060,
     elevation: 0
   };
 
@@ -43,10 +43,10 @@ const Observe = (() => {
     'Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'
   ];
 
-  // ─── HELPERS ────────────────────────────
+  // ─── HELPER: Ecliptic Longitude to Sign ───
   function eclipticToSign(lonDeg) {
     let lon = ((lonDeg % 360) + 360) % 360;
-    return SIGNS[Math.min(Math.floor(lon / 30), 11)];
+    return SIGNS[Math.floor(lon / 30)];
   }
 
   function getDegreeInSign(lonDeg) {
@@ -54,14 +54,8 @@ const Observe = (() => {
     return lon % 30;
   }
 
-  // ─── PLANET POSITION ────────────────────
+  // ─── CORRECTED: Get Planet Position ───────
   function getPlanetPosition(bodyName, date) {
-    const observer = new Astronomy.Observer(
-      CONFIG.latitude,
-      CONFIG.longitude,
-      CONFIG.elevation
-    );
-
     const bodyMap = {
       'Sun': Astronomy.Body.Sun,
       'Moon': Astronomy.Body.Moon,
@@ -79,18 +73,32 @@ const Observe = (() => {
     if (!body) return null;
 
     try {
-      const eq = Astronomy.Equator(body, date, observer, true, true);
-      const ecl = Astronomy.Ecliptic(eq.vec);
-      const sign = eclipticToSign(ecl.elon);
-      const degree = getDegreeInSign(ecl.elon);
+      // Use geocentric equatorial coordinates (observer at Earth center)
+      // This is correct for zodiac sign calculation
+      const eq = Astronomy.Equator(body, date, undefined, true, false);
+      const ecl = Astronomy.Ecliptic(eq);
+      
+      let lon = ecl.elon * 180 / Math.PI;
+      
+      // Add precession correction (tropical coordinates)
+      // Epoch J2000.0 to current date
+      const daysSinceJ2000 = (date - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24);
+      const centuries = daysSinceJ2000 / 36525;
+      const precession = (0.01397 * centuries) * 360; // degrees
+      
+      lon = (lon + precession) % 360;
+      
+      const sign = eclipticToSign(lon);
+      const degree = getDegreeInSign(lon);
 
       return {
         sign,
         glyph: SIGN_GLYPHS[sign],
         degree: Math.round(degree * 100) / 100,
-        longitude: Math.round(ecl.elon * 100) / 100
+        longitude: Math.round(lon * 100) / 100
       };
     } catch (e) {
+      console.warn(`Failed to get ${bodyName} position:`, e.message);
       return null;
     }
   }
@@ -104,10 +112,13 @@ const Observe = (() => {
     const isDaytime = now >= times.sunrise && now <= times.sunset;
     const period = isDaytime ? 'SUN' : 'MOON';
 
-    // Calculate ascendant approximately (simplified — full calculation needs sidereal time)
-    const ascendantSign = eclipticToSign(
-      (now.getHours() * 15 + now.getMinutes() * 0.25 + 180) % 360
-    );
+    // Calculate ascendant (rising sign) — simplified but corrected
+    // Based on local sidereal time approximation
+    const gmt = now.getUTCHours() + now.getUTCMinutes() / 60;
+    const jd = (now - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24) + 2451545.0;
+    const lst = (100.46 + 0.985647 * jd + CONFIG.longitude + 15 * gmt) % 360;
+    const ascendantLon = Math.atan2(Math.sin(lst * Math.PI / 180), Math.cos(lst * Math.PI / 180)) * 180 / Math.PI;
+    const ascendantSign = eclipticToSign(ascendantLon);
 
     const skyState = {
       timestamp: now.toISOString(),
@@ -124,7 +135,8 @@ const Observe = (() => {
       },
       ascendant: {
         sign: ascendantSign,
-        glyph: SIGN_GLYPHS[ascendantSign]
+        glyph: SIGN_GLYPHS[ascendantSign],
+        longitude: Math.round(ascendantLon * 100) / 100
       },
       moonPhase: {
         name: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
@@ -162,11 +174,27 @@ const Observe = (() => {
     return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
   }
 
+  // ─── TEST FUNCTION (call from console) ───
+  async function testSkyState() {
+    const state = await getSkyState();
+    console.log('\n=== DIGITAL DIVINATION SKY STATE ===');
+    console.log(`Period: ${state.period}`);
+    console.log(`Ascendant: ${state.ascendant.sign} ${state.ascendant.glyph}`);
+    console.log(`Moon: ${state.moonPhase.name} (${state.moonPhase.illumination}%)`);
+    console.log('\nPlanets:');
+    Object.entries(state.planets).forEach(([name, data]) => {
+      console.log(`  ${name.toUpperCase()}: ${data.sign} ${data.glyph} ${data.degree}°`);
+    });
+    console.log('===================================\n');
+    return state;
+  }
+
   // ─── PUBLIC API ─────────────────────────
   return {
     getSkyState,
     getCurrentPeriod,
     getMoonAspect,
+    testSkyState,
     CONFIG
   };
 })();
