@@ -284,19 +284,19 @@
         "prompt": "Tantalus, the cursed Greek king who starves surrounded by food and water forever just out of reach, as tarot card."
       },
       {
-        "id": "earth_05",
-        "name": "Five of Earth",
-        "title": "Demeter's Grief",
-        "culture": "Greek",
-        "rank": "five",
-        "element": "Earth",
-        "ruling_god": "Demeter",
-        "keywords": ["scarcity", "withdrawal", "the barren earth", "loss", "the market that dies"],
-        "upright": "Persephone descends and Demeter withdraws the harvest. The earth goes cold. The Five of Earth is the market crash, the scarcity that strikes when what you love is taken. Winter is real. But it is seasonal. Even Demeter's grief has a cycle.",
-        "reversed": "The first green shoot. Persephone returning. The market recovering. Grief releasing its grip on the ground. The scarcity is ending. Prepare to plant.",
-        "image": "data/images/minor/earth/earth_05.png",
-        "prompt": "Demeter, Greek goddess of the harvest, in grief as the earth turns barren and winter descends, as tarot card."
-      },
+  "id": "earth_05",
+  "name": "Five of Earth",
+  "title": "Bhumi",
+  "culture": "Hindu",
+  "rank": "five",
+  "element": "Earth",
+  "ruling_god": "Demeter",
+  "keywords": ["the neglected ground", "depletion", "patience exhausted", "the field taken for granted", "quiet withdrawal"],
+  "upright": "Bhumi bears everything and asks for nothing — and that is exactly how she has been treated. The Five of Earth is the resource that was always there until it wasn't. The ground does not rage when it is depleted. It simply stops giving. What have you been drawing from without returning to? The earth is patient. It is not infinite.",
+  "reversed": "Bhumi lifted from the depths. Vishnu descended as the boar and carried her back to the surface — the restoration of what was nearly lost. The soil remembers how to grow. The depletion is not permanent if the neglect ends now. Return something to the ground.",
+  "image": "data/images/minor/earth/earth_05.png",
+  "prompt": "Bhumi, Hindu goddess of the Earth, patient and vast, the ground that bears all things, lifted from the cosmic ocean by Vishnu as the boar Varaha, as tarot card."
+}
       {
         "id": "earth_06",
         "name": "Six of Earth",
