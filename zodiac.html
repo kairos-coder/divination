@@ -62,7 +62,7 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 .lum-card .lum-sign{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--text-mid)}
 .lum-card .lum-sign .glyph{font-size:1.2rem}
 .lum-card .lum-reading{font-size:0.82rem;line-height:1.6;color:var(--text-mid);font-style:italic;margin-top:0.8rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem}
-.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.5rem}
+.lum-card .lum-time{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;color:var(--text-dim);margin-top:0.5rem;line-height:1.8}
 
 /* WATCHERS */
 .watcher-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.6rem;transition:border-color 0.3s;display:flex;gap:1rem;align-items:center}
@@ -76,7 +76,7 @@ nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(5,5,13,0.9);
 .watcher-headline .sign-name{color:var(--gold-light)}
 .watcher-headline .glyph{font-size:0.9rem}
 .watcher-whisper{font-size:0.78rem;line-height:1.55;color:var(--text-dim);font-style:italic;margin-top:0.3rem}
-.watcher-meta{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.08em;color:var(--text-dim);margin-top:0.3rem}
+.watcher-meta{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.08em;color:var(--text-dim);margin-top:0.3rem;line-height:1.6}
 .watcher-attendant-label{color:var(--gold-dark);font-style:italic}
 
 /* BIRTH */
@@ -146,20 +146,27 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
 <div id="toast"></div>
 <footer><div class="footer-text">Celestial Grimoire · Ealdforn Republic · The Sky Is The Source Code</div></footer>
 
+<!-- Dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
-<!-- At the bottom of zodiac.html, replace the existing inline script -->
+
+<!-- Application Modules -->
+<script src="js/observe.js"></script>
 <script src="js/almanac.js"></script>
+
+<!-- Page Controller -->
 <script>
 // ══════════════════════════════════════════
 // ZODIAC PAGE CONTROLLER
 // Uses: Observe.js, Almanac.js
 // ══════════════════════════════════════════
 
-// Starfield
-const sc = document.getElementById('starfield'), sctx = sc.getContext('2d');
+// ─── STARFIELD ─────────────────────────────
+const sc = document.getElementById('starfield');
+const sctx = sc.getContext('2d');
 const stars = Array.from({length: 220}, () => ({
-  x: Math.random(), y: Math.random(), 
+  x: Math.random(),
+  y: Math.random(), 
   r: Math.random() * 1.2, 
   a: Math.random() * 0.45 + 0.05, 
   tw: Math.random() * Math.PI * 2
@@ -184,12 +191,12 @@ resizeStarfield();
   requestAnimationFrame(animateStars);
 })(0);
 
-// State
+// ─── STATE ─────────────────────────────────
 let skyState = [];
 let rawSky = null;
 let dailyTracking = null;
 
-// Toast notification
+// ─── TOAST ─────────────────────────────────
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -197,7 +204,7 @@ function toast(msg) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-// Date line
+// ─── RENDER: DATE LINE ─────────────────────
 function renderDateLine() {
   const now = new Date();
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -205,13 +212,13 @@ function renderDateLine() {
     `${now.toLocaleDateString('en-US', options)}<span>The Celestial Almanac · Daily Readings</span>`;
 }
 
-// Narrative
+// ─── RENDER: NARRATIVE ─────────────────────
 function renderNarrative() {
   document.getElementById('narrative').innerHTML = 
     Almanac.generateNarrative(skyState, rawSky, dailyTracking);
 }
 
-// Luminaries (Sun & Moon cards)
+// ─── RENDER: LUMINARIES ────────────────────
 function renderLuminaries() {
   const sun = skyState.find(s => s.body === 'sun');
   const moon = skyState.find(s => s.body === 'moon');
@@ -228,7 +235,7 @@ function renderLuminaries() {
 
   let html = '';
   
-  // SUN CARD with tracking
+  // SUN CARD
   if (sun && dailyTracking.sun) {
     const rise = fmt(dailyTracking.sun.rise);
     const set = fmt(dailyTracking.sun.set);
@@ -243,15 +250,16 @@ function renderLuminaries() {
       <div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${Almanac.SIGN_NAMES[sun.sign]}</div>
       <div class="lum-reading">${Almanac.getWhisper('Apollo', 1)}</div>
       <div class="lum-time">
-        ☀️ Rise: ${rise} · Set: ${set}
-        ${zenithTime ? `<br>⬆️ Zenith: ${zenithTime} at ${zenithAlt}°` : ''}
-        ${dailyTracking.sun.dawn ? `<br>🌅 Dawn: ${fmt(dailyTracking.sun.dawn)}` : ''}
-        ${dailyTracking.sun.dusk ? `<br>🌆 Dusk: ${fmt(dailyTracking.sun.dusk)}` : ''}
+        ☀️ Rise: ${rise}<br>
+        ⬆️ Zenith: ${zenithTime || '—'} ${zenithAlt ? 'at ' + zenithAlt + '°' : ''}<br>
+        🌇 Set: ${set}
+        ${dailyTracking.sun.dawn ? '<br>🌅 Dawn: ' + fmt(dailyTracking.sun.dawn) : ''}
+        ${dailyTracking.sun.dusk ? '<br>🌆 Dusk: ' + fmt(dailyTracking.sun.dusk) : ''}
       </div>
     </div>`;
   }
   
-  // MOON CARD with tracking
+  // MOON CARD
   if (moon && dailyTracking.moon) {
     const moonRise = dailyTracking.moon.rise ? fmt(dailyTracking.moon.rise) : 'No rise today';
     const moonSet = dailyTracking.moon.set ? fmt(dailyTracking.moon.set) : 'No set today';
@@ -266,13 +274,14 @@ function renderLuminaries() {
     html += `<div class="lum-card lunar">
       <div class="lum-icon">${phaseIcons[phaseIdx]}</div>
       <img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'">
-      <div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow ? ` / ${moon.moonShadow} — ${moon.moonShadowArcana}` : ''}</div>
+      <div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow ? ' / ' + moon.moonShadow + ' — ' + moon.moonShadowArcana : ''}</div>
       <div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${Almanac.SIGN_NAMES[moon.sign]}</div>
       <div class="lum-reading">${Almanac.getWhisper(shadowGod, 2)}</div>
       <div class="lum-time">
-        ${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${rawSky.moonPhase.illumination}% illuminated
-        <br>🌙 Rise: ${moonRise} · Set: ${moonSet}
-        ${moonZenithTime ? `<br>⬆️ Zenith: ${moonZenithTime} at ${moonZenithAlt}°` : ''}
+        ${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${rawSky.moonPhase.illumination}% illuminated<br>
+        🌙 Rise: ${moonRise}<br>
+        ⬆️ Zenith: ${moonZenithTime || '—'} ${moonZenithAlt ? 'at ' + moonZenithAlt + '°' : ''}<br>
+        🌑 Set: ${moonSet}
       </div>
     </div>`;
   }
@@ -280,7 +289,7 @@ function renderLuminaries() {
   document.getElementById('luminaryBox').innerHTML = html;
 }
 
-// Watchers (planets)
+// ─── RENDER: WATCHERS ──────────────────────
 function renderWatchers() {
   const bodies = skyState.filter(s => s.body !== 'sun' && s.body !== 'moon');
   if (!rawSky) return;
@@ -288,11 +297,14 @@ function renderWatchers() {
   const now = new Date();
   const isNight = now < new Date(rawSky.solar.sunrise) || now > new Date(rawSky.solar.sunset);
   
-  document.getElementById('watchersList').innerHTML = bodies.map(s => {
+  document.getElementById('watchersList').innerHTML = bodies.map((s, idx) => {
     const visibility = s.aboveHorizon ? 'above horizon' : 'below horizon';
     const trackingData = dailyTracking?.planets[s.body];
     const zenithInfo = trackingData?.zenith?.time 
-      ? ` · Zenith: ${new Date(trackingData.zenith.time).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'})}`
+      ? ` · Zenith: ${new Date(trackingData.zenith.time).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`
+      : '';
+    const altitudeInfo = trackingData?.altitude !== undefined 
+      ? ` · Alt: ${Math.round(trackingData.altitude)}°` 
       : '';
     
     return `
@@ -303,18 +315,18 @@ function renderWatchers() {
           <span class="god-name">${s.olympian}</span><span class="arcana-name"> · ${s.arcana}</span><br>
           as ${s.body} in <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>, ${Almanac.SIGN_NAMES[s.sign]}
         </div>
-        <div class="watcher-whisper">${Almanac.getWhisper(s.olympian, bodies.indexOf(s))}</div>
+        <div class="watcher-whisper">${Almanac.getWhisper(s.olympian, idx)}</div>
         <div class="watcher-meta">
-          ${isNight ? 'walks the night' : 'walks the day'} · ${visibility}${zenithInfo}
+          ${isNight ? 'walks the night' : 'walks the day'} · ${visibility}${zenithInfo}${altitudeInfo}
           ${s.approximate ? ' · approximate' : ''}
-          ${s.attendant ? `<span class="watcher-attendant-label"> · attends ${s.attendant} — ${s.attendantRole}</span>` : ''}
+          ${s.attendant ? `<br><span class="watcher-attendant-label">attends ${s.attendant} — ${s.attendantRole}</span>` : ''}
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-// Birth reading widget
+// ─── BIRTH READING ─────────────────────────
 function populateBirthSelect() {
   const sel = document.getElementById('birthSign');
   Almanac.SIGNS.forEach(sign => {
@@ -328,7 +340,8 @@ function populateBirthSelect() {
 function birthReading() {
   const sign = document.getElementById('birthSign').value;
   if (!sign) { 
-    document.getElementById('birthReadingText').innerHTML = 'The signs are carved into the sky. Choose yours.'; 
+    document.getElementById('birthReadingText').innerHTML = 
+      'The signs are carved into the sky. Choose yours.'; 
     return; 
   }
   
@@ -366,24 +379,15 @@ function birthReading() {
   document.getElementById('birthReadingText').innerHTML = html;
 }
 
-// Main refresh
-async function refreshAlmanac() {
-  const result = await buildSkyState();
-  skyState = result.state;
-  rawSky = result.raw;
-  dailyTracking = result.tracking;
-  renderAll();
-  toast('✦ The Olympians take new positions.');
-}
-
+// ─── DATA PIPELINE ─────────────────────────
 async function buildSkyState() {
-  // Get both the instant sky state and daily tracking
   const raw = await Observe.getSkyState();
   const tracking = Observe.getDailyTracking();
   const state = Almanac.buildSkyState(raw);
   return { state, raw, tracking };
 }
 
+// ─── MAIN RENDER ───────────────────────────
 function renderAll() {
   renderDateLine();
   renderNarrative();
@@ -391,14 +395,38 @@ function renderAll() {
   renderWatchers();
 }
 
+// ─── REFRESH ───────────────────────────────
+async function refreshAlmanac() {
+  try {
+    const result = await buildSkyState();
+    skyState = result.state;
+    rawSky = result.raw;
+    dailyTracking = result.tracking;
+    renderAll();
+    toast('✦ The Olympians take new positions.');
+  } catch (e) {
+    console.error('Failed to refresh almanac:', e);
+    toast('⚠ The sky is clouded. Try again.');
+  }
+}
+
+// ─── INIT ──────────────────────────────────
 async function init() {
   populateBirthSelect();
-  const result = await buildSkyState();
-  skyState = result.state;
-  rawSky = result.raw;
-  dailyTracking = result.tracking;
-  renderAll();
-  toast('✦ The watching begins.');
+  try {
+    const result = await buildSkyState();
+    skyState = result.state;
+    rawSky = result.raw;
+    dailyTracking = result.tracking;
+    renderAll();
+    toast('✦ The watching begins.');
+  } catch (e) {
+    console.error('Failed to initialize:', e);
+    document.getElementById('narrative').innerHTML = 
+      '<div class="narr-title">✦ The Sky is Clouded ✦</div>' +
+      '<p class="narr-body">The celestial grimoire cannot read the stars at this moment. ' +
+      'Please check that the astronomy libraries are loaded and try again.</p>';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
