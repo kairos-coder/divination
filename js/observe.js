@@ -40,55 +40,26 @@ const Observe = (() => {
     'Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'
   ];
 
-  // ─── DEBUG ──────────────────────────────
-  function debugAstronomyAPI() {
-    console.log('Astronomy Engine API Check:');
-    console.log('  typeof Astronomy:', typeof Astronomy);
-    if (typeof Astronomy !== 'undefined') {
-      console.log('  Astronomy.Body:', typeof Astronomy.Body);
-      console.log('  Astronomy.Body keys:', Astronomy.Body ? Object.keys(Astronomy.Body) : 'N/A');
-      console.log('  Astronomy.Equator:', typeof Astronomy.Equator);
-      console.log('  Astronomy.Ecliptic:', typeof Astronomy.Ecliptic);
-      console.log('  Astronomy.Horizon:', typeof Astronomy.Horizon);
-      console.log('  Astronomy.Observer:', typeof Astronomy.Observer);
-    }
-  }
-
   // ─── ASTRONOMY ENGINE BODY MAP ──────────
   function getAstronomyBody(bodyName) {
-    try {
-      // Check if Astronomy is loaded
-      if (typeof Astronomy === 'undefined') {
-        console.error('Astronomy Engine not loaded!');
-        return null;
-      }
-
-      // Check for Astronomy.Body (v2.x style)
-      if (Astronomy.Body) {
-        const bodyMap = {
-          'Sun': Astronomy.Body.Sun,
-          'Moon': Astronomy.Body.Moon,
-          'Mercury': Astronomy.Body.Mercury,
-          'Venus': Astronomy.Body.Venus,
-          'Mars': Astronomy.Body.Mars,
-          'Jupiter': Astronomy.Body.Jupiter,
-          'Saturn': Astronomy.Body.Saturn,
-          'Uranus': Astronomy.Body.Uranus,
-          'Neptune': Astronomy.Body.Neptune,
-          'Pluto': Astronomy.Body.Pluto
-        };
-        const body = bodyMap[bodyName];
-        if (body !== undefined) {
-          return body;
-        }
-      }
-
-      // Try direct string mapping (some versions use strings)
-      return bodyName;
-    } catch (e) {
-      console.error('Error in getAstronomyBody:', e);
+    if (typeof Astronomy === 'undefined' || !Astronomy.Body) {
       return null;
     }
+    
+    const bodyMap = {
+      'Sun': Astronomy.Body.Sun,
+      'Moon': Astronomy.Body.Moon,
+      'Mercury': Astronomy.Body.Mercury,
+      'Venus': Astronomy.Body.Venus,
+      'Mars': Astronomy.Body.Mars,
+      'Jupiter': Astronomy.Body.Jupiter,
+      'Saturn': Astronomy.Body.Saturn,
+      'Uranus': Astronomy.Body.Uranus,
+      'Neptune': Astronomy.Body.Neptune,
+      'Pluto': Astronomy.Body.Pluto
+    };
+    
+    return bodyMap[bodyName] || null;
   }
 
   // ─── HELPER: Ecliptic Longitude to Sign ───
@@ -104,52 +75,24 @@ const Observe = (() => {
 
   // ─── GET PLANET POSITION ──────────────────
   function getPlanetPosition(bodyName, date) {
-    try {
-      const body = getAstronomyBody(bodyName);
-      if (!body) {
-        console.warn(`Could not resolve body: ${bodyName}`);
-        return null;
-      }
+    const body = getAstronomyBody(bodyName);
+    if (!body) {
+      console.warn(`Could not resolve body: ${bodyName}`);
+      return null;
+    }
 
-      let eq, ecl;
+    try {
+      // Astronomy.Equator v2.x: Equator(body, time, observer, ofdate, aberration)
+      // Returns: { elon: degrees, elat: degrees, ra: hours, dec: degrees, dist: AU }
+      const eq = Astronomy.Equator(body, date, null, true, true);
       
-      // Try v2.x API first
-      if (Astronomy.Equator && Astronomy.Ecliptic) {
-        // v2.x: Equator(body, date, observer, equdate, aberration)
-        eq = Astronomy.Equator(body, date, null, true, false);
-        
-        // v2.x Ecliptic might take different parameters
-        if (typeof Astronomy.Ecliptic === 'function') {
-          // Try v2.x style: Ecliptic(elon, elat)
-          if (eq.elon !== undefined && eq.elat !== undefined) {
-            ecl = Astronomy.Ecliptic(eq.elon, eq.elat);
-          } 
-          // Try v3.x style: Ecliptic(equ)
-          else if (eq.vec) {
-            ecl = Astronomy.Ecliptic(eq);
-          } else {
-            // Assume eq has elon/elat
-            ecl = { elon: eq.elon, elat: eq.elat };
-          }
-        } else {
-          ecl = { elon: eq.elon, elat: eq.elat };
-        }
-      } else {
-        console.error('Astronomy.Equator or Astronomy.Ecliptic not available');
+      if (!eq || eq.elon === undefined) {
+        console.warn(`Equator returned invalid data for ${bodyName}:`, eq);
         return null;
       }
       
-      // Get longitude from ecliptic
-      let lon;
-      if (typeof ecl.elon === 'number') {
-        lon = ecl.elon; // Already in degrees in v2.x
-      } else if (ecl.elon && typeof ecl.elon === 'object') {
-        // Might be a vector
-        lon = Math.atan2(ecl.elon.y, ecl.elon.x) * 180 / Math.PI;
-      } else {
-        console.error('Cannot extract longitude from ecliptic:', ecl);
-        return null;
-      }
+      // elon is already in degrees in v2.x
+      let lon = eq.elon;
       
       // Add precession correction (tropical coordinates)
       const daysSinceJ2000 = (date - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24);
@@ -171,13 +114,16 @@ const Observe = (() => {
         if (Astronomy.Observer && Astronomy.Horizon) {
           const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
           const hor = Astronomy.Horizon(date, observer, body);
-          altitude = hor.altitude;
-          azimuth = hor.azimuth;
-          aboveHorizon = altitude > 0;
+          
+          // Horizon returns altitude in degrees, azimuth in degrees
+          if (hor && hor.altitude !== undefined) {
+            altitude = hor.altitude;
+            azimuth = hor.azimuth || 0;
+            aboveHorizon = altitude > 0;
+          }
         }
       } catch (e) {
-        // Horizon calculation failed, but position might still be valid
-        console.warn(`Horizon calculation failed for ${bodyName}:`, e.message);
+        // Horizon calculation failed, but position is still valid
       }
       
       return {
@@ -190,17 +136,17 @@ const Observe = (() => {
         aboveHorizon
       };
     } catch (e) {
-      console.warn(`Failed to get ${bodyName} position:`, e.message);
+      console.warn(`Failed to get ${bodyName} position:`, e.message, e.stack);
       return null;
     }
   }
 
   // ─── CALCULATE ZENITH TIME ────────────────
   function getZenithTime(bodyName, date) {
-    try {
-      const body = getAstronomyBody(bodyName);
-      if (!body || !Astronomy.Observer || !Astronomy.Horizon) return null;
+    const body = getAstronomyBody(bodyName);
+    if (!body || !Astronomy.Observer || !Astronomy.Horizon) return null;
 
+    try {
       const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
       
       // Search for highest altitude in 24 hours by sampling every 15 minutes
@@ -215,14 +161,13 @@ const Observe = (() => {
         
         try {
           const hor = Astronomy.Horizon(sampleTime, observer, body);
-          const alt = hor.altitude;
-          
-          if (alt > bestAltitude) {
-            bestAltitude = alt;
-            bestTime = sampleTime;
+          if (hor && hor.altitude !== undefined) {
+            if (hor.altitude > bestAltitude) {
+              bestAltitude = hor.altitude;
+              bestTime = sampleTime;
+            }
           }
         } catch (e) {
-          // Skip failed samples
           continue;
         }
       }
@@ -288,8 +233,8 @@ const Observe = (() => {
     // Sun tracking
     try {
       const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
-      
       const sunPos = getPlanetPosition('Sun', date);
+      
       tracking.sun = {
         rise: times.sunrise?.toISOString() || null,
         set: times.sunset?.toISOString() || null,
@@ -301,10 +246,6 @@ const Observe = (() => {
       };
     } catch (e) {
       console.warn('Sun tracking failed:', e);
-      tracking.sun = {
-        rise: null, set: null, dawn: null, dusk: null,
-        zenith: null, currentSign: 'Unknown', currentGlyph: '☉'
-      };
     }
 
     // Moon tracking
@@ -325,35 +266,25 @@ const Observe = (() => {
       };
     } catch (e) {
       console.warn('Moon tracking failed:', e);
-      tracking.moon = {
-        rise: null, set: null, phase: 'Unknown', illumination: 0,
-        phaseValue: 0, zenith: null, currentSign: 'Unknown', currentGlyph: '☽'
-      };
     }
 
-    // Track sign changes (only if planets are available)
-    if (getPlanetPosition('Sun', date)) {
-      const sunTransits = getSignTransits('Sun', date);
-      const moonTransits = getSignTransits('Moon', date);
-      tracking.events.push(...sunTransits, ...moonTransits);
-    }
+    // Track sign changes
+    const sunTransits = getSignTransits('Sun', date);
+    const moonTransits = getSignTransits('Moon', date);
+    tracking.events = [...sunTransits, ...moonTransits];
 
     // Planet tracking
     PLANETS.filter(p => p !== 'Sun' && p !== 'Moon').forEach(planet => {
-      try {
-        const pos = getPlanetPosition(planet, date);
-        if (pos) {
-          tracking.planets[planet.toLowerCase()] = {
-            sign: pos.sign,
-            glyph: pos.glyph,
-            degree: pos.degree,
-            altitude: pos.altitude,
-            aboveHorizon: pos.aboveHorizon,
-            zenith: getZenithTime(planet, date)
-          };
-        }
-      } catch (e) {
-        // Skip planets that fail
+      const pos = getPlanetPosition(planet, date);
+      if (pos) {
+        tracking.planets[planet.toLowerCase()] = {
+          sign: pos.sign,
+          glyph: pos.glyph,
+          degree: pos.degree,
+          altitude: pos.altitude,
+          aboveHorizon: pos.aboveHorizon,
+          zenith: getZenithTime(planet, date)
+        };
       }
     });
 
@@ -435,11 +366,6 @@ const Observe = (() => {
       }
     });
 
-    // If no planets were loaded, use SunCalc moon data as fallback
-    if (Object.keys(skyState.planets).length === 0) {
-      console.warn('No planet positions available from Astronomy Engine. Using basic SunCalc data only.');
-    }
-
     return skyState;
   }
 
@@ -475,7 +401,9 @@ const Observe = (() => {
 
   // ─── TEST FUNCTION ────────────────────────
   async function testSkyState() {
-    debugAstronomyAPI();
+    console.log('Testing single planet position:');
+    const testPos = getPlanetPosition('Sun', new Date());
+    console.log('Sun position:', testPos);
     
     const state = await getSkyState();
     const tracking = getDailyTracking();
@@ -490,12 +418,14 @@ const Observe = (() => {
     });
     
     console.log('\n=== DAILY TRACKING ===');
-    if (tracking.sun.rise) {
+    if (tracking.sun?.rise) {
       console.log(`Sun rises: ${new Date(tracking.sun.rise).toLocaleTimeString()}`);
       console.log(`Sun sets: ${new Date(tracking.sun.set).toLocaleTimeString()}`);
+      console.log(`Sun zenith: ${tracking.sun.zenith?.time?.toLocaleTimeString()}`);
     }
-    if (tracking.moon.rise) {
+    if (tracking.moon?.rise) {
       console.log(`Moon rises: ${new Date(tracking.moon.rise).toLocaleTimeString()}`);
+      console.log(`Moon sets: ${new Date(tracking.moon.set).toLocaleTimeString()}`);
     }
     if (tracking.events.length > 0) {
       console.log('\nSign Transits Today:');
@@ -506,9 +436,6 @@ const Observe = (() => {
     console.log('===================================\n');
     return { state, tracking };
   }
-
-  // Run debug on load
-  debugAstronomyAPI();
 
   // ─── PUBLIC API ───────────────────────────
   return {
