@@ -108,7 +108,7 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
   <ul class="nav-links">
     <li><a href="index.html">← Temple</a></li>
     <li><a href="draw.html">Draw Cards</a></li>
-    <li><a href="daily.html">Earth Shrine</a></li>
+    <li><a href="daily.html">Dashboard</a></li>
     <li><a href="archive.html">Archive</a></li>
   </ul>
 </nav>
@@ -148,27 +148,28 @@ footer{text-align:center;padding:3rem;position:relative;z-index:1;border-top:1px
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+<script src="js/observe.js"></script>
 <script>
 // ══════════════════════════════════════════
-// OLYMPIAN MAP
+// OLYMPIAN MAP — zodiac-specific
 // Eros & Phobos = moons of Mars = attendants of Ares
 // ══════════════════════════════════════════
 const CELESTIAL_OLYMPIANS = {
-  'Sun':     { olympian:'Apollo',     arcana:'The Sun (XIX)',              icon:'☉', image:'data/images/major/sun.png' },
-  'Moon':    { olympian:'Artemis',    arcana:'The Chariot (VII)',          icon:'☽', image:'data/images/artemis-card.jpg',
+  'sun':     { olympian:'Apollo',     arcana:'The Sun (XIX)',              icon:'☉', image:'data/images/major/sun.png' },
+  'moon':    { olympian:'Artemis',    arcana:'The Chariot (VII)',          icon:'☽', image:'data/images/artemis-card.jpg',
                moonShadow:'Melinoe',  moonShadowArcana:'The Moon (XVIII)' },
-  'Mercury': { olympian:'Hermes',     arcana:'The Magician (I)',           icon:'☿', image:'data/images/major/magician.png' },
-  'Venus':   { olympian:'Aphrodite',  arcana:'The Lovers (VI)',            icon:'♀', image:'data/images/aphrodite-card.jpg' },
-  'Mars':    { olympian:'Ares',       arcana:'The Hierophant (V)',         icon:'♂', image:'data/images/ares-card.jpg' },
-  'Jupiter': { olympian:'Zeus',       arcana:'The Emperor (IV)',           icon:'♃', image:'data/images/zeus-card.jpg' },
-  'Saturn':  { olympian:'Hera',       arcana:'The High Priestess (II)',    icon:'♄', image:'data/images/hera-card.jpg' },
-  'Uranus':  { olympian:'Hephaestus', arcana:'Strength (XI)',              icon:'♅', image:'data/images/hephaestus-card.jpg' },
-  'Neptune': { olympian:'Poseidon',   arcana:'The Tower (XVI)',            icon:'♆', image:'data/images/poseidon-card.jpg' },
-  'Pluto':   { olympian:'Hades',      arcana:'Death (XIII)',               icon:'♇', image:'data/images/hades-card.jpg' },
-  'Ceres':   { olympian:'Demeter',    arcana:'The Empress (III)',          icon:'⚳', image:'data/images/demeter-card.jpg' },
-  'Eros':    { olympian:'Dionysus',   arcana:'The Fool (0)',               icon:'⚴', image:'data/images/dionysus-card.jpg',
+  'mercury': { olympian:'Hermes',     arcana:'The Magician (I)',           icon:'☿', image:'data/images/major/magician.png' },
+  'venus':   { olympian:'Aphrodite',  arcana:'The Lovers (VI)',            icon:'♀', image:'data/images/aphrodite-card.jpg' },
+  'mars':    { olympian:'Ares',       arcana:'The Hierophant (V)',         icon:'♂', image:'data/images/ares-card.jpg' },
+  'jupiter': { olympian:'Zeus',       arcana:'The Emperor (IV)',           icon:'♃', image:'data/images/zeus-card.jpg' },
+  'saturn':  { olympian:'Hera',       arcana:'The High Priestess (II)',    icon:'♄', image:'data/images/hera-card.jpg' },
+  'uranus':  { olympian:'Hephaestus', arcana:'Strength (XI)',              icon:'♅', image:'data/images/hephaestus-card.jpg' },
+  'neptune': { olympian:'Poseidon',   arcana:'The Tower (XVI)',            icon:'♆', image:'data/images/poseidon-card.jpg' },
+  'pluto':   { olympian:'Hades',      arcana:'Death (XIII)',               icon:'♇', image:'data/images/hades-card.jpg' },
+  'ceres':   { olympian:'Demeter',    arcana:'The Empress (III)',          icon:'⚳', image:'data/images/demeter-card.jpg' },
+  'eros':    { olympian:'Dionysus',   arcana:'The Fool (0)',               icon:'⚴', image:'data/images/dionysus-card.jpg',
                attendant:'Ares', attendantRole:'Desire follows the spear — where Ares strikes, Dionysus pours.' },
-  'Phobos':  { olympian:'Athena',     arcana:'Justice (VIII)',             icon:'⚵', image:'data/images/athena-card.jpg',
+  'phobos':  { olympian:'Athena',     arcana:'Justice (VIII)',             icon:'⚵', image:'data/images/athena-card.jpg',
                attendant:'Ares', attendantRole:'Strategic fear — Athena rides with Ares so the war god remembers what victory costs.' }
 };
 
@@ -210,197 +211,220 @@ window.addEventListener('resize',rs);rs();
 (function anim(t){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{const a=s.a*(0.55+0.45*Math.sin(s.tw+t*0.0002));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(232,224,208,${a})`;sctx.fill();});requestAnimationFrame(anim);})(0);
 
 // ══════════════════════════════════════════
-// ASTRONOMY
+// BUILD SKY STATE — uses Observe.js
 // ══════════════════════════════════════════
-function eclipticToSign(lonDeg){let lon=((lonDeg%360)+360)%360;return SIGNS[Math.min(Math.floor(lon/30),11)];}
-function getBodyPosition(bodyName,date){
-  const observer=new Astronomy.Observer(40,-74,0);
-  try{
-    const bm={Sun:Astronomy.Body.Sun,Moon:Astronomy.Body.Moon,Mercury:Astronomy.Body.Mercury,Venus:Astronomy.Body.Venus,Mars:Astronomy.Body.Mars,Jupiter:Astronomy.Body.Jupiter,Saturn:Astronomy.Body.Saturn,Uranus:Astronomy.Body.Uranus,Neptune:Astronomy.Body.Neptune,Pluto:Astronomy.Body.Pluto};
-    if(bm[bodyName]){const eq=Astronomy.Equator(bm[bodyName],date,observer,true,true);const ecl=Astronomy.Ecliptic(eq.vec);return{elon:ecl.elon,found:true};}
-  }catch(e){}
-  const jd=date.getTime()/86400000+2440587.5;const t=(jd-2451545.0)/36525;
-  const approx={Ceres:(90+t*4.6)%360};
-  const lon=approx[bodyName];
-  if(lon!==undefined)return{elon:lon,found:true,approximate:true};
-  return{elon:0,found:false};
-}
-const INDEPENDENT_BODIES=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Ceres'];
+async function buildSkyState() {
+  const raw = await Observe.getSkyState();
+  const state = [];
 
-function buildSkyState(){
-  const now=new Date();const state=[];
-  INDEPENDENT_BODIES.forEach(name=>{
-    const pos=getBodyPosition(name,now);if(!pos.found)return;
-    const sign=eclipticToSign(pos.elon);const deity=CELESTIAL_OLYMPIANS[name];if(!deity)return;
-    state.push({body:name,lon:pos.elon,sign,glyph:SIGN_GLYPHS[sign],signName:SIGN_NAMES[sign],olympian:deity.olympian,arcana:deity.arcana,icon:deity.icon,image:deity.image,moonShadow:deity.moonShadow||null,moonShadowArcana:deity.moonShadowArcana||null,approximate:pos.approximate||false,attendant:null});
-  });
-  const mars=state.find(s=>s.body==='Mars');
-  if(mars){
-    ['Eros','Phobos'].forEach(moonName=>{
-      const d=CELESTIAL_OLYMPIANS[moonName];
-      state.push({body:moonName,lon:mars.lon,sign:mars.sign,glyph:mars.glyph,signName:mars.signName,olympian:d.olympian,arcana:d.arcana,icon:d.icon,image:d.image,moonShadow:null,moonShadowArcana:null,approximate:true,attendant:'Ares',attendantRole:d.attendantRole});
+  // Process each planet from observe.js
+  Object.entries(raw.planets).forEach(([key, pos]) => {
+    const deity = CELESTIAL_OLYMPIANS[key];
+    if (!deity) return;
+    state.push({
+      body: key,
+      sign: pos.sign,
+      glyph: pos.glyph,
+      signName: SIGN_NAMES[pos.sign],
+      olympian: deity.olympian,
+      arcana: deity.arcana,
+      icon: deity.icon,
+      image: deity.image,
+      moonShadow: deity.moonShadow || null,
+      moonShadowArcana: deity.moonShadowArcana || null,
+      approximate: false,
+      attendant: null
     });
-  }
-  return state;
-}
-function getSolarTimes(){return SunCalc.getTimes(new Date(),40,-74);}
-
-// ══════════════════════════════════════════
-// NARRATIVE GENERATOR — conversational voice
-// ══════════════════════════════════════════
-function generateNarrative(skyState){
-  const signGroups={};
-  skyState.forEach(s=>{if(!signGroups[s.sign])signGroups[s.sign]=[];signGroups[s.sign].push(s);});
-  const sorted=Object.entries(signGroups).sort((a,b)=>b[1].length-a[1].length);
-  const empty=SIGNS.filter(s=>!signGroups[s]);
-  const sun=skyState.find(s=>s.body==='Sun');
-  const moon=skyState.find(s=>s.body==='Moon');
-  const ares=skyState.find(s=>s.body==='Mars');
-  const moonIllum=SunCalc.getMoonIllumination(new Date());
-  const phaseNames=['new moon','waxing crescent','first quarter','waxing gibbous','full moon','waning gibbous','last quarter','waning crescent'];
-  const phaseIdx=Math.round(moonIllum.phase*8)%8;
-  const phaseName=phaseNames[phaseIdx];
-
-  let html=`<div class="narr-title">✦ Today's Horoscope ✦</div>`;
-
-  // ── HEADLINE: most crowded sign ──
-  if(sorted.length>0){
-    const [sign,watchers]=sorted[0];
-    const count=watchers.length;
-    const glyph=SIGN_GLYPHS[sign];
-    const names=watchers.map(w=>`<strong>${w.olympian}</strong>`);
-    const attendants=watchers.filter(w=>w.attendant);
-
-    if(count>=4){
-      html+=`<p class="narr-headline">There are ${count} celestial bodies in <strong>${sign} ${glyph}</strong> today. ${names.slice(0,-1).join(', ')} and ${names[names.length-1]} all align with you, <span class="sign-address">${sign}</span>! I feel like you're probably very busy?!?</p>`;
-    }else if(count===3){
-      html+=`<p class="narr-headline">Three gods walk <strong>${sign} ${glyph}</strong> today — ${names.join(', ')}. That's a council, <span class="sign-address">${sign}</span>.`;
-      if(attendants.length>0)html+=` Two of them followed Ares here.`;
-      html+=`</p>`;
-    }else if(count===2){
-      html+=`<p class="narr-headline">${names[0]} and ${names[1]} share <strong>${sign} ${glyph}</strong> today. Two currents in the ${SIGN_NAMES[sign].replace('the ','')}, <span class="sign-address">${sign}</span>.`;
-      if(attendants.length>0)html+=` One followed the other.`;
-      html+=`</p>`;
-    }else{
-      html+=`<p class="narr-headline">${names[0]} walks <strong>${sign} ${glyph}</strong> alone. A private audience, <span class="sign-address">${sign}</span>.</p>`;
-    }
-  }
-
-  // ── SUN ──
-  if(sun){
-    html+=`<p class="narr-body">The Sun rose in <strong>${sun.sign} ${sun.glyph}</strong>, so <strong>${sun.olympian}</strong> blesses the ${sun.signName}... it's your time to shine, <span class="sign-address">${sun.sign}</span>!</p>`;
-    html+=`<p class="narr-whisper">${getWhisper('Apollo',1)}</p>`;
-  }
-
-  // ── MOON ──
-  if(moon){
-    html+=`<p class="narr-body">The Moon rises in <strong>${moon.sign} ${moon.glyph}</strong> under a ${phaseName}. `;
-    if(moon.moonShadow){
-      html+=`Will your Moon Aspect be <strong>${moon.olympian}</strong> or <strong>${moon.moonShadow}</strong>? Will the goddess of the hunt find you tonight? Or will the goddess of madness haunt you, <span class="sign-address">${moon.sign}</span>?</p>`;
-    }else{
-      html+=`<strong>${moon.olympian}</strong> watches the house of ${SIGN_NAMES[moon.sign].replace('the ','')} tonight.</p>`;
-    }
-    const shadowGod=moon.moonShadow&&seededInt(dailySeed()+77,2)===0?moon.moonShadow:moon.olympian;
-    html+=`<p class="narr-whisper">${getWhisper(shadowGod,2)}</p>`;
-  }
-
-  // ── ARES TRIAD ──
-  if(ares){
-    const eros=skyState.find(s=>s.body==='Eros');
-    const phobos=skyState.find(s=>s.body==='Phobos');
-    const hasBoth=eros&&phobos;
-    if(hasBoth){
-      html+=`<p class="narr-body"><strong>Ares</strong> moves through <strong>${ares.sign} ${ares.glyph}</strong> today, and he brought company. <strong>Dionysus</strong> rides as Eros — desire that follows the spear. <strong>Athena</strong> rides as Phobos — not cowardice, but the intelligence of fear. The war god, the vine, and the strategist all in ${SIGN_NAMES[ares.sign]}. That's a very specific dinner party, <span class="sign-address">${ares.sign}</span>.</p>`;
-    }else{
-      html+=`<p class="narr-body"><strong>Ares</strong> walks <strong>${ares.sign} ${ares.glyph}</strong> today. The war god in ${SIGN_NAMES[ares.sign]}. ${getWhisper('Ares',5)}</p>`;
-    }
-  }
-
-  // ── OTHER GROUPINGS ──
-  const otherGroups=sorted.filter(([sign,watchers])=>{
-    if(watchers.filter(w=>!w.attendant).length<2)return false;
-    if(sign===ares?.sign)return false;
-    return true;
-  });
-  otherGroups.forEach(([sign,watchers])=>{
-    const names=watchers.filter(w=>!w.attendant).map(w=>`<strong>${w.olympian}</strong>`);
-    const last=names.pop();
-    const nameStr=names.length?names.join(', ')+' and '+last:last;
-    html+=`<p class="narr-body">${nameStr} share <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_NAMES[sign]} holds more than one current today, <span class="sign-address">${sign}</span>.</p>`;
   });
 
-  // ── SOLO TRAVELERS ──
-  const solos=sorted.filter(([sign,watchers])=>{
-    const nonAtt=watchers.filter(w=>!w.attendant);
-    if(nonAtt.length!==1)return false;
-    const w=nonAtt[0];
-    if(w.body==='Sun'||w.body==='Moon'||w.body==='Mars')return false;
-    return true;
-  });
-  if(solos.length>0){
-    solos.forEach(([sign,watchers])=>{
-      const w=watchers.find(w=>!w.attendant);
-      html+=`<p class="narr-body"><strong>${w.olympian}</strong> walks <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> alone — a private audience with ${SIGN_NAMES[sign]}, <span class="sign-address">${sign}</span>.</p>`;
-      html+=`<p class="narr-whisper">${getWhisper(w.olympian,10+solos.indexOf([sign,watchers]))}</p>`;
-    });
-  }
-
-  // ── EMPTY HOUSES ──
-  if(empty.length>0){
-    if(empty.length<=3){
-      empty.forEach(sign=>{
-        html+=`<p class="narr-empty"><span class="sign-address">${sign} ${SIGN_GLYPHS[sign]}</span> — the house is empty tonight. No Olympian walks your sign. This is not abandonment. This is <strong>privacy</strong>. The gods are watching elsewhere. What will you do with the silence?</p>`;
+  // Eros and Phobos follow Mars
+  const mars = state.find(s => s.body === 'mars');
+  if (mars) {
+    ['eros','phobos'].forEach(moonName => {
+      const d = CELESTIAL_OLYMPIANS[moonName];
+      state.push({
+        body: moonName,
+        sign: mars.sign,
+        glyph: mars.glyph,
+        signName: mars.signName,
+        olympian: d.olympian,
+        arcana: d.arcana,
+        icon: d.icon,
+        image: d.image,
+        approximate: true,
+        attendant: 'Ares',
+        attendantRole: d.attendantRole
       });
-    }else{
-      const listed=empty.slice(0,3).map(s=>`<span class="sign-address">${s}</span>`).join(', ');
-      html+=`<p class="narr-empty">${listed} and ${empty.length-3} other houses stand empty tonight. The gods are concentrated, not dispersed. The quiet signs have the luxury of their own counsel.</p>`;
+    });
+  }
+
+  return { state, raw };
+}
+
+// ══════════════════════════════════════════
+// NARRATIVE GENERATOR
+// ══════════════════════════════════════════
+function generateNarrative(skyState, raw) {
+  const signGroups = {};
+  skyState.forEach(s => {
+    if (!signGroups[s.sign]) signGroups[s.sign] = [];
+    signGroups[s.sign].push(s);
+  });
+
+  const sorted = Object.entries(signGroups).sort((a, b) => b[1].length - a[1].length);
+  const empty = SIGNS.filter(s => !signGroups[s]);
+
+  const sun = skyState.find(s => s.body === 'sun');
+  const moon = skyState.find(s => s.body === 'moon');
+  const ares = skyState.find(s => s.body === 'mars');
+  const moonPhase = raw.moonPhase.name.toLowerCase();
+
+  let html = `<div class="narr-title">✦ Today's Horoscope ✦</div>`;
+
+  // HEADLINE
+  if (sorted.length > 0) {
+    const [sign, watchers] = sorted[0];
+    const count = watchers.length;
+    const glyph = SIGN_GLYPHS[sign];
+    const names = watchers.map(w => `<strong>${w.olympian}</strong>`);
+    const attendants = watchers.filter(w => w.attendant);
+
+    if (count >= 4) {
+      html += `<p class="narr-headline">There are ${count} celestial bodies in <strong>${sign} ${glyph}</strong> today. ${names.slice(0, -1).join(', ')} and ${names[names.length - 1]} all align with you, <span class="sign-address">${sign}</span>! I feel like you're probably very busy?!?</p>`;
+    } else if (count === 3) {
+      html += `<p class="narr-headline">Three gods walk <strong>${sign} ${glyph}</strong> today — ${names.join(', ')}. That's a council, <span class="sign-address">${sign}</span>.${attendants.length > 0 ? ' Two of them followed Ares here.' : ''}</p>`;
+    } else if (count === 2) {
+      html += `<p class="narr-headline">${names[0]} and ${names[1]} share <strong>${sign} ${glyph}</strong> today. Two currents in the ${SIGN_NAMES[sign].replace('the ', '')}, <span class="sign-address">${sign}</span>.${attendants.length > 0 ? ' One followed the other.' : ''}</p>`;
+    } else {
+      html += `<p class="narr-headline">${names[0]} walks <strong>${sign} ${glyph}</strong> alone. A private audience, <span class="sign-address">${sign}</span>.</p>`;
     }
   }
 
-  // ── CLOSING ──
-  html+=`<p class="narr-closing">There are more divinations at <strong>Digital Divination: Aspects of the Divine</strong> — draw your cards, check the Earth Shrine, or wander the archive of misfit children. The sky is not a clock. It is a conversation.</p>`;
+  // SUN
+  if (sun) {
+    html += `<p class="narr-body">The Sun rose in <strong>${sun.sign} ${sun.glyph}</strong>, so <strong>${sun.olympian}</strong> blesses the ${sun.signName}... it's your time to shine, <span class="sign-address">${sun.sign}</span>!</p>`;
+    html += `<p class="narr-whisper">${getWhisper('Apollo', 1)}</p>`;
+  }
+
+  // MOON
+  if (moon) {
+    html += `<p class="narr-body">The Moon rises in <strong>${moon.sign} ${moon.glyph}</strong> under a ${moonPhase}. `;
+    if (moon.moonShadow) {
+      html += `Will your Moon Aspect be <strong>${moon.olympian}</strong> or <strong>${moon.moonShadow}</strong>? Will the goddess of the hunt find you tonight? Or will the goddess of madness haunt you, <span class="sign-address">${moon.sign}</span>?</p>`;
+    } else {
+      html += `<strong>${moon.olympian}</strong> watches the house of ${SIGN_NAMES[moon.sign].replace('the ', '')} tonight.</p>`;
+    }
+    const shadowGod = moon.moonShadow && seededInt(dailySeed() + 77, 2) === 0 ? moon.moonShadow : moon.olympian;
+    html += `<p class="narr-whisper">${getWhisper(shadowGod, 2)}</p>`;
+  }
+
+  // ARES TRIAD
+  if (ares) {
+    const eros = skyState.find(s => s.body === 'eros');
+    const phobos = skyState.find(s => s.body === 'phobos');
+    if (eros && phobos) {
+      html += `<p class="narr-body"><strong>Ares</strong> moves through <strong>${ares.sign} ${ares.glyph}</strong> today, and he brought company. <strong>Dionysus</strong> rides as Eros — desire that follows the spear. <strong>Athena</strong> rides as Phobos — not cowardice, but the intelligence of fear. The war god, the vine, and the strategist all in ${SIGN_NAMES[ares.sign]}. That's a very specific dinner party, <span class="sign-address">${ares.sign}</span>.</p>`;
+    } else {
+      html += `<p class="narr-body"><strong>Ares</strong> walks <strong>${ares.sign} ${ares.glyph}</strong> today. The war god in ${SIGN_NAMES[ares.sign]}. ${getWhisper('Ares', 5)}</p>`;
+    }
+  }
+
+  // OTHER GROUPINGS
+  const otherGroups = sorted.filter(([sign, watchers]) => {
+    if (watchers.filter(w => !w.attendant).length < 2) return false;
+    if (sign === ares?.sign) return false;
+    return true;
+  });
+  otherGroups.forEach(([sign, watchers]) => {
+    const names = watchers.filter(w => !w.attendant).map(w => `<strong>${w.olympian}</strong>`);
+    const last = names.pop();
+    const nameStr = names.length ? names.join(', ') + ' and ' + last : last;
+    html += `<p class="narr-body">${nameStr} share <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_NAMES[sign]} holds more than one current today, <span class="sign-address">${sign}</span>.</p>`;
+  });
+
+  // SOLO TRAVELERS
+  const solos = sorted.filter(([sign, watchers]) => {
+    const nonAtt = watchers.filter(w => !w.attendant);
+    if (nonAtt.length !== 1) return false;
+    const w = nonAtt[0];
+    if (w.body === 'sun' || w.body === 'moon' || w.body === 'mars') return false;
+    return true;
+  });
+  solos.forEach(([sign, watchers]) => {
+    const w = watchers.find(w => !w.attendant);
+    html += `<p class="narr-body"><strong>${w.olympian}</strong> walks <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> alone — a private audience with ${SIGN_NAMES[sign]}, <span class="sign-address">${sign}</span>.</p>`;
+    html += `<p class="narr-whisper">${getWhisper(w.olympian, 10 + solos.indexOf([sign, watchers]))}</p>`;
+  });
+
+  // EMPTY HOUSES
+  if (empty.length > 0) {
+    if (empty.length <= 3) {
+      empty.forEach(sign => {
+        html += `<p class="narr-empty"><span class="sign-address">${sign} ${SIGN_GLYPHS[sign]}</span> — the house is empty tonight. No Olympian walks your sign. This is not abandonment. This is <strong>privacy</strong>. The gods are watching elsewhere. What will you do with the silence?</p>`;
+      });
+    } else {
+      const listed = empty.slice(0, 3).map(s => `<span class="sign-address">${s}</span>`).join(', ');
+      html += `<p class="narr-empty">${listed} and ${empty.length - 3} other houses stand empty tonight. The gods are concentrated, not dispersed. The quiet signs have the luxury of their own counsel.</p>`;
+    }
+  }
+
+  html += `<p class="narr-closing">There are more divinations at <strong>Digital Divination: Aspects of the Divine</strong> — draw your cards, check the Dashboard, or wander the archive of misfit children. The sky is not a clock. It is a conversation.</p>`;
   return html;
 }
 
 // ══════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════
-let skyState=[];
-function renderDateLine(){
-  const now=new Date();
-  document.getElementById('dateLine').innerHTML=`${now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}<span>The Celestial Almanac · Who watches whom</span>`;
+let skyState = [];
+let rawSky = null;
+
+function renderDateLine() {
+  const now = new Date();
+  document.getElementById('dateLine').innerHTML = `${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<span>The Celestial Almanac · Who watches whom</span>`;
 }
-function renderNarrative(){document.getElementById('narrative').innerHTML=generateNarrative(skyState);}
-function renderLuminaries(){
-  const sun=skyState.find(s=>s.body==='Sun'),moon=skyState.find(s=>s.body==='Moon');
-  const times=getSolarTimes();
-  const fmt=t=>new Date(t).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
-  const moonIllum=SunCalc.getMoonIllumination(new Date());
-  const phaseNames=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
-  const phaseIcons=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
-  const phaseIdx=Math.round(moonIllum.phase*8)%8;
-  let html='';
-  if(sun)html+=`<div class="lum-card solar"><div class="lum-icon">☀️</div><img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'"><div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div><div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${SIGN_NAMES[sun.sign]}</div><div class="lum-reading">${getWhisper('Apollo',1)}</div><div class="lum-time">☀️ Rise: ${fmt(times.sunrise)} · Set: ${fmt(times.sunset)}</div></div>`;
-  if(moon){
-    const shadowGod=moon.moonShadow&&seededInt(dailySeed()+77,2)===0?moon.moonShadow:moon.olympian;
-    html+=`<div class="lum-card lunar"><div class="lum-icon">${phaseIcons[phaseIdx]}</div><img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'"><div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow?` / ${moon.moonShadow} — ${moon.moonShadowArcana}`:''}</div><div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${SIGN_NAMES[moon.sign]}</div><div class="lum-reading">${getWhisper(shadowGod,2)}</div><div class="lum-time">${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${Math.round(moonIllum.fraction*100)}% illuminated</div></div>`;
+
+function renderNarrative() {
+  document.getElementById('narrative').innerHTML = generateNarrative(skyState, rawSky);
+}
+
+function renderLuminaries() {
+  const sun = skyState.find(s => s.body === 'sun');
+  const moon = skyState.find(s => s.body === 'moon');
+  if (!rawSky) return;
+
+  const times = rawSky.solar;
+  const fmt = t => new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  const phaseNames = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+  const phaseIcons = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
+  const phaseIdx = Math.round(rawSky.moonPhase.phase * 8) % 8;
+
+  let html = '';
+  if (sun) {
+    html += `<div class="lum-card solar"><div class="lum-icon">☀️</div><img class="lum-card-img" src="${sun.image}" alt="${sun.olympian}" onerror="this.style.display='none'"><div class="lum-olympian">${sun.olympian} — ${sun.arcana}</div><div class="lum-sign">in <span class="glyph">${sun.glyph}</span> ${sun.sign}, ${SIGN_NAMES[sun.sign]}</div><div class="lum-reading">${getWhisper('Apollo', 1)}</div><div class="lum-time">☀️ Rise: ${fmt(times.sunrise)} · Set: ${fmt(times.sunset)}</div></div>`;
   }
-  document.getElementById('luminaryBox').innerHTML=html;
+  if (moon) {
+    const shadowGod = moon.moonShadow && seededInt(dailySeed() + 77, 2) === 0 ? moon.moonShadow : moon.olympian;
+    html += `<div class="lum-card lunar"><div class="lum-icon">${phaseIcons[phaseIdx]}</div><img class="lum-card-img" src="${moon.image}" alt="${moon.olympian}" onerror="this.style.display='none'"><div class="lum-olympian">${moon.olympian} — ${moon.arcana}${moon.moonShadow ? ` / ${moon.moonShadow} — ${moon.moonShadowArcana}` : ''}</div><div class="lum-sign">in <span class="glyph">${moon.glyph}</span> ${moon.sign}, ${SIGN_NAMES[moon.sign]}</div><div class="lum-reading">${getWhisper(shadowGod, 2)}</div><div class="lum-time">${phaseIcons[phaseIdx]} ${phaseNames[phaseIdx]} · ${rawSky.moonPhase.illumination}% illuminated</div></div>`;
+  }
+  document.getElementById('luminaryBox').innerHTML = html;
 }
-function renderWatchers(){
-  const bodies=skyState.filter(s=>s.body!=='Sun'&&s.body!=='Moon');
-  const now=new Date();const times=getSolarTimes();
-  const isNight=now<times.sunrise||now>times.sunset;
-  document.getElementById('watchersList').innerHTML=bodies.map(s=>`
-    <div class="watcher-entry${s.attendant?' attendant-entry':''}">
+
+function renderWatchers() {
+  const bodies = skyState.filter(s => s.body !== 'sun' && s.body !== 'moon');
+  if (!rawSky) return;
+  const now = new Date();
+  const isNight = now < new Date(rawSky.solar.sunrise) || now > new Date(rawSky.solar.sunset);
+
+  document.getElementById('watchersList').innerHTML = bodies.map(s => `
+    <div class="watcher-entry${s.attendant ? ' attendant-entry' : ''}">
       <img class="watcher-card-img" src="${s.image}" alt="${s.olympian}" onerror="this.style.display='none'">
       <div class="watcher-body">
         <div class="watcher-headline">
           <span class="god-name">${s.olympian}</span><span class="arcana-name"> · ${s.arcana}</span><br>
           as ${s.body} in <span class="sign-name">${s.sign} <span class="glyph">${s.glyph}</span></span>, ${SIGN_NAMES[s.sign]}
         </div>
-        <div class="watcher-whisper">${getWhisper(s.olympian,bodies.indexOf(s))}</div>
-        <div class="watcher-meta">${isNight?'walks the night':'walks the day, unseen'}${s.approximate?' · approximate':''}${s.attendant?`<span class="watcher-attendant-label"> · attends ${s.attendant} — ${s.attendantRole}</span>`:''}</div>
+        <div class="watcher-whisper">${getWhisper(s.olympian, bodies.indexOf(s))}</div>
+        <div class="watcher-meta">${isNight ? 'walks the night' : 'walks the day, unseen'}${s.approximate ? ' · approximate' : ''}${s.attendant ? `<span class="watcher-attendant-label"> · attends ${s.attendant} — ${s.attendantRole}</span>` : ''}</div>
       </div>
     </div>`).join('');
 }
@@ -408,38 +432,66 @@ function renderWatchers(){
 // ══════════════════════════════════════════
 // BIRTH READING
 // ══════════════════════════════════════════
-function populateBirthSelect(){
-  const sel=document.getElementById('birthSign');
-  SIGNS.forEach(sign=>{const o=document.createElement('option');o.value=sign;o.textContent=`${SIGN_GLYPHS[sign]} ${sign}`;sel.appendChild(o);});
+function populateBirthSelect() {
+  const sel = document.getElementById('birthSign');
+  SIGNS.forEach(sign => {
+    const o = document.createElement('option');
+    o.value = sign;
+    o.textContent = `${SIGN_GLYPHS[sign]} ${sign}`;
+    sel.appendChild(o);
+  });
 }
-function birthReading(){
-  const sign=document.getElementById('birthSign').value;
-  if(!sign){document.getElementById('birthReadingText').innerHTML='The signs are carved into the sky. Choose yours.';return;}
-  const watchers=skyState.filter(s=>s.sign===sign);
-  const glyph=SIGN_GLYPHS[sign],name=SIGN_NAMES[sign];
-  if(watchers.length===0){
-    document.getElementById('birthReadingText').innerHTML=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>The house is empty. No Olympian walks your sign today.<br>This is not abandonment. This is <strong>privacy</strong>.<br>The gods are watching elsewhere. What will you do with the silence?`;
+
+function birthReading() {
+  const sign = document.getElementById('birthSign').value;
+  if (!sign) { document.getElementById('birthReadingText').innerHTML = 'The signs are carved into the sky. Choose yours.'; return; }
+  const watchers = skyState.filter(s => s.sign === sign);
+  const glyph = SIGN_GLYPHS[sign], name = SIGN_NAMES[sign];
+  if (watchers.length === 0) {
+    document.getElementById('birthReadingText').innerHTML = `<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>The house is empty. No Olympian walks your sign today.<br>This is not abandonment. This is <strong>privacy</strong>.<br>The gods are watching elsewhere. What will you do with the silence?`;
     return;
   }
-  const primary=watchers.find(w=>!w.attendant)||watchers[0];
-  const attendants=watchers.filter(w=>w.attendant);
-  const others=watchers.filter(w=>w!==primary&&!w.attendant);
-  let html=`<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>`;
-  html+=`<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today as ${primary.body}.<br>`;
-  html+=`<em>${getWhisper(primary.olympian,50)}</em>`;
-  if(others.length>0){const names=others.map(w=>`<strong>${w.olympian}</strong>`).join(' and ');html+=`<br><br>${names} also walk ${sign} ${glyph} today. The house is crowded.`;}
-  if(attendants.length>0){const attNames=attendants.map(w=>`<strong>${w.olympian}</strong>`).join(' and ');html+=`<br><br>${attNames} follow Ares here — ${attendants.length===2?'desire and strategic fear, both':'an attendant force'} riding with the war god.`;}
-  document.getElementById('birthReadingText').innerHTML=html;
+  const primary = watchers.find(w => !w.attendant) || watchers[0];
+  const attendants = watchers.filter(w => w.attendant);
+  const others = watchers.filter(w => w !== primary && !w.attendant);
+  let html = `<span style="color:var(--gold-light)">${sign} ${glyph} · ${name}</span><br><br>`;
+  html += `<span style="color:var(--gold)">${primary.olympian}</span> walks your sign today as ${primary.body}.<br>`;
+  html += `<em>${getWhisper(primary.olympian, 50)}</em>`;
+  if (others.length > 0) { const names = others.map(w => `<strong>${w.olympian}</strong>`).join(' and '); html += `<br><br>${names} also walk ${sign} ${glyph} today. The house is crowded.`; }
+  if (attendants.length > 0) { const attNames = attendants.map(w => `<strong>${w.olympian}</strong>`).join(' and '); html += `<br><br>${attNames} follow Ares here — ${attendants.length === 2 ? 'desire and strategic fear, both' : 'an attendant force'} riding with the war god.`; }
+  document.getElementById('birthReadingText').innerHTML = html;
 }
 
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
-function refreshAlmanac(){skyState=buildSkyState();renderAll();toast('✦ The Olympians take new positions.');}
-function renderAll(){renderDateLine();renderNarrative();renderLuminaries();renderWatchers();}
-function init(){populateBirthSelect();skyState=buildSkyState();renderAll();toast('✦ The watching begins.');}
-document.addEventListener('DOMContentLoaded',init);
+function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3000); }
+
+async function refreshAlmanac() {
+  const result = await buildSkyState();
+  skyState = result.state;
+  rawSky = result.raw;
+  renderAll();
+  toast('✦ The Olympians take new positions.');
+}
+
+function renderAll() {
+  renderDateLine();
+  renderNarrative();
+  renderLuminaries();
+  renderWatchers();
+}
+
+async function init() {
+  populateBirthSelect();
+  const result = await buildSkyState();
+  skyState = result.state;
+  rawSky = result.raw;
+  renderAll();
+  toast('✦ The watching begins.');
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
