@@ -4,9 +4,10 @@
  * 
  * Reads real astronomical data using Astronomy Engine + SunCalc.
  * Tracks daily movement, rise/set/zenith, and sign transits.
+ * Pure observation. No interpretation. No narrative.
  * 
  * Dependencies:
- *   - Astronomy Engine (astronomy.browser.min.js)
+ *   - Astronomy Engine v2.1.8 (astronomy.browser.min.js)
  *   - SunCalc (suncalc.min.js)
  */
 
@@ -39,6 +40,32 @@ const Observe = (() => {
     'Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'
   ];
 
+  // ─── ASTRONOMY ENGINE v2 BODY MAP ────────
+  // In v2.x, bodies are accessed as Astronomy.Body.Sun, etc.
+  function getAstronomyBody(bodyName) {
+    try {
+      // Try v2.x API
+      if (typeof Astronomy !== 'undefined' && Astronomy.Body) {
+        const bodyMap = {
+          'Sun': Astronomy.Body.Sun,
+          'Moon': Astronomy.Body.Moon,
+          'Mercury': Astronomy.Body.Mercury,
+          'Venus': Astronomy.Body.Venus,
+          'Mars': Astronomy.Body.Mars,
+          'Jupiter': Astronomy.Body.Jupiter,
+          'Saturn': Astronomy.Body.Saturn,
+          'Uranus': Astronomy.Body.Uranus,
+          'Neptune': Astronomy.Body.Neptune,
+          'Pluto': Astronomy.Body.Pluto
+        };
+        return bodyMap[bodyName] || null;
+      }
+    } catch (e) {
+      console.warn('Astronomy.Body not available:', e);
+    }
+    return null;
+  }
+
   // ─── HELPER: Ecliptic Longitude to Sign ───
   function eclipticToSign(lonDeg) {
     let lon = ((lonDeg % 360) + 360) % 360;
@@ -50,29 +77,20 @@ const Observe = (() => {
     return lon % 30;
   }
 
-  // ─── CORRECTED: Get Planet Position ───────
+  // ─── GET PLANET POSITION ──────────────────
   function getPlanetPosition(bodyName, date) {
-    const bodyMap = {
-      'Sun': Astronomy.Body.Sun,
-      'Moon': Astronomy.Body.Moon,
-      'Mercury': Astronomy.Body.Mercury,
-      'Venus': Astronomy.Body.Venus,
-      'Mars': Astronomy.Body.Mars,
-      'Jupiter': Astronomy.Body.Jupiter,
-      'Saturn': Astronomy.Body.Saturn,
-      'Uranus': Astronomy.Body.Uranus,
-      'Neptune': Astronomy.Body.Neptune,
-      'Pluto': Astronomy.Body.Pluto
-    };
-
-    const body = bodyMap[bodyName];
-    if (!body) return null;
+    const body = getAstronomyBody(bodyName);
+    if (!body) {
+      console.warn(`Astronomy body not found for: ${bodyName}`);
+      return null;
+    }
 
     try {
-      const eq = Astronomy.Equator(body, date, undefined, true, false);
-      const ecl = Astronomy.Ecliptic(eq);
+      // Use geocentric equatorial coordinates (observer at Earth center)
+      const eq = Astronomy.Equator(body, date, null, true, false);
+      const ecl = Astronomy.Ecliptic(eq.elon, eq.elat);
       
-      let lon = ecl.elon * 180 / Math.PI;
+      let lon = ecl.elon;
       
       // Add precession correction (tropical coordinates)
       const daysSinceJ2000 = (date - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24);
@@ -85,15 +103,16 @@ const Observe = (() => {
       const degree = getDegreeInSign(lon);
 
       // Calculate altitude and azimuth for visibility
-      const hor = Astronomy.Horizon(date, CONFIG.latitude, CONFIG.longitude, body);
+      const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
+      const hor = Astronomy.Horizon(date, observer, body);
       
       return {
         sign,
         glyph: SIGN_GLYPHS[sign],
         degree: Math.round(degree * 100) / 100,
         longitude: Math.round(lon * 100) / 100,
-        altitude: Math.round(hor.altitude * 180 / Math.PI * 100) / 100,
-        azimuth: Math.round(hor.azimuth * 180 / Math.PI * 100) / 100,
+        altitude: Math.round(hor.altitude * 100) / 100,
+        azimuth: Math.round(hor.azimuth * 100) / 100,
         aboveHorizon: hor.altitude > 0
       };
     } catch (e) {
@@ -102,34 +121,41 @@ const Observe = (() => {
     }
   }
 
-  // ─── CALCULATE ZENITH TIME ──────────────
+  // ─── CALCULATE ZENITH TIME ────────────────
   function getZenithTime(bodyName, date) {
-    const bodyMap = {
-      'Sun': Astronomy.Body.Sun,
-      'Moon': Astronomy.Body.Moon,
-      'Mercury': Astronomy.Body.Mercury,
-      'Venus': Astronomy.Body.Venus,
-      'Mars': Astronomy.Body.Mars,
-      'Jupiter': Astronomy.Body.Jupiter,
-      'Saturn': Astronomy.Body.Saturn,
-      'Uranus': Astronomy.Body.Uranus,
-      'Neptune': Astronomy.Body.Neptune,
-      'Pluto': Astronomy.Body.Pluto
-    };
-
-    const body = bodyMap[bodyName];
+    const body = getAstronomyBody(bodyName);
     if (!body) return null;
 
     try {
+      const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
+      
+      // Search for highest altitude in 24 hours by sampling every 15 minutes
       const searchDate = new Date(date);
       searchDate.setHours(0, 0, 0, 0);
       
-      // Search for transit (highest point) in the next 24 hours
-      const transit = Astronomy.SearchHourAngle(body, searchDate, 0);
-      if (transit) {
+      let bestAltitude = -999;
+      let bestTime = null;
+      
+      for (let minutes = 0; minutes < 24 * 60; minutes += 15) {
+        const sampleTime = new Date(searchDate.getTime() + minutes * 60000);
+        
+        try {
+          const hor = Astronomy.Horizon(sampleTime, observer, body);
+          const alt = hor.altitude;
+          
+          if (alt > bestAltitude) {
+            bestAltitude = alt;
+            bestTime = sampleTime;
+          }
+        } catch (e) {
+          // Skip failed samples
+        }
+      }
+      
+      if (bestTime && bestAltitude > -90) {
         return {
-          time: transit.time,
-          altitude: transit.altitude * 180 / Math.PI
+          time: bestTime,
+          altitude: Math.round(bestAltitude * 100) / 100
         };
       }
     } catch (e) {
@@ -138,10 +164,8 @@ const Observe = (() => {
     return null;
   }
 
-  // ─── GET SIGN TRANSITS ──────────────────
+  // ─── GET SIGN TRANSITS ────────────────────
   function getSignTransits(bodyName, date) {
-    // Calculate when a body enters/exits signs during the day
-    // This is computationally intensive, so we approximate
     const positions = [];
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
@@ -165,6 +189,7 @@ const Observe = (() => {
     for (let i = 1; i < positions.length; i++) {
       if (positions[i].sign !== positions[i-1].sign) {
         transits.push({
+          body: bodyName,
           from: positions[i-1].sign,
           to: positions[i].sign,
           approximateTime: positions[i].time
@@ -175,7 +200,7 @@ const Observe = (() => {
     return transits;
   }
 
-  // ─── DAILY TRACKING ─────────────────────
+  // ─── DAILY TRACKING ──────────────────────
   function getDailyTracking(date = new Date()) {
     const tracking = {
       date: date.toISOString().split('T')[0],
@@ -187,23 +212,15 @@ const Observe = (() => {
 
     // Sun tracking
     const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
-    const sunPositions = {
-      dawn: getPlanetPosition('Sun', new Date(times.dawn)),
-      sunrise: getPlanetPosition('Sun', times.sunrise),
-      noon: getPlanetPosition('Sun', new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0)),
-      sunset: getPlanetPosition('Sun', times.sunset),
-      dusk: getPlanetPosition('Sun', new Date(times.dusk))
-    };
-
+    
     tracking.sun = {
       rise: times.sunrise.toISOString(),
       set: times.sunset.toISOString(),
       dawn: times.dawn?.toISOString() || null,
       dusk: times.dusk?.toISOString() || null,
       zenith: getZenithTime('Sun', date),
-      positions: sunPositions,
-      currentSign: sunPositions.noon?.sign || 'Unknown',
-      currentGlyph: sunPositions.noon?.glyph || '☉'
+      currentSign: getPlanetPosition('Sun', date)?.sign || 'Unknown',
+      currentGlyph: getPlanetPosition('Sun', date)?.glyph || '☉'
     };
 
     // Moon tracking
@@ -222,8 +239,9 @@ const Observe = (() => {
     };
 
     // Track sign changes
-    tracking.events.push(...getSignTransits('Sun', date));
-    tracking.events.push(...getSignTransits('Moon', date));
+    const sunTransits = getSignTransits('Sun', date);
+    const moonTransits = getSignTransits('Moon', date);
+    tracking.events.push(...sunTransits, ...moonTransits);
 
     // Planet tracking
     PLANETS.filter(p => p !== 'Sun' && p !== 'Moon').forEach(planet => {
@@ -243,7 +261,7 @@ const Observe = (() => {
     return tracking;
   }
 
-  // ─── GET SKY STATE ──────────────────────
+  // ─── GET SKY STATE ────────────────────────
   async function getSkyState() {
     const now = new Date();
     const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
@@ -296,14 +314,14 @@ const Observe = (() => {
     return skyState;
   }
 
-  // ─── GET CURRENT PERIOD ONLY ────────────
+  // ─── GET CURRENT PERIOD ONLY ──────────────
   function getCurrentPeriod() {
     const now = new Date();
     const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
     return (now >= times.sunrise && now <= times.sunset) ? 'SUN' : 'MOON';
   }
 
-  // ─── GET MOON ASPECT ────────────────────
+  // ─── GET MOON ASPECT ──────────────────────
   function getMoonAspect() {
     const now = new Date();
     const moonIllum = SunCalc.getMoonIllumination(now);
@@ -311,14 +329,14 @@ const Observe = (() => {
     return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
   }
 
-  // ─── UPDATE CONFIG ──────────────────────
+  // ─── UPDATE CONFIG ────────────────────────
   function setLocation(lat, lon, elev = 0) {
     CONFIG.latitude = lat;
     CONFIG.longitude = lon;
     CONFIG.elevation = elev;
   }
 
-  // ─── TEST FUNCTION ──────────────────────
+  // ─── TEST FUNCTION ────────────────────────
   async function testSkyState() {
     const state = await getSkyState();
     const tracking = getDailyTracking();
@@ -341,14 +359,14 @@ const Observe = (() => {
     if (tracking.events.length > 0) {
       console.log('\nSign Transits Today:');
       tracking.events.forEach(e => {
-        console.log(`  ${e.from} → ${e.to} around ${e.approximateTime.toLocaleTimeString()}`);
+        console.log(`  ${e.body}: ${e.from} → ${e.to} around ${e.approximateTime.toLocaleTimeString()}`);
       });
     }
     console.log('===================================\n');
     return { state, tracking };
   }
 
-  // ─── PUBLIC API ─────────────────────────
+  // ─── PUBLIC API ───────────────────────────
   return {
     getSkyState,
     getCurrentPeriod,
