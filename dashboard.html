@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dashboard — Digital Divination</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:         #d4a840;
+  --gold-light:   #f0d878;
+  --gold-dark:    #8a6518;
+  --void:         #060610;
+  --deep:         #0c0c1e;
+  --surface:      #181838;
+  --surface2:     #202048;
+  --border:       #2a2a4a;
+  --border-gold:  rgba(212,168,64,0.2);
+  --text:         #f0ead8;
+  --text-mid:     #d0c0a0;
+  --text-dim:     #988870;
+  --fire:         #c94a2a;
+  --earth:        #6a8a3a;
+  --water:        #66aacc;
+  --air:          #aa88cc;
+  --sage:         #8ab87a;
+  --ember:        #c94a2a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 5%, #120828 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient canvas */
+#ambientCanvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.05;
+}
+
+/* Overlay */
+#dashboardOverlay {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(6,6,16,0.6) 0%, transparent 70%);
+}
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: rgba(8,8,20,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 200;
+}
+
+.nav-brand { display: flex; flex-direction: column; gap: 1px; }
+.nav-brand-title { font-family: 'Cinzel Decorative', serif; font-size: 13px; color: var(--gold); letter-spacing: 1.5px; }
+.nav-brand-sub { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px; color: var(--gold-dark); text-transform: uppercase; }
+
+.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; justify-content: flex-end; }
+.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; padding: 4px 0; }
+.nav-links a:hover { color: var(--gold-light); }
+
+.dashboard-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+}
+
+/* Header */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.dashboard-header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(24px, 5vw, 40px);
+  color: var(--gold-light);
+  letter-spacing: 4px;
+}
+.dashboard-header .subtitle {
+  font-style: italic;
+  color: var(--text-mid);
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+/* Grid layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+/* Cards */
+.panel {
+  background: rgba(24,24,56,0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s;
+}
+.panel:hover {
+  border-color: var(--border-gold);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.panel-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel-title .glyph { font-size: 20px; }
+
+/* Sky panel */
+.sky-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.sky-item {
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  padding: 8px 12px;
+  text-align: center;
+}
+.sky-item .planet {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.sky-item .sign {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 18px;
+  color: var(--gold-light);
+}
+.sky-item .degree {
+  font-size: 10px;
+  color: var(--text-mid);
+}
+.period-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-family: 'Cinzel', serif;
+  background: var(--surface2);
+  margin-bottom: 12px;
+}
+.period-badge.sun { background: rgba(212,168,64,0.2); color: var(--gold); }
+.period-badge.moon { background: rgba(102,170,204,0.2); color: var(--water); }
+
+/* Earth Shrine - 4x4 mycelial grid */
+.shrine-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.shrine-cell {
+  aspect-ratio: 1;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.shrine-cell:hover {
+  border-color: var(--gold);
+  transform: scale(1.02);
+}
+.shrine-cell .card-name-small {
+  font-size: 8px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  color: var(--text-mid);
+}
+.shrine-cell .card-suit {
+  font-size: 16px;
+}
+.shrine-cell.empty {
+  opacity: 0.3;
+}
+.shrine-cell.fire { border-left: 3px solid var(--fire); }
+.shrine-cell.water { border-left: 3px solid var(--water); }
+.shrine-cell.earth { border-left: 3px solid var(--earth); }
+.shrine-cell.air { border-left: 3px solid var(--air); }
+
+/* Live feed */
+.feed-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.feed-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-gold);
+  font-size: 11px;
+}
+.feed-item .timestamp {
+  color: var(--text-dim);
+  font-size: 9px;
+  font-family: monospace;
+}
+.feed-item .cards {
+  color: var(--gold-light);
+  margin-top: 4px;
+}
+.feed-item .question {
+  font-style: italic;
+  color: var(--text-mid);
+  margin-top: 4px;
+}
+
+/* GAIA Field */
+.gaia-matrix {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.gaia-cell {
+  background: rgba(0,0,0,0.3);
+  border-radius: 6px;
+  padding: 6px;
+  text-align: center;
+  font-size: 10px;
+}
+.gaia-cell.harmonic { background: rgba(138,184,122,0.2); color: var(--sage); }
+.gaia-cell.coherent { background: rgba(212,168,64,0.15); color: var(--gold); }
+.gaia-cell.stable { background: rgba(102,170,204,0.1); color: var(--water); }
+.gaia-cell.dissonant { background: rgba(201,74,42,0.15); color: var(--fire); }
+.k-value {
+  text-align: center;
+  font-size: 24px;
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  margin-top: 12px;
+}
+.k-value span { font-size: 12px; color: var(--text-dim); }
+
+/* Stats row */
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.stat-card {
+  flex: 1;
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+.stat-number {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 28px;
+  color: var(--gold-light);
+}
+.stat-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Refresh button */
+.refresh-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 8px;
+  font-family: 'Cinzel', serif;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+.refresh-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border-gold);
+}
+</style>
+</head>
+<body>
+
+<canvas id="ambientCanvas"></canvas>
+<div id="dashboardOverlay"></div>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-title">Digital Divination</div>
+    <div class="nav-brand-sub">Aspects of the Divine</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Temple</a></li>
+    <li><a href="draw.html">Draw Cards</a></li>
+    <li><a href="zodiac.html">Zodiac</a></li>
+    <li><a href="archive.html">Archive</a></li>
+  </ul>
+</nav>
+
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>✦ Ealdforn Dashboard ✦</h1>
+    <div class="subtitle">The Earth Shrine · The Watchers · The Field</div>
+  </div>
+
+  <div class="dashboard-grid">
+    
+    <!-- PANEL 1: SKY STATE -->
+    <div class="panel">
+      <div class="panel-title">
+        <span class="glyph">☀️</span> The Watchers
+        <button class="refresh-btn" onclick="refreshAll()">⟳ Refresh</button>
+      </div>
+      <div id="skyPanel">
+        <div class="period-badge" id="periodBadge">Loading...</div>
+        <div class="sky-grid" id="planetGrid"></div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: EARTH SHRINE (4x4 Mycelial Grid) -->
+    <div class="panel">
+      <div class="panel-title">
+        <span class="glyph">🜃</span> Earth Shrine · Mycelial Grid
+      </div>
+      <div class="shrine-grid" id="shrineGrid"></div>
+      <div class="stats-row" style="margin-top: 16px;">
+        <div class="stat-card">
+          <div class="stat-number" id="recentReadingsCount">0</div>
+          <div class="stat-label">Recent Readings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="solarCount">0</div>
+          <div class="stat-label">Solar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="lunarCount">0</div>
+          <div class="stat-label">Lunar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: LIVE FEED -->
+    <div class="panel">
+      <div class="panel-title">
+        <span class="glyph">📖</span> Live Feed · Recent Readings
+      </div>
+      <div class="feed-list" id="feedList">
+        <div style="text-align:center;color:var(--text-dim);padding:20px;">Loading readings...</div>
+      </div>
+    </div>
+
+    <!-- PANEL 4: GAIA FIELD -->
+    <div class="panel">
+      <div class="panel-title">
+        <span class="glyph">🌍</span> GAIA Field · Primordial Cosmology
+      </div>
+      <div id="gaiaPanel">
+        <div class="gaia-matrix" id="titanMatrix"></div>
+        <div class="k-value">
+          <span>K =</span> <span id="kValue">0.00</span>
+        </div>
+        <div class="stats-row" style="margin-top: 12px;">
+          <div class="stat-card">
+            <div class="stat-number" id="totalReadings">0</div>
+            <div class="stat-label">Total Readings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="dbStatus">⚡</div>
+            <div class="stat-label">DivineDB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    EALDFORN REPUBLIC · THE SKY IS THE SOURCE CODE · THE FIRE HOLDS
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+<script src="js/observe.js"></script>
+
+<script>
+// ─── SUPABASE CONFIG ─────────────────────────
+const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
+
+let supabaseClient = null;
+let currentReadings = [];
+
+// ─── INIT SUPABASE ──────────────────────────
+function initSupabase() {
+  if (window.supabase && !supabaseClient) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('DivineDB client ready');
+  }
+}
+
+// ─── AMBIENT CANVAS (Pontus light) ──────────
+const canvas = document.getElementById('ambientCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+let time = 0;
+function drawAmbient() {
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  time += 0.02;
+  for (let i = 0; i < 8; i++) {
+    const y = h * 0.3 + i * (h * 0.08);
+    const amp = 8 + i * 2;
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    for (let x = 0; x <= w; x += 8) {
+      const yOff = Math.sin(x * 0.01 + time + i * 0.5) * amp + Math.sin(x * 0.025 + time * 0.7) * (amp * 0.3);
+      ctx.lineTo(x, y + yOff);
+    }
+    ctx.lineTo(w, h);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(20, 40, 80, ${0.03 + i * 0.01})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(drawAmbient);
+}
+drawAmbient();
+
+// ─── SKY STATE ──────────────────────────────
+async function loadSkyState() {
+  try {
+    const state = await Observe.getSkyState();
+    const period = state.period;
+    const badge = document.getElementById('periodBadge');
+    badge.className = `period-badge ${period === 'SUN' ? 'sun' : 'moon'}`;
+    badge.innerHTML = period === 'SUN' ? '☀️ SOLAR READING' : '🌙 LUNAR READING';
+    
+    const grid = document.getElementById('planetGrid');
+    const planets = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn'];
+    let html = '';
+    for (const p of planets) {
+      const data = state.planets[p];
+      if (data) {
+        html += `
+          <div class="sky-item">
+            <div class="planet">${p.toUpperCase()}</div>
+            <div class="sign">${data.sign}</div>
+            <div class="degree">${data.degree}°</div>
+          </div>
+        `;
+      }
+    }
+    grid.innerHTML = html;
+  } catch(e) {
+    console.warn('Sky load failed:', e);
+    document.getElementById('planetGrid').innerHTML = '<div style="text-align:center;">Sky unavailable</div>';
+  }
+}
+
+// ─── LOAD RECENT READINGS FROM DIVINEDB ──────
+async function loadReadings() {
+  if (!supabaseClient) initSupabase();
+  if (!supabaseClient) return;
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('readings')
+      .select('*')
+      .order('timestamp', { ascending: false })
+      .limit(20);
+    
+    if (error) throw error;
+    currentReadings = data || [];
+    updateFeed();
+    updateShrine();
+    updateStats();
+  } catch(e) {
+    console.warn('Failed to load readings:', e);
+    document.getElementById('feedList').innerHTML = '<div style="text-align:center;">DivineDB offline</div>';
+  }
+}
+
+// ─── UPDATE LIVE FEED ───────────────────────
+function updateFeed() {
+  const container = document.getElementById('feedList');
+  if (!currentReadings.length) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:20px;">No readings yet. Draw cards.</div>';
+    return;
+  }
+  
+  let html = '';
+  for (const r of currentReadings.slice(0, 10)) {
+    const date = new Date(r.timestamp);
+    const timeStr = date.toLocaleString();
+    html += `
+      <div class="feed-item">
+        <div class="timestamp">${timeStr} · ${r.period || 'UNKNOWN'}</div>
+        <div class="cards">${r.past_card || '?'} → ${r.present_card || '?'} → ${r.future_card || '?'}</div>
+        ${r.user_question ? `<div class="question">"${r.user_question.substring(0, 60)}${r.user_question.length > 60 ? '...' : ''}"</div>` : ''}
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+// ─── UPDATE EARTH SHRINE (4x4 mycelial grid) ─
+function updateShrine() {
+  const container = document.getElementById('shrineGrid');
+  const recent = currentReadings.slice(0, 16);
+  const totalCells = 16;
+  let html = '';
+  
+  for (let i = 0; i < totalCells; i++) {
+    const reading = recent[i];
+    if (reading) {
+      const suit = getSuitFromCard(reading.future_card || reading.past_card || '');
+      html += `
+        <div class="shrine-cell ${suit}">
+          <div class="card-suit">${getSuitIcon(suit)}</div>
+          <div class="card-name-small">${truncateCard(reading.future_card || reading.past_card || 'Card', 12)}</div>
+        </div>
+      `;
+    } else {
+      html += `<div class="shrine-cell empty"><div class="card-suit">🌱</div><div class="card-name-small">awaiting</div></div>`;
+    }
+  }
+  container.innerHTML = html;
+}
+
+function getSuitFromCard(cardName) {
+  const name = (cardName || '').toLowerCase();
+  if (name.includes('fire') || name.includes('ares') || name.includes('apollo')) return 'fire';
+  if (name.includes('water') || name.includes('poseidon')) return 'water';
+  if (name.includes('earth') || name.includes('demeter')) return 'earth';
+  if (name.includes('air') || name.includes('zeus')) return 'air';
+  return '';
+}
+
+function getSuitIcon(suit) {
+  const icons = { fire: '🔥', water: '🌊', earth: '🜃', air: '💨' };
+  return icons[suit] || '🜏';
+}
+
+function truncateCard(name, len) {
+  if (!name) return '???';
+  return name.length > len ? name.substring(0, len) + '…' : name;
+}
+
+// ─── UPDATE STATS ───────────────────────────
+function updateStats() {
+  const total = currentReadings.length;
+  const solar = currentReadings.filter(r => r.period === 'SUN' || r.period === 'SOLAR').length;
+  const lunar = currentReadings.filter(r => r.period === 'MOON' || r.period === 'LUNAR').length;
+  
+  document.getElementById('recentReadingsCount').innerText = Math.min(total, 16);
+  document.getElementById('solarCount').innerText = solar;
+  document.getElementById('lunarCount').innerText = lunar;
+  document.getElementById('totalReadings').innerText = total;
+  document.getElementById('dbStatus').innerHTML = supabaseClient ? '📖 Online' : '💾 Local';
+}
+
+// ─── GAIA TITAN MATRIX (simulated) ──────────
+function loadGaiaMatrix() {
+  const titans = ['Kronos', 'Rhea', 'Oceanus', 'Tethys', 'Hyperion', 'Theia', 'Koios', 'Phoibe', 'Mnemosyne', 'Themis'];
+  const container = document.getElementById('titanMatrix');
+  let html = '';
+  
+  // Show first 10 titans with simulated harmony
+  for (let i = 0; i < 10; i++) {
+    const harmony = Math.random();
+    let status = 'stable';
+    if (harmony > 0.8) status = 'harmonic';
+    else if (harmony > 0.6) status = 'coherent';
+    else if (harmony < 0.3) status = 'dissonant';
+    
+    html += `<div class="gaia-cell ${status}">${titans[i].substring(0, 4)}</div>`;
+  }
+  container.innerHTML = html;
+  
+  // Simulate K-value based on reading count
+  const k = Math.min(0.8 + (currentReadings.length / 100), 1.5);
+  document.getElementById('kValue').innerText = k.toFixed(2);
+}
+
+// ─── REFRESH ALL ────────────────────────────
+async function refreshAll() {
+  await loadSkyState();
+  await loadReadings();
+  loadGaiaMatrix();
+}
+
+// ─── INIT ───────────────────────────────────
+async function init() {
+  initSupabase();
+  await loadSkyState();
+  await loadReadings();
+  loadGaiaMatrix();
+  
+  // Auto-refresh every 60 seconds
+  setInterval(() => {
+    loadSkyState();
+    loadReadings();
+    loadGaiaMatrix();
+  }, 60000);
+}
+
+init();
+</script>
+
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
