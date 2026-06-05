@@ -7,7 +7,7 @@
  * Pure observation. No interpretation. No narrative.
  * 
  * Dependencies:
- *   - Astronomy Engine v2.1.8 (astronomy.browser.min.js)
+ *   - Astronomy Engine v2.1.8+ (astronomy.browser.min.js)
  *   - SunCalc (suncalc.min.js)
  */
 
@@ -40,12 +40,31 @@ const Observe = (() => {
     'Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'
   ];
 
-  // ─── ASTRONOMY ENGINE v2 BODY MAP ────────
-  // In v2.x, bodies are accessed as Astronomy.Body.Sun, etc.
+  // ─── DEBUG ──────────────────────────────
+  function debugAstronomyAPI() {
+    console.log('Astronomy Engine API Check:');
+    console.log('  typeof Astronomy:', typeof Astronomy);
+    if (typeof Astronomy !== 'undefined') {
+      console.log('  Astronomy.Body:', typeof Astronomy.Body);
+      console.log('  Astronomy.Body keys:', Astronomy.Body ? Object.keys(Astronomy.Body) : 'N/A');
+      console.log('  Astronomy.Equator:', typeof Astronomy.Equator);
+      console.log('  Astronomy.Ecliptic:', typeof Astronomy.Ecliptic);
+      console.log('  Astronomy.Horizon:', typeof Astronomy.Horizon);
+      console.log('  Astronomy.Observer:', typeof Astronomy.Observer);
+    }
+  }
+
+  // ─── ASTRONOMY ENGINE BODY MAP ──────────
   function getAstronomyBody(bodyName) {
     try {
-      // Try v2.x API
-      if (typeof Astronomy !== 'undefined' && Astronomy.Body) {
+      // Check if Astronomy is loaded
+      if (typeof Astronomy === 'undefined') {
+        console.error('Astronomy Engine not loaded!');
+        return null;
+      }
+
+      // Check for Astronomy.Body (v2.x style)
+      if (Astronomy.Body) {
         const bodyMap = {
           'Sun': Astronomy.Body.Sun,
           'Moon': Astronomy.Body.Moon,
@@ -58,12 +77,18 @@ const Observe = (() => {
           'Neptune': Astronomy.Body.Neptune,
           'Pluto': Astronomy.Body.Pluto
         };
-        return bodyMap[bodyName] || null;
+        const body = bodyMap[bodyName];
+        if (body !== undefined) {
+          return body;
+        }
       }
+
+      // Try direct string mapping (some versions use strings)
+      return bodyName;
     } catch (e) {
-      console.warn('Astronomy.Body not available:', e);
+      console.error('Error in getAstronomyBody:', e);
+      return null;
     }
-    return null;
   }
 
   // ─── HELPER: Ecliptic Longitude to Sign ───
@@ -79,18 +104,52 @@ const Observe = (() => {
 
   // ─── GET PLANET POSITION ──────────────────
   function getPlanetPosition(bodyName, date) {
-    const body = getAstronomyBody(bodyName);
-    if (!body) {
-      console.warn(`Astronomy body not found for: ${bodyName}`);
-      return null;
-    }
-
     try {
-      // Use geocentric equatorial coordinates (observer at Earth center)
-      const eq = Astronomy.Equator(body, date, null, true, false);
-      const ecl = Astronomy.Ecliptic(eq.elon, eq.elat);
+      const body = getAstronomyBody(bodyName);
+      if (!body) {
+        console.warn(`Could not resolve body: ${bodyName}`);
+        return null;
+      }
+
+      let eq, ecl;
       
-      let lon = ecl.elon;
+      // Try v2.x API first
+      if (Astronomy.Equator && Astronomy.Ecliptic) {
+        // v2.x: Equator(body, date, observer, equdate, aberration)
+        eq = Astronomy.Equator(body, date, null, true, false);
+        
+        // v2.x Ecliptic might take different parameters
+        if (typeof Astronomy.Ecliptic === 'function') {
+          // Try v2.x style: Ecliptic(elon, elat)
+          if (eq.elon !== undefined && eq.elat !== undefined) {
+            ecl = Astronomy.Ecliptic(eq.elon, eq.elat);
+          } 
+          // Try v3.x style: Ecliptic(equ)
+          else if (eq.vec) {
+            ecl = Astronomy.Ecliptic(eq);
+          } else {
+            // Assume eq has elon/elat
+            ecl = { elon: eq.elon, elat: eq.elat };
+          }
+        } else {
+          ecl = { elon: eq.elon, elat: eq.elat };
+        }
+      } else {
+        console.error('Astronomy.Equator or Astronomy.Ecliptic not available');
+        return null;
+      }
+      
+      // Get longitude from ecliptic
+      let lon;
+      if (typeof ecl.elon === 'number') {
+        lon = ecl.elon; // Already in degrees in v2.x
+      } else if (ecl.elon && typeof ecl.elon === 'object') {
+        // Might be a vector
+        lon = Math.atan2(ecl.elon.y, ecl.elon.x) * 180 / Math.PI;
+      } else {
+        console.error('Cannot extract longitude from ecliptic:', ecl);
+        return null;
+      }
       
       // Add precession correction (tropical coordinates)
       const daysSinceJ2000 = (date - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24);
@@ -98,22 +157,37 @@ const Observe = (() => {
       const precession = (0.01397 * centuries) * 360;
       
       lon = (lon + precession) % 360;
+      if (lon < 0) lon += 360;
       
       const sign = eclipticToSign(lon);
       const degree = getDegreeInSign(lon);
 
       // Calculate altitude and azimuth for visibility
-      const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
-      const hor = Astronomy.Horizon(date, observer, body);
+      let altitude = 0;
+      let azimuth = 0;
+      let aboveHorizon = false;
+      
+      try {
+        if (Astronomy.Observer && Astronomy.Horizon) {
+          const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
+          const hor = Astronomy.Horizon(date, observer, body);
+          altitude = hor.altitude;
+          azimuth = hor.azimuth;
+          aboveHorizon = altitude > 0;
+        }
+      } catch (e) {
+        // Horizon calculation failed, but position might still be valid
+        console.warn(`Horizon calculation failed for ${bodyName}:`, e.message);
+      }
       
       return {
         sign,
         glyph: SIGN_GLYPHS[sign],
         degree: Math.round(degree * 100) / 100,
         longitude: Math.round(lon * 100) / 100,
-        altitude: Math.round(hor.altitude * 100) / 100,
-        azimuth: Math.round(hor.azimuth * 100) / 100,
-        aboveHorizon: hor.altitude > 0
+        altitude: Math.round(altitude * 100) / 100,
+        azimuth: Math.round(azimuth * 100) / 100,
+        aboveHorizon
       };
     } catch (e) {
       console.warn(`Failed to get ${bodyName} position:`, e.message);
@@ -123,10 +197,10 @@ const Observe = (() => {
 
   // ─── CALCULATE ZENITH TIME ────────────────
   function getZenithTime(bodyName, date) {
-    const body = getAstronomyBody(bodyName);
-    if (!body) return null;
-
     try {
+      const body = getAstronomyBody(bodyName);
+      if (!body || !Astronomy.Observer || !Astronomy.Horizon) return null;
+
       const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
       
       // Search for highest altitude in 24 hours by sampling every 15 minutes
@@ -149,6 +223,7 @@ const Observe = (() => {
           }
         } catch (e) {
           // Skip failed samples
+          continue;
         }
       }
       
@@ -211,50 +286,74 @@ const Observe = (() => {
     };
 
     // Sun tracking
-    const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
-    
-    tracking.sun = {
-      rise: times.sunrise.toISOString(),
-      set: times.sunset.toISOString(),
-      dawn: times.dawn?.toISOString() || null,
-      dusk: times.dusk?.toISOString() || null,
-      zenith: getZenithTime('Sun', date),
-      currentSign: getPlanetPosition('Sun', date)?.sign || 'Unknown',
-      currentGlyph: getPlanetPosition('Sun', date)?.glyph || '☉'
-    };
+    try {
+      const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
+      
+      const sunPos = getPlanetPosition('Sun', date);
+      tracking.sun = {
+        rise: times.sunrise?.toISOString() || null,
+        set: times.sunset?.toISOString() || null,
+        dawn: times.dawn?.toISOString() || null,
+        dusk: times.dusk?.toISOString() || null,
+        zenith: getZenithTime('Sun', date),
+        currentSign: sunPos?.sign || 'Unknown',
+        currentGlyph: sunPos?.glyph || '☉'
+      };
+    } catch (e) {
+      console.warn('Sun tracking failed:', e);
+      tracking.sun = {
+        rise: null, set: null, dawn: null, dusk: null,
+        zenith: null, currentSign: 'Unknown', currentGlyph: '☉'
+      };
+    }
 
     // Moon tracking
-    const moonTimes = SunCalc.getMoonTimes(date, CONFIG.latitude, CONFIG.longitude);
-    const moonIllum = SunCalc.getMoonIllumination(date);
-    
-    tracking.moon = {
-      rise: moonTimes.rise?.toISOString() || null,
-      set: moonTimes.set?.toISOString() || null,
-      phase: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
-      illumination: Math.round(moonIllum.fraction * 100),
-      phaseValue: Math.round(moonIllum.phase * 100) / 100,
-      zenith: getZenithTime('Moon', date),
-      currentSign: getPlanetPosition('Moon', date)?.sign || 'Unknown',
-      currentGlyph: getPlanetPosition('Moon', date)?.glyph || '☽'
-    };
+    try {
+      const moonTimes = SunCalc.getMoonTimes(date, CONFIG.latitude, CONFIG.longitude);
+      const moonIllum = SunCalc.getMoonIllumination(date);
+      const moonPos = getPlanetPosition('Moon', date);
+      
+      tracking.moon = {
+        rise: moonTimes.rise?.toISOString() || null,
+        set: moonTimes.set?.toISOString() || null,
+        phase: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
+        illumination: Math.round(moonIllum.fraction * 100),
+        phaseValue: Math.round(moonIllum.phase * 100) / 100,
+        zenith: getZenithTime('Moon', date),
+        currentSign: moonPos?.sign || 'Unknown',
+        currentGlyph: moonPos?.glyph || '☽'
+      };
+    } catch (e) {
+      console.warn('Moon tracking failed:', e);
+      tracking.moon = {
+        rise: null, set: null, phase: 'Unknown', illumination: 0,
+        phaseValue: 0, zenith: null, currentSign: 'Unknown', currentGlyph: '☽'
+      };
+    }
 
-    // Track sign changes
-    const sunTransits = getSignTransits('Sun', date);
-    const moonTransits = getSignTransits('Moon', date);
-    tracking.events.push(...sunTransits, ...moonTransits);
+    // Track sign changes (only if planets are available)
+    if (getPlanetPosition('Sun', date)) {
+      const sunTransits = getSignTransits('Sun', date);
+      const moonTransits = getSignTransits('Moon', date);
+      tracking.events.push(...sunTransits, ...moonTransits);
+    }
 
     // Planet tracking
     PLANETS.filter(p => p !== 'Sun' && p !== 'Moon').forEach(planet => {
-      const pos = getPlanetPosition(planet, date);
-      if (pos) {
-        tracking.planets[planet.toLowerCase()] = {
-          sign: pos.sign,
-          glyph: pos.glyph,
-          degree: pos.degree,
-          altitude: pos.altitude,
-          aboveHorizon: pos.aboveHorizon,
-          zenith: getZenithTime(planet, date)
-        };
+      try {
+        const pos = getPlanetPosition(planet, date);
+        if (pos) {
+          tracking.planets[planet.toLowerCase()] = {
+            sign: pos.sign,
+            glyph: pos.glyph,
+            degree: pos.degree,
+            altitude: pos.altitude,
+            aboveHorizon: pos.aboveHorizon,
+            zenith: getZenithTime(planet, date)
+          };
+        }
+      } catch (e) {
+        // Skip planets that fail
       }
     });
 
@@ -264,46 +363,71 @@ const Observe = (() => {
   // ─── GET SKY STATE ────────────────────────
   async function getSkyState() {
     const now = new Date();
-    const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
-    const moonIllum = SunCalc.getMoonIllumination(now);
     
-    const isDaytime = now >= times.sunrise && now <= times.sunset;
-    const period = isDaytime ? 'SUN' : 'MOON';
-
-    // Calculate ascendant (rising sign)
-    const gmt = now.getUTCHours() + now.getUTCMinutes() / 60;
-    const jd = (now - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24) + 2451545.0;
-    const lst = (100.46 + 0.985647 * jd + CONFIG.longitude + 15 * gmt) % 360;
-    const ascendantLon = Math.atan2(Math.sin(lst * Math.PI / 180), Math.cos(lst * Math.PI / 180)) * 180 / Math.PI;
-    const ascendantSign = eclipticToSign(ascendantLon);
-
-    const skyState = {
+    let skyState = {
       timestamp: now.toISOString(),
-      period,
+      period: 'SUN',
       location: {
         latitude: CONFIG.latitude,
         longitude: CONFIG.longitude
       },
       solar: {
-        sunrise: times.sunrise.toISOString(),
-        sunset: times.sunset.toISOString(),
-        dawn: times.dawn?.toISOString() || null,
-        dusk: times.dusk?.toISOString() || null
+        sunrise: null,
+        sunset: null,
+        dawn: null,
+        dusk: null
       },
       ascendant: {
-        sign: ascendantSign,
-        glyph: SIGN_GLYPHS[ascendantSign],
-        longitude: Math.round(ascendantLon * 100) / 100
+        sign: 'Unknown',
+        glyph: '?',
+        longitude: 0
       },
       moonPhase: {
-        name: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
-        illumination: Math.round(moonIllum.fraction * 100),
-        phase: Math.round(moonIllum.phase * 100) / 100
+        name: 'Unknown',
+        illumination: 0,
+        phase: 0
       },
       planets: {}
     };
 
-    // Get positions for all planets
+    // Get SunCalc data
+    try {
+      const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
+      const moonIllum = SunCalc.getMoonIllumination(now);
+      
+      const isDaytime = now >= times.sunrise && now <= times.sunset;
+      skyState.period = isDaytime ? 'SUN' : 'MOON';
+      
+      skyState.solar = {
+        sunrise: times.sunrise?.toISOString() || null,
+        sunset: times.sunset?.toISOString() || null,
+        dawn: times.dawn?.toISOString() || null,
+        dusk: times.dusk?.toISOString() || null
+      };
+
+      skyState.moonPhase = {
+        name: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
+        illumination: Math.round(moonIllum.fraction * 100),
+        phase: Math.round(moonIllum.phase * 100) / 100
+      };
+
+      // Calculate ascendant (rising sign)
+      const gmt = now.getUTCHours() + now.getUTCMinutes() / 60;
+      const jd = (now - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24) + 2451545.0;
+      const lst = (100.46 + 0.985647 * jd + CONFIG.longitude + 15 * gmt) % 360;
+      const ascendantLon = Math.atan2(Math.sin(lst * Math.PI / 180), Math.cos(lst * Math.PI / 180)) * 180 / Math.PI;
+      const ascendantSign = eclipticToSign(ascendantLon);
+      
+      skyState.ascendant = {
+        sign: ascendantSign,
+        glyph: SIGN_GLYPHS[ascendantSign],
+        longitude: Math.round(ascendantLon * 100) / 100
+      };
+    } catch (e) {
+      console.warn('SunCalc data failed:', e);
+    }
+
+    // Get planet positions
     PLANETS.forEach(planet => {
       const position = getPlanetPosition(planet, now);
       if (position) {
@@ -311,22 +435,35 @@ const Observe = (() => {
       }
     });
 
+    // If no planets were loaded, use SunCalc moon data as fallback
+    if (Object.keys(skyState.planets).length === 0) {
+      console.warn('No planet positions available from Astronomy Engine. Using basic SunCalc data only.');
+    }
+
     return skyState;
   }
 
   // ─── GET CURRENT PERIOD ONLY ──────────────
   function getCurrentPeriod() {
     const now = new Date();
-    const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
-    return (now >= times.sunrise && now <= times.sunset) ? 'SUN' : 'MOON';
+    try {
+      const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
+      return (now >= times.sunrise && now <= times.sunset) ? 'SUN' : 'MOON';
+    } catch (e) {
+      return 'SUN';
+    }
   }
 
   // ─── GET MOON ASPECT ──────────────────────
   function getMoonAspect() {
     const now = new Date();
-    const moonIllum = SunCalc.getMoonIllumination(now);
-    const phaseIdx = Math.round(moonIllum.phase * 8) % 8;
-    return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
+    try {
+      const moonIllum = SunCalc.getMoonIllumination(now);
+      const phaseIdx = Math.round(moonIllum.phase * 8) % 8;
+      return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
+    } catch (e) {
+      return 'Artemis';
+    }
   }
 
   // ─── UPDATE CONFIG ────────────────────────
@@ -338,6 +475,8 @@ const Observe = (() => {
 
   // ─── TEST FUNCTION ────────────────────────
   async function testSkyState() {
+    debugAstronomyAPI();
+    
     const state = await getSkyState();
     const tracking = getDailyTracking();
     
@@ -351,11 +490,13 @@ const Observe = (() => {
     });
     
     console.log('\n=== DAILY TRACKING ===');
-    console.log(`Sun rises: ${new Date(tracking.sun.rise).toLocaleTimeString()}`);
-    console.log(`Sun sets: ${new Date(tracking.sun.set).toLocaleTimeString()}`);
-    console.log(`Sun zenith: ${tracking.sun.zenith?.time?.toLocaleTimeString()}`);
-    console.log(`Moon rises: ${tracking.moon.rise ? new Date(tracking.moon.rise).toLocaleTimeString() : 'No rise today'}`);
-    console.log(`Moon sets: ${tracking.moon.set ? new Date(tracking.moon.set).toLocaleTimeString() : 'No set today'}`);
+    if (tracking.sun.rise) {
+      console.log(`Sun rises: ${new Date(tracking.sun.rise).toLocaleTimeString()}`);
+      console.log(`Sun sets: ${new Date(tracking.sun.set).toLocaleTimeString()}`);
+    }
+    if (tracking.moon.rise) {
+      console.log(`Moon rises: ${new Date(tracking.moon.rise).toLocaleTimeString()}`);
+    }
     if (tracking.events.length > 0) {
       console.log('\nSign Transits Today:');
       tracking.events.forEach(e => {
@@ -365,6 +506,9 @@ const Observe = (() => {
     console.log('===================================\n');
     return { state, tracking };
   }
+
+  // Run debug on load
+  debugAstronomyAPI();
 
   // ─── PUBLIC API ───────────────────────────
   return {
