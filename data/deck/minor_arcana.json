@@ -353,20 +353,20 @@
         "image": "data/images/minor/earth/earth_09.png",
         "prompt": "The Influencer, modern archetype of Narcissus reborn under the ring light — the curated self as brand, as tarot card."
       },
-      {
-        "id": "earth_10",
-        "name": "Ten of Earth",
-        "title": "House of Atreus",
-        "culture": "Greek",
-        "rank": "ten",
-        "element": "Earth",
-        "ruling_god": "Hera",
-        "keywords": ["dynasty", "generational wealth", "generational curse", "legacy", "the bloodline"],
-        "upright": "The House of Atreus ruled Mycenae for generations — and every generation bathed in blood. The Ten of Earth is the dynasty. The wealth that passes down. The curse that passes with it. What are you inheriting? What will you pass on?",
-        "reversed": "The curse broken. The dynasty ended. Atreus's last descendant laying down the knife. Sometimes the greatest inheritance is freedom from the inheritance.",
-        "image": "data/images/minor/earth/earth_10.png",
-        "prompt": "The House of Atreus, the cursed Greek dynasty of Mycenae where every generation inherited blood and gold, as tarot card."
-      },
+{
+  "id": "earth_10",
+  "name": "Ten of Earth",
+  "title": "Enki",
+  "culture": "Sumerian",
+  "rank": "ten",
+  "element": "Earth",
+  "ruling_god": "Hera",
+  "keywords": ["civilizational inheritance", "the accumulated gift", "deep wisdom", "what passes down", "the founding systems"],
+  "upright": "Enki gave humanity the me — writing, kingship, craft, music, law. Not as charity but as architecture. The Ten of Earth is everything you were handed without knowing it: the language you think in, the systems you move through, the knowledge that arrived before you did. You are downstream of something vast. Honor the source.",
+  "reversed": "The me scattered. Inanna stole them drunk from Enki's table and he couldn't take them back — the knowledge already loose in the world, already corrupting, already being misused. The inheritance weaponized. The gift that became a burden passed to people who didn't know its weight.",
+  "image": "data/images/minor/earth/earth_10.png",
+  "prompt": "Enki, Sumerian god of wisdom and fresh water, keeper of the me — the sacred laws of civilization — seated in the abzu, his underwater domain, as tarot card."
+}
       {
         "id": "earth_page",
         "name": "Page of Earth",
