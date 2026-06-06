@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chthonic Grimoire · The Void Claims the Sky</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void:        #060610;
+  --deep:        #0a0818;
+  --surface:     #100c24;
+  --surface2:    #1a1432;
+  --border:      #2a2044;
+  
+  /* Chthonic palette */
+  --chthonic:      #9966cc;
+  --chthonic-light:#c4a0e8;
+  --chthonic-dim:  #664488;
+  --chthonic-dark: #332244;
+  
+  /* Element river colors */
+  --fire-river:   #cc5533;
+  --earth-river:  #886644;
+  --air-river:    #7766aa;
+  --water-river:  #447799;
+  
+  /* Primordial */
+  --chaos:        #220022;
+  --chaos-light:  #ff44ff;
+  
+  /* Hades/Threshold */
+  --threshold:    #8866aa;
+  
+  --text:        #e8e0f0;
+  --text-mid:    #c8b8e0;
+  --text-dim:    #8878a8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 50% 90%, #0c0620 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 5%, #060210 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, #080418 0%, var(--void) 100%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Stars — dimmer, colder */
+.stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.star {
+  position: absolute; background: #8866cc; border-radius: 50%;
+  opacity: 0.15; animation: twinkle 6s infinite alternate;
+}
+@keyframes twinkle {
+  0%   { opacity: 0.05; transform: scale(1); }
+  100% { opacity: 0.3;  transform: scale(1.4); }
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: rgba(6,2,16,0.9); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(153,102,204,0.2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 200;
+}
+.nav-brand { display: flex; flex-direction: column; gap: 1px; }
+.nav-brand-title {
+  font-family: 'Cinzel Decorative', serif; font-size: 13px;
+  color: var(--chthonic-light); letter-spacing: 1.5px;
+}
+.nav-brand-sub {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px;
+  color: var(--chthonic-dim); text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
+.nav-links a {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--text-dim);
+  text-decoration: none; transition: color 0.2s; padding: 4px 0;
+}
+.nav-links a:hover { color: var(--chthonic-light); }
+
+/* ── SISTER LINK ── */
+.sister-link {
+  position: fixed; top: 64px; right: 16px; z-index: 200;
+}
+.sister-link a {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-dim);
+  text-decoration: none; padding: 6px 12px;
+  border: 1px solid rgba(212,168,64,0.2); border-radius: 16px;
+  transition: all 0.3s;
+}
+.sister-link a:hover {
+  border-color: rgba(212,168,64,0.5); color: #d4a840;
+}
+
+/* ── LAYOUT ── */
+.container {
+  position: relative; z-index: 2; max-width: 720px;
+  margin: 0 auto; padding: 80px 16px 60px;
+}
+
+.header { text-align: center; margin-bottom: 8px; }
+.header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(22px, 5vw, 38px);
+  color: var(--chthonic-light);
+  letter-spacing: 2px;
+  text-shadow: 0 0 40px rgba(153,102,204,0.3);
+}
+.header .date {
+  font-family: 'Cinzel', serif; font-size: 10px;
+  letter-spacing: 3px; color: var(--text-dim); margin-top: 8px;
+}
+
+/* ── VOID BANNER ── */
+.void-banner {
+  text-align: center; padding: 10px; margin-bottom: 20px;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif; font-size: 9px;
+  letter-spacing: 4px; text-transform: uppercase;
+  background: rgba(153,102,204,0.05);
+  border: 1px solid rgba(153,102,204,0.15);
+  color: var(--chthonic-light);
+}
+
+/* ── SKY DIAGRAM (void-focused) ── */
+.sky-diagram {
+  position: relative;
+  width: min(400px, 84vw); height: min(400px, 84vw);
+  margin: 0 auto 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(8,4,24,0.8), rgba(2,2,12,0.98));
+  border: 1px solid rgba(153,102,204,0.2);
+  box-shadow: 0 0 80px rgba(0,0,0,0.6), inset 0 0 60px rgba(0,0,0,0.5);
+}
+
+.zodiac-sign {
+  position: absolute; text-align: center;
+  font-family: 'Cinzel Decorative', serif; font-size: 16px;
+  transition: all 0.4s; cursor: pointer; z-index: 10;
+}
+.zodiac-sign .sign-name {
+  font-size: 6px; letter-spacing: 2px; display: block;
+  margin-top: -2px; opacity: 0.6;
+}
+
+/* Chthonic claimed sign */
+.zodiac-sign.chthonic {
+  color: var(--chthonic-light);
+  text-shadow: 0 0 12px rgba(153,102,204,0.5);
+  font-size: 20px;
+}
+.zodiac-sign.chthonic .sign-name { opacity: 1; color: var(--chthonic); }
+
+/* Olympian occupied (muted — this grimoire doesn't care about them) */
+.zodiac-sign.olympian {
+  color: #332244;
+  opacity: 0.4;
+}
+
+/* Truly empty (both absent — rare) */
+.zodiac-sign.void {
+  color: #1a0a2a;
+  opacity: 0.25;
+}
+
+/* Primordial chaos on fully-void elements */
+.zodiac-sign.primordial {
+  color: var(--chaos-light);
+  text-shadow: 0 0 20px rgba(255,68,255,0.6);
+  animation: chaos-pulse 3s infinite alternate;
+}
+@keyframes chaos-pulse {
+  0% { text-shadow: 0 0 15px rgba(255,68,255,0.4); }
+  100% { text-shadow: 0 0 30px rgba(255,68,255,0.8); }
+}
+
+.sign-0  { top:-8px;left:50%;transform:translateX(-50%); }
+.sign-1  { top:14%;right:8%;transform:translate(50%,-50%); }
+.sign-2  { top:50%;right:-8px;transform:translateY(-50%); }
+.sign-3  { bottom:14%;right:8%;transform:translate(50%,50%); }
+.sign-4  { bottom:-8px;left:50%;transform:translateX(-50%); }
+.sign-5  { bottom:14%;left:8%;transform:translate(-50%,50%); }
+.sign-6  { top:50%;left:-8px;transform:translateY(-50%); }
+.sign-7  { top:14%;left:8%;transform:translate(-50%,-50%); }
+.sign-8  { top:28%;right:-2px;transform:translate(50%,-50%); }
+.sign-9  { bottom:28%;right:-2px;transform:translate(50%,50%); }
+.sign-10 { bottom:28%;left:-2px;transform:translate(-50%,50%); }
+.sign-11 { top:28%;left:-2px;transform:translate(-50%,-50%); }
+
+.center-sky {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); text-align: center; z-index: 5;
+}
+.center-sky .void-glyph {
+  font-size: 42px; display: block;
+}
+.center-sky .void-label {
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 3px; color: var(--text-dim); margin-top: 6px;
+}
+.center-sky .threshold-note {
+  font-size: 9px; color: var(--threshold);
+  font-style: italic; margin-top: 4px;
+}
+
+/* ── GRIMOIRE CARDS ── */
+.grimoire-card {
+  background: rgba(16,12,36,0.55);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+}
+.grimoire-card.chthonic-border {
+  border-color: rgba(153,102,204,0.25);
+}
+
+.grimoire-card h2 {
+  font-family: 'Cinzel Decorative', serif; font-size: 14px;
+  color: var(--chthonic-light); margin-bottom: 18px;
+  letter-spacing: 2px; text-align: center;
+}
+
+/* ── RIVER PANEL ── */
+.river-panel {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.river-card {
+  border-radius: 12px; padding: 14px; text-align: center;
+  border: 1px solid transparent;
+}
+.river-card.fire  { background: rgba(40,15,10,0.5); border-color: rgba(204,85,51,0.2); }
+.river-card.earth { background: rgba(30,20,10,0.5); border-color: rgba(136,102,68,0.2); }
+.river-card.air   { background: rgba(20,15,40,0.5); border-color: rgba(119,102,170,0.2); }
+.river-card.water { background: rgba(10,20,35,0.5); border-color: rgba(68,119,153,0.2); }
+.river-card.primordial { background: rgba(30,0,30,0.5); border-color: rgba(255,68,255,0.2); grid-column: 1 / -1; }
+
+.river-name {
+  font-family: 'Cinzel Decorative', serif; font-size: 12px; margin-bottom: 4px;
+}
+.river-card.fire  .river-name { color: var(--fire-river); }
+.river-card.earth .river-name { color: var(--earth-river); }
+.river-card.air   .river-name { color: var(--air-river); }
+.river-card.water .river-name { color: var(--water-river); }
+.river-card.primordial .river-name { color: var(--chaos-light); }
+
+.river-residents {
+  font-size: 10px; color: var(--text-dim); line-height: 1.6;
+}
+.river-residents .resident-name {
+  color: var(--chthonic-light); font-style: normal;
+}
+
+/* ── THRESHOLD CARD ── */
+.threshold-card {
+  background: rgba(20,10,35,0.6);
+  border: 1px solid rgba(136,102,170,0.3);
+  border-radius: 12px; padding: 20px; text-align: center;
+  margin-bottom: 16px;
+}
+.threshold-glyph { font-size: 36px; margin-bottom: 8px; }
+.threshold-title {
+  font-family: 'Cinzel Decorative', serif; font-size: 14px;
+  color: var(--threshold);
+}
+.threshold-position {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
+  color: var(--text-dim); margin: 6px 0;
+}
+.threshold-whisper {
+  font-size: 13px; font-style: italic; color: var(--text-mid);
+  line-height: 1.6; padding-top: 10px;
+  border-top: 1px solid rgba(136,102,170,0.1);
+}
+
+/* ── VOID HOUSES ── */
+.void-houses {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px; margin-top: 8px;
+}
+.void-house {
+  border-radius: 10px; padding: 14px; text-align: center;
+  border: 1px solid transparent;
+  background: rgba(0,0,0,0.2);
+}
+.void-house.occupied { border-color: rgba(212,168,64,0.12); background: rgba(16,12,8,0.3); opacity: 0.5; }
+.void-house.void { border-color: rgba(153,102,204,0.2); background: rgba(12,6,24,0.4); }
+.void-house.primordial-house { border-color: rgba(255,68,255,0.3); background: rgba(20,0,20,0.5); }
+
+.void-house .vh-glyph { font-size: 20px; }
+.void-house.occupied .vh-glyph { color: var(--chthonic-dim); opacity: 0.5; }
+.void-house.void .vh-glyph { color: var(--chthonic-light); }
+.void-house.primordial-house .vh-glyph { color: var(--chaos-light); text-shadow: 0 0 10px rgba(255,68,255,0.4); }
+
+.void-house .vh-sign { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px; margin-top: 3px; }
+.void-house.occupied .vh-sign { color: var(--text-dim); opacity: 0.5; }
+.void-house.void .vh-sign { color: var(--text-dim); }
+.void-house.primordial-house .vh-sign { color: var(--chaos-light); }
+
+.void-house .vh-resident {
+  font-family: 'Cinzel Decorative', serif; font-size: 11px;
+  color: var(--chthonic-light); margin-top: 4px;
+}
+.void-house .vh-title {
+  font-size: 8px; color: var(--chthonic-dim); font-style: italic; margin-top: 2px;
+  line-height: 1.3;
+}
+.void-house .vh-occupied-note {
+  font-size: 8px; color: var(--text-dim); opacity: 0.4; margin-top: 4px;
+}
+
+/* ── NARRATIVE ── */
+.narrative-block {
+  font-size: 17px; font-style: italic; line-height: 1.85; color: var(--text-mid);
+}
+.narrative-block strong { color: var(--chthonic-light); font-style: normal; }
+.narrative-block .sign-addr { color: var(--chthonic); font-weight: 600; font-style: normal; }
+.narrative-block .whisper {
+  display: block; margin-top: 14px; padding-left: 14px;
+  border-left: 2px solid rgba(153,102,204,0.25);
+  font-size: 15px; color: var(--text-dim);
+}
+.narrative-block p { margin-bottom: 12px; }
+.narrative-block p:last-child { margin-bottom: 0; }
+
+.narrative-source {
+  text-align: center; font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 3px; color: var(--chthonic-dim); margin-top: 16px;
+  padding-top: 12px; border-top: 1px solid rgba(153,102,204,0.08);
+}
+
+/* ── SIGN SELECTOR ── */
+.sign-selector {
+  text-align: center; margin-top: 4px;
+  padding-top: 20px; border-top: 1px solid rgba(153,102,204,0.15);
+}
+.sign-selector label {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  color: var(--text-dim); display: block; margin-bottom: 8px;
+}
+.sign-selector select {
+  font-family: 'Cinzel', serif; background: var(--surface);
+  border: 1px solid var(--border); color: var(--text);
+  padding: 10px 20px; border-radius: 8px; font-size: 11px;
+  cursor: pointer; -webkit-appearance: none; appearance: none;
+  max-width: 260px; width: 100%;
+}
+.sign-selector select:focus { border-color: var(--chthonic); outline: none; }
+#signMessage {
+  margin-top: 14px; font-size: 14px; font-style: italic;
+  color: var(--text-mid); line-height: 1.7; min-height: 40px;
+}
+
+.refresh-row { text-align: center; margin: 14px 0; }
+.btn-refresh {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; padding: 9px 20px; border-radius: 6px;
+  border: 1px solid var(--chthonic-dim);
+  background: transparent; color: var(--chthonic);
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-refresh:active { background: rgba(153,102,204,0.1); }
+
+footer {
+  text-align: center; padding: 30px; font-size: 7px; letter-spacing: 3px;
+  color: var(--chthonic-dim); border-top: 1px solid rgba(153,102,204,0.06);
+  margin-top: 20px; opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  nav { padding: 0 12px; }
+  .nav-links { gap: 10px; }
+  .nav-links a { font-size: 7px; letter-spacing: 2px; }
+  .sky-diagram { width: 86vw; height: 86vw; }
+  .zodiac-sign { font-size: 13px; }
+  .zodiac-sign.chthonic { font-size: 16px; }
+  .void-houses { grid-template-columns: repeat(2, 1fr); }
+  .river-panel { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-title">Chthonic Grimoire</div>
+    <div class="nav-brand-sub">The Void Claims the Sky</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Temple</a></li>
+    <li><a href="zodiac.html">Celestial</a></li>
+    <li><a href="chthonic.html">Chthonic</a></li>
+    <li><a href="draw.html">Draw</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+  </ul>
+</nav>
+
+<div class="sister-link">
+  <a href="zodiac.html">☀ Celestial Grimoire →</a>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <h1>⬡ Chthonic Grimoire ⬡</h1>
+    <div class="date" id="currentDate"></div>
+  </div>
+
+  <div class="void-banner" id="voidBanner"></div>
+
+  <!-- Sky Diagram — shows chthonic claims prominently -->
+  <div class="sky-diagram" id="skyDiagram">
+    <div id="zodiacRing"></div>
+    <div class="center-sky" id="centerSky"></div>
+  </div>
+
+  <!-- The Threshold — Hades/Pluto position -->
+  <div class="threshold-card" id="thresholdCard"></div>
+
+  <!-- The Rivers — grouped by element -->
+  <div class="grimoire-card chthonic-border">
+    <h2>⬡ The Rivers Below ⬡</h2>
+    <div class="river-panel" id="riverPanel"></div>
+  </div>
+
+  <!-- Void Reading — the primary narrative -->
+  <div class="grimoire-card chthonic-border">
+    <h2>⬡ The Void Speaks ⬡</h2>
+    <div class="narrative-block" id="voidReading"></div>
+    <div class="narrative-source" id="narrativeSource"></div>
+  </div>
+
+  <!-- The Void Houses — all 12 signs, who claims what -->
+  <div class="grimoire-card chthonic-border">
+    <h2>⬡ The Twelve Houses Below ⬡</h2>
+    <div class="void-houses" id="voidHouses"></div>
+  </div>
+
+  <div class="refresh-row">
+    <button class="btn-refresh" onclick="ChthonicGrimoire.refresh()">⬡ Consult the Void Again</button>
+  </div>
+
+  <!-- Sign Selector -->
+  <div class="grimoire-card chthonic-border">
+    <div class="sign-selector">
+      <label>⬡ Who Walks Your Void ⬡</label>
+      <select id="birthSign"></select>
+      <div id="signMessage"></div>
+    </div>
+  </div>
+
+  <footer>CHTHONIC GRIMOIRE · EALDFORN REPUBLIC · THE VOID REMEMBERS WHAT THE SKY FORGETS</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+<script src="js/observe.js"></script>
+<script src="js/almanac.js"></script>
+<script src="js/chthonic.js"></script>
+
+<script>
+const ChthonicGrimoire = (() => {
+
+  // ── CONSTANTS (from Almanac) ────────────────────────────────────────────
+  const SIGNS  = Almanac.SIGNS;
+  const GLYPHS = Almanac.SIGN_GLYPHS;
+  const NAMES  = Almanac.SIGN_NAMES;
+  const SIGN_ELEMENTS = Chthonic.SIGN_ELEMENTS;
+
+  // ── STATE ────────────────────────────────────────────────────────────────
+  let skyData = null;
+
+  // ── HELPERS ──────────────────────────────────────────────────────────────
+  function degreesStr(deg) {
+    return `${Math.floor(deg)}°`;
+  }
+  function fmtTime(t) {
+    return new Date(t).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true });
+  }
+
+  // ── VOID BANNER ─────────────────────────────────────────────────────────
+  function buildBanner(report) {
+    const banner = document.getElementById('voidBanner');
+    const chthonicCount = report.chthonicHouses;
+    const olympianCount = report.olympianHouses;
+    
+    if (chthonicCount > olympianCount) {
+      banner.innerHTML = `⬡ THE VOID PREVAILS — ${chthonicCount} houses claimed by the Underworld ⬡`;
+    } else if (chthonicCount === olympianCount) {
+      banner.innerHTML = `⬡ BALANCE — ${chthonicCount} void houses against ${olympianCount} Olympian ⬡`;
+    } else {
+      banner.innerHTML = `⬡ ${chthonicCount} houses belong to the dark — Olympus holds ${olympianCount} ⬡`;
+    }
+  }
+
+  // ── SKY DIAGRAM ─────────────────────────────────────────────────────────
+  function buildDiagram(report, planets) {
+    document.getElementById('zodiacRing').innerHTML = report.claims.map(({ sign, olympianCount, chthonic }, i) => {
+      let classes = 'zodiac-sign';
+      if (chthonic && chthonic.isPrimordial) classes += ' primordial';
+      else if (chthonic) classes += ' chthonic';
+      else if (olympianCount > 0) classes += ' olympian';
+      else classes += ' void';
+      
+      const glyph = chthonic ? (chthonic.glyph || '⬡') : GLYPHS[sign];
+      const title = chthonic
+        ? `${sign}: ${chthonic.name} — ${chthonic.title}`
+        : olympianCount > 0
+          ? `${sign}: Olympian occupied (${olympianCount})`
+          : `${sign}: Void`;
+      
+      return `<div class="zodiac-sign sign-${i} ${classes}" title="${title}">
+        ${glyph}
+        <span class="sign-name">${sign.substring(0,3).toUpperCase()}</span>
+      </div>`;
+    }).join('');
+
+    // Center — threshold glyph
+    const threshold = report.threshold;
+    document.getElementById('centerSky').innerHTML = `
+      <span class="void-glyph">${threshold ? Chthonic.HADES.glyph : '⬡'}</span>
+      <div class="void-label">VOID READING</div>
+      ${threshold ? `<div class="threshold-note">Hades guards the gate at ${threshold.sign} ${GLYPHS[threshold.sign]}</div>` : ''}
+    `;
+  }
+
+  // ── THRESHOLD CARD ──────────────────────────────────────────────────────
+  function buildThreshold(report, planets) {
+    const threshold = report.threshold;
+    if (!threshold) {
+      document.getElementById('thresholdCard').innerHTML = `
+        <div class="threshold-glyph">⬡</div>
+        <div class="threshold-title">The Gate is Unreadable</div>
+        <div class="threshold-whisper">Pluto cannot be found. The threshold is everywhere and nowhere. All signs touch the Underworld equally tonight.</div>`;
+      return;
+    }
+
+    const plutoData = planets.pluto;
+    document.getElementById('thresholdCard').innerHTML = `
+      <div class="threshold-glyph">${Chthonic.HADES.glyph}</div>
+      <div class="threshold-title">${Chthonic.HADES.name} · ${Chthonic.HADES.title}</div>
+      <div class="threshold-position">
+        ${threshold.sign} ${GLYPHS[threshold.sign]} · ${degreesStr(threshold.degree)} · ${Chthonic.HADES.river}
+      </div>
+      <div class="threshold-whisper">
+        <em>"${Chthonic.HADES.whisper}"</em>
+        <br><br>
+        Hades walks <strong>${threshold.sign} ${GLYPHS[threshold.sign]}</strong> — the gate is here.
+        ${SIGN_ELEMENTS[threshold.sign] === 'Fire' ? 'The fire of the threshold burns away pretense. What crosses here cannot pretend.' :
+          SIGN_ELEMENTS[threshold.sign] === 'Earth' ? 'The earth of the threshold is solid. What crosses here leaves a permanent mark.' :
+          SIGN_ELEMENTS[threshold.sign] === 'Air' ? 'The air of the threshold carries whispers. What crosses here is heard below.' :
+          'The water of the threshold reflects truth. What crosses here cannot hide its face.'}
+      </div>`;
+  }
+
+  // ── RIVER PANEL ─────────────────────────────────────────────────────────
+  function buildRivers(report) {
+    const elements = ['Fire', 'Earth', 'Air', 'Water'];
+    const hasPrimordial = Object.values(report.byElement).some(e => e.isFullyVoid);
+    
+    let html = elements.map(element => {
+      const data = report.byElement[element];
+      const residents = Chthonic.getResidents(element);
+      const riverName = residents[0]?.river || element;
+      
+      if (data.count === 0) {
+        return `
+          <div class="river-card ${element.toLowerCase()}">
+            <div class="river-name">${riverName}</div>
+            <div class="river-residents">No void houses in ${element} — Olympus holds all</div>
+          </div>`;
+      }
+      
+      // Map claimed signs to their residents
+      const claimedSigns = report.claims
+        .filter(c => c.chthonic && c.chthonic.element === element && !c.chthonic.isPrimordial);
+      
+      const residentNames = claimedSigns.map(c => 
+        `<span class="resident-name">${c.chthonic.name}</span> <span style="font-size:8px;opacity:0.6;">(${c.sign})</span>`
+      );
+      
+      return `
+        <div class="river-card ${element.toLowerCase()}">
+          <div class="river-name">${riverName}</div>
+          <div class="river-residents">
+            ${residentNames.length > 0 ? residentNames.join('<br>') : '—'}
+            ${data.isFullyVoid ? '<br><span style="color:#ff44ff;font-size:9px;">⛧ ALL VOID — Chaos stirs</span>' : ''}
+          </div>
+        </div>`;
+    }).join('');
+    
+    if (hasPrimordial) {
+      html += `
+        <div class="river-card primordial">
+          <div class="river-name">⛧ All Rivers · Chaos</div>
+          <div class="river-residents">
+            ${Chthonic.PRIMORDIAL.whisper}
+          </div>
+        </div>`;
+    }
+    
+    document.getElementById('riverPanel').innerHTML = html;
+  }
+
+  // ── VOID HOUSES ─────────────────────────────────────────────────────────
+  function buildVoidHouses(report) {
+    document.getElementById('voidHouses').innerHTML = report.claims.map(({ sign, olympianCount, chthonic }) => {
+      if (olympianCount > 0) {
+        // Olympian occupied — muted in this grimoire
+        const count = olympianCount;
+        return `
+          <div class="void-house occupied">
+            <div class="vh-glyph">${GLYPHS[sign]}</div>
+            <div class="vh-sign">${sign}</div>
+            <div class="vh-occupied-note">${count} Olympian${count > 1 ? 's' : ''} hold this house</div>
+          </div>`;
+      }
+      
+      if (chthonic) {
+        const classes = chthonic.isPrimordial ? 'void primordial-house' : 'void';
+        return `
+          <div class="void-house ${classes}">
+            <div class="vh-glyph">${chthonic.glyph || '⬡'}</div>
+            <div class="vh-sign">${sign}</div>
+            <div class="vh-resident">${chthonic.name}</div>
+            <div class="vh-title">${chthonic.title}</div>
+          </div>`;
+      }
+      
+      // Truly empty
+      return `
+        <div class="void-house void">
+          <div class="vh-glyph">⬡</div>
+          <div class="vh-sign">${sign}</div>
+          <div class="vh-resident">—</div>
+          <div class="vh-title">Silent void</div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── VOID READING ────────────────────────────────────────────────────────
+  function buildVoidReading(report) {
+    const chthonicClaims = report.claims.filter(c => c.chthonic);
+    const primordialClaims = chthonicClaims.filter(c => c.chthonic.isPrimordial);
+    const normalClaims = chthonicClaims.filter(c => !c.chthonic.isPrimordial);
+    const threshold = report.threshold;
+    
+    let parts = [];
+    
+    // Opening — the state of the void
+    if (chthonicClaims.length === 0) {
+      parts.push(`<p>The void is quiet today. Every house is held by Olympus. The Underworld watches from the threshold, but does not enter. <strong>This is not peace. It is a held breath.</strong></p>`);
+    } else if (chthonicClaims.length >= 8) {
+      parts.push(`<p>The void spreads wide — <strong>${chthonicClaims.length} houses</strong> belong to the Underworld. Olympus has retreated to its strongholds. The dark is not invading. It is simply returning to what was always its own.</p>`);
+    } else {
+      parts.push(`<p><strong>${chthonicClaims.length} houses</strong> lie abandoned by the Olympians. The void does not steal them. It answers when no one else will. What Olympus leaves empty, the Underworld fills.</p>`);
+    }
+    
+    // Threshold
+    if (threshold) {
+      parts.push(`<p>Hades guards the gate at <span class="sign-addr">${threshold.sign} ${GLYPHS[threshold.sign]}</span>. Where the Gatekeeper walks, the boundary between worlds is thin. ${Chthonic.HADES.whisper}</p>`);
+    }
+    
+    // Primordial Chaos
+    if (primordialClaims.length > 0) {
+      const elements = [...new Set(primordialClaims.map(c => Chthonic.SIGN_ELEMENTS[c.sign]))];
+      elements.forEach(element => {
+        const signs = primordialClaims.filter(c => Chthonic.SIGN_ELEMENTS[c.sign] === element);
+        parts.push(`<p>⛧ <strong>Chaos stirs in ${element}.</strong> All ${element} signs — ${signs.map(s => `<span class="sign-addr">${s.sign}</span>`).join(', ')} — are void. ${Chthonic.PRIMORDIAL.whisper}</p>`);
+      });
+    }
+    
+    // Specific residents
+    const featured = normalClaims.slice(0, 4);
+    featured.forEach(({ sign, chthonic }) => {
+      parts.push(`<p><span class="sign-addr">${sign}</span> belongs to <strong>${chthonic.name}</strong>, ${chthonic.title}. ${chthonic.domain}. <span class="whisper">"${chthonic.whisper}"</span></p>`);
+    });
+    
+    // Elemental summary
+    Object.entries(report.byElement).forEach(([element, data]) => {
+      if (data.count > 0 && !data.isFullyVoid) {
+        parts.push(`<p><strong>${element}:</strong> ${data.residents.slice(0, 2).join(' and ')} hold the void in ${data.signs.join(', ')}.</p>`);
+      }
+    });
+    
+    // Closing
+    parts.push(`<span class="whisper">The void does not speak to comfort. It speaks because the silence must eventually break. Listen to what Olympus could not bear to hear.</span>`);
+    
+    document.getElementById('voidReading').innerHTML = parts.join('');
+    document.getElementById('narrativeSource').textContent = '— Spoken by The Shade from beneath the threshold';
+  }
+
+  // ── SIGN SELECTOR ───────────────────────────────────────────────────────
+  function initSignSelector() {
+    const sel = document.getElementById('birthSign');
+    sel.innerHTML = '<option value="">— Select your sign —</option>' +
+      SIGNS.map(s => `<option value="${s}">${GLYPHS[s]} ${s}</option>`).join('');
+    
+    sel.onchange = () => {
+      const sign = sel.value;
+      const msg  = document.getElementById('signMessage');
+      if (!sign || !skyData) { msg.innerHTML = ''; return; }
+      
+      const report = Chthonic.getWarReport(skyData.planets);
+      const claim  = report.claims.find(c => c.sign === sign);
+      
+      if (!claim) {
+        msg.innerHTML = `The sign cannot be read.`;
+        return;
+      }
+      
+      if (claim.olympianCount > 0) {
+        const olympians = Object.entries(skyData.planets)
+          .filter(([_, d]) => d && d.sign === sign)
+          .map(([name]) => name);
+        msg.innerHTML = `
+          <div style="margin-bottom:8px;opacity:0.7;">${GLYPHS[sign]} ${sign} — <strong>Olympus holds this house</strong></div>
+          <div style="font-size:12px;color:var(--text-dim);">${olympians.join(', ')} walk${olympians.length === 1 ? 's' : ''} here</div>
+          <em style="display:block;margin-top:10px;color:var(--chthonic-dim);">The void watches from outside. It does not enter occupied ground.</em>`;
+      } else if (claim.chthonic) {
+        const c = claim.chthonic;
+        msg.innerHTML = `
+          <div style="margin-bottom:8px;">${GLYPHS[sign]} ${sign} — <strong style="color:var(--chthonic-light);">The Void Claims This House</strong></div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--chthonic-light);">${c.glyph || '⬡'} ${c.name}</div>
+          <div style="font-size:10px;color:var(--chthonic-dim);font-style:italic;">${c.title}</div>
+          <div style="font-size:10px;color:#775599;">River: ${c.river}</div>
+          <em style="display:block;margin-top:10px;color:var(--text-mid);">"${c.whisper}"</em>
+          ${c.isPrimordial ? '<div style="margin-top:8px;color:#ff44ff;font-size:11px;">⛧ All signs of this element are void — Chaos answers</div>' : ''}`;
+      } else {
+        msg.innerHTML = `${GLYPHS[sign]} ${sign} — True silence. Neither Olympus nor the Underworld claims this ground.`;
+      }
+    };
+  }
+
+  // ── STARS ────────────────────────────────────────────────────────────────
+  function generateStars() {
+    const container = document.getElementById('stars');
+    for (let i = 0; i < 200; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.cssText = `
+        left:${Math.random()*100}%;top:${Math.random()*100}%;
+        width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;
+        animation-delay:${Math.random()*6}s;animation-duration:${Math.random()*4+3}s;
+        opacity:${Math.random()*0.2+0.05}`;
+      container.appendChild(star);
+    }
+  }
+
+  // ── PUBLIC ───────────────────────────────────────────────────────────────
+  async function init() {
+    generateStars();
+    initSignSelector();
+    await refresh();
+  }
+
+  async function refresh() {
+    try {
+      const raw = await Observe.getSkyState();
+      skyData = raw;
+
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+        weekday:'long', year:'numeric', month:'long', day:'numeric'
+      });
+
+      const report = Chthonic.getWarReport(raw.planets);
+      
+      buildBanner(report);
+      buildDiagram(report, raw.planets);
+      buildThreshold(report, raw.planets);
+      buildRivers(report);
+      buildVoidReading(report);
+      buildVoidHouses(report);
+
+    } catch(err) {
+      console.error('Chthonic Grimoire failed:', err);
+      document.getElementById('voidReading').innerHTML =
+        '<em>The void is clouded. Even the darkness cannot speak right now. Try again.</em>';
+    }
+  }
+
+  return { init, refresh };
+})();
+
+document.addEventListener('DOMContentLoaded', () => ChthonicGrimoire.init());
+</script>
+
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
