@@ -1,39 +1,60 @@
 /**
- * OBSERVE.JS — Enhanced Sky State Reader
- * Digital Divination · Ealdforn Republic
+ * OBSERVE.JS — Sky State Reader + DivineDB Persistence
+ * 
+ * Reads real astronomical data using Astronomy Engine + SunCalc.
+ * Automatically saves each unique sky state to DivineDB (sky_states table).
  */
 
 const Observe = (() => {
+  // ─── CONFIG ─────────────────────────────────────
   const CONFIG = {
     latitude: 40.7128,
     longitude: -74.0060,
-    elevation: 0
+    elevation: 0,
+    supabaseUrl: 'https://kzcucjcyxybypncbdbws.supabase.co',
+    supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig'
   };
 
-  const SIGNS = [
-    'Aries','Taurus','Gemini','Cancer','Leo','Virgo',
-    'Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'
-  ];
+  const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  const SIGN_GLYPHS = { 'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓' };
 
-  const SIGN_GLYPHS = {
-    'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌',
-    'Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐',
-    'Capricorn':'♑','Aquarius':'♒','Pisces':'♓'
-  };
+  let supabaseClient = null;
+  let lastSavedHash = null;
 
-  const PLANETS = [
-    'Sun','Moon','Mercury','Venus','Mars',
-    'Jupiter','Saturn','Uranus','Neptune','Pluto'
-  ];
+  // ─── INIT SUPABASE ──────────────────────────────
+  function initSupabase() {
+    if (window.supabase && !supabaseClient) {
+      supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
+      console.log('DivineDB: sky_states ready');
+    }
+  }
 
-  const MOON_PHASES = [
-    'New Moon','Waxing Crescent','First Quarter','Waxing Gibbous',
-    'Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'
-  ];
+  // ─── HELPER: Generate unique hash for sky state ─
+  function getSkyStateHash(skyState) {
+    const data = {
+      period: skyState.period,
+      sun_sign: skyState.planets?.sun?.sign,
+      moon_sign: skyState.planets?.moon?.sign,
+      planet_signs: Object.fromEntries(
+        Object.entries(skyState.planets || {}).map(([k, v]) => [k, v.sign])
+      )
+    };
+    return JSON.stringify(data);
+  }
 
-  function getAstronomyBody(bodyName) {
-    if (typeof Astronomy === 'undefined' || !Astronomy.Body) return null;
-    
+  // ─── HELPER: Sign from longitude ────────────────
+  function eclipticToSign(lonDeg) {
+    let lon = ((lonDeg % 360) + 360) % 360;
+    return SIGNS[Math.floor(lon / 30)];
+  }
+
+  function getDegreeInSign(lonDeg) {
+    let lon = ((lonDeg % 360) + 360) % 360;
+    return lon % 30;
+  }
+
+  // ─── GET PLANET POSITION ────────────────────────
+  function getPlanetPosition(bodyName, date) {
     const bodyMap = {
       'Sun': Astronomy.Body.Sun,
       'Moon': Astronomy.Body.Moon,
@@ -46,327 +67,175 @@ const Observe = (() => {
       'Neptune': Astronomy.Body.Neptune,
       'Pluto': Astronomy.Body.Pluto
     };
-    
-    return bodyMap[bodyName] || null;
-  }
 
-  function eclipticToSign(lonDeg) {
-    let lon = ((lonDeg % 360) + 360) % 360;
-    return SIGNS[Math.floor(lon / 30)];
-  }
-
-  function getDegreeInSign(lonDeg) {
-    let lon = ((lonDeg % 360) + 360) % 360;
-    return lon % 30;
-  }
-
-  function getPlanetPosition(bodyName, date) {
-    const body = getAstronomyBody(bodyName);
+    const body = bodyMap[bodyName];
     if (!body) return null;
 
     try {
-      const earthObserver = new Astronomy.Observer(0, 0, 0);
+      const eq = Astronomy.Equator(body, date, undefined, true, false);
+      const ecl = Astronomy.Ecliptic(eq);
+      let lon = ecl.elon * 180 / Math.PI;
       
-      // Get equatorial coordinates
-      const eq = Astronomy.Equator(body, date, earthObserver, true, true);
-      
-      if (!eq) return null;
-      
-      // Convert equatorial to ecliptic
-      // Astronomy.Ecliptic takes equatorial coordinates and returns ecliptic
-      // v2.x: Ecliptic(equ) where equ has .ra and .dec, OR Ecliptic(elon, elat)
-      let ecl;
-      try {
-        // Try passing the equatorial object directly
-        ecl = Astronomy.Ecliptic(eq);
-      } catch (e1) {
-        try {
-          // Try with vec
-          ecl = Astronomy.Ecliptic(eq.vec);
-        } catch (e2) {
-          console.warn(`Ecliptic conversion failed for ${bodyName}:`, e2.message);
-          return null;
-        }
-      }
-      
-      if (!ecl || ecl.elon === undefined) {
-        console.warn(`Ecliptic returned no elon for ${bodyName}`);
-        return null;
-      }
-      
-      let lon = ecl.elon;
-      
-      // Precession correction
+      // Precession correction (tropical coordinates)
       const daysSinceJ2000 = (date - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24);
       const centuries = daysSinceJ2000 / 36525;
       const precession = (0.01397 * centuries) * 360;
-      
       lon = (lon + precession) % 360;
-      if (lon < 0) lon += 360;
       
       const sign = eclipticToSign(lon);
       const degree = getDegreeInSign(lon);
 
-      // Horizon position
-      let altitude = 0;
-      let azimuth = 0;
-      let aboveHorizon = false;
-      
-      try {
-        const locObserver = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
-        const hor = Astronomy.Horizon(date, locObserver, body);
-        if (hor && typeof hor.altitude === 'number') {
-          altitude = hor.altitude;
-          azimuth = hor.azimuth || 0;
-          aboveHorizon = altitude > 0;
-        }
-      } catch (e) {
-        // Optional
-      }
-      
       return {
         sign,
         glyph: SIGN_GLYPHS[sign],
         degree: Math.round(degree * 100) / 100,
-        longitude: Math.round(lon * 100) / 100,
-        altitude: Math.round(altitude * 100) / 100,
-        azimuth: Math.round(azimuth * 100) / 100,
-        aboveHorizon
+        longitude: Math.round(lon * 100) / 100
       };
     } catch (e) {
-      console.warn(`getPlanetPosition failed for ${bodyName}:`, e.message || e);
+      console.warn(`Failed to get ${bodyName} position:`, e.message);
       return null;
     }
   }
 
-  function getZenithTime(bodyName, date) {
-    const body = getAstronomyBody(bodyName);
-    if (!body) return null;
-
-    try {
-      const observer = new Astronomy.Observer(CONFIG.latitude, CONFIG.longitude, CONFIG.elevation);
-      const searchDate = new Date(date);
-      searchDate.setHours(0, 0, 0, 0);
-      
-      let bestAltitude = -999;
-      let bestTime = null;
-      
-      for (let minutes = 0; minutes < 24 * 60; minutes += 15) {
-        const sampleTime = new Date(searchDate.getTime() + minutes * 60000);
-        try {
-          const hor = Astronomy.Horizon(sampleTime, observer, body);
-          if (hor && typeof hor.altitude === 'number' && hor.altitude > bestAltitude) {
-            bestAltitude = hor.altitude;
-            bestTime = sampleTime;
-          }
-        } catch (e) {
-          continue;
-        }
-      }
-      
-      if (bestTime && bestAltitude > -90) {
-        return {
-          time: bestTime,
-          altitude: Math.round(bestAltitude * 100) / 100
-        };
-      }
-    } catch (e) {
-      // Silent
-    }
-    return null;
+  // ─── GET MOON PHASE NAME ────────────────────────
+  function getMoonPhaseName(phase) {
+    const phases = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous',
+                    'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+    return phases[Math.round(phase * 8) % 8];
   }
 
-  function getSignTransits(bodyName, date) {
-    const positions = [];
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
+  // ─── SAVE TO DIVINEDB ───────────────────────────
+  async function saveSkyState(skyState) {
+    if (!supabaseClient) return null;
     
-    for (let h = 0; h < 24; h += 2) {
-      const sampleDate = new Date(startOfDay.getTime() + h * 3600000);
-      const pos = getPlanetPosition(bodyName, sampleDate);
-      if (pos) {
-        positions.push({
-          time: sampleDate,
-          sign: pos.sign,
-          glyph: pos.glyph,
-          degree: pos.degree
-        });
-      }
+    // Deduplication: check if we've already saved this exact configuration
+    const currentHash = getSkyStateHash(skyState);
+    if (lastSavedHash === currentHash) {
+      console.log('DivineDB: sky_state unchanged, skipping save');
+      return null;
     }
     
-    const transits = [];
-    for (let i = 1; i < positions.length; i++) {
-      if (positions[i].sign !== positions[i-1].sign) {
-        transits.push({
-          body: bodyName,
-          from: positions[i-1].sign,
-          to: positions[i].sign,
-          approximateTime: positions[i].time
-        });
-      }
-    }
-    
-    return transits;
-  }
-
-  function getDailyTracking(date = new Date()) {
-    const tracking = {
-      date: date.toISOString().split('T')[0],
-      sun: null,
-      moon: null,
-      planets: {},
-      events: []
-    };
-
     try {
-      const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
-      const sunPos = getPlanetPosition('Sun', date);
-      tracking.sun = {
-        rise: times.sunrise?.toISOString() || null,
-        set: times.sunset?.toISOString() || null,
-        dawn: times.dawn?.toISOString() || null,
-        dusk: times.dusk?.toISOString() || null,
-        zenith: getZenithTime('Sun', date),
-        currentSign: sunPos?.sign || 'Unknown',
-        currentGlyph: sunPos?.glyph || '☉'
+      const record = {
+        id: crypto.randomUUID(),
+        timestamp: skyState.timestamp,
+        period: skyState.period,
+        sun_sign: skyState.planets?.sun?.sign || null,
+        sun_degree: skyState.planets?.sun?.degree || null,
+        moon_sign: skyState.planets?.moon?.sign || null,
+        moon_degree: skyState.planets?.moon?.degree || null,
+        moon_phase: skyState.moonPhase?.name || null,
+        moon_illumination: skyState.moonPhase?.illumination || null,
+        planets: skyState.planets || {},
+        ascendant_sign: skyState.ascendant?.sign || null
       };
-    } catch (e) {
-      console.warn('Sun tracking failed:', e);
-    }
-
-    try {
-      const moonTimes = SunCalc.getMoonTimes(date, CONFIG.latitude, CONFIG.longitude);
-      const moonIllum = SunCalc.getMoonIllumination(date);
-      const moonPos = getPlanetPosition('Moon', date);
-      tracking.moon = {
-        rise: moonTimes.rise?.toISOString() || null,
-        set: moonTimes.set?.toISOString() || null,
-        phase: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
-        illumination: Math.round(moonIllum.fraction * 100),
-        phaseValue: Math.round(moonIllum.phase * 100) / 100,
-        zenith: getZenithTime('Moon', date),
-        currentSign: moonPos?.sign || 'Unknown',
-        currentGlyph: moonPos?.glyph || '☽'
-      };
-    } catch (e) {
-      console.warn('Moon tracking failed:', e);
-    }
-
-    tracking.events = [
-      ...getSignTransits('Sun', date),
-      ...getSignTransits('Moon', date)
-    ];
-
-    PLANETS.filter(p => p !== 'Sun' && p !== 'Moon').forEach(planet => {
-      const pos = getPlanetPosition(planet, date);
-      if (pos) {
-        tracking.planets[planet.toLowerCase()] = {
-          sign: pos.sign,
-          glyph: pos.glyph,
-          degree: pos.degree,
-          altitude: pos.altitude,
-          aboveHorizon: pos.aboveHorizon,
-          zenith: getZenithTime(planet, date)
-        };
+      
+      const { error } = await supabaseClient.from('sky_states').insert([record]);
+      if (error) {
+        console.warn('DivineDB: failed to save sky_state', error.message);
+        return null;
       }
-    });
-
-    return tracking;
+      
+      lastSavedHash = currentHash;
+      console.log('✅ DivineDB: sky_state saved', record.timestamp);
+      return record;
+    } catch (err) {
+      console.warn('DivineDB: save exception', err.message);
+      return null;
+    }
   }
 
-  async function getSkyState() {
+  // ─── GET SKY STATE (MAIN FUNCTION) ──────────────
+  async function getSkyState(saveToDB = true) {
+    initSupabase();
     const now = new Date();
+    const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
+    const moonIllum = SunCalc.getMoonIllumination(now);
     
+    const isDaytime = now >= times.sunrise && now <= times.sunset;
+    const period = isDaytime ? 'SUN' : 'MOON';
+
+    // Calculate ascendant (simplified)
+    const gmt = now.getUTCHours() + now.getUTCMinutes() / 60;
+    const jd = (now - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24) + 2451545.0;
+    const lst = (100.46 + 0.985647 * jd + CONFIG.longitude + 15 * gmt) % 360;
+    const ascendantLon = Math.atan2(Math.sin(lst * Math.PI / 180), Math.cos(lst * Math.PI / 180)) * 180 / Math.PI;
+    const ascendantSign = eclipticToSign(ascendantLon);
+
+    const planets = {};
+    const planetNames = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
+    
+    for (const name of planetNames) {
+      const pos = getPlanetPosition(name, now);
+      if (pos) planets[name.toLowerCase()] = pos;
+    }
+
     const skyState = {
       timestamp: now.toISOString(),
-      period: 'SUN',
-      location: { latitude: CONFIG.latitude, longitude: CONFIG.longitude },
-      solar: { sunrise: null, sunset: null, dawn: null, dusk: null },
-      ascendant: { sign: 'Unknown', glyph: '?', longitude: 0 },
-      moonPhase: { name: 'Unknown', illumination: 0, phase: 0 },
-      planets: {}
-    };
-
-    try {
-      const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
-      const moonIllum = SunCalc.getMoonIllumination(now);
-      
-      skyState.period = (now >= times.sunrise && now <= times.sunset) ? 'SUN' : 'MOON';
-      skyState.solar = {
-        sunrise: times.sunrise?.toISOString() || null,
-        sunset: times.sunset?.toISOString() || null,
-        dawn: times.dawn?.toISOString() || null,
-        dusk: times.dusk?.toISOString() || null
-      };
-      
-      skyState.moonPhase = {
-        name: MOON_PHASES[Math.round(moonIllum.phase * 8) % 8],
+      period,
+      ascendant: { sign: ascendantSign, glyph: SIGN_GLYPHS[ascendantSign] },
+      moonPhase: {
+        name: getMoonPhaseName(moonIllum.phase),
         illumination: Math.round(moonIllum.fraction * 100),
         phase: Math.round(moonIllum.phase * 100) / 100
-      };
+      },
+      planets
+    };
 
-      const gmt = now.getUTCHours() + now.getUTCMinutes() / 60;
-      const jd = (now - new Date(Date.UTC(2000, 0, 1, 12, 0, 0))) / (1000 * 60 * 60 * 24) + 2451545.0;
-      const lst = (100.46 + 0.985647 * jd + CONFIG.longitude + 15 * gmt) % 360;
-      const ascendantLon = Math.atan2(Math.sin(lst * Math.PI / 180), Math.cos(lst * Math.PI / 180)) * 180 / Math.PI;
-      
-      skyState.ascendant = {
-        sign: eclipticToSign(ascendantLon),
-        glyph: SIGN_GLYPHS[eclipticToSign(ascendantLon)],
-        longitude: Math.round(ascendantLon * 100) / 100
-      };
-    } catch (e) {
-      console.warn('SunCalc data failed:', e);
+    // Save to DivineDB if requested
+    if (saveToDB && supabaseClient) {
+      await saveSkyState(skyState);
     }
-
-    PLANETS.forEach(planet => {
-      const position = getPlanetPosition(planet, now);
-      if (position) {
-        skyState.planets[planet.toLowerCase()] = position;
-      }
-    });
 
     return skyState;
   }
 
+  // ─── GET HISTORICAL SKY STATE ───────────────────
+  async function getHistoricalSkyState(date) {
+    initSupabase();
+    if (!supabaseClient) return null;
+    
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+    
+    const { data, error } = await supabaseClient
+      .from('sky_states')
+      .select('*')
+      .gte('timestamp', start.toISOString())
+      .lte('timestamp', end.toISOString())
+      .order('timestamp', { ascending: false })
+      .limit(1);
+    
+    if (error) {
+      console.warn('Failed to fetch historical sky:', error);
+      return null;
+    }
+    return data?.[0] || null;
+  }
+
+  // ─── GET CURRENT PERIOD (NO ASTRONOMY) ──────────
   function getCurrentPeriod() {
-    try {
-      const now = new Date();
-      const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
-      return (now >= times.sunrise && now <= times.sunset) ? 'SUN' : 'MOON';
-    } catch (e) {
-      return 'SUN';
-    }
+    const now = new Date();
+    const times = SunCalc.getTimes(now, CONFIG.latitude, CONFIG.longitude);
+    return (now >= times.sunrise && now <= times.sunset) ? 'SUN' : 'MOON';
   }
 
+  // ─── GET MOON ASPECT ────────────────────────────
   function getMoonAspect() {
-    try {
-      const moonIllum = SunCalc.getMoonIllumination(new Date());
-      const phaseIdx = Math.round(moonIllum.phase * 8) % 8;
-      return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
-    } catch (e) {
-      return 'Artemis';
-    }
+    const now = new Date();
+    const moonIllum = SunCalc.getMoonIllumination(now);
+    const phaseIdx = Math.round(moonIllum.phase * 8) % 8;
+    return (phaseIdx === 0 || phaseIdx === 7) ? 'Melinoe' : 'Artemis';
   }
 
-  function setLocation(lat, lon, elev = 0) {
-    CONFIG.latitude = lat;
-    CONFIG.longitude = lon;
-    CONFIG.elevation = elev;
-  }
-
+  // ─── PUBLIC API ─────────────────────────────────
   return {
     getSkyState,
+    getHistoricalSkyState,
     getCurrentPeriod,
     getMoonAspect,
-    getDailyTracking,
-    getSignTransits,
-    getPlanetPosition,
-    getZenithTime,
-    setLocation,
-    CONFIG,
-    SIGNS,
-    SIGN_GLYPHS,
-    MOON_PHASES
+    CONFIG
   };
 })();
