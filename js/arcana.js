@@ -2,9 +2,44 @@
  * ARCANA.JS — The Major Arcana Deck
  * 22 + 1 cards mapped to Greek Olympians & Primordials
  * Digital Divination · Ealdforn Republic
+ * 
+ * Image paths reflect current file structure:
+ *   Root: data/images/*-card.jpg (primary)
+ *   Major: data/images/major/*.png (where .jpg doesn't exist)
  */
+
 const Arcana = (() => {
-  
+
+  // ═══════════════════════════════════════
+  // IMAGE PATH MAP
+  // Primary path first, fallback second
+  // ═══════════════════════════════════════
+  const IMAGE_MAP = {
+    'major_00': 'data/images/dionysus-card.jpg',
+    'major_01': 'data/images/major/magician.png',
+    'major_02': 'data/images/hera-card.jpg',
+    'major_03': 'data/images/demeter-card.jpg',
+    'major_04': 'data/images/zeus-card.jpg',
+    'major_05': 'data/images/ares-card.jpg',
+    'major_06': 'data/images/aphrodite-card.jpg',
+    'major_07': 'data/images/artemis-card.jpg',
+    'major_08': 'data/images/athena-card.jpg',
+    'major_09': 'data/images/hermit-card.jpg',
+    'major_10': 'data/images/major/wheel_of_fortune.png',
+    'major_11': 'data/images/hephaestus-card.jpg',
+    'major_12': 'data/images/prometheus-card.jpg',
+    'major_13': 'data/images/thanatos-card.jpg',
+    'major_14': 'data/images/major/temperance.png',
+    'major_15': 'data/images/hades-card.jpg',
+    'major_16': 'data/images/poseidon-card.jpg',
+    'major_17': 'data/images/persephone-card.jpg',
+    'major_18': 'data/images/major/moon.png',
+    'major_19': 'data/images/major/sun.png',
+    'major_20': 'data/images/major/judgment.png',
+    'major_21': 'data/images/major/world.png',
+    'major_hidden': 'data/images/major/hidden.png'
+  };
+
   // ═══════════════════════════════════════
   // THE DECK
   // ═══════════════════════════════════════
@@ -53,6 +88,7 @@ const Arcana = (() => {
         "rank": "0",
         "element": "Water",
         "ruling_god": "Dionysus",
+        "image": "data/images/dionysus-card.jpg",
         "keywords": ["beginnings", "madness", "divine risk", "ecstasy", "leap of faith", "the vine"],
         "upright": "A new journey begins. You stand at the threshold, untethered and unburdened — no map, no plan, only the pull of the unknown. Dionysus laughs beside you, twice-born, breaker of chains. The only sane response to an insane world is to dance into it. The vine does not ask permission to grow. Neither should you.",
         "reversed": "Recklessness disguised as freedom. The leap taken without looking — not courage but escape. The wine has turned bitter and the dance has become a stumble. Ask yourself: is this liberation or are you just running? The vine that grows without direction chokes itself."
@@ -65,6 +101,7 @@ const Arcana = (() => {
         "rank": "1",
         "element": "Air",
         "ruling_god": "Hermes",
+        "image": "data/images/major/magician.png",
         "keywords": ["skill", "messages", "trickery", "translation", "the conduit", "boundaries"],
         "upright": "All tools are at your disposal. Hermes holds the caduceus — the serpents of knowledge twine around the staff of communication. You are the conduit between realms, the translator of divine will into mortal action. Speak, and the path opens. Every locked door has a word that opens it. Find the word.",
         "reversed": "Deception. The trick that tricks the trickster. Words used as weapons rather than bridges. Someone is not saying what they mean — perhaps you are not saying it to yourself. The caduceus dropped. The message lost in translation. Check the fine print."
@@ -77,6 +114,7 @@ const Arcana = (() => {
         "rank": "2",
         "element": "Earth",
         "ruling_god": "Hera",
+        "image": "data/images/hera-card.jpg",
         "keywords": ["covenant", "hidden knowledge", "the binding", "intuition", "the veil", "oath"],
         "upright": "The queen sits behind the veil. Hera guards the mystery of the binding — not all truths are spoken, not all knowledge is public. Some things are held in the covenant between souls, in the space between what is said and what is understood. Trust what you know without being told. The oath holds.",
         "reversed": "The broken covenant. Secrets weaponized rather than protected. The binding that became a chain, the intuition that curdled into suspicion. What oath are you keeping that should be broken? What truth are you withholding that wants to be spoken?"
@@ -89,6 +127,7 @@ const Arcana = (() => {
         "rank": "3",
         "element": "Earth",
         "ruling_god": "Demeter",
+        "image": "data/images/demeter-card.jpg",
         "keywords": ["harvest", "abundance", "nurturing", "growth", "the cultivated earth", "season"],
         "upright": "The fields are ripe. Demeter opens her hands and grain spills forth — not wild growth, but cultivated abundance, the harvest earned through patience and labor. Nurture what you have planted. It is ready. What you give to the soil, the soil returns tenfold. This is the season of reaping.",
         "reversed": "Neglect. The harvest left to rot in the field. Grief that withholds abundance — Demeter mourning Persephone, refusing to let the earth bear fruit. You must tend your own garden. No one else can water what you have abandoned. The soil has not forgotten how to grow."
@@ -101,6 +140,7 @@ const Arcana = (() => {
         "rank": "4",
         "element": "Air",
         "ruling_god": "Zeus",
+        "image": "data/images/zeus-card.jpg",
         "keywords": ["authority", "structure", "rule", "judgment", "the thunder", "order"],
         "upright": "Order from chaos. Zeus grips the thunderbolt and the realm bends toward law — not through violence but through the weight of undeniable authority. Take your seat. Lead with clarity. Power is not the thunder — it is the silence before the storm, the decision made before the lightning strikes.",
         "reversed": "Tyranny. The throne that crushes rather than orders. Authority wielded without wisdom becomes a cage for all — including the one who holds the key. The thunderbolt thrown in anger rather than justice. Ask: are you ruling, or are you just dominating?"
@@ -113,6 +153,7 @@ const Arcana = (() => {
         "rank": "5",
         "element": "Fire",
         "ruling_god": "Ares",
+        "image": "data/images/ares-card.jpg",
         "keywords": ["tradition as weapon", "conquest by custom", "institutionalized force", "doctrine", "orthodoxy"],
         "upright": "He wraps himself in tradition like a blood-red cloak. Ares as Hierophant is the warlord who cites precedent, the conqueror who claims custom as justification. Institutions are not inherently sacred — they are built by the victorious. See through the ritual to the power it protects. The spear-shaker knows: conquest needs a story.",
         "reversed": "The mask slipping. Tradition revealed as tyranny, the doctrine exposed as domination. The warlord's cloak unravels and the congregation sees the armor beneath. The institution that cannot survive scrutiny does not deserve to survive. Question the orthodoxy."
@@ -125,6 +166,7 @@ const Arcana = (() => {
         "rank": "6",
         "element": "Water",
         "ruling_god": "Aphrodite",
+        "image": "data/images/aphrodite-card.jpg",
         "keywords": ["love", "choice", "union", "desire", "the pull", "beauty"],
         "upright": "The heart speaks and nothing that was separate remains so. Aphrodite rises from the foam — not born of comfort but of the violent meeting of sky and sea. Love is not the absence of choice; it is the choice made with open eyes. Choose with love. Choose as love. The mirror shows what you desire. It also shows what you are.",
         "reversed": "Discord dressed as desire. The mirror that shows only what you lack, never what you have. Love confused with possession, beauty weaponized into manipulation. Desire without discernment leads to the bed of thorns. Who are you loving — the person, or the reflection of your own wanting?"
@@ -137,6 +179,7 @@ const Arcana = (() => {
         "rank": "7",
         "element": "Earth",
         "ruling_god": "Artemis",
+        "image": "data/images/artemis-card.jpg",
         "keywords": ["sovereignty", "the hunt", "untouchable will", "the advance", "independence", "wilderness"],
         "upright": "Forward. Artemis drives the chariot and the wild bends toward her will. The hunt is not aggression — it is pursuit of what is rightfully yours. She needs no permission, no companion, no validation. The dark is not your enemy. It is where sovereignty is forged. Charge. The moon lights your path.",
         "reversed": "The hunt that hunts you. Will turned against itself — the chariot without a driver, the arrow loosed at shadows. Independence curdled into isolation. Who is pursuing whom? The wilderness is not a place to get lost; it is a place to be found. Turn the chariot around."
@@ -149,6 +192,7 @@ const Arcana = (() => {
         "rank": "8",
         "element": "Air",
         "ruling_god": "Athena",
+        "image": "data/images/athena-card.jpg",
         "keywords": ["wisdom", "strategy", "institutions", "truth", "the scales", "clarity"],
         "upright": "The scales balance. Athena sees what was done and what is owed — not with the heat of vengeance but with the cold clarity of wisdom. Truth cuts clean. Accept the verdict, whether it favors you or not. The battle is won before the sword is drawn — in the quiet, in the mind, where strategy outlives strength.",
         "reversed": "Injustice. The rigged scale, the bought verdict, the judgment that serves power rather than truth. Athena's owl has been blinded and the court belongs to the loudest voice. Appeal to a higher court — even if that court is only your own conscience. The scales will balance eventually."
@@ -161,6 +205,7 @@ const Arcana = (() => {
         "rank": "9",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/hermit-card.jpg",
         "keywords": ["the seeker", "the outsider", "the lamp", "solitude", "mortality", "the human condition"],
         "upright": "The only card without a divine face. The Hermit is Mortal Man — the seeker in the dark with only a lamp and his own breath. No god answers his call. No oracle lights his path. The lamp is enough. The path reveals itself step by step. This is the human condition — no domain, no throne, just the light you carry and the courage to walk alone.",
         "reversed": "Isolation mistaken for wisdom. The lamp flickering, the path lost, the solitude curdled into loneliness. You have withdrawn too far. The world still needs your light — even the hermit must eventually return to the village. Wisdom shared is wisdom multiplied. Wisdom hoarded is just exile."
@@ -173,6 +218,7 @@ const Arcana = (() => {
         "rank": "10",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/major/wheel_of_fortune.png",
         "keywords": ["spinning", "measuring", "cutting", "the cycle", "wyrd", "inevitability", "fortune"],
         "upright": "The three are one. Clotho spins the thread, Lachesis measures its length, Atropos cuts at the appointed hour — all in the turning of the wheel. What rises must fall. What falls may rise again. The Moirai do not choose; they turn. The wheel is the only truth. Your fortune is not fixed — it is in motion.",
         "reversed": "The wheel stuck. Fate delayed but not denied. The thread that should have been cut still trailing, the measurement that keeps extending past its season. The cycle refuses to complete because you refuse to release it. The Fates are patient. They will wait. But the wheel will turn."
@@ -185,6 +231,7 @@ const Arcana = (() => {
         "rank": "11",
         "element": "Fire",
         "ruling_god": "Hephaestus",
+        "image": "data/images/hephaestus-card.jpg",
         "keywords": ["creation", "labor", "invisible craft", "the forge", "endurance", "resilience"],
         "upright": "The forge burns. Hephaestus shapes what others cannot see — the lame god, cast from Olympus, who built thrones for those who exiled him. Strength is not the blow; it is the heat, the hammer, the repetition. The fire does not care that he is broken. It only cares that he keeps working. The work is the work.",
         "reversed": "The broken forge. Labor without creation, the hammer falling on nothing, the fire reduced to embers. Rest is not weakness — even Hephaestus set down his hammer. Rekindle the flame before you raise the hammer again. The forge can be rebuilt."
@@ -197,6 +244,7 @@ const Arcana = (() => {
         "rank": "12",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/prometheus-card.jpg",
         "keywords": ["sacrifice", "stolen fire", "suffering for the gift", "surrender", "foresight", "suspension"],
         "upright": "Suspended between heaven and earth. Prometheus gave fire to humanity and paid in flesh — bound to the rock, the eagle feeding daily on his liver. The sacrifice is not meaningless; it bought something precious. Wait. See from this new angle. Some gifts cost everything. That does not mean they were not worth giving.",
         "reversed": "Martyrdom refused. The sacrifice no one asked for, the gift that cost everything and changed nothing. The rock no longer holds you — but you remain suspended by habit, by the story of your own suffering. You are allowed to unbind yourself. The eagle can be driven away."
@@ -209,6 +257,7 @@ const Arcana = (() => {
         "rank": "13",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/thanatos-card.jpg",
         "keywords": ["transition", "release", "the necessary end", "transformation", "the threshold", "letting go"],
         "upright": "Something must end. Thanatos does not kill — he receives what is already finished, the gentle death who comes when the thread is fully measured. What dies now was already complete. Let it go. Every ending is a door. The field must be cleared before the new seed can be planted.",
         "reversed": "Resistance to death. The ending refused, the ghost that lingers because you will not release it. The body has fallen but you keep building monuments to what was. The threshold is open. Walk through. What you mourn has already passed — what you cling to is only the memory of its weight."
@@ -221,6 +270,7 @@ const Arcana = (() => {
         "rank": "14",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/major/temperance.png",
         "keywords": ["the hearth", "moderation", "sacred center", "blending", "the eternal flame", "balance"],
         "upright": "The hearth burns steady. Hestia, first and last of the Olympians, tends the sacred center — the flame that does not consume but sustains, the warmth that asks for nothing in return. Moderation is not deprivation; it is the art of keeping the fire at the right temperature. Return to center. The flame does not need to roar to be eternal.",
         "reversed": "Imbalance. The hearth neglected — the flame that gutters from neglect or rages from overfeeding. Too much of one thing becomes poison, even water, even love. Return to center. The hearth has not gone cold. It waits for your attention."
@@ -233,6 +283,7 @@ const Arcana = (() => {
         "rank": "15",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/hades-card.jpg",
         "keywords": ["bondage", "shadow", "wealth", "the hidden", "attachment", "the underworld"],
         "upright": "You are bound — but the chain is one you chose. Hades holds the riches of the deep earth: all the wealth you have buried, all the attachments you refuse to name. The darkness holds treasure. But it also holds chains. What are you holding onto that holds you? The door to the underworld is unlocked. It always was.",
         "reversed": "Liberation. The chain recognized and broken. The shadow named and faced — and found to be smaller than you remembered. The wealth of the underworld is still there, but you no longer need to dwell among the dead to possess it. You are freer than you think."
@@ -245,6 +296,7 @@ const Arcana = (() => {
         "rank": "16",
         "element": "Water",
         "ruling_god": "Poseidon",
+        "image": "data/images/poseidon-card.jpg",
         "keywords": ["upheaval", "destruction", "revelation", "earthquake", "the wave", "collapse"],
         "upright": "The tower crumbles. Poseidon shakes the foundations — not out of malice but because what was built on sand cannot stand. The wave does not negotiate. The earthquake does not discriminate. Let it fall. The truth was under the rubble the whole time. I do not destroy for sport. I destroy what was already broken.",
         "reversed": "Averted disaster. The near-miss that teaches without destroying. The tower sways but holds — the crack is visible now, and that visibility is a gift. Repair it before the next wave comes. The warning was received."
@@ -257,6 +309,7 @@ const Arcana = (() => {
         "rank": "17",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/persephone-card.jpg",
         "keywords": ["hope", "return", "the seed in darkness", "guidance", "rebirth", "emergence"],
         "upright": "She returns from the underworld and the first green shoot breaks the soil. Persephone is The Star — the hope that was buried and came back, the light that shines not because darkness never happened but because it was survived. Every descent is a seed. Every return is a star. The winter is ending.",
         "reversed": "The return delayed. Hope deferred but not extinguished. The seed still underground, waiting for a spring that hasn't come — but the seed has not rotted. The darkness is not permanent. Keep watch. Persephone always returns."
@@ -269,6 +322,7 @@ const Arcana = (() => {
         "rank": "18",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/major/moon.png",
         "keywords": ["ghosts", "madness", "the in-between", "hauntings", "the veil", "illusion"],
         "upright": "The moonlight deceives. Melinoe walks with ghosts and the half-mad — she brings what the dead need to say. Not all visions are false, but not all are true. The in-between is where the real work happens, where the veil thins and you must discern between prophecy and projection. The madness is the message. Listen carefully.",
         "reversed": "The haunting lifting. Madness recognized and named. The ghost that spoke and was finally heard — and having been heard, can now rest. The veil thickens. Clarity returns, not because the mystery was solved but because you stopped fearing it. The moonlight no longer deceives."
@@ -281,6 +335,7 @@ const Arcana = (() => {
         "rank": "19",
         "element": "Fire",
         "ruling_god": "Apollo",
+        "image": "data/images/major/sun.png",
         "keywords": ["light", "radiance", "art", "broadcast", "ego", "clarity", "illumination"],
         "upright": "Full illumination. Apollo drives the chariot of light and nothing is hidden — joy, clarity, the long night finally over. Create. Broadcast. Shine. The sun does not doubt; it rises. So must you. This is the card of the artist who stops hiding, the truth that steps into the light, the warmth that reaches every corner.",
         "reversed": "The sun behind clouds. Diminished radiance. The ego that eclipsed the light — pride that became a barrier rather than a beacon. The sun still burns behind the veil. Clear what stands between you and your own brightness."
@@ -293,6 +348,7 @@ const Arcana = (() => {
         "rank": "20",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/major/judgment.png",
         "keywords": ["reckoning", "awakening", "final accounting", "calling", "rebirth", "evaluation"],
         "upright": "The Judges sit. Rhadamanthus of the East, Minos of the Center, Aeacus of the West — the three who weigh the soul. A reckoning has come, not as punishment but as clarity. The calling you hear is not a condemnation; it is purpose, it is the voice that says: rise. Answer it. We do not punish. We see. That is enough.",
         "reversed": "The judgment postponed. The calling ignored — the trumpet sounded but you covered your ears. The accounting delayed but not cancelled. The Judges are patient. They have waited for every soul. They will wait for yours. But the longer you delay, the heavier the silence becomes."
@@ -305,6 +361,7 @@ const Arcana = (() => {
         "rank": "21",
         "element": null,
         "ruling_god": null,
+        "image": "data/images/major/world.png",
         "keywords": ["completion", "wholeness", "the primordial earth", "integration", "the all", "cosmos"],
         "upright": "The circle closes. Gaia, first-born of Chaos, holds all things within her — every element, every god, every mortal, every story. A cycle completes. You have arrived not at an end but at a new wholeness, the integration of everything you have been into everything you are becoming. Everything that was, is, and will be — it is all here. It is all you.",
         "reversed": "Incompletion. The final piece missing, the circle that won't close. The journey almost finished but the last step refused. What remains undone? What integration are you resisting? The World card reversed is not failure — it is the pause before the final stitch, the breath before the circle seals."
@@ -318,6 +375,7 @@ const Arcana = (() => {
       "rank": "hidden",
       "element": null,
       "ruling_god": null,
+      "image": "data/images/major/hidden.png",
       "keywords": ["mystery", "the unrevealed", "the 23rd seat", "surfaces when needed"],
       "upright": "She is not on the list. She surfaces when the reading calls for her. The Hidden card is not drawn — it appears. I am the one not named. The 23rd seat. I surface when the pantheon cannot answer.",
       "reversed": "The Hidden withdrawing. The mystery that was almost revealed and slipped away. Not yet. Not this reading."
@@ -325,96 +383,138 @@ const Arcana = (() => {
   };
 
   // ═══════════════════════════════════════
+  // MAP CHTHONIC RESIDENTS TO ARCANA CARDS
+  // ═══════════════════════════════════════
+  const CHTHONIC_CARD_MAP = {
+    // Fire — Phlegethon
+    'Hecate':       'major_18',  // The Moon
+    'Zagreus':      'major_13',  // Death
+    'Melinoë':      'major_18',  // The Moon
+    'Melinoe':      'major_18',  // The Moon (without diaeresis)
+    
+    // Air — Cocytus
+    'Hypnos':       'major_12',  // The Hanged Man
+    'Angelos':      'major_20',  // Judgement
+    'Oneiroi':      'major_17',  // The Star
+    
+    // Earth — Acheron
+    'Thanatos':     'major_13',  // Death
+    'Minos':        'major_20',  // Judgement
+    'Rhadamanthus': 'major_20',  // Judgement
+    'Aeacus':       'major_09',  // The Hermit
+    'Cerberus':     'major_11',  // Strength
+    
+    // Water — Styx
+    'Styx':         'major_02',  // The High Priestess
+    'Charon':       'major_07',  // The Chariot
+    'Nyx':          'major_18',  // The Moon
+    'Erinyes':      'major_16',  // The Tower
+    
+    // Primordial
+    'Chaos':        'major_00',  // The Fool
+    
+    // Threshold
+    'Hades':        'major_15'   // The Devil
+  };
+
+  // ═══════════════════════════════════════
   // PUBLIC API
   // ═══════════════════════════════════════
-  
+
   /** Get a card by its ID */
   function getCard(id) {
     if (!deck || !deck.cards) {
-      console.error('Arcana deck not properly initialized');
+      console.error('Arcana: deck not initialized');
       return null;
     }
+    if (id === 'major_hidden') return deck.hidden_card;
     return deck.cards.find(c => c.id === id) || null;
   }
-  
+
   /** Get all cards ruled by a specific god */
   function getCardsByGod(godName) {
     if (!godName || !deck || !deck.cards) return [];
-    return deck.cards.filter(c => 
+    return deck.cards.filter(c =>
       c.ruling_god && c.ruling_god.toLowerCase() === godName.toLowerCase()
     );
   }
-  
+
   /** Get the triad cards for an element */
   function getTriad(element) {
     const suit = deck.divine_suits[element.toLowerCase()];
     if (!suit || !suit.cards) return [];
     return suit.cards.map(id => getCard(id)).filter(Boolean);
   }
-  
+
   /** Get the ruling triad gods for an element */
   function getTriadGods(element) {
     const suit = deck.divine_suits[element.toLowerCase()];
-    return suit ? suit.ruling_triad : [];
+    return suit ? [...suit.ruling_triad] : [];
   }
-  
+
   /** Get all unsuited cards */
   function getUnsuited() {
     if (!deck.unsuited) return [];
     return deck.unsuited.map(id => getCard(id)).filter(Boolean);
   }
-  
-  /** Map chthonic resident names to their Arcana card IDs */
-  const CHTHONIC_CARD_MAP = {
-    'Hecate':    'major_18',
-    'Zagreus':   'major_13',
-    'Melinoë':   'major_18',
-    'Melinoe':   'major_18',
-    'Hypnos':    'major_12',
-    'Angelos':   'major_20',
-    'Oneiroi':   'major_17',
-    'Thanatos':  'major_13',
-    'Minos':     'major_20',
-    'Rhadamanthus': 'major_20',
-    'Aeacus':    'major_09',
-    'Cerberus':  'major_11',
-    'Styx':      'major_02',
-    'Charon':    'major_07',
-    'Nyx':       'major_18',
-    'Erinyes':   'major_16',
-    'Chaos':     'major_00',
-    'Hades':     'major_15'
-  };
-  
+
   /** Get the Major Arcana card for a chthonic resident */
   function getChthonicCard(residentName) {
     if (!residentName) return null;
     const cardId = CHTHONIC_CARD_MAP[residentName];
-    return cardId ? getCard(cardId) : null;
+    if (!cardId) return null;
+    return getCard(cardId);
   }
-  
+
+  /** Get image path for a card */
+  function getCardImage(cardOrId) {
+    const card = typeof cardOrId === 'string' ? getCard(cardOrId) : cardOrId;
+    if (!card) return 'data/images/major/placeholder.png';
+    return card.image || IMAGE_MAP[card.id] || 'data/images/major/placeholder.png';
+  }
+
   /** Check if a card is suited (belongs to an Olympian triad) */
   function isSuited(card) {
     return card?.element !== null && card?.ruling_god !== null;
   }
-  
+
   /** Get the hidden card */
   function getHidden() {
     return deck.hidden_card || null;
+  }
+
+  /** Get deck info */
+  function getDeckInfo() {
+    return {
+      name: deck.deck_name,
+      cardCount: deck.card_count,
+      hiddenCount: deck.hidden_count,
+      divineSuits: deck.divine_suits,
+      unsuitedCount: deck.unsuited.length
+    };
   }
 
   // ═══════════════════════════════════════
   // RETURN
   // ═══════════════════════════════════════
   return {
+    // Data
+    deck,
+    IMAGE_MAP,
+    CHTHONIC_CARD_MAP,
+
+    // Card lookup
     getCard,
     getCardsByGod,
     getTriad,
     getTriadGods,
     getUnsuited,
     getChthonicCard,
-    isSuited,
+    getCardImage,
     getHidden,
-    CHTHONIC_CARD_MAP
+    getDeckInfo,
+
+    // Checks
+    isSuited
   };
 })();
