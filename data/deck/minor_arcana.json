@@ -654,16 +654,16 @@
       {
         "id": "air_03",
         "name": "Three of Air",
-        "title": "The Althing",
-        "culture": "Norse",
+        "title": "Eshu / Elegua",
+        "culture": "Yoruba",
         "rank": "three",
         "element": "Air",
-        "ruling_god": "Zeus",
-        "keywords": ["consensus", "the assembly", "democracy", "the discourse", "the vote"],
-        "upright": "At the Althing, every free Norseman could speak and vote. Laws were spoken from the Law Rock. Disputes were settled. The Three of Air is the consensus — the groupthink, the narrative that wins. Agreement is comfortable. Is it correct? Even the Althing could be swayed by a skilled speaker.",
-        "reversed": "The Althing divided. The vote that failed. The consensus that cracked under the weight of one dissenting voice. The law that was spoken but not believed. Courage is lonely.",
+        "ruling_god": "Hermes",
+        "keywords": ["the doorkeeper", "the threshold", "the messenger", "the trickster", "the crossroad"],
+        "upright": "Eshu stands at the gate. No assembly begins until he is acknowledged. He opens the path — or closes it. The Three of Air is the threshold, not the room. The question is not 'what did they decide?' The question is 'who was allowed to speak?' Eshu knows. Greet him first.",
+        "reversed": "The gate is locked. Eshu has not been honored. The assembly speaks only to itself. Who is missing from the conversation? What voice did you forget to invite? The doorkeeper does not punish. He simply waits for you to remember.",
         "image": "data/images/minor/air/air_03.png",
-        "prompt": "The Norse Althing, the ancient assembly where free men gathered at the Law Rock to speak and vote, as tarot card."
+        "prompt": "Eshu or Elegua, Yoruba trickster orisha of crossroads, messages, and thresholds — the doorkeeper who must be greeted first, as a tarot card."
       },
       {
         "id": "air_04",
