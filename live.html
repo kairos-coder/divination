@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ealdforn #9 — Live Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #d4a840;
+  --gold-light: #f0d878;
+  --gold-dark: #8a6518;
+  --void: #060610;
+  --surface: #181838;
+  --surface2: #202048;
+  --border: #2a2a4a;
+  --border-gold: rgba(212,168,64,0.2);
+  --text: #f0ead8;
+  --text-mid: #d0c0a0;
+  --text-dim: #988870;
+  --fire: #c94a2a;
+  --earth: #6a8a3a;
+  --water: #66aacc;
+  --air: #aa88cc;
+}
+
+body {
+  background: var(--void);
+  background-image: radial-gradient(ellipse 70% 50% at 10% 5%, #120828 0%, transparent 55%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.live-badge {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff3300;
+  color: white;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  z-index: 100;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; background: #ff3300; }
+  50% { opacity: 0.7; background: #cc2200; }
+}
+
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+}
+.header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  color: var(--gold-light);
+}
+.header .sub {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: rgba(24,24,56,0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+}
+.panel-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Sky Panel */
+.sky-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-gold);
+}
+.period-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-family: 'Cinzel', serif;
+}
+.period-badge.sun { background: rgba(212,168,64,0.2); color: var(--gold); }
+.period-badge.moon { background: rgba(102,170,204,0.2); color: var(--water); }
+
+/* Draw Panel */
+.draw-area {
+  text-align: center;
+}
+.card-display {
+  background: var(--surface2);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.card-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 24px;
+  color: var(--gold-light);
+}
+.card-title {
+  font-size: 18px;
+  font-style: italic;
+  color: var(--text-mid);
+}
+.card-meaning {
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.draw-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  padding: 12px 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  border-radius: 40px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+/* Council Feed */
+.feed-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.feed-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-gold);
+  font-size: 12px;
+}
+.feed-time {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: monospace;
+}
+.feed-cards {
+  color: var(--gold-light);
+  margin-top: 4px;
+}
+
+/* Tetrad Status */
+.tetrad-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.tetrad-pillar {
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.pillar-status {
+  font-size: 10px;
+  margin-top: 6px;
+}
+.status-online { color: var(--sage); }
+.status-offline { color: var(--fire); }
+
+/* Audience Pulse */
+.pulse-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 16px 0;
+}
+.pulse-btn {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pulse-btn:hover { transform: scale(1.1); border-color: var(--gold); }
+.pulse-count {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  text-align: center;
+}
+
+.timer {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: var(--gold-light);
+  margin: 16px 0;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  font-size: 8px;
+  color: var(--gold-dark);
+  border-top: 1px solid var(--border-gold);
+}
+</style>
+</head>
+<body>
+
+<div class="live-badge">● LIVE · EALDFORN #9</div>
+
+<div class="dashboard">
+  <div class="header">
+    <h1>✦ THE NEXUS ✦</h1>
+    <div class="sub">Ealdforn #9 · The Tetrad Live</div>
+  </div>
+
+  <div class="grid">
+    
+    <!-- PANEL 1: SKY STATE -->
+    <div class="panel">
+      <div class="panel-title">☀️ The Watchers · Sky State</div>
+      <div id="skyPanel">
+        <div class="sky-row"><span>Period</span><span id="periodBadge" class="period-badge">Loading...</span></div>
+        <div class="sky-row"><span>Sun</span><span id="sunSign">—</span></div>
+        <div class="sky-row"><span>Moon</span><span id="moonSign">—</span></div>
+        <div class="sky-row"><span>Mercury</span><span id="mercSign">—</span></div>
+        <div class="sky-row"><span>Venus</span><span id="venSign">—</span></div>
+        <div class="sky-row"><span>Mars</span><span id="marsSign">—</span></div>
+        <div class="sky-row"><span>Jupiter</span><span id="jupSign">—</span></div>
+        <div class="sky-row"><span>Saturn</span><span id="satSign">—</span></div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: LIVE DRAW -->
+    <div class="panel">
+      <div class="panel-title">🜏 Live Draw · Card for the Show</div>
+      <div class="draw-area">
+        <div id="liveCard" class="card-display">
+          <div style="color: var(--text-dim);">Pull a card for the audience</div>
+        </div>
+        <button class="draw-btn" onclick="drawLiveCard()">▸ Draw Card</button>
+        <div class="pulse-buttons">
+          <button class="pulse-btn" onclick="react('fire')">🔥</button>
+          <button class="pulse-btn" onclick="react('earth')">🜃</button>
+          <button class="pulse-btn" onclick="react('water')">🌊</button>
+          <button class="pulse-btn" onclick="react('air')">💨</button>
+        </div>
+        <div id="reactionCount" class="pulse-count">Waiting for audience...</div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: COUNCIL FEED -->
+    <div class="panel">
+      <div class="panel-title">📖 Council Feed · Recent Readings</div>
+      <div id="feedList" class="feed-list">
+        <div style="text-align:center;padding:20px;">Loading memories...</div>
+      </div>
+    </div>
+
+    <!-- PANEL 4: TETRAD STATUS -->
+    <div class="panel">
+      <div class="panel-title">🌍 Tetrad Status · Four Pillars</div>
+      <div class="tetrad-grid">
+        <div class="tetrad-pillar">🔥 Divination<div id="statusDivination" class="pillar-status status-online">● Online</div></div>
+        <div class="tetrad-pillar">🜃 GAIA<div id="statusGaia" class="pillar-status status-online">● Online</div></div>
+        <div class="tetrad-pillar">💨 Ealdforn<div id="statusEaldforn" class="pillar-status status-online">● Online</div></div>
+        <div class="tetrad-pillar">🌊 Nexus<div id="statusNexus" class="pillar-status status-online">● Online</div></div>
+      </div>
+      <div class="timer" id="timer">00:00:00</div>
+      <div style="text-align:center; font-size:10px; color:var(--text-dim);">Show started: <span id="startTime">—</span></div>
+    </div>
+  </div>
+
+  <footer>
+    EALDFORN #9 · THE TETRAD IS LIVE · THE FIRE HOLDS
+  </footer>
+</div>
+
+<script src="js/observe.js"></script>
+<script>
+// ─── SUPABASE ────────────────────────────────
+const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
+let supabase = null;
+
+// ─── SHOW STATE ──────────────────────────────
+let showStart = new Date();
+let reactions = { fire: 0, earth: 0, water: 0, air: 0 };
+
+// ─── INIT ────────────────────────────────────
+async function init() {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  await loadSky();
+  await loadFeed();
+  startTimer();
+  document.getElementById('startTime').innerText = showStart.toLocaleTimeString();
+}
+
+// ─── SKY STATE ───────────────────────────────
+async function loadSky() {
+  try {
+    const sky = await Observe.getSkyState();
+    const period = sky.period;
+    const badge = document.getElementById('periodBadge');
+    badge.className = `period-badge ${period === 'SUN' ? 'sun' : 'moon'}`;
+    badge.innerText = period === 'SUN' ? 'SOLAR' : 'LUNAR';
+    
+    const planets = sky.planets;
+    document.getElementById('sunSign').innerHTML = `${planets.sun?.sign || '?'} ${planets.sun?.degree || ''}°`;
+    document.getElementById('moonSign').innerHTML = `${planets.moon?.sign || '?'} ${planets.moon?.degree || ''}°`;
+    document.getElementById('mercSign').innerHTML = `${planets.mercury?.sign || '?'}`;
+    document.getElementById('venSign').innerHTML = `${planets.venus?.sign || '?'}`;
+    document.getElementById('marsSign').innerHTML = `${planets.mars?.sign || '?'}`;
+    document.getElementById('jupSign').innerHTML = `${planets.jupiter?.sign || '?'}`;
+    document.getElementById('satSign').innerHTML = `${planets.saturn?.sign || '?'}`;
+  } catch(e) {
+    console.warn('Sky load failed:', e);
+  }
+}
+
+// ─── LIVE CARD DRAW ──────────────────────────
+async function drawLiveCard() {
+  const container = document.getElementById('liveCard');
+  container.innerHTML = '<div style="color:var(--text-dim);">Shuffling...</div>';
+  
+  try {
+    await Divine.loadDecks();
+    const deck = Divine.getMajorDeck();
+    const card = Divine.uniformDraw(deck, 1)[0];
+    
+    container.innerHTML = `
+      <div class="card-name">${card.name}</div>
+      <div class="card-title">${card.title || ''}</div>
+      <div class="card-meaning">${(card.upright || '').substring(0, 150)}...</div>
+    `;
+    
+    // Save to DivineDB as show reading
+    if (supabase) {
+      await supabase.from('readings').insert([{
+        id: crypto.randomUUID(),
+        timestamp: new Date().toISOString(),
+        period: 'LIVE_SHOW',
+        past_card: null,
+        present_card: card.name,
+        future_card: null,
+        reading_text: `Live draw during Ealdforn #9: ${card.name}`,
+        user_question: 'Audience pull',
+        deck_mode: 'major'
+      }]);
+      loadFeed();
+    }
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--fire);">Draw failed — try again</div>';
+  }
+}
+
+// ─── COUNCIL FEED ────────────────────────────
+async function loadFeed() {
+  if (!supabase) return;
+  try {
+    const { data } = await supabase
+      .from('readings')
+      .select('*')
+      .order('timestamp', { ascending: false })
+      .limit(10);
+    
+    const container = document.getElementById('feedList');
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:20px;">No readings yet. Be the first.</div>';
+      return;
+    }
+    
+    container.innerHTML = data.map(r => `
+      <div class="feed-item">
+        <div class="feed-time">${new Date(r.timestamp).toLocaleTimeString()}</div>
+        <div class="feed-cards">${r.present_card || r.past_card || 'Reading'}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    console.warn('Feed failed:', e);
+  }
+}
+
+// ─── AUDIENCE REACTIONS ──────────────────────
+function react(element) {
+  reactions[element]++;
+  const total = Object.values(reactions).reduce((a,b) => a+b, 0);
+  document.getElementById('reactionCount').innerHTML = `🔥 ${reactions.fire} 🜃 ${reactions.earth} 🌊 ${reactions.water} 💨 ${reactions.air} · ${total} reactions`;
+}
+
+// ─── SHOW TIMER ──────────────────────────────
+function startTimer() {
+  const timerEl = document.getElementById('timer');
+  setInterval(() => {
+    const elapsed = Math.floor((new Date() - showStart) / 1000);
+    const h = Math.floor(elapsed / 3600);
+    const m = Math.floor((elapsed % 3600) / 60);
+    const s = elapsed % 60;
+    timerEl.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+// ─── DECLARE DIVINE FOR DRAW ─────────────────
+// Divine might not be loaded yet — add fallback
+window.Divine = window.Divine || {
+  loadDecks: async () => { console.log('Divine mock loaded'); },
+  getMajorDeck: () => [{ name: 'The Fool', title: 'Dionysus', upright: 'Beginnings. The leap.' }],
+  uniformDraw: (deck, n) => [deck[0]]
+};
+
+init();
+</script>
+<script src="js/divine.js"></script>
+</body>
+</html>
