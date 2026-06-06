@@ -119,8 +119,8 @@ footer { text-align: center; margin-top: 40px; font-size: 9px; color: #8a6518; }
       <div class="sky-card">📅 Date<br><span id="previewDate" class="sky-value">—</span></div>
     </div>
     <div class="button-row">
-      <button class="btn btn-primary" onclick="recordSky()">📝 Record Sky State</button>
-      <button class="btn btn-secondary" onclick="refreshPreview()">⟳ Refresh Preview</button>
+      <button class="btn btn-primary" id="recordBtn">📝 Record Sky State</button>
+      <button class="btn btn-secondary" id="refreshBtn">⟳ Refresh Preview</button>
     </div>
     <div id="recordStatus"></div>
   </div>
@@ -133,7 +133,7 @@ footer { text-align: center; margin-top: 40px; font-size: 9px; color: #8a6518; }
     </div>
     <div class="auto-refresh" id="autoRefreshStatus">
       ⏱️ Auto-save: Off
-      <button onclick="toggleAutoRefresh()" style="background:none; border:1px solid #2a2a4a; color:#988870; padding:2px 8px; margin-left:8px; border-radius:20px; cursor:pointer;">Enable</button>
+      <button id="autoRefreshBtn" style="background:none; border:1px solid #2a2a4a; color:#988870; padding:2px 8px; margin-left:8px; border-radius:20px; cursor:pointer;">Enable</button>
     </div>
   </div>
 
@@ -143,150 +143,156 @@ footer { text-align: center; margin-top: 40px; font-size: 9px; color: #8a6518; }
 </div>
 
 <script>
-const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
+(function() {
+  const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
 
-let supabase = null;
-let autoRefreshInterval = null;
-let lastSavedHash = null;
+  let supabaseClient = null;
+  let autoRefreshInterval = null;
+  let lastSavedHash = null;
 
-// Initialize Supabase
-function initSupabase() {
-  if (window.supabase && !supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('Almanac: DivineDB connected');
+  function initSupabase() {
+    if (window.supabase && !supabaseClient) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('Almanac: DivineDB connected');
+    }
   }
-}
 
-// Get hash of current sky to avoid duplicates
-function getSkyHash(sky) {
-  return `${sky.period}_${sky.planets?.sun?.sign}_${sky.planets?.moon?.sign}`;
-}
-
-// Preview current sky
-async function refreshPreview() {
-  if (!window.Observe) {
-    document.getElementById('previewPeriod').innerText = 'Observe.js?';
-    return;
+  function getSkyHash(sky) {
+    return `${sky.period}_${sky.planets?.sun?.sign}_${sky.planets?.moon?.sign}`;
   }
-  try {
-    const sky = await Observe.getSkyState();
-    document.getElementById('previewPeriod').innerText = sky.period === 'SUN' ? 'SOLAR' : 'LUNAR';
-    document.getElementById('previewSun').innerText = `${sky.planets?.sun?.sign || '?'} ${sky.planets?.sun?.degree || ''}°`;
-    document.getElementById('previewMoon').innerText = `${sky.planets?.moon?.sign || '?'} ${sky.planets?.moon?.degree || ''}°`;
-    document.getElementById('previewDate').innerText = new Date().toLocaleDateString();
-  } catch(e) {
-    console.error('Preview error:', e);
-  }
-}
 
-// Record current sky to DivineDB
-async function recordSky() {
-  const statusDiv = document.getElementById('recordStatus');
-  statusDiv.innerHTML = '<div class="status status-info">⏳ Recording sky state...</div>';
-  
-  try {
-    const sky = await Observe.getSkyState();
-    const currentHash = getSkyHash(sky);
+  async function refreshPreview() {
+    if (!window.Observe) {
+      document.getElementById('previewPeriod').innerText = '?';
+      return;
+    }
+    try {
+      const sky = await Observe.getSkyState();
+      document.getElementById('previewPeriod').innerText = sky.period === 'SUN' ? 'SOLAR' : 'LUNAR';
+      document.getElementById('previewSun').innerText = `${sky.planets?.sun?.sign || '?'} ${sky.planets?.sun?.degree || ''}°`;
+      document.getElementById('previewMoon').innerText = `${sky.planets?.moon?.sign || '?'} ${sky.planets?.moon?.degree || ''}°`;
+      document.getElementById('previewDate').innerText = new Date().toLocaleDateString();
+    } catch(e) {
+      console.error('Preview error:', e);
+    }
+  }
+
+  async function recordSky() {
+    const statusDiv = document.getElementById('recordStatus');
+    statusDiv.innerHTML = '<div class="status status-info">⏳ Recording sky state...</div>';
     
-    if (lastSavedHash === currentHash) {
-      statusDiv.innerHTML = '<div class="status status-info">📌 Sky unchanged since last record. Skipping.</div>';
+    try {
+      const sky = await Observe.getSkyState();
+      const currentHash = getSkyHash(sky);
+      
+      if (lastSavedHash === currentHash) {
+        statusDiv.innerHTML = '<div class="status status-info">📌 Sky unchanged since last record. Skipping.</div>';
+        return;
+      }
+      
+      const record = {
+        id: crypto.randomUUID(),
+        timestamp: new Date().toISOString(),
+        period: sky.period,
+        sun_sign: sky.planets?.sun?.sign,
+        sun_degree: sky.planets?.sun?.degree,
+        moon_sign: sky.planets?.moon?.sign,
+        moon_degree: sky.planets?.moon?.degree,
+        moon_phase: sky.moonPhase?.name,
+        moon_illumination: sky.moonPhase?.illumination,
+        planets: sky.planets,
+        ascendant_sign: sky.ascendant?.sign
+      };
+      
+      const { error } = await supabaseClient.from('sky_states').insert([record]);
+      
+      if (error) {
+        statusDiv.innerHTML = `<div class="status status-error">❌ Failed: ${error.message}</div>`;
+      } else {
+        lastSavedHash = currentHash;
+        statusDiv.innerHTML = `<div class="status status-success">✅ Sky state recorded at ${new Date().toLocaleTimeString()}</div>`;
+        loadHistory();
+      }
+    } catch(e) {
+      statusDiv.innerHTML = `<div class="status status-error">❌ Error: ${e.message}</div>`;
+    }
+  }
+
+  async function loadHistory() {
+    const container = document.getElementById('historyContainer');
+    if (!supabaseClient) {
+      container.innerHTML = '<div style="text-align:center;">Connecting to DivineDB...</div>';
       return;
     }
     
-    const record = {
-      id: crypto.randomUUID(),
-      timestamp: new Date().toISOString(),
-      period: sky.period,
-      sun_sign: sky.planets?.sun?.sign,
-      sun_degree: sky.planets?.sun?.degree,
-      moon_sign: sky.planets?.moon?.sign,
-      moon_degree: sky.planets?.moon?.degree,
-      moon_phase: sky.moonPhase?.name,
-      moon_illumination: sky.moonPhase?.illumination,
-      planets: sky.planets,
-      ascendant_sign: sky.ascendant?.sign
-    };
-    
-    const { error } = await supabase.from('sky_states').insert([record]);
+    const { data, error } = await supabaseClient
+      .from('sky_states')
+      .select('id, timestamp, period, sun_sign, moon_sign')
+      .order('timestamp', { ascending: false })
+      .limit(20);
     
     if (error) {
-      statusDiv.innerHTML = `<div class="status status-error">❌ Failed: ${error.message}</div>`;
-    } else {
-      lastSavedHash = currentHash;
-      statusDiv.innerHTML = `<div class="status status-success">✅ Sky state recorded at ${new Date().toLocaleTimeString()}</div>`;
-      loadHistory();
+      container.innerHTML = `<div style="color:#c94a2a;">Error: ${error.message}</div>`;
+      return;
     }
-  } catch(e) {
-    statusDiv.innerHTML = `<div class="status status-error">❌ Error: ${e.message}</div>`;
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div style="text-align:center;">No sky states recorded yet. Click "Record Sky State" to begin.</div>';
+      return;
+    }
+    
+    const html = `
+      <table class="history-table">
+        <thead><tr><th>Time</th><th>Period</th><th>Sun</th><th>Moon</th></tr></thead>
+        <tbody>
+          ${data.map(r => `
+            <tr>
+              <td>${new Date(r.timestamp).toLocaleString()}</td>
+              <td>${r.period === 'SUN' ? '☀️ Solar' : '🌙 Lunar'}</td>
+              <td>${r.sun_sign || '—'}</td>
+              <td>${r.moon_sign || '—'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+    container.innerHTML = html;
   }
-}
 
-// Load recent history
-async function loadHistory() {
-  const container = document.getElementById('historyContainer');
-  if (!supabase) {
-    container.innerHTML = '<div style="text-align:center;">Connecting to DivineDB...</div>';
-    return;
+  function toggleAutoRefresh() {
+    const statusSpan = document.getElementById('autoRefreshStatus');
+    const toggleBtn = document.getElementById('autoRefreshBtn');
+    if (autoRefreshInterval) {
+      clearInterval(autoRefreshInterval);
+      autoRefreshInterval = null;
+      statusSpan.innerHTML = '⏱️ Auto-save: Off ';
+      toggleBtn.textContent = 'Enable';
+      toggleBtn.style.borderColor = '#2a2a4a';
+      toggleBtn.style.color = '#988870';
+    } else {
+      autoRefreshInterval = setInterval(() => {
+        recordSky();
+      }, 60 * 60 * 1000);
+      statusSpan.innerHTML = '⏱️ Auto-save: On (hourly) ';
+      toggleBtn.textContent = 'Disable';
+      toggleBtn.style.borderColor = '#d4a840';
+      toggleBtn.style.color = '#d4a840';
+    }
+  }
+
+  async function init() {
+    initSupabase();
+    await refreshPreview();
+    await loadHistory();
+    
+    document.getElementById('recordBtn').onclick = recordSky;
+    document.getElementById('refreshBtn').onclick = refreshPreview;
+    document.getElementById('autoRefreshBtn').onclick = toggleAutoRefresh;
   }
   
-  const { data, error } = await supabase
-    .from('sky_states')
-    .select('id, timestamp, period, sun_sign, moon_sign')
-    .order('timestamp', { ascending: false })
-    .limit(20);
-  
-  if (error) {
-    container.innerHTML = `<div style="color:#c94a2a;">Error: ${error.message}</div>`;
-    return;
-  }
-  
-  if (!data || data.length === 0) {
-    container.innerHTML = '<div style="text-align:center;">No sky states recorded yet. Click "Record Sky State" to begin.</div>';
-    return;
-  }
-  
-  const html = `
-    <table class="history-table">
-      <thead><tr><th>Time</th><th>Period</th><th>Sun</th><th>Moon</th></tr></thead>
-      <tbody>
-        ${data.map(r => `
-          <tr>
-            <td>${new Date(r.timestamp).toLocaleString()}</td>
-            <td>${r.period === 'SUN' ? '☀️ Solar' : '🌙 Lunar'}</td>
-            <td>${r.sun_sign || '—'}</td>
-            <td>${r.moon_sign || '—'}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
-  container.innerHTML = html;
-}
-
-// Auto-refresh every hour
-function toggleAutoRefresh() {
-  const statusSpan = document.getElementById('autoRefreshStatus');
-  if (autoRefreshInterval) {
-    clearInterval(autoRefreshInterval);
-    autoRefreshInterval = null;
-    statusSpan.innerHTML = '⏱️ Auto-save: Off <button onclick="toggleAutoRefresh()" style="background:none; border:1px solid #2a2a4a; color:#988870; padding:2px 8px; margin-left:8px; border-radius:20px; cursor:pointer;">Enable</button>';
-  } else {
-    autoRefreshInterval = setInterval(() => {
-      recordSky();
-    }, 60 * 60 * 1000);
-    statusSpan.innerHTML = '⏱️ Auto-save: On (hourly) <button onclick="toggleAutoRefresh()" style="background:none; border:1px solid #d4a840; color:#d4a840; padding:2px 8px; margin-left:8px; border-radius:20px; cursor:pointer;">Disable</button>';
-  }
-}
-
-// Initialize
-async function init() {
-  initSupabase();
-  await refreshPreview();
-  await loadHistory();
-}
-
-init();
+  init();
+})();
 </script>
 </body>
 </html>
