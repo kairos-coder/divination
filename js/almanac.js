@@ -1,18 +1,179 @@
 /**
- * ALMANAC.JS — Celestial Almanac Data & Narrative
+ * ALMANAC.JS — Celestial Almanac Data & Narrative + Persistence
  * Digital Divination · Ealdforn Republic
  * 
- * Contains celestial mappings, whispers, and narrative generation.
- * Separated from UI logic for cleaner architecture.
- * 
- * Usage:
- *   const data = Almanac.getCelestialMappings();
- *   const narrative = Almanac.generateNarrative(skyState, tracking);
+ * Contains celestial mappings, whispers, narrative generation.
+ * NOW with Supabase persistence for sky states.
  */
 
 const Almanac = (() => {
   // ══════════════════════════════════════════
-  // CELESTIAL MAPPINGS
+  // SUPABASE CONFIG
+  // ══════════════════════════════════════════
+  const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
+  
+  let supabaseClient = null;
+  let lastSavedHash = null;
+
+  function initSupabase() {
+    if (window.supabase && !supabaseClient) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('Almanac: DivineDB connected');
+    }
+  }
+
+  // Generate hash of current sky to avoid duplicates
+  function getSkyStateHash(skyState) {
+    const data = {
+      period: skyState.period,
+      sun_sign: skyState.planets?.sun?.sign,
+      moon_sign: skyState.planets?.moon?.sign,
+      planet_signs: Object.fromEntries(
+        Object.entries(skyState.planets || {}).map(([k, v]) => [k, v.sign])
+      )
+    };
+    return JSON.stringify(data);
+  }
+
+  // ══════════════════════════════════════════
+  // SKY STATE PERSISTENCE
+  // ══════════════════════════════════════════
+  
+  // Save current sky state to DivineDB
+  async function recordCurrentSky() {
+    initSupabase();
+    if (!supabaseClient) {
+      console.warn('Almanac: Supabase not available');
+      return null;
+    }
+
+    if (typeof Observe === 'undefined') {
+      console.warn('Almanac: Observe.js not loaded');
+      return null;
+    }
+
+    try {
+      const rawSky = await Observe.getSkyState();
+      const currentHash = getSkyStateHash(rawSky);
+      
+      if (lastSavedHash === currentHash) {
+        console.log('Almanac: Sky unchanged, skipping save');
+        return null;
+      }
+
+      const record = {
+        id: crypto.randomUUID(),
+        timestamp: rawSky.timestamp,
+        period: rawSky.period,
+        sun_sign: rawSky.planets?.sun?.sign || null,
+        sun_degree: rawSky.planets?.sun?.degree || null,
+        moon_sign: rawSky.planets?.moon?.sign || null,
+        moon_degree: rawSky.planets?.moon?.degree || null,
+        moon_phase: rawSky.moonPhase?.name || null,
+        moon_illumination: rawSky.moonPhase?.illumination || null,
+        planets: rawSky.planets || {},
+        ascendant_sign: rawSky.ascendant?.sign || null
+      };
+
+      const { error } = await supabaseClient.from('sky_states').insert([record]);
+      if (error) {
+        console.warn('Almanac: Failed to save sky_state', error.message);
+        return null;
+      }
+
+      lastSavedHash = currentHash;
+      console.log('✅ Almanac: Sky state recorded', record.timestamp);
+      return record;
+    } catch (err) {
+      console.warn('Almanac: Record failed', err.message);
+      return null;
+    }
+  }
+
+  // Get the most recent sky state from DivineDB
+  async function getLatestSkyState() {
+    initSupabase();
+    if (!supabaseClient) return null;
+
+    const { data, error } = await supabaseClient
+      .from('sky_states')
+      .select('*')
+      .order('timestamp', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.warn('Almanac: Failed to fetch latest', error);
+      return null;
+    }
+    return data?.[0] || null;
+  }
+
+  // Get sky state for a specific date
+  async function getSkyStateForDate(date) {
+    initSupabase();
+    if (!supabaseClient) return null;
+
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    const { data, error } = await supabaseClient
+      .from('sky_states')
+      .select('*')
+      .gte('timestamp', start.toISOString())
+      .lte('timestamp', end.toISOString())
+      .order('timestamp', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.warn('Almanac: Failed to fetch for date', error);
+      return null;
+    }
+    return data?.[0] || null;
+  }
+
+  // Get all sky states in a date range
+  async function getSkyStatesInRange(startDate, endDate) {
+    initSupabase();
+    if (!supabaseClient) return [];
+
+    const { data, error } = await supabaseClient
+      .from('sky_states')
+      .select('*')
+      .gte('timestamp', startDate.toISOString())
+      .lte('timestamp', endDate.toISOString())
+      .order('timestamp', { ascending: true });
+
+    if (error) {
+      console.warn('Almanac: Failed to fetch range', error);
+      return [];
+    }
+    return data || [];
+  }
+
+  // Auto-refresh every hour
+  let refreshInterval = null;
+  function startAutoRefresh(intervalMinutes = 60) {
+    if (refreshInterval) clearInterval(refreshInterval);
+    recordCurrentSky();
+    refreshInterval = setInterval(() => {
+      recordCurrentSky();
+    }, intervalMinutes * 60 * 1000);
+    console.log(`Almanac: Auto-refresh every ${intervalMinutes} minutes`);
+  }
+
+  function stopAutoRefresh() {
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+      refreshInterval = null;
+      console.log('Almanac: Auto-refresh stopped');
+    }
+  }
+
+  // ══════════════════════════════════════════
+  // CELESTIAL MAPPINGS (preserved)
   // ══════════════════════════════════════════
   const CELESTIAL_OLYMPIANS = {
     'sun':     { olympian:'Apollo',     arcana:'The Sun (XIX)',              icon:'☉', image:'data/images/major/sun.png' },
@@ -38,7 +199,7 @@ const Almanac = (() => {
   const SIGN_NAMES  = {Aries:'the Ram',Taurus:'the Bull',Gemini:'the Twins',Cancer:'the Crab',Leo:'the Lion',Virgo:'the Maiden',Libra:'the Scales',Scorpio:'the Scorpion',Sagittarius:'the Archer',Capricorn:'the Sea-Goat',Aquarius:'the Water-Bearer',Pisces:'the Fish'};
 
   // ══════════════════════════════════════════
-  // WHISPERS
+  // WHISPERS (preserved)
   // ══════════════════════════════════════════
   const WHISPERS = {
     Apollo:    ['The sun does not negotiate with shadows. It simply rises.','Your radiance is not an offering. It is a demand on the world.','Apollo does not wait for permission to set the sky on fire.'],
@@ -58,7 +219,7 @@ const Almanac = (() => {
   };
 
   // ══════════════════════════════════════════
-  // UTILITY FUNCTIONS
+  // UTILITY FUNCTIONS (preserved)
   // ══════════════════════════════════════════
   function dailySeed() {
     const d = new Date();
@@ -77,7 +238,7 @@ const Almanac = (() => {
   }
 
   // ══════════════════════════════════════════
-  // BUILD SKY STATE WITH MAPPINGS
+  // BUILD SKY STATE WITH MAPPINGS (preserved)
   // ══════════════════════════════════════════
   function buildSkyState(raw) {
     const state = [];
@@ -102,7 +263,6 @@ const Almanac = (() => {
       });
     });
 
-    // Eros and Phobos follow Mars
     const mars = state.find(s => s.body === 'mars');
     if (mars) {
       ['eros', 'phobos'].forEach(moonName => {
@@ -129,7 +289,7 @@ const Almanac = (() => {
   }
 
   // ══════════════════════════════════════════
-  // NARRATIVE GENERATOR
+  // NARRATIVE GENERATOR (preserved)
   // ══════════════════════════════════════════
   function generateNarrative(skyState, raw, tracking) {
     const signGroups = {};
@@ -148,7 +308,6 @@ const Almanac = (() => {
 
     let html = `<div class="narr-title">✦ Today's Horoscope ✦</div>`;
 
-    // HEADLINE
     if (sorted.length > 0) {
       const [sign, watchers] = sorted[0];
       const count = watchers.length;
@@ -167,7 +326,6 @@ const Almanac = (() => {
       }
     }
 
-    // SUN READING with tracking
     if (sun && tracking?.sun) {
       const rise = new Date(tracking.sun.rise).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       const set = new Date(tracking.sun.set).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -182,7 +340,6 @@ const Almanac = (() => {
       html += `<p class="narr-whisper">${getWhisper('Apollo', 1)}</p>`;
     }
 
-    // MOON READING with tracking
     if (moon && tracking?.moon) {
       const moonRise = tracking.moon.rise ? new Date(tracking.moon.rise).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : null;
       const moonSet = tracking.moon.set ? new Date(tracking.moon.set).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : null;
@@ -212,7 +369,6 @@ const Almanac = (() => {
       html += `<p class="narr-whisper">${getWhisper(shadowGod, 2)}</p>`;
     }
 
-    // PLANETARY MOVEMENTS from tracking
     if (tracking?.events?.length > 0) {
       html += `<p class="narr-body"><strong>Sign Transits Today:</strong></p>`;
       tracking.events.forEach(event => {
@@ -221,7 +377,6 @@ const Almanac = (() => {
       });
     }
 
-    // VISIBILITY REPORT
     const visibleBodies = skyState.filter(s => s.aboveHorizon && s.body !== 'sun');
     const hiddenBodies = skyState.filter(s => !s.aboveHorizon && s.body !== 'sun' && s.body !== 'moon');
     
@@ -234,7 +389,6 @@ const Almanac = (() => {
       html += `<p class="narr-body">${hiddenBodies.length} celestial bodies walk below the horizon — their influence is felt but not seen.</p>`;
     }
 
-    // ARES TRIAD (keep existing logic)
     if (ares) {
       const eros = skyState.find(s => s.body === 'eros');
       const phobos = skyState.find(s => s.body === 'phobos');
@@ -243,7 +397,6 @@ const Almanac = (() => {
       }
     }
 
-    // OTHER GROUPINGS (keep existing logic)
     const otherGroups = sorted.filter(([sign, watchers]) => {
       if (watchers.filter(w => !w.attendant).length < 2) return false;
       if (sign === ares?.sign) return false;
@@ -256,7 +409,6 @@ const Almanac = (() => {
       html += `<p class="narr-body">${nameStr} share <strong>${sign} ${SIGN_GLYPHS[sign]}</strong> — ${SIGN_NAMES[sign]} holds more than one current today.</p>`;
     });
 
-    // SOLO TRAVELERS (keep existing logic)
     const solos = sorted.filter(([sign, watchers]) => {
       const nonAtt = watchers.filter(w => !w.attendant);
       if (nonAtt.length !== 1) return false;
@@ -270,7 +422,6 @@ const Almanac = (() => {
       html += `<p class="narr-whisper">${getWhisper(w.olympian, 10 + solos.indexOf([sign, watchers]))}</p>`;
     });
 
-    // EMPTY HOUSES (keep existing logic)
     if (empty.length > 0) {
       if (empty.length <= 3) {
         empty.forEach(sign => {
@@ -290,6 +441,15 @@ const Almanac = (() => {
   // PUBLIC API
   // ══════════════════════════════════════════
   return {
+    // Persistence
+    recordCurrentSky,
+    getLatestSkyState,
+    getSkyStateForDate,
+    getSkyStatesInRange,
+    startAutoRefresh,
+    stopAutoRefresh,
+    
+    // Legacy exports (preserved)
     CELESTIAL_OLYMPIANS,
     SIGNS,
     SIGN_GLYPHS,
