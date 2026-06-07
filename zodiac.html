@@ -86,10 +86,10 @@ body {
   position: relative;
 }
 
-/* ── PARCHMENT GRAIN OVERLAY ── */
+/* ── PARCHMENT GRAIN OVERLAY — sits above mosaic, unifies texture ── */
 body::before {
   content: '';
-  position: fixed; inset: 0; z-index: 0;
+  position: fixed; inset: 0; z-index: 1;
   pointer-events: none;
   background-image:
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
@@ -98,11 +98,25 @@ body::before {
   mix-blend-mode: multiply;
 }
 
+/* ── CARD MOSAIC — The Deck Beneath ── */
+#cardMosaic {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  opacity: 0.13;
+}
+#cardMosaic img {
+  width: 100%; aspect-ratio: 2/3; object-fit: cover;
+  filter: sepia(0.45) brightness(1.08) saturate(0.85);
+  mix-blend-mode: multiply;
+  transition: opacity 1.2s ease;
+}
+
 /* ── NAVIGATION ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; height: 56px;
-  background: rgba(245,236,215,0.95);
+  background: rgba(245,236,215,0.92);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-gold);
   box-shadow: 0 1px 0 rgba(200,152,10,0.1), 0 2px 12px rgba(42,31,14,0.08);
   display: flex; align-items: center; justify-content: space-between;
@@ -212,10 +226,10 @@ nav {
   /* Multi-ring orrery look */
   background:
     radial-gradient(circle at 40% 35%,
-      rgba(255,248,220,0.9) 0%,
-      rgba(245,236,200,0.85) 25%,
-      rgba(234,215,175,0.8) 55%,
-      rgba(210,185,140,0.75) 100%
+      rgba(255,248,220,0.85) 0%,
+      rgba(245,236,200,0.78) 25%,
+      rgba(234,215,175,0.72) 55%,
+      rgba(210,185,140,0.68) 100%
     );
   border: 2px solid var(--border-gold);
   box-shadow:
@@ -317,7 +331,7 @@ nav {
 
 /* ── GRIMOIRE CARDS — Vellum panels ── */
 .grimoire-card {
-  background: rgba(251,245,232,0.7);
+  background: rgba(251,245,232,0.82);
   border: 1px solid var(--border-parchment);
   border-radius: 4px;
   padding: 24px 22px;
@@ -639,6 +653,9 @@ footer {
 </style>
 </head>
 <body>
+
+<!-- Card Mosaic — the deck beneath the reading -->
+<div id="cardMosaic"></div>
 
 <nav>
   <div class="nav-brand">
@@ -1263,6 +1280,46 @@ const Grimoire = (() => {
 
   return { init, refresh, setVoice };
 })();
+
+// ── CARD MOSAIC ──────────────────────────────────────────────────────────
+const MOSAIC_CARDS = [
+  {image:"data/images/major/sun.png"},{image:"data/images/major/moon.png"},
+  {image:"data/images/major/wheel_of_fortune.png"},{image:"data/images/major/temperance.png"},
+  {image:"data/images/major/judgment.png"},{image:"data/images/major/world.png"},
+  {image:"data/images/zeus-card.jpg"},{image:"data/images/athena-card.jpg"},
+  {image:"data/images/apollo-card.jpg"},{image:"data/images/artemis-card.jpg"},
+  {image:"data/images/hermes-card.jpg"},{image:"data/images/aphrodite-card.jpg"},
+  {image:"data/images/demeter-card.jpg"},{image:"data/images/hera-card.jpg"},
+  {image:"data/images/poseidon-card.jpg"},{image:"data/images/hephaestus-card.jpg"},
+  {image:"data/images/ares-card.jpg"},{image:"data/images/dionysus-card.jpg"},
+  {image:"data/images/hades-card.jpg"},{image:"data/images/persephone-card.jpg"},
+  {image:"data/images/prometheus-card.jpg"},{image:"data/images/thanatos-card.jpg"},
+  {image:"data/images/hermit-card.jpg"},
+  {image:"data/images/minor/fire/fire_ace.png"},{image:"data/images/minor/fire/fire_02.png"},
+  {image:"data/images/minor/earth/earth_ace.png"},{image:"data/images/minor/water/water_ace.png"},
+  {image:"data/images/minor/air/air_ace.png"}
+];
+
+function buildMosaic() {
+  const mosaic = document.getElementById('cardMosaic');
+  const cells  = [];
+  for (let i = 0; i < 36; i++) {
+    const card = MOSAIC_CARDS[Math.floor(Math.random() * MOSAIC_CARDS.length)];
+    cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
+  }
+  mosaic.innerHTML = cells.join('');
+}
+buildMosaic();
+
+// Slow drift — one card changes every 10s, fades gracefully
+setInterval(() => {
+  const imgs = document.querySelectorAll('#cardMosaic img');
+  if (!imgs.length) return;
+  const idx  = Math.floor(Math.random() * imgs.length);
+  const card = MOSAIC_CARDS[Math.floor(Math.random() * MOSAIC_CARDS.length)];
+  imgs[idx].style.opacity = '0';
+  setTimeout(() => { imgs[idx].src = card.image; imgs[idx].style.opacity = ''; }, 600);
+}, 10000);
 
 document.addEventListener('DOMContentLoaded', () => Grimoire.init());
 </script>
