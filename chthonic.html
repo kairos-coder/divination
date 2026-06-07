@@ -198,8 +198,35 @@ nav {
   letter-spacing: 4px; color: #665588;
   text-transform: uppercase; margin-top: 6px;
 }
-
-/* ═══════════════════════════════════════════
+/* ── DAILY NARRATIVE ── */
+.daily-narrative {
+  background: rgba(8,4,20,0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(153,102,204,0.25);
+  border-radius: 24px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-mid);
+  font-style: italic;
+  transition: all 0.3s;
+}
+.daily-narrative:hover {
+  border-color: rgba(153,102,204,0.45);
+  background: rgba(8,4,20,0.7);
+}
+.narrative-meta {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #665588;
+  margin-top: 14px;
+  text-align: right;
+  text-transform: uppercase;
+}
+   /* ═══════════════════════════════════════════
    WAR BANNER
    ═══════════════════════════════════════════ */
 .war-banner {
@@ -229,8 +256,7 @@ nav {
   width: 100%; text-align: center; margin-top: 4px;
   font-size: 8px; letter-spacing: 2px;
 }
-
-/* ═══════════════════════════════════════════
+   /* ═══════════════════════════════════════════
    SKY DIAGRAM
    ═══════════════════════════════════════════ */
 .sky-diagram {
@@ -924,8 +950,8 @@ footer {
   </div>
 
   <!-- WAR BANNER -->
-  <div class="war-banner" id="warBanner"></div>
-
+  <div class="war-banner" id="warBanner"></div>   
+  <div id="chthonicNarrative"></div> 
   <!-- SKY DIAGRAM -->
   <div class="sky-diagram" id="skyDiagram">
     <div id="zodiacRing"></div>
