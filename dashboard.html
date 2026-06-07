@@ -85,6 +85,24 @@ nav {
   padding: 80px 20px 40px;
 }
 
+/* Hero Image */
+.hero-image {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.hero-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+.hero-image img:hover {
+  opacity: 1;
+}
+
 /* Header */
 .dashboard-header {
   text-align: center;
@@ -400,6 +418,12 @@ footer {
 </nav>
 
 <div class="dashboard-container">
+  
+  <!-- Hero Image -->
+  <div class="hero-image">
+    <img src="data/images/dashboard/dash1.png" alt="Ealdforn Dashboard" loading="lazy">
+  </div>
+
   <div class="dashboard-header">
     <h1>✦ Ealdforn Dashboard ✦</h1>
     <div class="subtitle">The Earth Shrine · The Watchers · The Field</div>
