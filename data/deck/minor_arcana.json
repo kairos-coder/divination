@@ -1,4 +1,4 @@
-{
+      {
   "deck_name": "Minor Arcana — The Global Pantheon",
   "card_count": 56,
   "cultural_origins": [
@@ -752,16 +752,16 @@
       {
         "id": "air_10",
         "name": "Ten of Air",
-        "title": "The Cancellation",
-        "culture": "Modern",
+        "title": "Enlil",
+        "culture": "Sumerian",
         "rank": "ten",
         "element": "Air",
         "ruling_god": "Zeus",
-        "keywords": ["exile", "public judgment", "the discourse ban", "the vote to banish"],
-        "upright": "The timeline votes. The ostracism sherds are digital now — quote tweets, callout threads, the ratio that becomes exile. The Ten of Air is the cancellation — public judgment, banishment from the discourse. The mob is loud. What is true? What is just? Ostracism in Athens lasted ten years. Online, it can be forever — or a week.",
-        "reversed": "Return from exile. The cancelled welcomed back — or the cancellation itself cancelled. The landscape has changed. Have you? The sherds are buried. The discourse moves on.",
+        "keywords": ["judgment", "exile", "the tablet of destinies", "the flood", "the council's vote"],
+        "upright": "Enlil holds the Tablets of Destiny. The council votes. The sentence is wind — you cannot grasp it, but you feel it. The Ten of Air is public judgment, the exile that comes not from one enemy but from the assembly. Enlil does not hate you. He simply decides. That is worse.",
+        "reversed": "The tablets are lost. Enlil looks away. The judgment is delayed, but the air is thick with waiting. Exile deferred is still exile. The council has not forgiven. It has merely adjourned.",
         "image": "data/images/minor/air/air_10.png",
-        "prompt": "The Cancellation, modern archetype of Athenian ostracism reborn — the digital exile voted by a thousand anonymous sherds, as tarot card."
+        "prompt": "Enlil, Sumerian god of air, wind, and judgment — holder of the Tablets of Destiny — seated in the Ekur temple as a tarot card, Mesopotamian style, divine authority."
       },
       {
         "id": "air_page",
