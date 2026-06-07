@@ -29,6 +29,7 @@
   --water:        #66aacc;
   --air:          #aa88cc;
   --sage:         #8ab87a;
+  --nav-h:        56px;
 }
 
 html { scroll-behavior: smooth; }
@@ -46,17 +47,21 @@ body {
   position: relative;
 }
 
+/* ── MOSAIC ─────────────────────────────────── */
 #cardMosaic {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   display: grid; grid-template-columns: repeat(6, 1fr);
   opacity: 0.18;
+}
+/* Reduce grid on mobile — perf + visual clarity */
+@media (max-width: 600px) {
+  #cardMosaic { grid-template-columns: repeat(3, 1fr); opacity: 0.12; }
 }
 #cardMosaic img {
   width: 100%; aspect-ratio: 2/3; object-fit: cover;
   filter: sepia(0.15) brightness(0.9);
   transition: transform 0.5s;
 }
-#cardMosaic img:hover { transform: scale(1.02); }
 
 #pontusAmbient {
   position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.04;
@@ -71,30 +76,94 @@ body {
     linear-gradient(to bottom, rgba(6,6,16,0.7) 0%, rgba(6,6,16,0.3) 30%, rgba(6,6,16,0.3) 70%, rgba(6,6,16,0.7) 100%);
 }
 
+/* ── NAV ────────────────────────────────────── */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: 56px;
-  background: rgba(8,8,20,0.88);
+  height: var(--nav-h);
+  background: rgba(8,8,20,0.92);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-gold);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 20px;
   z-index: 200;
 }
 
-.nav-brand { display: flex; flex-direction: column; gap: 1px; }
+.nav-brand { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; }
 .nav-brand-title { font-family: 'Cinzel Decorative', serif; font-size: 13px; color: var(--gold); letter-spacing: 1.5px; }
 .nav-brand-sub { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px; color: var(--gold-dark); text-transform: uppercase; }
 
-.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; justify-content: flex-end; }
-.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; padding: 4px 0; }
+/* Desktop nav links */
+.nav-links {
+  display: flex; gap: 16px; list-style: none;
+}
+.nav-links a {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--text-dim); text-decoration: none;
+  transition: color 0.2s; padding: 4px 0;
+}
 .nav-links a:hover { color: var(--gold-light); }
 
+/* Hamburger — hidden on desktop */
+.nav-hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--gold); border-radius: 2px;
+  transition: all 0.25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile drawer */
+.nav-drawer {
+  display: none;
+  position: fixed;
+  top: var(--nav-h); left: 0; right: 0;
+  background: rgba(8,8,20,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-gold);
+  z-index: 199;
+  padding: 16px 0;
+  transform: translateY(-8px);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.nav-drawer.open {
+  opacity: 1; transform: translateY(0); pointer-events: auto;
+}
+.nav-drawer ul { list-style: none; }
+.nav-drawer ul li a {
+  display: block;
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--text-dim); text-decoration: none;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(42,42,74,0.4);
+  transition: color 0.2s, background 0.2s;
+}
+.nav-drawer ul li:last-child a { border-bottom: none; }
+.nav-drawer ul li a:hover,
+.nav-drawer ul li a:active { color: var(--gold); background: rgba(212,168,64,0.05); }
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-drawer { display: block; }
+}
+
+/* ── LAYOUT ─────────────────────────────────── */
 .table-container {
-  padding: 80px 16px 40px;
+  padding: 80px 16px 48px;
   max-width: 700px;
   margin: 0 auto;
   position: relative;
@@ -103,355 +172,310 @@ nav {
 
 .table-header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
-
 .table-header h1 {
   font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(20px, 4vw, 32px);
+  font-size: clamp(20px, 5vw, 32px);
   color: var(--gold-light);
   text-shadow: 0 0 60px rgba(212,168,64,0.2);
+  line-height: 1.2;
 }
-
 .table-subtitle {
-  font-style: italic;
-  color: var(--text-mid);
-  margin-top: 6px;
-  font-size: 15px;
+  font-style: italic; color: var(--text-mid);
+  margin-top: 8px; font-size: clamp(13px, 3vw, 15px);
 }
 
 .sky-badge {
-  text-align: center;
-  margin-bottom: 16px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  color: var(--text-dim);
-  min-height: 1.5rem;
+  text-align: center; margin-bottom: 14px;
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.12em; color: var(--text-dim); min-height: 1.5rem;
 }
 .sky-badge .period-dot {
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  margin-right: 6px;
-  vertical-align: middle;
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; margin-right: 6px; vertical-align: middle;
 }
 .sky-badge .period-dot.sun  { background: var(--gold);  box-shadow: 0 0 8px var(--gold); }
 .sky-badge .period-dot.moon { background: var(--water); box-shadow: 0 0 8px var(--water); }
 
 .db-status {
-  text-align: center;
-  margin-bottom: 12px;
-  font-size: 0.5rem;
-  font-family: 'Cinzel', serif;
-  letter-spacing: 0.1em;
-  color: var(--text-dim);
-  opacity: 0.7;
+  text-align: center; margin-bottom: 10px;
+  font-size: 0.5rem; font-family: 'Cinzel', serif;
+  letter-spacing: 0.1em; color: var(--text-dim); opacity: 0.7;
 }
 .db-status.connected { color: var(--sage); }
 .db-status.offline   { color: var(--fire); }
 
-.question-area {
-  text-align: center;
-  margin-bottom: 20px;
+/* ── SIGN SELECTOR ──────────────────────────── */
+.sign-selector { text-align: center; margin-bottom: 14px; }
+.sign-selector label {
+  font-family: 'Cinzel', serif; font-size: 0.5rem;
+  letter-spacing: 0.15em; color: var(--text-dim);
+  display: block; margin-bottom: 6px;
 }
+.sign-selector select {
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  background: rgba(24,24,56,0.75);
+  border: 1px solid var(--border);
+  color: var(--text); padding: 10px 16px;
+  border-radius: 6px; cursor: pointer;
+  max-width: 260px; width: 100%;
+  backdrop-filter: blur(8px);
+  -webkit-appearance: none; appearance: none;
+  text-align: center;
+  /* Bigger tap target on mobile */
+  min-height: 44px;
+}
+.sign-selector select:focus { border-color: var(--gold); outline: none; }
 
+/* ── QUESTION INPUT ─────────────────────────── */
+.question-area { text-align: center; margin-bottom: 18px; }
 .question-input {
   background: rgba(24,24,56,0.75);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
-  font-style: italic;
-  padding: 12px 18px;
-  width: 100%;
-  max-width: 460px;
-  text-align: center;
-  transition: border-color 0.3s;
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(15px, 4vw, 17px); font-style: italic;
+  padding: 12px 18px; width: 100%; max-width: 460px;
+  text-align: center; transition: border-color 0.3s;
   backdrop-filter: blur(8px);
+  /* Prevent iOS zoom on focus (font-size must be ≥16px or we override) */
+  font-size: 16px;
+  min-height: 48px;
 }
+.question-input:focus { outline: none; border-color: var(--gold); }
+.question-input::placeholder { color: var(--text-dim); opacity: 0.5; }
 
-.question-input:focus {
-  outline: none;
-  border-color: var(--gold);
-}
-
-.question-input::placeholder {
-  color: var(--text-dim);
-  opacity: 0.5;
-}
-
-.sign-selector {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.sign-selector select {
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  background: rgba(24,24,56,0.75);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  max-width: 260px;
-  width: 100%;
-  backdrop-filter: blur(8px);
-  -webkit-appearance: none;
-  appearance: none;
-  text-align: center;
-}
-
-.sign-selector select:focus {
-  border-color: var(--gold);
-  outline: none;
-}
-
-.sign-selector label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.5rem;
-  letter-spacing: 0.15em;
-  color: var(--text-dim);
-  display: block;
-  margin-bottom: 6px;
-}
-
+/* ── DECK SELECTOR ──────────────────────────── */
 .deck-selector {
-  text-align: center;
-  margin-bottom: 20px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
+  text-align: center; margin-bottom: 18px;
+  display: flex; gap: 6px; justify-content: flex-start;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+  /* Hide scrollbar but keep scrollability */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.deck-selector::-webkit-scrollbar { display: none; }
+
+/* Faint fade hints at edges on mobile */
+@media (max-width: 600px) {
+  .deck-selector {
+    /* Pad so first/last items aren't flush to edge */
+    padding-left: 4px;
+    padding-right: 4px;
+    mask-image: linear-gradient(to right, transparent 0, black 12px, black calc(100% - 12px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 12px, black calc(100% - 12px), transparent 100%);
+  }
 }
 
 .deck-option {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 7px 12px;
-  border-radius: 20px;
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px 14px; border-radius: 20px;
   border: 1px solid var(--border);
   background: rgba(24,24,56,0.6);
-  color: var(--text-dim);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+  color: var(--text-dim); cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
   backdrop-filter: blur(6px);
   -webkit-tap-highlight-color: transparent;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  /* Tap target */
+  min-height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
 }
-
 .deck-option:hover { border-color: var(--border-gold); color: var(--text-mid); }
-
 .deck-option.active                  { border-color: var(--gold);  color: var(--gold);  background: rgba(212,168,64,0.08); }
 .deck-option.suit-fire.active        { border-color: var(--fire);  color: var(--fire);  background: rgba(201,74,42,0.08); }
 .deck-option.suit-water.active       { border-color: var(--water); color: var(--water); background: rgba(102,170,204,0.08); }
 .deck-option.suit-earth.active       { border-color: var(--earth); color: var(--earth); background: rgba(106,138,58,0.08); }
 .deck-option.suit-air.active         { border-color: var(--air);   color: var(--air);   background: rgba(170,136,204,0.08); }
 
-.spread {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: flex-start;
+/* ── BUTTON ROW ─────────────────────────────── */
+.button-row {
+  text-align: center; margin-bottom: 28px;
+  display: flex; gap: 10px;
+  justify-content: center; align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 32px;
-  min-height: 300px;
 }
+.btn-reveal {
+  font-family: 'Cinzel', serif; font-size: 11px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: #0a0a0a;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none; padding: 13px 32px; border-radius: 8px;
+  cursor: pointer; transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(212,168,64,0.2);
+  -webkit-tap-highlight-color: transparent;
+  min-height: 48px; min-width: 140px;
+}
+.btn-reveal:hover { box-shadow: 0 0 50px rgba(212,168,64,0.45); transform: translateY(-2px); }
+.btn-reveal:active { transform: translateY(0); box-shadow: 0 0 20px rgba(212,168,64,0.3); }
+.btn-reveal:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
+.btn-new {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-dim); background: transparent;
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 20px; cursor: pointer; transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 48px;
+}
+.btn-new:hover { border-color: var(--gold); color: var(--gold); }
+.btn-new:active { background: rgba(212,168,64,0.05); }
+
+/* ── SPREAD ─────────────────────────────────── */
+.spread {
+  display: flex; gap: 12px;
+  justify-content: center; align-items: flex-start;
+  flex-wrap: nowrap;         /* row by default */
+  margin-bottom: 32px; min-height: 200px;
+}
 .card-slot {
-  flex: 1;
-  min-width: 140px;
-  max-width: 220px;
+  flex: 1; min-width: 0;
+  max-width: 200px;
   perspective: 1000px;
 }
 
+/* Mobile: horizontal strip that fits 3 cards side by side */
+@media (max-width: 500px) {
+  .spread {
+    gap: 8px;
+  }
+  .card-slot {
+    /* Cards fill width evenly, no min forcing overflow */
+    flex: 1 1 0;
+    max-width: none;
+  }
+}
+
 .card-inner {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 2/3;
+  position: relative; width: 100%; aspect-ratio: 2/3;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
 }
-
-.card-inner.flipped {
-  transform: rotateY(180deg);
-}
+.card-inner.flipped { transform: rotateY(180deg); }
 
 .card-face {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   backface-visibility: hidden;
-  border-radius: 14px;
-  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 10px; overflow: hidden;
   border: 1px solid var(--border);
 }
-
 .card-back {
   background: var(--surface2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   border: 1px solid var(--border-gold);
-  cursor: default;
 }
-
 .card-back-design { text-align: center; }
-.card-back-sigil  { font-size: 36px; opacity: 0.6; }
-.card-back-text   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-top: 6px; opacity: 0.5; }
+.card-back-sigil  { font-size: clamp(20px, 5vw, 36px); opacity: 0.6; }
+.card-back-text   {
+  font-family: 'Cinzel', serif; font-size: clamp(5px, 1.5vw, 7px);
+  letter-spacing: 4px; color: var(--gold);
+  text-transform: uppercase; margin-top: 6px; opacity: 0.5;
+}
 
 .card-front {
-  background: var(--surface);
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
+  background: var(--surface); transform: rotateY(180deg);
+  display: flex; flex-direction: column;
 }
-
 .card-front img {
-  width: 100%;
-  height: 55%;
-  object-fit: cover;
+  width: 100%; height: 55%; object-fit: cover;
   border-bottom: 1px solid var(--border-gold);
   background: var(--surface2);
 }
-
 .card-front .card-info {
-  padding: 10px 12px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  padding: clamp(6px, 2vw, 10px) clamp(6px, 2vw, 12px);
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
 }
 
-.card-position { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.6; margin-bottom: 2px; }
-.card-name     { font-family: 'Cinzel Decorative', serif; font-size: 12px; color: var(--gold-light); line-height: 1.2; }
-.card-domain   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; }
-.card-overlay  { font-size: 10px; font-style: italic; color: var(--text-mid); margin-top: 4px; line-height: 1.4; }
-
-.button-row { text-align: center; margin-bottom: 32px; }
-
-.btn-reveal {
+/* Card text — scales with card width via clamp */
+.card-position {
   font-family: 'Cinzel', serif;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #0a0a0a;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  border: none;
-  padding: 12px 32px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 0 30px rgba(212,168,64,0.2);
-  -webkit-tap-highlight-color: transparent;
+  font-size: clamp(5px, 1.4vw, 7px);
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); opacity: 0.6; margin-bottom: 2px;
 }
-
-.btn-reveal:hover {
-  box-shadow: 0 0 50px rgba(212,168,64,0.45);
-  transform: translateY(-2px);
+.card-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(8px, 2.2vw, 12px);
+  color: var(--gold-light); line-height: 1.2;
 }
-
-.btn-reveal:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-new {
+.card-domain {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 9px 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 10px;
-  -webkit-tap-highlight-color: transparent;
+  font-size: clamp(5px, 1.4vw, 7px);
+  letter-spacing: 2px; color: var(--text-dim);
+  text-transform: uppercase; margin-top: 2px;
 }
-
-.btn-new:hover { border-color: var(--gold); color: var(--gold); }
-
-.reading-area {
-  max-width: 600px;
-  margin: 0 auto 40px;
-  padding: 24px 20px;
-  background: rgba(24,24,56,0.75);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  backdrop-filter: blur(12px);
-  display: none;
-}
-
-.reading-area.visible {
-  display: block;
-  animation: fadeUp 0.6s ease;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.reading-header   { font-family: 'Cinzel Decorative', serif; font-size: 16px; color: var(--gold-light); text-align: center; margin-bottom: 20px; }
-.reading-sky      { text-align: center; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 16px; font-style: italic; }
-.reading-block    { margin-bottom: 16px; padding-left: 14px; border-left: 2px solid var(--border-gold); }
-.reading-position { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
-.reading-text     { font-size: 14px; font-style: italic; color: var(--text-mid); line-height: 1.7; }
-
-.reading-synthesis {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-gold);
-  font-size: 15px;
-  font-style: italic;
-  color: var(--text);
-  line-height: 1.8;
-  text-align: center;
-}
-
-.saved-indicator {
-  text-align: center;
-  font-family: 'Cinzel', serif;
-  font-size: 0.5rem;
-  letter-spacing: 0.15em;
-  color: var(--text-dim);
-  margin-top: 12px;
-}
-.saved-indicator.cloud { color: var(--sage); }
-
-.gaia-stats {
-  text-align: center;
-  margin-top: 16px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.5rem;
-  letter-spacing: 0.1em;
-  color: var(--text-dim);
-  opacity: 0.6;
+.card-overlay {
+  font-size: clamp(7px, 1.8vw, 10px);
+  font-style: italic; color: var(--text-mid);
+  margin-top: 3px; line-height: 1.4;
 }
 
 .img-placeholder {
   width: 100%; height: 55%;
   background: var(--surface2);
   display: flex; align-items: center; justify-content: center;
-  font-size: 32px; opacity: 0.3;
+  font-size: clamp(20px, 5vw, 32px); opacity: 0.3;
   border-bottom: 1px solid var(--border-gold);
 }
 
-@media (max-width: 600px) {
-  nav { padding: 0 12px; }
-  .nav-links { gap: 10px; }
-  .nav-links a { font-size: 7px; letter-spacing: 2px; }
-  .spread { flex-direction: column; align-items: center; gap: 12px; }
-  .card-slot { max-width: 180px; }
-  .deck-option { font-size: 6px; padding: 6px 10px; }
-  .table-container { padding: 70px 10px 30px; }
+/* ── READING AREA ────────────────────────────── */
+.reading-area {
+  max-width: 600px; margin: 0 auto 40px;
+  padding: clamp(16px, 4vw, 24px) clamp(14px, 4vw, 20px);
+  background: rgba(24,24,56,0.75);
+  border: 1px solid var(--border); border-radius: 12px;
+  backdrop-filter: blur(12px); display: none;
+}
+.reading-area.visible {
+  display: block;
+  animation: fadeUp 0.6s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reading-header {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(13px, 4vw, 16px);
+  color: var(--gold-light); text-align: center; margin-bottom: 20px;
+}
+.reading-sky      { text-align: center; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 16px; font-style: italic; }
+.reading-block    { margin-bottom: 16px; padding-left: 14px; border-left: 2px solid var(--border-gold); }
+.reading-position { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.reading-text     { font-size: clamp(13px, 3.5vw, 14px); font-style: italic; color: var(--text-mid); line-height: 1.7; }
+.reading-synthesis {
+  margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--border-gold);
+  font-size: clamp(13px, 3.8vw, 15px); font-style: italic;
+  color: var(--text); line-height: 1.8; text-align: center;
+}
+
+.saved-indicator {
+  text-align: center; font-family: 'Cinzel', serif;
+  font-size: 0.5rem; letter-spacing: 0.15em;
+  color: var(--text-dim); margin-top: 12px;
+}
+.saved-indicator.cloud { color: var(--sage); }
+
+.gaia-stats {
+  text-align: center; margin-top: 16px;
+  font-family: 'Cinzel', serif; font-size: 0.5rem;
+  letter-spacing: 0.1em; color: var(--text-dim); opacity: 0.6;
+}
+
+/* ── SAFE AREA (notch/home bar) ─────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .table-container {
+    padding-bottom: calc(48px + env(safe-area-inset-bottom));
+  }
 }
 </style>
 </head>
@@ -472,7 +496,19 @@ nav {
     <li><a href="daily.html">Daily</a></li>
     <li><a href="archive.html">Archive</a></li>
   </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <ul>
+    <li><a href="index.html">Temple</a></li>
+    <li><a href="zodiac.html">Zodiac</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="archive.html">Archive</a></li>
+  </ul>
+</div>
 
 <div class="table-container">
 
@@ -494,7 +530,7 @@ nav {
   <div class="question-area">
     <input type="text" class="question-input" id="questionInput"
            placeholder="What question do you bring to the cards?"
-           maxlength="200">
+           maxlength="200" autocomplete="off" autocorrect="off" spellcheck="false">
   </div>
 
   <div class="deck-selector">
@@ -566,11 +602,45 @@ nav {
 <script src="js/supabase.js"></script>
 
 <script>
-// ─── SUPABASE CONFIG ─────────────────────────
+// ─── HAMBURGER ────────────────────────────────
+const hamburger = document.getElementById('navHamburger');
+const drawer    = document.getElementById('navDrawer');
+
+hamburger.addEventListener('click', () => {
+  const isOpen = drawer.classList.contains('open');
+  drawer.classList.toggle('open', !isOpen);
+  hamburger.classList.toggle('open', !isOpen);
+  hamburger.setAttribute('aria-expanded', String(!isOpen));
+  drawer.setAttribute('aria-hidden', String(isOpen));
+});
+
+// Close drawer on nav link tap
+drawer.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    drawer.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+  });
+});
+
+// Close on outside tap
+document.addEventListener('touchstart', e => {
+  if (drawer.classList.contains('open') &&
+      !drawer.contains(e.target) &&
+      !hamburger.contains(e.target)) {
+    drawer.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+  }
+}, { passive: true });
+
+// ─── SUPABASE CONFIG ──────────────────────────
 const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
 
-// ─── MOSAIC BACKGROUND ───────────────────────
+// ─── MOSAIC BACKGROUND ────────────────────────
 const MAJOR_ARCANA = [
   {id:"major_00",name:"The Fool",image:"data/images/dionysus-card.jpg"},
   {id:"major_01",name:"The Magician",image:"data/images/major/magician.png"},
@@ -615,8 +685,11 @@ const MOSAIC_POOL = [...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MAJOR_ARCANA, ...MINOR
 
 function buildMosaic() {
   const mosaic = document.getElementById('cardMosaic');
+  // Fewer cells on mobile for performance
+  const isMobile = window.innerWidth <= 600;
+  const count = isMobile ? 12 : 36;
   const cells = [];
-  for (let i = 0; i < 36; i++) {
+  for (let i = 0; i < count; i++) {
     const card = MOSAIC_POOL[Math.floor(Math.random() * MOSAIC_POOL.length)];
     cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
   }
@@ -631,7 +704,7 @@ setInterval(() => {
   imgs[idx].src = MOSAIC_POOL[Math.floor(Math.random() * MOSAIC_POOL.length)].image;
 }, 8000);
 
-// ─── PONTUS AMBIENT ─────────────────────────
+// ─── PONTUS AMBIENT ───────────────────────────
 const pCvs = document.getElementById('pontusAmbient');
 const pCtx = pCvs.getContext('2d');
 
@@ -671,7 +744,7 @@ function drawPontus() {
 }
 drawPontus();
 
-// ─── APP CONTROLLER ─────────────────────────
+// ─── APP CONTROLLER ──────────────────────────
 const App = (() => {
   let mode = 'major';
   let currentReading = null;
@@ -688,11 +761,7 @@ const App = (() => {
   }
 
   async function saveReadingToDivineDB(readingData) {
-    if (!supabaseClient) {
-      initSupabase();
-      if (!supabaseClient) return null;
-    }
-
+    if (!supabaseClient) { initSupabase(); if (!supabaseClient) return null; }
     try {
       const record = {
         id: crypto.randomUUID(),
@@ -706,12 +775,8 @@ const App = (() => {
         deck_mode: mode,
         birth_sign: readingData.birthSign
       };
-
       const { data, error } = await supabaseClient.from('readings').insert([record]);
-      if (error) {
-        console.warn('DivineDB save failed:', error.message);
-        return null;
-      }
+      if (error) { console.warn('DivineDB save failed:', error.message); return null; }
       console.log('✅ Reading saved to DivineDB, ID:', data[0].id);
       updateGaiaStats();
       return data[0];
@@ -723,19 +788,13 @@ const App = (() => {
 
   async function updateGaiaStats() {
     const el = document.getElementById('gaiaStats');
-    if (!supabaseClient) {
-      initSupabase();
-      if (!supabaseClient) return;
-    }
+    if (!supabaseClient) { initSupabase(); if (!supabaseClient) return; }
     try {
       const { count, error } = await supabaseClient
-        .from('readings')
-        .select('*', { count: 'exact', head: true });
+        .from('readings').select('*', { count: 'exact', head: true });
       if (error) throw error;
       if (el) el.textContent = `📚 ${count || 0} readings in DivineDB`;
-    } catch(e) {
-      if (el) el.textContent = '';
-    }
+    } catch(e) { if (el) el.textContent = ''; }
   }
 
   function updateDBStatus() {
@@ -783,9 +842,7 @@ const App = (() => {
     try {
       const sky = await Observe.getSkyState();
       return sky.period;
-    } catch(e) {
-      return Observe.getCurrentPeriod();
-    }
+    } catch(e) { return Observe.getCurrentPeriod(); }
   }
 
   function setMode(newMode) {
@@ -805,9 +862,9 @@ const App = (() => {
     try {
       await Divine.loadDecks();
 
-      const question = document.getElementById('questionInput').value.trim() || null;
+      const question  = document.getElementById('questionInput').value.trim() || null;
       const birthSign = document.getElementById('birthSign').value || null;
-      const period = await getCurrentPeriod();
+      const period    = await getCurrentPeriod();
 
       const pool = mode === 'major' ? Divine.getMajorDeck() :
                    ['fire','water','earth','air'].includes(mode) ?
@@ -823,7 +880,7 @@ const App = (() => {
         const skyState = await Observe.getSkyState();
         skyState.moonAspect = Observe.getMoonAspect();
         const allCards = Divine.getFullDeck();
-        const weights = Weight.calculate(skyState, past, present, allCards);
+        const weights  = Weight.calculate(skyState, past, present, allCards);
         const futureDraw = Divine.weightedDraw(allCards, 1, weights);
         future = futureDraw[0];
       } catch(e) {
@@ -834,36 +891,33 @@ const App = (() => {
 
       currentReading = { past, present, future, question, period, birthSign };
 
-      document.getElementById('frontPast').innerHTML = Divine.renderCard(past, 'past');
+      document.getElementById('frontPast').innerHTML    = Divine.renderCard(past,    'past');
       document.getElementById('frontPresent').innerHTML = Divine.renderCard(present, 'present');
-      document.getElementById('frontFuture').innerHTML = Divine.renderCard(future, 'future');
+      document.getElementById('frontFuture').innerHTML  = Divine.renderCard(future,  'future');
 
-      const cardPast = document.getElementById('cardPast');
+      const cardPast    = document.getElementById('cardPast');
       const cardPresent = document.getElementById('cardPresent');
-      const cardFuture = document.getElementById('cardFuture');
+      const cardFuture  = document.getElementById('cardFuture');
 
       cardPast.classList.remove('flipped');
       cardPresent.classList.remove('flipped');
       cardFuture.classList.remove('flipped');
       void cardPast.offsetWidth;
 
-      setTimeout(() => cardPast.classList.add('flipped'), 100);
+      setTimeout(() => cardPast.classList.add('flipped'),    100);
       setTimeout(() => cardPresent.classList.add('flipped'), 400);
-      setTimeout(() => cardFuture.classList.add('flipped'), 700);
+      setTimeout(() => cardFuture.classList.add('flipped'),  700);
 
       setTimeout(async () => {
         const reading = {
           cards: { past, present, future },
           question: question || 'The unspoken question',
-          skyContext: {},
-          synthesis: ''
+          skyContext: {}, synthesis: ''
         };
-
         try {
           const skyState = Observe.getCurrentPeriod ? {
             period: Observe.getCurrentPeriod(),
-            moonPhase: { name: '' },
-            planets: {}
+            moonPhase: { name: '' }, planets: {}
           } : reading.skyContext;
           reading.skyContext = skyState;
         } catch(e) {}
@@ -872,22 +926,12 @@ const App = (() => {
         const readingArea = document.getElementById('readingArea');
         readingArea.innerHTML = readingHtml;
         readingArea.classList.add('visible');
-        readingArea.scrollIntoView({ behavior: 'smooth' });
+        readingArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // Extract synthesis text for DB
         const synthesisMatch = readingHtml.match(/<div class="reading-synthesis">(.*?)<\/div>/s);
         const synthesis = synthesisMatch ? synthesisMatch[1].replace(/<[^>]*>/g, '') : '';
 
-        const readingForDB = {
-          period: period,
-          past: past,
-          present: present,
-          future: future,
-          synthesis: synthesis,
-          question: question,
-          birthSign: birthSign
-        };
-        await saveReadingToDivineDB(readingForDB);
+        await saveReadingToDivineDB({ period, past, present, future, synthesis, question, birthSign });
 
         btn.textContent = originalText;
         btn.disabled = false;
