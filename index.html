@@ -147,6 +147,93 @@ nav{
 .suit-triad{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
 .suit-domain{font-size:13px;font-style:italic;color:var(--text-mid);margin-top:10px;line-height:1.5}
 
+/* ✦ New Social Hub Section — integrated with existing design language ✦ */
+.social-section {
+  position: relative;
+  z-index: 2;
+  padding: 80px 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(212,168,64,0.06);
+  text-align: center;
+}
+
+.social-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+.social-heading {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(20px, 3vw, 28px);
+  color: var(--gold-light);
+  margin-bottom: 12px;
+}
+
+.social-subtitle {
+  font-size: 15px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 42px;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.social-card-link {
+  background: rgba(24,24,56,0.55);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px 18px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-card-link:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 20px rgba(212,168,64,0.12);
+  background: rgba(30,30,70,0.7);
+}
+
+.social-icon {
+  font-size: 36px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 10px rgba(212,168,64,0.25));
+}
+
+.social-platform {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 15px;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+}
+
+.social-handle {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  opacity: 0.8;
+  word-break: break-word;
+}
+
 footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-top:1px solid rgba(212,168,64,0.06)}
 .footer-sigil{font-size:24px;opacity:0.25;margin-bottom:10px}
 .footer-text{font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2}
@@ -241,6 +328,70 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
     <div class="suit-card"><div class="suit-symbol">🜃</div><div class="suit-name">Earth</div><div class="suit-triad">Demeter · Hera · Artemis</div><div class="suit-domain">Harvest, covenant, the hunt — the ground that sustains and binds</div></div>
     <div class="suit-card"><div class="suit-symbol">🌊</div><div class="suit-name">Water</div><div class="suit-triad">Poseidon · Dionysus · Aphrodite</div><div class="suit-domain">The sea, ecstasy, desire — the depths that move and drown</div></div>
     <div class="suit-card"><div class="suit-symbol">💨</div><div class="suit-name">Air</div><div class="suit-triad">Zeus · Athena · Hermes</div><div class="suit-domain">Authority, wisdom, messages — the mind that commands and connects</div></div>
+  </div>
+</section>
+
+<!-- ✦ Follow the Flame — Social Nexus ✦ -->
+<section class="social-section">
+  <div class="social-eyebrow">Follow the Flame</div>
+  <div class="social-heading">The Ealdforn Nexus</div>
+  <div class="social-subtitle">Where the divine reaches the digital. Find us across the realms.</div>
+  <div class="social-grid">
+    
+    <a href="https://discord.gg/EQEtBKQ3" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">💬</div>
+      <div class="social-platform">Discord</div>
+      <div class="social-handle">Join the Server</div>
+    </a>
+    
+    <a href="https://www.facebook.com/mategwas/" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">📘</div>
+      <div class="social-platform">Facebook</div>
+      <div class="social-handle">Mategwas</div>
+    </a>
+    
+    <a href="https://www.facebook.com/ealdforn/" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">📘</div>
+      <div class="social-platform">Facebook</div>
+      <div class="social-handle">Ealdforn</div>
+    </a>
+    
+    <a href="https://ealdforn.substack.com" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">📜</div>
+      <div class="social-platform">Substack</div>
+      <div class="social-handle">Ealdforn</div>
+    </a>
+    
+    <a href="https://www.youtube.com/@ealdforn" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">▶️</div>
+      <div class="social-platform">YouTube</div>
+      <div class="social-handle">@ealdforn</div>
+    </a>
+    
+    <a href="https://vm.tiktok.com/ZT927LQhVXJQ6-jyhEM/" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">🎵</div>
+      <div class="social-platform">TikTok</div>
+      <div class="social-handle">@ealdforn</div>
+    </a>
+    
+    <a href="https://www.github.com/kairos-coder" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">🐙</div>
+      <div class="social-platform">GitHub</div>
+      <div class="social-handle">kairos-coder</div>
+    </a>
+    
+    <a href="https://x.com/KairosKronos4" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">𝕏</div>
+      <div class="social-platform">X / Twitter</div>
+      <div class="social-handle">@KairosKronos4</div>
+    </a>
+    
+    <a href="https://creator.nightcafe.studio/u/Ealdforn_Author?ru=Ealdforn_Author" target="_blank" rel="noopener noreferrer" class="social-card-link">
+      <div class="social-icon">🎨</div>
+      <div class="social-platform">NightCafe</div>
+      <div class="social-handle">Ealdforn Author</div>
+    </a>
+    
   </div>
 </section>
 
