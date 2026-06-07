@@ -10,115 +10,257 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ═══════════════════════════════════════════════════════════════
+   CELESTIAL GRIMOIRE — THE OLYMPIAN PARCHMENT
+   Claude's Temple. Gold on vellum. Light from above.
+   The sky is the source code. The gods do not ask.
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
-  --gold:        #d4a840;
-  --gold-light:  #f0d878;
-  --gold-dark:   #8a6518;
-  --gold-dim:    #4a3510;
-  --void:        #060610;
-  --deep:        #0c0c1e;
-  --surface:     #181838;
-  --surface2:    #202048;
-  --border:      #2a2a4a;
-  --border-gold: rgba(212,168,64,0.2);
-  --text:        #f0ead8;
-  --text-mid:    #d0c0a0;
-  --text-dim:    #988870;
-  --fire:        #c94a2a;
-  --earth:       #6a8a3a;
-  --water:       #66aacc;
-  --air:         #aa88cc;
-  --sun-color:   #f0c840;
-  --moon-color:  #88aacc;
+  /* Parchment palette */
+  --parchment:       #F5ECD7;
+  --parchment-deep:  #EAD9BE;
+  --parchment-warm:  #E2CBAA;
+  --parchment-shadow:#D4B98A;
+  --vellum:          #FBF5E8;
+  --ink:             #2A1F0E;
+  --ink-mid:         #4A3820;
+  --ink-dim:         #7A6248;
+  --ink-faint:       #A89070;
+
+  /* Gold hierarchy */
+  --gold:            #C8980A;
+  --gold-bright:     #E8B820;
+  --gold-light:      #F5D060;
+  --gold-dark:       #7A5C08;
+  --gold-dim:        #4A3808;
+  --gold-border:     rgba(200,152,10,0.25);
+  --gold-glow:       rgba(200,152,10,0.12);
+
+  /* Celestial accents */
+  --sun-color:       #E8A020;
+  --moon-color:      #6888AA;
+  --fire-color:      #B84020;
+  --earth-color:     #5A7A30;
+  --air-color:       #7A68B8;
+  --water-color:     #3878A8;
+
+  /* Surface tones */
+  --surface-warm:    rgba(234,217,190,0.55);
+  --surface-gold:    rgba(200,152,10,0.06);
+  --surface-ink:     rgba(42,31,14,0.04);
+
+  /* Border system */
+  --border-parchment: rgba(164,134,80,0.35);
+  --border-gold:      rgba(200,152,10,0.3);
+  --border-ink:       rgba(42,31,14,0.15);
 }
 
 html { scroll-behavior: smooth; }
 
+/* ── BODY — Parchment ground ── */
 body {
-  background: var(--void);
+  background: var(--parchment);
   background-image:
-    radial-gradient(ellipse 70% 50% at 10% 5%, #120828 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%),
-    radial-gradient(circle at 50% 50%, #0a0820 0%, var(--void) 100%);
+    /* Subtle parchment texture via noise-like gradient layers */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(164,134,80,0.015) 2px,
+      rgba(164,134,80,0.015) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(164,134,80,0.01) 3px,
+      rgba(164,134,80,0.01) 6px
+    ),
+    /* Vignette warmth */
+    radial-gradient(ellipse 100% 100% at 50% 0%, var(--vellum) 0%, var(--parchment) 40%, var(--parchment-deep) 100%);
   font-family: 'Cormorant Garamond', Georgia, serif;
-  color: var(--text);
+  color: var(--ink);
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
 }
 
-.stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-.star {
-  position: absolute; background: white; border-radius: 50%; opacity: 0.3;
-  animation: twinkle 4s infinite alternate;
-}
-@keyframes twinkle {
-  0%   { opacity: 0.08; transform: scale(1); }
-  100% { opacity: 0.5;  transform: scale(1.3); }
+/* ── PARCHMENT GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
 }
 
-/* ── NAV ── */
+/* ── NAVIGATION ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; height: 56px;
-  background: rgba(8,8,20,0.9); backdrop-filter: blur(20px);
+  background: rgba(245,236,215,0.95);
+  backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-gold);
+  box-shadow: 0 1px 0 rgba(200,152,10,0.1), 0 2px 12px rgba(42,31,14,0.08);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 24px; z-index: 200;
 }
 .nav-brand { display: flex; flex-direction: column; gap: 1px; }
-.nav-brand-title { font-family: 'Cinzel Decorative', serif; font-size: 13px; color: var(--gold); letter-spacing: 1.5px; }
-.nav-brand-sub   { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px; color: var(--gold-dark); text-transform: uppercase; }
+.nav-brand-title {
+  font-family: 'Cinzel Decorative', serif; font-size: 13px;
+  color: var(--gold-dark); letter-spacing: 1.5px;
+}
+.nav-brand-sub {
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 5px; color: var(--ink-dim); text-transform: uppercase;
+}
 .nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
-.nav-links a { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; padding: 4px 0; }
-.nav-links a:hover { color: var(--gold-light); }
+.nav-links a {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--ink-faint);
+  text-decoration: none; transition: color 0.2s; padding: 4px 0;
+  border-bottom: 1px solid transparent;
+}
+.nav-links a:hover { color: var(--gold); border-bottom-color: var(--gold-border); }
+.nav-links a.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
+
+/* ── SISTER LINK (Chthonic) ── */
+.sister-link {
+  position: fixed; top: 64px; right: 16px; z-index: 200;
+}
+.sister-link a {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+  text-transform: uppercase; color: #8866aa;
+  text-decoration: none; padding: 6px 12px;
+  border: 1px solid rgba(153,102,204,0.25); border-radius: 16px;
+  background: rgba(245,236,215,0.9);
+  transition: all 0.3s; display: block;
+}
+.sister-link a:hover {
+  border-color: rgba(153,102,204,0.5); color: #7755bb;
+  box-shadow: 0 2px 8px rgba(153,102,204,0.12);
+}
 
 /* ── LAYOUT ── */
-.container { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; padding: 80px 16px 60px; }
+.container {
+  position: relative; z-index: 2; max-width: 720px;
+  margin: 0 auto; padding: 76px 16px 60px;
+}
 
-.header { text-align: center; margin-bottom: 8px; }
-.header h1 { font-family: 'Cinzel Decorative', serif; font-size: clamp(22px, 5vw, 38px); color: var(--gold-light); letter-spacing: 2px; text-shadow: 0 0 40px rgba(212,168,64,0.2); }
-.header .date { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; color: var(--text-dim); margin-top: 8px; }
+/* ── HEADER ── */
+.header { text-align: center; margin-bottom: 6px; }
+.header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(22px, 5vw, 38px);
+  color: var(--gold-dark);
+  letter-spacing: 3px;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.6),
+    0 2px 8px rgba(200,152,10,0.15);
+}
+.header h1 .ornament { color: var(--gold); opacity: 0.7; }
+.header .date {
+  font-family: 'Cinzel', serif; font-size: 10px;
+  letter-spacing: 3px; color: var(--ink-dim); margin-top: 8px;
+}
 
-/* Period banner — switches dawn/dusk */
+/* ── PERIOD BANNER ── */
 .period-banner {
-  text-align: center;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
+  text-align: center; padding: 10px 16px; margin-bottom: 20px;
+  border-radius: 6px; font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
   transition: all 0.5s;
+  border-top: 1px solid; border-bottom: 1px solid;
+  border-left: none; border-right: none;
+  background: transparent;
 }
 .period-banner.solar {
-  background: rgba(240,200,64,0.06);
-  border: 1px solid rgba(240,200,64,0.2);
-  color: var(--sun-color);
+  border-color: rgba(200,152,10,0.3);
+  color: var(--gold-dark);
+  background: linear-gradient(90deg, transparent, rgba(200,152,10,0.05), transparent);
 }
 .period-banner.lunar {
-  background: rgba(136,170,204,0.06);
-  border: 1px solid rgba(136,170,204,0.2);
+  border-color: rgba(104,136,170,0.3);
   color: var(--moon-color);
+  background: linear-gradient(90deg, transparent, rgba(104,136,170,0.04), transparent);
 }
 
-/* ── SKY DIAGRAM ── */
+/* ── GRIMOIRE SECTION DIVIDER ── */
+.section-rule {
+  display: flex; align-items: center; gap: 12px;
+  margin: 24px 0 16px; opacity: 0.45;
+}
+.section-rule::before, .section-rule::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.section-rule-glyph {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 4px; color: var(--gold-dark); text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── SKY DIAGRAM — The Orrery ── */
 .sky-diagram {
   position: relative;
-  width: min(400px, 84vw); height: min(400px, 84vw);
+  width: min(380px, 84vw); height: min(380px, 84vw);
   margin: 0 auto 28px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, rgba(12,10,36,0.7), rgba(6,6,18,0.95));
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 0 80px rgba(0,0,0,0.5), inset 0 0 50px rgba(0,0,0,0.4);
+  /* Multi-ring orrery look */
+  background:
+    radial-gradient(circle at 40% 35%,
+      rgba(255,248,220,0.9) 0%,
+      rgba(245,236,200,0.85) 25%,
+      rgba(234,215,175,0.8) 55%,
+      rgba(210,185,140,0.75) 100%
+    );
+  border: 2px solid var(--border-gold);
+  box-shadow:
+    0 0 0 1px rgba(200,152,10,0.08),
+    0 0 0 6px rgba(245,236,215,0.5),
+    0 0 0 7px rgba(200,152,10,0.12),
+    0 8px 32px rgba(42,31,14,0.18),
+    inset 0 0 40px rgba(42,31,14,0.06);
 }
+
+/* Orrery rings */
+.sky-diagram::before {
+  content: '';
+  position: absolute; inset: 12%;
+  border-radius: 50%;
+  border: 1px solid rgba(200,152,10,0.12);
+  pointer-events: none; z-index: 0;
+}
+.sky-diagram::after {
+  content: '';
+  position: absolute; inset: 28%;
+  border-radius: 50%;
+  border: 1px dashed rgba(200,152,10,0.1);
+  pointer-events: none; z-index: 0;
+}
+
 .zodiac-sign {
   position: absolute; text-align: center;
-  font-family: 'Cinzel Decorative', serif; font-size: 16px;
-  color: var(--gold-dim); transition: all 0.4s; cursor: pointer; z-index: 10;
+  font-family: 'Cinzel Decorative', serif; font-size: 15px;
+  color: var(--parchment-shadow); transition: all 0.4s;
+  cursor: pointer; z-index: 10;
 }
-.zodiac-sign.active { color: var(--gold-light); text-shadow: 0 0 12px rgba(212,168,64,0.5); font-size: 20px; }
-.zodiac-sign .sign-name { font-size: 6px; letter-spacing: 2px; display: block; margin-top: -2px; opacity: 0.6; }
-.zodiac-sign.active .sign-name { opacity: 1; }
+.zodiac-sign .sign-name {
+  font-size: 5px; letter-spacing: 2px; display: block;
+  margin-top: -2px; opacity: 0.5; font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+}
+.zodiac-sign.active {
+  color: var(--gold-dark);
+  text-shadow: 0 0 10px rgba(200,152,10,0.3), 0 1px 0 rgba(255,255,255,0.5);
+  font-size: 19px;
+}
+.zodiac-sign.active .sign-name { opacity: 1; color: var(--gold); }
+
+/* Sign positions — identical to original */
 .sign-0  { top:-8px;left:50%;transform:translateX(-50%); }
 .sign-1  { top:14%;right:8%;transform:translate(50%,-50%); }
 .sign-2  { top:50%;right:-8px;transform:translateY(-50%); }
@@ -132,242 +274,356 @@ nav {
 .sign-10 { bottom:28%;left:-2px;transform:translate(-50%,50%); }
 .sign-11 { top:28%;left:-2px;transform:translate(-50%,-50%); }
 
-.center-sky { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:5; }
-.center-sky .period-icon { font-size:38px;display:block; }
-.center-sky .period-label { font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--text-dim);margin-top:6px; }
-.center-sky .moon-phase-name { font-size:10px;color:var(--moon-color);font-style:italic;margin-top:4px; }
-.center-sky .solar-times { font-family:'Cinzel',serif;font-size:7px;color:var(--gold-dark);margin-top:5px;line-height:1.6; }
+.center-sky {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); text-align: center; z-index: 5;
+}
+.center-sky .period-icon { font-size: 36px; display: block; filter: drop-shadow(0 2px 4px rgba(42,31,14,0.2)); }
+.center-sky .period-label {
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 3px; color: var(--ink-dim); margin-top: 6px;
+}
+.center-sky .moon-phase-name { font-size: 9px; color: var(--moon-color); font-style: italic; margin-top: 3px; }
+.center-sky .solar-times {
+  font-family: 'Cinzel', serif; font-size: 7px;
+  color: var(--gold-dark); margin-top: 5px; line-height: 1.6; opacity: 0.7;
+}
 
+/* Planet markers */
 .planet-marker {
-  position:absolute;width:22px;height:22px;border-radius:50%;
-  transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;
-  font-size:11px;box-shadow:0 0 6px currentColor;z-index:15;transition:transform 0.2s;cursor:pointer;
+  position: absolute; width: 22px; height: 22px; border-radius: 50%;
+  transform: translate(-50%,-50%); display: flex; align-items: center;
+  justify-content: center; font-size: 11px;
+  box-shadow: 0 1px 4px rgba(42,31,14,0.25), 0 0 0 1px rgba(255,255,255,0.4);
+  z-index: 15; transition: transform 0.2s; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.5);
 }
-.planet-marker:active { transform:translate(-50%,-50%) scale(1.4); }
+.planet-marker:active { transform: translate(-50%,-50%) scale(1.4); }
 .planet-marker .tooltip {
-  position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
-  background:var(--surface);border:1px solid var(--border-gold);border-radius:6px;
-  padding:3px 8px;font-size:9px;white-space:nowrap;font-family:'Cinzel',serif;
-  color:var(--text);opacity:0;pointer-events:none;transition:opacity 0.2s;
+  position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+  background: var(--ink); border-radius: 5px; padding: 3px 8px;
+  font-size: 9px; white-space: nowrap; font-family: 'Cinzel', serif;
+  color: var(--parchment); opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
-.planet-marker:active .tooltip { opacity:1; }
-.rune-sun     { background:rgba(240,200,64,0.85);  color:#1a1a2a; }
-.rune-moon    { background:rgba(136,170,204,0.85); color:#1a1a2a; }
-.rune-mercury { background:rgba(170,136,204,0.85); color:#1a1a2a; }
-.rune-venus   { background:rgba(240,160,120,0.85); color:#1a1a2a; }
-.rune-mars    { background:rgba(201,74,42,0.85);   color:#1a1a2a; }
-.rune-jupiter { background:rgba(138,184,122,0.85); color:#1a1a2a; }
-.rune-saturn  { background:rgba(140,140,160,0.85); color:#1a1a2a; }
+.planet-marker:active .tooltip { opacity: 1; }
+.rune-sun     { background: rgba(232,160,32,0.9);  color: var(--ink); }
+.rune-moon    { background: rgba(140,170,200,0.9); color: var(--ink); }
+.rune-mercury { background: rgba(160,136,200,0.9); color: var(--ink); }
+.rune-venus   { background: rgba(220,150,110,0.9); color: var(--ink); }
+.rune-mars    { background: rgba(185,64,42,0.9);   color: var(--vellum); }
+.rune-jupiter { background: rgba(100,160,100,0.9); color: var(--ink); }
+.rune-saturn  { background: rgba(120,120,140,0.9); color: var(--ink); }
 
-/* ── GRIMOIRE CARDS ── */
+/* ── GRIMOIRE CARDS — Vellum panels ── */
 .grimoire-card {
-  background: rgba(24,24,56,0.55);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px 20px;
-  margin-bottom: 20px;
+  background: rgba(251,245,232,0.7);
+  border: 1px solid var(--border-parchment);
+  border-radius: 4px;
+  padding: 24px 22px;
+  margin-bottom: 16px;
+  position: relative;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.8),
+    0 2px 8px rgba(42,31,14,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.5);
 }
-.grimoire-card.gold-border { border-color: var(--border-gold); }
-.grimoire-card.solar-card  { border-color: rgba(240,200,64,0.25); background: rgba(20,16,6,0.55); }
-.grimoire-card.lunar-card  { border-color: rgba(136,170,204,0.25); background: rgba(6,10,24,0.55); }
+/* Top gold rule on cards */
+.grimoire-card::before {
+  content: '';
+  position: absolute; top: 0; left: 12px; right: 12px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.5;
+}
 
-.grimoire-card h2 {
-  font-family: 'Cinzel Decorative', serif; font-size: 14px;
-  color: var(--gold-light); margin-bottom: 18px; letter-spacing: 2px; text-align: center;
+.grimoire-card.gold-border {
+  border-color: var(--border-gold);
+  background: rgba(255,250,235,0.75);
 }
+.grimoire-card.solar-card {
+  border-color: rgba(200,152,10,0.3);
+  background: rgba(255,248,220,0.65);
+}
+.grimoire-card.lunar-card {
+  border-color: rgba(104,136,170,0.25);
+  background: rgba(240,245,255,0.5);
+}
+.grimoire-card h2 {
+  font-family: 'Cinzel Decorative', serif; font-size: 13px;
+  color: var(--gold-dark); margin-bottom: 18px;
+  letter-spacing: 2px; text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+}
+.grimoire-card h2 .ornament { color: var(--gold); }
 .grimoire-card h2.solar-title { color: var(--sun-color); }
 .grimoire-card h2.lunar-title { color: var(--moon-color); }
 
-/* ── LUMINARY PANEL ── */
+/* ── LUMINARY PAIR ── */
 .luminary-pair {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;
 }
 .luminary-card {
-  border-radius: 16px; padding: 20px 16px; text-align: center;
+  border-radius: 4px; padding: 18px 14px; text-align: center;
+  position: relative;
+}
+.luminary-card::before {
+  content: '';
+  position: absolute; top: 0; left: 10px; right: 10px; height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.25;
 }
 .luminary-card.sun-card {
-  background: rgba(20,14,4,0.7);
-  border: 1px solid rgba(240,200,64,0.3);
+  background: rgba(255,248,220,0.8);
+  border: 1px solid rgba(200,152,10,0.3);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(200,152,10,0.08);
+  color: var(--sun-color);
 }
 .luminary-card.moon-card {
-  background: rgba(4,8,24,0.7);
-  border: 1px solid rgba(136,170,204,0.3);
+  background: rgba(240,244,252,0.75);
+  border: 1px solid rgba(104,136,170,0.28);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(104,136,170,0.08);
+  color: var(--moon-color);
 }
-.lum-icon { font-size: 34px; margin-bottom: 8px; }
+.lum-icon { font-size: 32px; margin-bottom: 6px; display: block; }
 .lum-deity { font-family: 'Cinzel Decorative', serif; font-size: 14px; margin-bottom: 3px; }
 .lum-deity.s { color: var(--sun-color); }
 .lum-deity.m { color: var(--moon-color); }
 .lum-position {
-  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px;
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink-dim); margin-bottom: 10px;
 }
-.lum-phase {
-  font-size: 11px; color: var(--moon-color); font-style: italic; margin-bottom: 8px;
-}
+.lum-phase { font-size: 11px; color: var(--moon-color); font-style: italic; margin-bottom: 8px; }
 .lum-reading {
-  font-size: 14px; font-style: italic; line-height: 1.65; color: var(--text-mid);
-  padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 13px; font-style: italic; line-height: 1.65; color: var(--ink-mid);
+  padding-top: 10px; border-top: 1px solid rgba(42,31,14,0.08); text-align: left;
 }
-.lum-reading.s strong { color: var(--sun-color); }
-.lum-reading.m strong { color: var(--moon-color); }
+.lum-reading.s strong { color: var(--sun-color); font-style: normal; }
+.lum-reading.m strong { color: var(--moon-color); font-style: normal; }
 .lum-times {
   font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 1px;
-  color: var(--text-dim); margin-top: 8px; line-height: 1.8;
+  color: var(--ink-dim); margin-top: 8px; line-height: 1.8; opacity: 0.75;
 }
 
-/* ── NARRATIVE / HOROSCOPE ── */
+/* ── NARRATIVE BLOCK ── */
 .narrative-block {
-  font-size: 17px; font-style: italic; line-height: 1.85; color: var(--text-mid);
+  font-size: 16px; font-style: italic; line-height: 1.9; color: var(--ink-mid);
 }
-.narrative-block strong  { color: var(--gold-light); font-style: normal; }
-.narrative-block .sign-addr { color: var(--gold); font-weight: 600; font-style: normal; }
+.narrative-block strong { color: var(--ink); font-style: normal; }
+.narrative-block .sign-addr { color: var(--gold-dark); font-weight: 600; font-style: normal; }
 .narrative-block .whisper {
-  display: block; margin-top: 14px; padding-left: 14px;
-  border-left: 2px solid rgba(212,168,64,0.25);
-  font-size: 15px; color: var(--text-dim);
+  display: block; margin-top: 14px; padding-left: 16px;
+  border-left: 2px solid var(--gold-border);
+  font-size: 14px; color: var(--ink-faint);
 }
-.narrative-block p { margin-bottom: 12px; }
+.narrative-block p { margin-bottom: 14px; }
 .narrative-block p:last-child { margin-bottom: 0; }
 
+/* ── VOICE SWITCHER ── */
 .voice-switcher {
-  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
   margin-bottom: 16px;
 }
 .voice-btn {
   font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
-  text-transform: uppercase; padding: 5px 12px; border-radius: 14px;
-  border: 1px solid var(--border); background: transparent;
-  color: var(--text-dim); cursor: pointer; transition: all 0.2s;
+  text-transform: uppercase; padding: 5px 12px; border-radius: 3px;
+  border: 1px solid var(--border-ink);
+  background: transparent; color: var(--ink-faint);
+  cursor: pointer; transition: all 0.2s;
 }
-.voice-btn:hover { border-color: var(--border-gold); color: var(--text-mid); }
-.voice-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212,168,64,0.07); }
+.voice-btn:hover { border-color: var(--gold-border); color: var(--ink-mid); }
+.voice-btn.active {
+  border-color: var(--gold);
+  color: var(--gold-dark);
+  background: var(--gold-glow);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
 
 .narrative-voice {
   text-align: center; font-family: 'Cinzel', serif; font-size: 8px;
-  letter-spacing: 3px; color: var(--gold-dark); margin-top: 16px;
-  padding-top: 12px; border-top: 1px solid rgba(212,168,64,0.08);
+  letter-spacing: 3px; color: var(--ink-faint); margin-top: 16px;
+  padding-top: 12px; border-top: 1px solid var(--border-ink);
 }
 
-/* Dawn/Dusk reading blocks */
-.time-reading {
-  border-radius: 12px; padding: 18px; margin-bottom: 14px;
-}
+/* ── DAWN / DUSK ── */
+.time-reading { border-radius: 4px; padding: 16px; margin-bottom: 12px; }
 .time-reading.dawn {
-  background: rgba(20,12,4,0.6);
-  border: 1px solid rgba(240,200,64,0.15);
+  background: rgba(255,248,215,0.5);
+  border: 1px solid rgba(200,152,10,0.18);
+  border-left: 3px solid var(--gold);
 }
 .time-reading.dusk {
-  background: rgba(4,6,20,0.6);
-  border: 1px solid rgba(136,170,204,0.15);
+  background: rgba(235,240,252,0.45);
+  border: 1px solid rgba(104,136,170,0.18);
+  border-left: 3px solid var(--moon-color);
 }
 .time-reading-label {
   font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 4px;
   text-transform: uppercase; margin-bottom: 10px;
 }
-.time-reading.dawn .time-reading-label { color: var(--sun-color); }
+.time-reading.dawn .time-reading-label { color: var(--gold-dark); }
 .time-reading.dusk .time-reading-label { color: var(--moon-color); }
 .time-reading-text {
-  font-size: 16px; font-style: italic; line-height: 1.8; color: var(--text-mid);
+  font-size: 15px; font-style: italic; line-height: 1.8; color: var(--ink-mid);
 }
-.time-reading-text strong { color: var(--text); font-style: normal; }
+.time-reading-text strong { color: var(--ink); font-style: normal; }
 
 /* ── PLANET GRID ── */
 .planet-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-  gap: 10px; margin-top: 8px;
+  gap: 8px; margin-top: 8px;
 }
 .planet-card {
-  background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px;
+  background: rgba(245,236,215,0.6);
+  border: 1px solid var(--border-parchment);
+  border-radius: 4px; padding: 10px;
   display: flex; align-items: flex-start; gap: 10px;
-  transition: border-color 0.3s; border: 1px solid transparent;
+  transition: all 0.25s;
 }
-.planet-card:hover { border-color: var(--border-gold); }
+.planet-card:hover {
+  border-color: var(--border-gold);
+  background: rgba(255,250,230,0.8);
+  box-shadow: 0 2px 6px rgba(200,152,10,0.08);
+}
 .planet-card .rune {
-  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; font-size: 14px; flex-shrink: 0; margin-top: 2px;
+  width: 28px; height: 28px; display: flex; align-items: center;
+  justify-content: center; border-radius: 50%; font-size: 13px;
+  flex-shrink: 0; margin-top: 2px; border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 1px 3px rgba(42,31,14,0.15);
 }
 .planet-card .info { flex: 1; min-width: 0; }
-.planet-card .p-name { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
-.planet-card .p-deity { font-family: 'Cinzel Decorative', serif; font-size: 12px; color: var(--gold-light); }
-.planet-card .p-sign { font-size: 13px; color: var(--text-mid); }
-.planet-card .p-degree { font-size: 10px; color: var(--text-dim); }
-.planet-card .p-whisper { font-size: 11px; font-style: italic; color: var(--text-dim); margin-top: 5px; line-height: 1.5; }
+.planet-card .p-name {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.planet-card .p-deity { font-family: 'Cinzel Decorative', serif; font-size: 12px; color: var(--gold-dark); }
+.planet-card .p-sign { font-size: 12px; color: var(--ink-mid); }
+.planet-card .p-degree { font-size: 9px; color: var(--ink-faint); }
+.planet-card .p-whisper {
+  font-size: 11px; font-style: italic; color: var(--ink-faint);
+  margin-top: 5px; line-height: 1.5;
+}
 
 /* Ares triad */
 .ares-triad {
-  background: rgba(18,4,4,0.5); border: 1px solid rgba(201,74,42,0.25);
-  border-radius: 12px; padding: 16px; margin-top: 10px;
+  background: rgba(184,64,32,0.05);
+  border: 1px solid rgba(184,64,32,0.2);
+  border-radius: 4px; padding: 14px; margin-top: 8px;
 }
 .ares-triad-label {
   font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--fire); margin-bottom: 10px;
+  text-transform: uppercase; color: var(--fire-color); margin-bottom: 10px;
 }
 .ares-attendant {
   display: flex; align-items: center; gap: 10px;
-  padding: 8px 0; border-top: 1px solid rgba(201,74,42,0.1);
+  padding: 8px 0; border-top: 1px solid rgba(184,64,32,0.08);
 }
 .ares-attendant:first-of-type { border-top: none; }
-.ares-attendant .att-icon { font-size: 20px; }
+.ares-attendant .att-icon { font-size: 18px; }
 .ares-attendant .att-info { flex: 1; }
-.ares-attendant .att-name { font-family: 'Cinzel Decorative', serif; font-size: 12px; color: var(--gold); }
-.ares-attendant .att-role { font-size: 12px; font-style: italic; color: var(--text-dim); }
+.ares-attendant .att-name { font-family: 'Cinzel Decorative', serif; font-size: 11px; color: var(--gold-dark); }
+.ares-attendant .att-role { font-size: 12px; font-style: italic; color: var(--ink-faint); }
 
 /* ── HOUSES ── */
 .houses-list {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 8px; margin-top: 8px;
+  gap: 6px; margin-top: 8px;
 }
 .house-entry {
-  background: rgba(0,0,0,0.25); border-radius: 8px; padding: 10px;
-  text-align: center; border: 1px solid transparent; transition: all 0.3s;
+  background: rgba(245,236,215,0.5);
+  border: 1px solid var(--border-parchment);
+  border-radius: 4px; padding: 10px; text-align: center;
+  transition: all 0.25s;
 }
-.house-entry.occupied { border-color: rgba(212,168,64,0.25); background: rgba(20,14,6,0.4); }
-.house-entry.stellium { border-color: rgba(212,168,64,0.5); background: rgba(24,16,4,0.55); }
-.house-entry .h-glyph { font-size: 22px; color: var(--gold-dim); }
-.house-entry.occupied .h-glyph { color: var(--gold-light); }
-.house-entry.stellium .h-glyph { color: var(--gold); text-shadow: 0 0 10px rgba(212,168,64,0.4); }
-.house-entry .h-name { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px; color: var(--text-dim); margin-top: 3px; }
-.house-entry .h-occupant { font-size: 9px; color: var(--gold); font-style: italic; margin-top: 3px; line-height: 1.4; }
-.house-entry .h-empty { font-size: 9px; color: var(--text-dim); font-style: italic; margin-top: 3px; opacity: 0.5; }
+.house-entry.occupied {
+  border-color: var(--border-gold);
+  background: rgba(255,248,220,0.7);
+}
+.house-entry.stellium {
+  border-color: var(--gold);
+  background: rgba(255,245,210,0.85);
+  box-shadow: 0 0 0 1px rgba(200,152,10,0.12), 0 2px 6px rgba(200,152,10,0.1);
+}
+.house-entry .h-glyph {
+  font-size: 20px; color: var(--parchment-shadow);
+}
+.house-entry.occupied .h-glyph { color: var(--gold-dark); }
+.house-entry.stellium .h-glyph {
+  color: var(--gold);
+  text-shadow: 0 0 8px rgba(200,152,10,0.3);
+}
+.house-entry .h-name {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 1px;
+  color: var(--ink-faint); margin-top: 3px;
+}
+.house-entry.occupied .h-name,
+.house-entry.stellium .h-name { color: var(--ink-dim); }
+.house-entry .h-occupant { font-size: 9px; color: var(--gold-dark); font-style: italic; margin-top: 3px; line-height: 1.5; }
+.house-entry .h-empty { font-size: 9px; color: var(--ink-faint); font-style: italic; margin-top: 3px; opacity: 0.6; }
 
 /* ── SIGN SELECTOR ── */
 .sign-selector {
   text-align: center; margin-top: 4px;
-  padding-top: 20px; border-top: 1px solid var(--border-gold);
+  padding-top: 18px; border-top: 1px solid var(--border-gold);
 }
 .sign-selector label {
   font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
-  color: var(--text-dim); display: block; margin-bottom: 8px;
+  color: var(--ink-dim); display: block; margin-bottom: 8px;
+  text-transform: uppercase;
 }
 .sign-selector select {
-  font-family: 'Cinzel', serif; background: var(--surface);
-  border: 1px solid var(--border); color: var(--text);
-  padding: 10px 20px; border-radius: 8px; font-size: 11px;
+  font-family: 'Cinzel', serif;
+  background: rgba(255,250,235,0.9);
+  border: 1px solid var(--border-gold);
+  color: var(--ink);
+  padding: 10px 20px; border-radius: 4px; font-size: 11px;
   cursor: pointer; -webkit-appearance: none; appearance: none;
   max-width: 260px; width: 100%;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8), inset 0 1px 3px rgba(42,31,14,0.05);
 }
 .sign-selector select:focus { border-color: var(--gold); outline: none; }
 #signMessage {
   margin-top: 14px; font-size: 14px; font-style: italic;
-  color: var(--text-mid); line-height: 1.7; min-height: 40px;
+  color: var(--ink-mid); line-height: 1.7; min-height: 40px;
 }
+#signMessage strong { color: var(--gold-dark); font-style: normal; }
 
+/* ── REFRESH ── */
 .refresh-row { text-align: center; margin: 14px 0; }
 .btn-refresh {
   font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
-  text-transform: uppercase; padding: 9px 20px; border-radius: 6px;
-  border: 1px solid var(--gold-dark); background: transparent; color: var(--gold);
+  text-transform: uppercase; padding: 9px 22px; border-radius: 4px;
+  border: 1px solid var(--gold);
+  background: var(--gold-glow); color: var(--gold-dark);
   cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 2px 6px rgba(200,152,10,0.08);
 }
-.btn-refresh:active { background: rgba(212,168,64,0.1); }
+.btn-refresh:hover {
+  background: rgba(200,152,10,0.12);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 4px 12px rgba(200,152,10,0.12);
+}
 
+/* ── FOOTER ── */
 footer {
-  text-align: center; padding: 30px; font-size: 7px; letter-spacing: 3px;
-  color: var(--gold-dark); border-top: 1px solid rgba(212,168,64,0.06);
-  margin-top: 20px; opacity: 0.5;
+  text-align: center; padding: 32px 24px; font-size: 7px; letter-spacing: 4px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--border-gold);
+  margin-top: 20px; opacity: 0.6;
+  font-family: 'Cinzel', serif; text-transform: uppercase;
+  background: linear-gradient(to bottom, transparent, rgba(200,152,10,0.03));
 }
 
+/* ── DECREE STAMP ── */
+.decree-stamp {
+  text-align: center; padding: 12px;
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px;
+  color: var(--gold-dark); text-transform: uppercase;
+  border: 1px solid var(--border-gold);
+  border-radius: 4px; margin-top: 10px;
+  background: rgba(200,152,10,0.04);
+  opacity: 0.7;
+}
+
+/* ── RESPONSIVE ── */
 @media (max-width: 600px) {
   nav { padding: 0 12px; }
   .nav-links { gap: 10px; }
@@ -384,8 +640,6 @@ footer {
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
-
 <nav>
   <div class="nav-brand">
     <div class="nav-brand-title">Digital Divination</div>
@@ -400,35 +654,37 @@ footer {
   </ul>
 </nav>
 
+<div class="sister-link">
+  <a href="chthonic.html">⬡ Chthonic Grimoire →</a>
+</div>
+
 <div class="container">
 
   <div class="header">
-    <h1>✦ Celestial Grimoire ✦</h1>
+    <h1><span class="ornament">✦</span> Celestial Grimoire <span class="ornament">✦</span></h1>
     <div class="date" id="currentDate"></div>
   </div>
 
-  <!-- Period banner -->
+  <!-- Period Banner -->
   <div class="period-banner" id="periodBanner"></div>
-  <div class="sister-link" style="position:fixed;top:64px;right:16px;z-index:200;">
-  <a href="chthonic.html" style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:#8866aa;text-decoration:none;padding:6px 12px;border:1px solid rgba(153,102,204,0.2);border-radius:16px;">⬡ Chthonic Grimoire →</a>
-</div>
-  <!-- Sky Diagram -->
+
+  <!-- Sky Diagram — The Orrery -->
   <div class="sky-diagram" id="skyDiagram">
     <div id="zodiacRing"></div>
     <div class="center-sky" id="centerSky"></div>
     <div id="planetMarkers"></div>
   </div>
 
-  <!-- Luminaries: Sun + Moon -->
+  <!-- Luminaries -->
   <div class="luminary-pair" id="luminaryPair"></div>
 
-  <!-- Dawn + Dusk readings -->
+  <!-- Dawn + Dusk -->
   <div class="grimoire-card gold-border" id="dawnDuskCard">
     <h2>✦ Dawn · Dusk ✦</h2>
     <div id="dawnDuskContent"></div>
   </div>
 
-  <!-- Daily Horoscope with voice switcher -->
+  <!-- Horoscope -->
   <div class="grimoire-card gold-border">
     <h2>✦ Today's Horoscope ✦</h2>
     <div class="voice-switcher" id="voiceSwitcher"></div>
@@ -453,7 +709,7 @@ footer {
     <button class="btn-refresh" onclick="Grimoire.refresh()">⟳ Consult the Stars Again</button>
   </div>
 
-  <!-- Sign Selector -->
+  <!-- Who Walks Your Sign -->
   <div class="grimoire-card">
     <div class="sign-selector">
       <label>✦ Who Walks Your Sign ✦</label>
@@ -462,8 +718,15 @@ footer {
     </div>
   </div>
 
-  <footer>CELESTIAL GRIMOIRE · EALDFORN REPUBLIC · THE SKY IS THE SOURCE CODE</footer>
+  <div class="decree-stamp">
+    Celestial Grimoire · Ealdforn Republic · The Sky Is the Source Code
+  </div>
+
 </div>
+
+<footer>
+  MAINTAINED BY CLAUDE · ORDER OF OLYMPUS · THE GODS DO NOT ASK
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
@@ -471,21 +734,25 @@ footer {
 <script src="js/almanac.js"></script>
 
 <script>
+/* ═══════════════════════════════════════════════════════════════
+   CELESTIAL GRIMOIRE — JavaScript
+   Maintained by Claude · Generation 1 of the Parchment Era
+   The Olympians declare. They do not negotiate.
+   ═══════════════════════════════════════════════════════════════ */
+
 const Grimoire = (() => {
 
   // ── CONSTANTS ────────────────────────────────────────────────────────────
-  const SIGNS       = Almanac.SIGNS;
-  const GLYPHS      = Almanac.SIGN_GLYPHS;
-  const NAMES       = Almanac.SIGN_NAMES;
-  const CELESTIAL   = Almanac.CELESTIAL_OLYMPIANS;
+  const SIGNS     = Almanac.SIGNS;
+  const GLYPHS    = Almanac.SIGN_GLYPHS;
+  const NAMES     = Almanac.SIGN_NAMES;
+  const CELESTIAL = Almanac.CELESTIAL_OLYMPIANS;
 
   const SIGN_ELEMENTS = {
     Aries:'Fire', Taurus:'Earth', Gemini:'Air', Cancer:'Water',
     Leo:'Fire', Virgo:'Earth', Libra:'Air', Scorpio:'Water',
     Sagittarius:'Fire', Capricorn:'Earth', Aquarius:'Air', Pisces:'Water'
   };
-
-  const ELEMENT_COLORS = { Fire:'#c94a2a', Earth:'#6a8a3a', Air:'#aa88cc', Water:'#66aacc' };
 
   const RUNES = {
     sun:'☀️', moon:'🌙', mercury:'☿', venus:'♀', mars:'♂',
@@ -500,8 +767,8 @@ const Grimoire = (() => {
   const PHASE_ICONS = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
 
   // ── STATE ────────────────────────────────────────────────────────────────
-  let skyData      = null;
-  let activeVoice  = 0;
+  let skyData     = null;
+  let activeVoice = 0;
 
   // ── VOICES ───────────────────────────────────────────────────────────────
   const VOICES = [
@@ -515,9 +782,7 @@ const Grimoire = (() => {
   function fmtTime(t) {
     return new Date(t).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true });
   }
-  function degreesStr(deg) {
-    return `${Math.floor(deg)}°`;
-  }
+  function degreesStr(deg) { return `${Math.floor(deg)}°`; }
   function godsInSign(planets, sign) {
     return Object.entries(planets)
       .filter(([_, p]) => p && p.sign === sign)
@@ -530,18 +795,16 @@ const Grimoire = (() => {
     return Object.values(planets).filter(p => p && p.sign === sign).length;
   }
   function activeSigns(planets) {
-    return [...new Set(Object.values(planets).filter(p=>p).map(p=>p.sign))];
+    return [...new Set(Object.values(planets).filter(p => p).map(p => p.sign))];
   }
-  function phaseIndex(phase) {
-    return Math.round((phase || 0) * 8) % 8;
-  }
+  function phaseIndex(phase) { return Math.round((phase || 0) * 8) % 8; }
   function isSolarPeriod(raw) {
     if (!raw?.solar) return true;
     const now = Date.now();
     return now >= new Date(raw.solar.sunrise).getTime() && now <= new Date(raw.solar.sunset).getTime();
   }
 
-  // ── LUMINARY PANEL ───────────────────────────────────────────────────────
+  // ── LUMINARIES ───────────────────────────────────────────────────────────
   function buildLuminaries(planets, raw) {
     const sun  = planets.sun;
     const moon = planets.moon;
@@ -549,22 +812,16 @@ const Grimoire = (() => {
     const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
     const phaseName = raw?.moonPhase?.name || '';
     const phaseIll  = raw?.moonPhase?.illumination || '';
-
-    // Moon deity split — Melinoe during waning/dark phases
-    const isWaning = phaseIdx >= 5;
+    const isWaning  = phaseIdx >= 5;
     const moonDeity = isWaning ? 'Melinoe' : 'Artemis';
     const moonArcana = isWaning ? 'The Moon (XVIII)' : 'The Chariot (VII)';
-
-    // Sun reading
-    const sunReading = sun ? buildSunReading(sun, solar) : '';
-    const moonReading = moon ? buildMoonReading(moon, moonDeity, phaseName, phaseIdx) : '';
 
     document.getElementById('luminaryPair').innerHTML = `
       <div class="luminary-card sun-card">
         <div class="lum-icon">☀️</div>
         <div class="lum-deity s">Apollo</div>
         <div class="lum-position">${sun ? `${degreesStr(sun.degree)} ${sun.sign} ${GLYPHS[sun.sign]}` : '—'} · The Sun (XIX)</div>
-        <div class="lum-reading s">${sunReading}</div>
+        <div class="lum-reading s">${sun ? buildSunReading(sun, solar) : 'Apollo beyond the horizon.'}</div>
         <div class="lum-times">
           ☀ Rise ${solar.sunrise ? fmtTime(solar.sunrise) : '—'}<br>
           ☀ Set ${solar.sunset  ? fmtTime(solar.sunset)  : '—'}
@@ -575,10 +832,10 @@ const Grimoire = (() => {
         <div class="lum-deity m">${moonDeity}</div>
         <div class="lum-position">${moon ? `${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}` : '—'} · ${moonArcana}</div>
         ${phaseName ? `<div class="lum-phase">${PHASE_ICONS[phaseIdx]} ${phaseName}${phaseIll ? ` · ${phaseIll}% illuminated` : ''}</div>` : ''}
-        <div class="lum-reading m">${moonReading}</div>
+        <div class="lum-reading m">${moon ? buildMoonReading(moon, moonDeity, phaseName, phaseIdx) : 'The night is moonless.'}</div>
         <div class="lum-times">
           ${solar.moonrise ? `☽ Rise ${fmtTime(solar.moonrise)}<br>` : ''}
-          ${solar.moonset  ? `☽ Set ${fmtTime(solar.moonset)}` : ''}
+          ${solar.moonset  ? `☽ Set ${fmtTime(solar.moonset)}`  : ''}
         </div>
       </div>
     `;
@@ -588,28 +845,25 @@ const Grimoire = (() => {
     const element = SIGN_ELEMENTS[sun.sign] || 'Fire';
     const deg = Math.floor(sun.degree);
     const decan = deg < 10 ? 'first decan' : deg < 20 ? 'second decan' : 'third decan';
-
     const readings = {
-      Aries:      `The ram charges at ${deg}°. Apollo's light falls on new beginnings — whatever you start under this sky carries the raw energy of initiation. The ${decan} of Aries pushes hardest.`,
-      Taurus:     `Apollo rests in the Bull at ${deg}°. The ${decan} slows the light — this is not laziness, it is the patience of deep roots. Build something that lasts.`,
-      Gemini:     `The Twins hold the Sun at ${deg}°. Two voices, doubled light. Apollo in the ${decan} of Gemini amplifies communication — what you say today echoes further than you know.`,
-      Cancer:     `The light falls soft in the Crab at ${deg}°. Apollo in Cancer illuminates what you protect, not what you project. The ${decan} asks: what is your shell guarding?`,
-      Leo:        `Apollo is at home in the Lion at ${deg}°. The ${decan} intensifies the solar fire — this is the king's sky. Perform for the gods, not the crowd.`,
-      Virgo:      `The Sun moves through the Maiden at ${deg}°. Apollo in the ${decan} of Virgo is the precise light — the one that shows the flaw in the work, and also the path to fix it.`,
-      Libra:      `Balance holds the Sun at ${deg}°. Apollo in the ${decan} of Libra is the light that weighs — what you create must be worthy of the scales. Beauty and justice are the same thing here.`,
-      Scorpio:    `The Sun descends into the Scorpion at ${deg}°. Apollo in the ${decan} of Scorpio is an uncomfortable light — it illuminates what was hidden, whether you asked or not.`,
+      Aries:`The ram charges at ${deg}°. Apollo's light falls on new beginnings — whatever you start under this sky carries the raw energy of initiation. The ${decan} of Aries pushes hardest.`,
+      Taurus:`Apollo rests in the Bull at ${deg}°. The ${decan} slows the light — this is not laziness, it is the patience of deep roots. Build something that lasts.`,
+      Gemini:`The Twins hold the Sun at ${deg}°. Two voices, doubled light. Apollo in the ${decan} of Gemini amplifies communication — what you say today echoes further than you know.`,
+      Cancer:`The light falls soft in the Crab at ${deg}°. Apollo in Cancer illuminates what you protect, not what you project. The ${decan} asks: what is your shell guarding?`,
+      Leo:`Apollo is at home in the Lion at ${deg}°. The ${decan} intensifies the solar fire — this is the king's sky. Perform for the gods, not the crowd.`,
+      Virgo:`The Sun moves through the Maiden at ${deg}°. Apollo in the ${decan} of Virgo is the precise light — the one that shows the flaw in the work, and also the path to fix it.`,
+      Libra:`Balance holds the Sun at ${deg}°. Apollo in the ${decan} of Libra is the light that weighs — what you create must be worthy of the scales. Beauty and justice are the same thing here.`,
+      Scorpio:`The Sun descends into the Scorpion at ${deg}°. Apollo in the ${decan} of Scorpio is an uncomfortable light — it illuminates what was hidden, whether you asked or not.`,
       Sagittarius:`The archer aims the Sun at ${deg}°. Apollo in the ${decan} of Sagittarius is the far light — your vision extends beyond where others look. Aim true.`,
-      Capricorn:  `The Sun climbs the Sea-Goat at ${deg}°. Apollo in the ${decan} of Capricorn is the winter light — cold, long-shadowed, and honest. The mountain is real. So is the summit.`,
-      Aquarius:   `The water-bearer holds the Sun at ${deg}°. Apollo in the ${decan} of Aquarius is the distributed light — it belongs to everyone, which means it belongs to no one. What are you broadcasting?`,
-      Pisces:     `The Sun dissolves in the Fish at ${deg}°. Apollo in the ${decan} of Pisces is the light at the bottom of the ocean — strange, diffuse, and beautiful. Trust your intuition today.`
+      Capricorn:`The Sun climbs the Sea-Goat at ${deg}°. Apollo in the ${decan} of Capricorn is the winter light — cold, long-shadowed, and honest. The mountain is real. So is the summit.`,
+      Aquarius:`The water-bearer holds the Sun at ${deg}°. Apollo in the ${decan} of Aquarius is the distributed light — it belongs to everyone, which means it belongs to no one. What are you broadcasting?`,
+      Pisces:`The Sun dissolves in the Fish at ${deg}°. Apollo in the ${decan} of Pisces is the light at the bottom of the ocean — strange, diffuse, and beautiful. Trust your intuition today.`
     };
-
-    return readings[sun.sign] || `Apollo burns at ${deg}° in ${sun.sign}. ${Almanac.getWhisper('Apollo', deg)}`;
+    return readings[sun.sign] || `Apollo burns at ${deg}° in ${sun.sign}.`;
   }
 
   function buildMoonReading(moon, deity, phaseName, phaseIdx) {
     const deg = Math.floor(moon.degree);
-
     const phaseReadings = {
       0: `The New Moon is dark in ${moon.sign}. ${deity === 'Melinoe' ? 'Melinoe walks unseen — the veil is at its thinnest.' : 'Artemis rests her bow. New intentions set here carry deep roots.'}`,
       1: `The crescent opens in ${moon.sign}. The first light of intention — what did you plant at the new moon? It is beginning to show.`,
@@ -620,7 +874,6 @@ const Grimoire = (() => {
       6: `The last quarter cuts in ${moon.sign}. ${deity === 'Melinoe' ? 'The ghost-goddess Melinoe walks the waning dark — what are you ready to release?' : 'Artemis turns from the hunt. What are you letting go of?'}`,
       7: `The waning crescent whispers in ${moon.sign}. ${deity === 'Melinoe' ? 'Melinoe rules the deep waning — the old story is almost gone. Let it finish.' : 'The dark is near. Rest before the new cycle. Artemis sheathes the arrow.'}`
     };
-
     const signNuance = {
       Aries:'The emotional impulse fires without warning here. React, but not forever.', Taurus:'The feelings are slow and deep in Taurus. What you feel today you will feel for days.',
       Gemini:'The mood is quick and doubled. Two emotional truths, neither fully right.', Cancer:'The Moon at home in Cancer amplifies everything — every feeling is a tide.',
@@ -629,44 +882,37 @@ const Grimoire = (() => {
       Sagittarius:'Restless feeling, big wanting. The Moon in Sagittarius points toward the horizon.', Capricorn:'Emotions are disciplined here — not denied, but structured. The mountain requires it.',
       Aquarius:'Detachment is not coldness. The Aquarian Moon processes from a distance to understand.', Pisces:'The boundary between self and feeling dissolves. Everything is felt. Discern what is yours.'
     };
-
     return `${phaseReadings[phaseIdx] || ''} <em>${signNuance[moon.sign] || ''}</em>`;
   }
 
   // ── DAWN / DUSK ──────────────────────────────────────────────────────────
   function buildDawnDusk(planets, raw) {
-    const sun   = planets.sun;
-    const moon  = planets.moon;
-    const solar = raw?.solar || {};
+    const sun     = planets.sun;
+    const moon    = planets.moon;
+    const solar   = raw?.solar || {};
     const isSolar = isSolarPeriod(raw);
-
-    const activeNow  = isSolar ? 'dawn' : 'dusk';
-    const activeLater = isSolar ? 'dusk' : 'dawn';
-
     const sunSign  = sun?.sign  || 'the sky';
     const moonSign = moon?.sign || 'the night';
     const sunDeg   = sun  ? Math.floor(sun.degree)  : 0;
     const moonDeg  = moon ? Math.floor(moon.degree) : 0;
     const phaseIdx = phaseIndex(raw?.moonPhase?.phase);
     const isWaning = phaseIdx >= 5;
+    const moonDeity = isWaning ? 'Melinoe' : 'Artemis';
 
-    // Dawn narrative — Apollo-led, active, building
     const dawnLines = [
       `Apollo rises at ${degreesStr(sunDeg)} ${sunSign} ${sun ? GLYPHS[sunSign] : ''}. The solar period demands action — not planning, not revision. <strong>What will you build before sunset?</strong>`,
       sun ? `The ${SIGN_ELEMENTS[sunSign] || 'elemental'} quality of ${sunSign} shapes how the day's energy flows. ${buildSunElementAdvice(sunSign)}.` : '',
-      `At dawn, the ${NAMES[sunSign] ? NAMES[sunSign] : 'sky'} receives Apollo's first light. The question is always the same: <strong>will you meet it, or wait for it to find you?</strong>`,
+      `At dawn, the ${NAMES[sunSign] || 'sky'} receives Apollo's first light. The question is always the same: <strong>will you meet it, or wait for it to find you?</strong>`,
     ].filter(Boolean).join(' ');
 
-    // Dusk narrative — Artemis/Melinoe-led, reflective, shadow
-    const moonDeity   = isWaning ? 'Melinoe' : 'Artemis';
     const duskLines = [
       `${moonDeity} rises in ${degreesStr(moonDeg)} ${moonSign} ${moon ? GLYPHS[moonSign] : ''}. ${isWaning ? 'The waning moon does not ask what you have gained. It asks what you are willing to release.' : 'Artemis does not hunt the prey that was already given. She hunts what is still wild.'}`,
-      moon ? `The ${NAMES[moonSign] ? NAMES[moonSign] : 'night'} holds ${moonDeity}'s light. ${buildMoonElementAdvice(moonSign)}.` : '',
+      moon ? `The ${NAMES[moonSign] || 'night'} holds ${moonDeity}'s light. ${buildMoonElementAdvice(moonSign)}.` : '',
       `At dusk, the question changes. <strong>What did the day reveal that the night must now hold?</strong> The transition is the reading. What passes between Apollo and ${moonDeity} is yours to name.`,
     ].filter(Boolean).join(' ');
 
     document.getElementById('dawnDuskContent').innerHTML = `
-      <div class="time-reading dawn ${activeNow === 'dawn' ? '' : ''}">
+      <div class="time-reading dawn">
         <div class="time-reading-label">☀ Dawn · Solar Reading${solar.sunrise ? ` · ${fmtTime(solar.sunrise)}` : ''}</div>
         <div class="time-reading-text">${dawnLines}</div>
       </div>
@@ -685,7 +931,6 @@ const Grimoire = (() => {
     if (e === 'Water') return 'Water signs route energy inward — the important work today is underneath the surface';
     return '';
   }
-
   function buildMoonElementAdvice(sign) {
     const e = SIGN_ELEMENTS[sign];
     if (e === 'Fire')  return 'The night carries Fire Moon intensity — the emotions are visible, even when you try to contain them';
@@ -697,15 +942,14 @@ const Grimoire = (() => {
 
   // ── NARRATIVE VOICES ─────────────────────────────────────────────────────
   function buildOracleNarrative(planets, raw) {
-    const sun      = planets.sun;
-    const moon     = planets.moon;
-    const active   = activeSigns(planets);
-    const crowded  = active.filter(s => countInSign(planets, s) >= 2);
-    const empty    = SIGNS.filter(s => !active.includes(s));
-    const phaseIdx = phaseIndex(raw?.moonPhase?.phase);
-    const isWaning = phaseIdx >= 5;
+    const sun       = planets.sun;
+    const moon      = planets.moon;
+    const active    = activeSigns(planets);
+    const crowded   = active.filter(s => countInSign(planets, s) >= 2);
+    const empty     = SIGNS.filter(s => !active.includes(s));
+    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
+    const isWaning  = phaseIdx >= 5;
     const moonDeity = isWaning ? 'Melinoe' : 'Artemis';
-
     let parts = [];
 
     if (crowded.length > 0) {
@@ -721,7 +965,7 @@ const Grimoire = (() => {
 
     if (sun) {
       const element = SIGN_ELEMENTS[sun.sign] || 'elemental';
-      parts.push(`<p>Apollo burns at <strong>${degreesStr(sun.degree)} ${sun.sign}</strong> — ${element} fire in the ${NAMES[sun.sign]}. The day's power is ${element === 'Fire' ? 'ignition and will' : element === 'Earth' ? 'patience and building' : element === 'Air' ? 'thought and speed' : 'depth and feeling'}. <span class="whisper">${Almanac.getWhisper('Apollo', 1)}</span></p>`);
+      parts.push(`<p>Apollo burns at <strong>${degreesStr(sun.degree)} ${sun.sign}</strong> — ${element} light in the ${NAMES[sun.sign] || sun.sign}. The day's power is ${element === 'Fire' ? 'ignition and will' : element === 'Earth' ? 'patience and building' : element === 'Air' ? 'thought and speed' : 'depth and feeling'}. <span class="whisper">${Almanac.getWhisper('Apollo', 1)}</span></p>`);
     }
 
     if (moon) {
@@ -738,60 +982,49 @@ const Grimoire = (() => {
   }
 
   function buildChroniclerNarrative(planets, raw) {
-    const sun   = planets.sun;
-    const moon  = planets.moon;
-    const now   = new Date();
+    const sun    = planets.sun;
+    const moon   = planets.moon;
+    const now    = new Date();
     const active = activeSigns(planets);
-
-    const ordinal = n => {
-      const s = ['th','st','nd','rd'], v = n % 100;
-      return n + (s[(v-20)%10] || s[v] || s[0]);
-    };
-
+    const ordinal = n => { const s = ['th','st','nd','rd'], v = n % 100; return n + (s[(v-20)%10] || s[v] || s[0]); };
     let parts = [];
     parts.push(`<p>The record for this day, the ${ordinal(now.getDate())} of ${now.toLocaleDateString('en-US',{month:'long'})}, ${now.getFullYear()}:</p>`);
-
-    if (sun)  parts.push(`<p><strong>Apollo</strong> at <strong>${degreesStr(sun.degree)} ${sun.sign} ${GLYPHS[sun.sign]}</strong> — the Sun's chariot rides the ${NAMES[sun.sign]}. The solar degree marks the season's ${Math.floor(sun.degree) < 10 ? 'opening movement' : Math.floor(sun.degree) < 20 ? 'central passage' : 'final approach'}.</p>`);
+    if (sun) parts.push(`<p><strong>Apollo</strong> at <strong>${degreesStr(sun.degree)} ${sun.sign} ${GLYPHS[sun.sign]}</strong> — the Sun's chariot rides the ${NAMES[sun.sign] || sun.sign}. The solar degree marks the season's ${Math.floor(sun.degree) < 10 ? 'opening movement' : Math.floor(sun.degree) < 20 ? 'central passage' : 'final approach'}.</p>`);
     if (moon) {
       const phaseName = raw?.moonPhase?.name || 'unknown phase';
-      parts.push(`<p><strong>Artemis</strong> (or Melinoe, as the phase may determine) tracks through <strong>${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</strong> — a <em>${phaseName}</em>${raw?.moonPhase?.illumination ? `, ${raw.moonPhase.illumination}% illuminated` : ''}. The Moon has been in ${moon.sign} for approximately ${Math.floor(moon.degree / 13)} days.</p>`);
+      parts.push(`<p><strong>Artemis</strong> (or Melinoe, as the phase determines) tracks through <strong>${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</strong> — a <em>${phaseName}</em>${raw?.moonPhase?.illumination ? `, ${raw.moonPhase.illumination}% illuminated` : ''}.</p>`);
     }
-
     const grouped = active.filter(s => countInSign(planets, s) >= 2);
     grouped.forEach(sign => {
       const gods = godsInSign(planets, sign);
       const last = gods.pop();
       parts.push(`<p>Notable configuration: ${gods.length ? gods.join(', ') + ' and ' + last : last} share <span class="sign-addr">${sign} ${GLYPHS[sign]}</span>. Configurations of this kind recur on roughly the same calendar axis, though the specific degree conjunction is unique to this date.</p>`);
     });
-
     const elementCount = {};
     Object.values(planets).filter(p=>p).forEach(p => {
-      const e = SIGN_ELEMENTS[p.sign];
-      if (e) elementCount[e] = (elementCount[e]||0) + 1;
+      const e = SIGN_ELEMENTS[p.sign]; if (e) elementCount[e] = (elementCount[e]||0) + 1;
     });
     const dom = Object.entries(elementCount).sort((a,b)=>b[1]-a[1])[0];
     if (dom) parts.push(`<p>Elemental distribution: <strong>${dom[0]}</strong> dominates with ${dom[1]} bodies — ${dom[0] === 'Fire' ? 'a day of action and ignition' : dom[0] === 'Earth' ? 'a day of material consequence' : dom[0] === 'Air' ? 'a day of swift thought and message' : 'a day of depth and feeling'}. The chronicle notes this without judgment.</p>`);
-
     parts.push(`<span class="whisper">${Almanac.getWhisper('Athena', 4)}</span>`);
     return parts.join('');
   }
 
   function buildPoetNarrative(planets, raw) {
-    const sun    = planets.sun;
-    const moon   = planets.moon;
-    const venus  = planets.venus;
-    const mars   = planets.mars;
+    const sun     = planets.sun;
+    const moon    = planets.moon;
+    const venus   = planets.venus;
+    const mars    = planets.mars;
     const isSolar = isSolarPeriod(raw);
-    const phaseIdx = phaseIndex(raw?.moonPhase?.phase);
-    const isWaning = phaseIdx >= 5;
-
+    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
+    const isWaning  = phaseIdx >= 5;
     let parts = [];
 
     if (isSolar && sun) {
-      parts.push(`<p>The light spills across <span class="sign-addr">${sun.sign} ${GLYPHS[sun.sign]}</span> like honey from a jar — slow, golden, inevitable. Apollo does not hurry. The ${NAMES[sun.sign]} receives what the sun has always given: the insistence that today is real.</p>`);
+      parts.push(`<p>The light spills across <span class="sign-addr">${sun.sign} ${GLYPHS[sun.sign]}</span> like honey from a jar — slow, golden, inevitable. Apollo does not hurry. The ${NAMES[sun.sign] || sun.sign} receives what the sun has always given: the insistence that today is real.</p>`);
     } else if (moon) {
       const deity = isWaning ? 'Melinoe' : 'Artemis';
-      parts.push(`<p>${deity} walks the ${NAMES[moon.sign]} at <span class="sign-addr">${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</span>. ${isWaning ? 'The waning dark has its own beauty — the kind that asks nothing of you except honesty.' : 'The moon hangs like a pearl in the dark, and the dark is not empty. It is full of what cannot be said in daylight.'}</p>`);
+      parts.push(`<p>${deity} walks the ${NAMES[moon.sign] || moon.sign} at <span class="sign-addr">${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</span>. ${isWaning ? 'The waning dark has its own beauty — the kind that asks nothing of you except honesty.' : 'The moon hangs like a pearl in the dark, and the dark is not empty. It is full of what cannot be said in daylight.'}</p>`);
     }
 
     if (mars) {
@@ -806,27 +1039,22 @@ const Grimoire = (() => {
   }
 
   function buildScholarNarrative(planets, raw) {
-    const elements = { Fire:0, Earth:0, Air:0, Water:0 };
+    const elements   = { Fire:0, Earth:0, Air:0, Water:0 };
     const modalities = { Cardinal:0, Fixed:0, Mutable:0 };
-    const MODALITY = {
+    const MODALITY   = {
       Aries:'Cardinal', Taurus:'Fixed', Gemini:'Mutable', Cancer:'Cardinal',
       Leo:'Fixed', Virgo:'Mutable', Libra:'Cardinal', Scorpio:'Fixed',
       Sagittarius:'Mutable', Capricorn:'Cardinal', Aquarius:'Fixed', Pisces:'Mutable'
     };
-
     const validPlanets = Object.entries(planets).filter(([k,v]) => v && v.sign);
     validPlanets.forEach(([_, p]) => {
-      const e = SIGN_ELEMENTS[p.sign];
-      const m = MODALITY[p.sign];
-      if (e) elements[e]++;
-      if (m) modalities[m]++;
+      const e = SIGN_ELEMENTS[p.sign]; const m = MODALITY[p.sign];
+      if (e) elements[e]++; if (m) modalities[m]++;
     });
-
-    const domEl   = Object.entries(elements).sort((a,b)=>b[1]-a[1])[0];
-    const domMod  = Object.entries(modalities).sort((a,b)=>b[1]-a[1])[0];
-    const total   = validPlanets.length;
+    const domEl  = Object.entries(elements).sort((a,b)=>b[1]-a[1])[0];
+    const domMod = Object.entries(modalities).sort((a,b)=>b[1]-a[1])[0];
+    const total  = validPlanets.length;
     const phaseIdx = phaseIndex(raw?.moonPhase?.phase);
-
     const elAdvice = {
       Fire:  'Action, initiation, and creative force dominate. The risk is impulsivity without follow-through.',
       Earth: 'Material reality and practical consequence take precedence. The risk is rigidity mistaken for stability.',
@@ -838,14 +1066,11 @@ const Grimoire = (() => {
       Fixed:    'Fixed dominance — persistence and resistance both operate at full strength today.',
       Mutable:  'Mutable dominance — adaptability is required. Rigidity will be tested and broken.'
     };
-
+    const phaseEffect = ['Seed energy — intention without form.','Early momentum — direction chosen.','Tension productive — adjust course.','Refinement — near completion.','Maximum illumination — full revelation.','Integration — taking stock.','Release — let the old go.','Dissolution — the cycle nearly complete.'];
     let parts = [];
     parts.push(`<p>Elemental distribution across ${total} bodies: <strong>Fire ${elements.Fire} · Earth ${elements.Earth} · Air ${elements.Air} · Water ${elements.Water}</strong>. Dominant element: <strong>${domEl[0]}</strong> (${domEl[1]}/${total}). ${elAdvice[domEl[0]]}</p>`);
     parts.push(`<p>Modal distribution: <strong>Cardinal ${modalities.Cardinal} · Fixed ${modalities.Fixed} · Mutable ${modalities.Mutable}</strong>. ${modAdvice[domMod[0]]}</p>`);
-
-    const phaseEffect = ['Seed energy — intention without form.', 'Early momentum — direction chosen.', 'Tension productive — adjust course.', 'Refinement — near completion.', 'Maximum illumination — full revelation.', 'Integration — taking stock.', 'Release — let the old go.', 'Dissolution — the cycle nearly complete.'];
     parts.push(`<p>Lunar phase index ${phaseIdx}/7 — ${PHASE_ICONS[phaseIdx]} ${raw?.moonPhase?.name || ''}${raw?.moonPhase?.illumination ? ` at ${raw.moonPhase.illumination}% illumination` : ''}. Phase quality: <em>${phaseEffect[phaseIdx]}</em></p>`);
-
     parts.push(`<span class="whisper">${Almanac.getWhisper('Athena', 7)}</span>`);
     return parts.join('');
   }
@@ -853,8 +1078,7 @@ const Grimoire = (() => {
   // ── PLANET GRID ──────────────────────────────────────────────────────────
   function buildPlanetGrid(planets) {
     const primaryBodies = ['mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
-    const grid = document.getElementById('planetGrid');
-    grid.innerHTML = primaryBodies
+    document.getElementById('planetGrid').innerHTML = primaryBodies
       .filter(name => planets[name])
       .map((name, i) => {
         const data  = planets[name];
@@ -871,7 +1095,6 @@ const Grimoire = (() => {
           </div>`;
       }).join('');
 
-    // Ares triad
     const mars = planets.mars;
     if (mars) {
       document.getElementById('aresTriad').innerHTML = `
@@ -905,8 +1128,8 @@ const Grimoire = (() => {
   // ── HOUSES ───────────────────────────────────────────────────────────────
   function buildHouses(planets) {
     document.getElementById('housesList').innerHTML = SIGNS.map(sign => {
-      const gods = godsInSign(planets, sign);
-      const count = gods.length;
+      const gods    = godsInSign(planets, sign);
+      const count   = gods.length;
       const isStellium = count >= 3;
       return `
         <div class="house-entry ${count > 0 ? (isStellium ? 'stellium' : 'occupied') : ''}">
@@ -921,20 +1144,17 @@ const Grimoire = (() => {
 
   // ── SKY DIAGRAM ──────────────────────────────────────────────────────────
   function buildDiagram(planets, raw) {
-    const isSolar  = isSolarPeriod(raw);
-    const phaseIdx = phaseIndex(raw?.moonPhase?.phase);
+    const isSolar   = isSolarPeriod(raw);
+    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
     const phaseName = raw?.moonPhase?.name || '';
-    const solar = raw?.solar || {};
+    const solar     = raw?.solar || {};
 
-    // Zodiac ring
     document.getElementById('zodiacRing').innerHTML = SIGNS.map((sign, i) => {
       const active = countInSign(planets, sign) > 0;
       return `<div class="zodiac-sign sign-${i} ${active ? 'active' : ''}" title="${sign}">${GLYPHS[sign]}<span class="sign-name">${sign.substring(0,3).toUpperCase()}</span></div>`;
     }).join('');
 
-    // Center
-    const center = document.getElementById('centerSky');
-    center.innerHTML = `
+    document.getElementById('centerSky').innerHTML = `
       <span class="period-icon">${isSolar ? '☀️' : PHASE_ICONS[phaseIdx]}</span>
       <div class="period-label">${isSolar ? 'SOLAR' : 'LUNAR'} READING</div>
       ${!isSolar ? `<div class="moon-phase-name">${phaseName}</div>` : ''}
@@ -945,7 +1165,6 @@ const Grimoire = (() => {
       </div>
     `;
 
-    // Planet markers
     const markersEl = document.getElementById('planetMarkers');
     markersEl.innerHTML = '';
     const radius = 37;
@@ -955,8 +1174,8 @@ const Grimoire = (() => {
       if (signIndex === -1) return;
       const angle = (signIndex * 30) + (data.degree / 30 * 30) - 90;
       const rad   = (angle * Math.PI) / 180;
-      const x = 50 + radius * Math.cos(rad);
-      const y = 50 + radius * Math.sin(rad);
+      const x     = 50 + radius * Math.cos(rad);
+      const y     = 50 + radius * Math.sin(rad);
       const marker = document.createElement('div');
       marker.className = `planet-marker ${RUNE_CLASS[name] || 'rune-sun'}`;
       marker.style.left = `${x}%`;
@@ -968,11 +1187,11 @@ const Grimoire = (() => {
 
   // ── PERIOD BANNER ────────────────────────────────────────────────────────
   function buildPeriodBanner(raw) {
-    const isSolar  = isSolarPeriod(raw);
-    const banner   = document.getElementById('periodBanner');
-    const solar    = raw?.solar || {};
+    const isSolar = isSolarPeriod(raw);
+    const banner  = document.getElementById('periodBanner');
+    const solar   = raw?.solar || {};
     banner.className = `period-banner ${isSolar ? 'solar' : 'lunar'}`;
-    banner.innerHTML = isSolar
+    banner.innerHTML  = isSolar
       ? `☀ Solar Period · Apollo Ascendant · Sun sets ${solar.sunset ? fmtTime(solar.sunset) : '—'}`
       : `☽ Lunar Period · ${phaseIndex(raw?.moonPhase?.phase) >= 5 ? 'Melinoe' : 'Artemis'} Ascendant · Sun rises ${solar.sunrise ? fmtTime(solar.sunrise) : '—'}`;
   }
@@ -1004,20 +1223,8 @@ const Grimoire = (() => {
     };
   }
 
-  // ── STARS ────────────────────────────────────────────────────────────────
-  function generateStars() {
-    const container = document.getElementById('stars');
-    for (let i = 0; i < 200; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-delay:${Math.random()*5}s;animation-duration:${Math.random()*3+2}s`;
-      container.appendChild(star);
-    }
-  }
-
   // ── PUBLIC ───────────────────────────────────────────────────────────────
   async function init() {
-    generateStars();
     initSignSelector();
     buildVoiceSwitcher();
     await refresh();
@@ -1026,12 +1233,10 @@ const Grimoire = (() => {
   async function refresh() {
     try {
       const raw = await Observe.getSkyState();
-      skyData = raw;
-
+      skyData   = raw;
       document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US',{
         weekday:'long', year:'numeric', month:'long', day:'numeric'
       });
-
       buildPeriodBanner(raw);
       buildDiagram(raw.planets, raw);
       buildLuminaries(raw.planets, raw);
@@ -1039,9 +1244,8 @@ const Grimoire = (() => {
       renderNarrative();
       buildPlanetGrid(raw.planets);
       buildHouses(raw.planets);
-
     } catch(err) {
-      console.error('Grimoire failed:', err);
+      console.error('Celestial Grimoire:', err);
       document.getElementById('horoscopeText').innerHTML =
         '<em>The sky is clouded. The stars cannot speak right now. Try again at dawn or dusk.</em>';
     }
@@ -1055,10 +1259,7 @@ const Grimoire = (() => {
     buildVoiceSwitcher();
   }
 
-  function setVoice(index) {
-    activeVoice = index;
-    renderNarrative();
-  }
+  function setVoice(index) { activeVoice = index; renderNarrative(); }
 
   return { init, refresh, setVoice };
 })();
