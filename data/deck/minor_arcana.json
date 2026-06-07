@@ -682,16 +682,16 @@
       {
         "id": "air_05",
         "name": "Five of Air",
-        "title": "The Reply Guy",
-        "culture": "Modern",
+        "title": "Arachne",
+        "culture": "Greek",
         "rank": "five",
         "element": "Air",
         "ruling_god": "Athena",
-        "keywords": ["the challenge", "public defeat", "the ratio", "hubris", "skill as weapon"],
-        "upright": "The Reply Guy sits in the mentions, keyboard sharpened, thread pulled, receipts deployed. He is Arachne reborn in the digital age — his tapestry is the takedown thread, his Athena is the poster he's ratioing. The Five of Air is the public evisceration, the post that was too good, the skill that threatened power. You won the argument. That's why they're mad.",
-        "reversed": "The Reply Guy ratio'd himself. The thread that backfired. Arachne as a spider, still weaving but now ignored. The post that taught you something about when to speak and when to let the tapestry speak for itself.",
+        "keywords": ["the weaver", "the challenger", "the takedown", "hubris", "skill as weapon", "transformation"],
+        "upright": "Arachne wove a tapestry that rivaled the gods. She did not lose because her skill was less — she lost because she challenged a goddess on her own loom. The Five of Air is the public evisceration, the work that threatens power, the skill that cannot be ignored. You won the argument. That's why they are angry. The thread is perfect. The goddess still struck.",
+        "reversed": "The thread that backfired. Arachne as a spider, still weaving but now invisible — her art continues, but no one sees it. The work that taught you something about when to speak and when to let the tapestry speak for itself. The skill is not diminished. The audience has simply left.",
         "image": "data/images/minor/air/air_05.png",
-        "prompt": "Arachne, the mortal weaver who challenged Athena and was transformed — reborn as the reply guy whose thread destroys gods, as tarot card."
+        "prompt": "Arachne, the mortal weaver who challenged Athena and was transformed into a spider, weaving her final tapestry as a tarot card, dark academia style, dramatic lighting, loom and threads."
       },
       {
         "id": "air_06",
