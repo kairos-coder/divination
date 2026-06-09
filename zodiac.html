@@ -758,11 +758,11 @@ footer {
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script src="js/observe.js"></script>
 <script src="js/almanac.js"></script>
-
 <script>
 /* ═══════════════════════════════════════════════════════════════
    CELESTIAL GRIMOIRE — JavaScript
    Maintained by Claude · Generation 1 of the Parchment Era
+   REFACTORED: 2026-06-08 — Solar moments, lunar rise/set
    The Olympians declare. They do not negotiate.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -806,6 +806,7 @@ const Grimoire = (() => {
 
   // ── HELPERS ──────────────────────────────────────────────────────────────
   function fmtTime(t) {
+    if (!t) return '—';
     return new Date(t).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true });
   }
   function degreesStr(deg) { return `${Math.floor(deg)}°`; }
@@ -825,7 +826,7 @@ const Grimoire = (() => {
   }
   function phaseIndex(phase) { return Math.round((phase || 0) * 8) % 8; }
   function isSolarPeriod(raw) {
-    if (!raw?.solar) return true;
+    if (!raw?.solar?.sunrise || !raw?.solar?.sunset) return true;
     const now = Date.now();
     return now >= new Date(raw.solar.sunrise).getTime() && now <= new Date(raw.solar.sunset).getTime();
   }
@@ -835,12 +836,16 @@ const Grimoire = (() => {
     const sun  = planets.sun;
     const moon = planets.moon;
     const solar = raw?.solar || {};
-    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
-    const phaseName = raw?.moonPhase?.name || '';
-    const phaseIll  = raw?.moonPhase?.illumination || '';
-    const isWaning  = phaseIdx >= 5;
-    const moonDeity = isWaning ? 'Melinoe' : 'Artemis';
-    const moonArcana = isWaning ? 'The Moon (XVIII)' : 'The Chariot (VII)';
+    const moonPhase = raw?.moonPhase || {};
+    const phaseIdx  = phaseIndex(moonPhase.phase);
+    const phaseName = moonPhase.name || '';
+    const phaseIll  = moonPhase.illumination || '';
+    const moonDeity = moonPhase.deity || (phaseIdx >= 5 ? 'Melinoe' : 'Artemis');
+    const moonArcana = moonDeity === 'Melinoe' ? 'The Moon (XVIII)' : 'The Chariot (VII)';
+
+    // 🜏 Moon rise/set from new observe.js
+    const moonRise = raw.moonRise;
+    const moonSet  = raw.moonSet;
 
     document.getElementById('luminaryPair').innerHTML = `
       <div class="luminary-card sun-card">
@@ -849,8 +854,8 @@ const Grimoire = (() => {
         <div class="lum-position">${sun ? `${degreesStr(sun.degree)} ${sun.sign} ${GLYPHS[sun.sign]}` : '—'} · The Sun (XIX)</div>
         <div class="lum-reading s">${sun ? buildSunReading(sun, solar) : 'Apollo beyond the horizon.'}</div>
         <div class="lum-times">
-          ☀ Rise ${solar.sunrise ? fmtTime(solar.sunrise) : '—'}<br>
-          ☀ Set ${solar.sunset  ? fmtTime(solar.sunset)  : '—'}
+          ☀ Rise ${fmtTime(solar.sunrise)}<br>
+          ☀ Set ${fmtTime(solar.sunset)}
         </div>
       </div>
       <div class="luminary-card moon-card">
@@ -860,8 +865,8 @@ const Grimoire = (() => {
         ${phaseName ? `<div class="lum-phase">${PHASE_ICONS[phaseIdx]} ${phaseName}${phaseIll ? ` · ${phaseIll}% illuminated` : ''}</div>` : ''}
         <div class="lum-reading m">${moon ? buildMoonReading(moon, moonDeity, phaseName, phaseIdx) : 'The night is moonless.'}</div>
         <div class="lum-times">
-          ${solar.moonrise ? `☽ Rise ${fmtTime(solar.moonrise)}<br>` : ''}
-          ${solar.moonset  ? `☽ Set ${fmtTime(solar.moonset)}`  : ''}
+          ${moonRise ? `☽ Rise ${fmtTime(moonRise.time)}<br>` : ''}
+          ${moonSet  ? `☽ Set ${fmtTime(moonSet.time)}`  : ''}
         </div>
       </div>
     `;
@@ -911,171 +916,165 @@ const Grimoire = (() => {
     return `${phaseReadings[phaseIdx] || ''} <em>${signNuance[moon.sign] || ''}</em>`;
   }
 
-  // ── DAWN / ZENITH / DUSK (Past-Present-Future) ──────────────────────────
-function buildDawnDusk(planets, raw) {
-  const sun     = planets.sun;
-  const moon    = planets.moon;
-  const solar   = raw?.solar || {};
-  const isSolar = isSolarPeriod(raw);
-  const sunSign  = sun?.sign  || 'the sky';
-  const moonSign = moon?.sign || 'the night';
-  const sunDeg   = sun  ? Math.floor(sun.degree)  : 0;
-  const moonDeg  = moon ? Math.floor(moon.degree) : 0;
-  const phaseIdx = phaseIndex(raw?.moonPhase?.phase);
-  const isWaning = phaseIdx >= 5;
-  const moonDeity = isWaning ? 'Melinoe' : 'Artemis';
-
-  // ── DAWN (Past) — What the day promised ──
-  const dawnSunSign = sunSign;
-  const dawnSunDeg  = sunDeg;
-  const dawnPromise = getDawnPromise(dawnSunSign, dawnSunDeg);
-
-  // ── ZENITH (Present) — What is true now ──
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMin  = now.getMinutes();
-  const timeLabel = currentHour < 12 
-    ? `${currentHour}:${String(currentMin).padStart(2,'0')} AM` 
-    : currentHour === 12 
-      ? `12:${String(currentMin).padStart(2,'0')} PM` 
-      : `${currentHour - 12}:${String(currentMin).padStart(2,'0')} PM`;
+  // ════════════════════════════════════════════════════════════
+  // 🜏 DAWN · ZENITH · DUSK — True Past-Present-Future
+  // ════════════════════════════════════════════════════════════
   
-  const zenithTime = solar.sunrise && solar.sunset 
-    ? new Date((new Date(solar.sunrise).getTime() + new Date(solar.sunset).getTime()) / 2)
-    : null;
-  const zenithLabel = zenithTime 
-    ? new Date(zenithTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) 
-    : '12:00 PM';
-  
-  const presentReading = getZenithReading(sunSign, sunDeg, isSolar, currentHour);
+  function buildDawnDusk(planets, raw) {
+    const solarMoments = raw.solarMoments || {};
+    const dawn   = solarMoments.dawn;
+    const zenith = solarMoments.zenith;
+    const dusk   = solarMoments.dusk;
+    const moonPhase = raw.moonPhase || {};
+    const moonDeity = moonPhase.deity || 'Artemis';
+    const moonRise = raw.moonRise;
+    const isSolar = isSolarPeriod(raw);
 
-  // ── DUSK (Future) — What the day delivers ──
-  const duskReading = getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg);
+    // ── DAWN (Past) — Sun at sunrise ──
+    let dawnHTML = '';
+    if (dawn && dawn.sun) {
+      const sunSign = dawn.sun.sign;
+      const sunDeg  = Math.floor(dawn.sun.degree);
+      const ascSign = dawn.ascendant?.sign || 'the horizon';
+      const dawnPromise = getDawnPromise(sunSign, sunDeg);
+      dawnHTML = `
+        <div class="time-reading dawn">
+          <div class="time-reading-label">☀ DAWN · Past · ${fmtTime(dawn.time)}</div>
+          <div class="time-reading-text">
+            Apollo rose in <strong>${sunSign} ${GLYPHS[sunSign]}</strong> at ${degreesStr(sunDeg)}°.
+            The ascendant was <strong>${ascSign} ${GLYPHS[ascSign]}</strong>.
+            ${dawnPromise}
+          </div>
+        </div>`;
+    }
 
-  document.getElementById('dawnDuskContent').innerHTML = `
-    <div class="time-reading dawn">
-      <div class="time-reading-label">☀ DAWN · Past · ${solar.sunrise ? fmtTime(solar.sunrise) : '—'}</div>
-      <div class="time-reading-text">
-        Apollo rose in <strong>${dawnSunSign} ${GLYPHS[dawnSunSign]}</strong> at ${degreesStr(dawnSunDeg)}°.
-        ${dawnPromise}
-      </div>
-    </div>
-    <div class="time-reading zenith">
-      <div class="time-reading-label">☀ ZENITH · Present · ${timeLabel}</div>
-      <div class="time-reading-text">
-        Apollo ${isSolar ? 'burns at the peak' : 'travels below the horizon'} — <strong>${sunSign} ${GLYPHS[sunSign]}</strong> at ${degreesStr(sunDeg)}°.
-        ${presentReading}
-      </div>
-    </div>
-    <div class="time-reading dusk">
-      <div class="time-reading-label">☽ DUSK · Future · ${solar.sunset ? fmtTime(solar.sunset) : '—'}</div>
-      <div class="time-reading-text">
-        Apollo sets. <strong>${moonDeity}</strong> rises in <strong>${moonSign} ${GLYPHS[moonSign]}</strong> at ${degreesStr(moonDeg)}° under a ${(raw?.moonPhase?.name || '').toLowerCase()}.
-        ${duskReading}
-      </div>
-    </div>
-  `;
-}
+    // ── ZENITH (Present) — Sun at solar noon ──
+    let zenithHTML = '';
+    if (zenith && zenith.sun) {
+      const sunSign = zenith.sun.sign;
+      const sunDeg  = Math.floor(zenith.sun.degree);
+      const ascSign = zenith.ascendant?.sign || 'the horizon';
+      const now = new Date();
+      const currentHour = now.getHours();
+      const timeLabel = fmtTime(new Date());
+      const presentReading = getZenithReading(sunSign, sunDeg, isSolar, currentHour, ascSign);
+      zenithHTML = `
+        <div class="time-reading zenith">
+          <div class="time-reading-label">☀ ZENITH · Present · ${timeLabel}</div>
+          <div class="time-reading-text">
+            Apollo ${isSolar ? 'burns at the peak' : 'travels below'} — <strong>${sunSign} ${GLYPHS[sunSign]}</strong> at ${degreesStr(sunDeg)}°.
+            The ascendant is <strong>${ascSign} ${GLYPHS[ascSign]}</strong>.
+            ${presentReading}
+          </div>
+        </div>`;
+    }
 
-// ── DAWN PROMISE (Past) ──
-function getDawnPromise(sign, deg) {
-  const promises = {
-    Aries: 'The Ram charged into the day. The promise was <strong>initiation</strong> — whatever you began at dawn carries the raw fire of new beginnings.',
-    Taurus: 'The Bull received the first light. The promise was <strong>patience</strong> — not slowness, but the deep roots that hold when the wind comes.',
-    Gemini: 'The Twins doubled the dawn. The promise was <strong>connection</strong> — two voices, one light. What you said at dawn still echoes.',
-    Cancer: 'The Crab caught the early light in its shell. The promise was <strong>protection</strong> — the soft thing inside you was given permission to exist.',
-    Leo: 'The Lion roared at the sun. The promise was <strong>visibility</strong> — the courage to be seen, fully, without apology.',
-    Virgo: 'The Maiden measured the light precisely. The promise was <strong>discernment</strong> — the clarity to see what needs fixing and the patience to fix it.',
-    Libra: 'The Scales balanced the dawn. The promise was <strong>harmony</strong> — not the absence of conflict, but the presence of justice.',
-    Scorpio: 'The Scorpion received the light in shadow. The promise was <strong>transformation</strong> — something hidden was going to surface.',
-    Sagittarius: 'The Archer aimed at the rising sun. The promise was <strong>direction</strong> — the arrow loosed at dawn flies all day.',
-    Capricorn: 'The Sea-Goat climbed the first light. The promise was <strong>discipline</strong> — the mountain is real, and so is the summit.',
-    Aquarius: 'The Water-Bearer poured the dawn. The promise was <strong>community</strong> — the light belongs to everyone it touches.',
-    Pisces: 'The Fish dissolved in the first rays. The promise was <strong>intuition</strong> — the boundary between you and the world was thinner today.'
-  };
-  return promises[sign] || `The ${sign} held the dawn. The promise was presence — the simple gift of another day.`;
-}
+    // ── DUSK (Future) — Sun at sunset + Moon rising ──
+    let duskHTML = '';
+    if (dusk && dusk.sun) {
+      const sunSign = dusk.sun.sign;
+      const sunDeg  = Math.floor(dusk.sun.degree);
+      const ascSign = dusk.ascendant?.sign || 'the horizon';
+      const moonSign = moonRise?.moon?.sign || 'the night';
+      const moonDeg  = moonRise?.moon ? Math.floor(moonRise.moon.degree) : 0;
+      const duskPromise = getDuskPromise(sunSign, moonSign, moonDeity, moonPhase.isWaning, moonDeg, ascSign);
+      duskHTML = `
+        <div class="time-reading dusk">
+          <div class="time-reading-label">☽ DUSK · Future · ${fmtTime(dusk.time)}</div>
+          <div class="time-reading-text">
+            Apollo sets. The ascendant becomes <strong>${ascSign} ${GLYPHS[ascSign]}</strong>.
+            <strong>${moonDeity}</strong> rises in <strong>${moonSign} ${GLYPHS[moonSign]}</strong> at ${degreesStr(moonDeg)}° under a ${(moonPhase.name || '').toLowerCase()}.
+            ${duskPromise}
+          </div>
+        </div>`;
+    }
 
-// ── ZENITH READING (Present) ──
-function getZenithReading(sign, deg, isSolar, hour) {
-  if (!isSolar) {
-    return 'The sun travels below the horizon. The present moment belongs to the moon — to reflection, not action. What did the day reveal before the light faded?';
-  }
-  
-  const decan = deg < 10 ? 'first decan' : deg < 20 ? 'second decan' : 'third decan';
-  const hourLabel = hour < 10 ? 'morning' : hour < 14 ? 'midday' : hour < 17 ? 'afternoon' : 'evening';
-  
-  const readings = {
-    Aries: `The ${hourLabel} fire of Aries burns at its peak. The ${decan} pushes hardest — this is the moment of <strong>action</strong>. What are you starting right now?`,
-    Taurus: `The ${hourLabel} steadiness of Taurus holds the light. The ${decan} deepens the roots — this is the moment of <strong>building</strong>. What are you constructing with your time?`,
-    Gemini: `The ${hourLabel} quickness of Gemini doubles the light. The ${decan} amplifies every word — this is the moment of <strong>communication</strong>. What needs to be said?`,
-    Cancer: `The ${hourLabel} softness of Cancer holds the sun. The ${decan} protects what matters — this is the moment of <strong>feeling</strong>. What are you guarding?`,
-    Leo: `The ${hourLabel} radiance of Leo commands the sky. The ${decan} demands presence — this is the moment of <strong>expression</strong>. What are you performing?`,
-    Virgo: `The ${hourLabel} precision of Virgo focuses the light. The ${decan} sharpens discernment — this is the moment of <strong>refinement</strong>. What needs your careful attention?`,
-    Libra: `The ${hourLabel} balance of Libra weighs the light. The ${decan} seeks equilibrium — this is the moment of <strong>choice</strong>. What needs to be decided?`,
-    Scorpio: `The ${hourLabel} intensity of Scorpio deepens the light. The ${decan} reveals what was hidden — this is the moment of <strong>truth</strong>. What are you finally seeing?`,
-    Sagittarius: `The ${hourLabel} reach of Sagittarius extends the light. The ${decan} aims far — this is the moment of <strong>vision</strong>. Where are you pointing?`,
-    Capricorn: `The ${hourLabel} discipline of Capricorn structures the light. The ${decan} builds stone by stone — this is the moment of <strong>commitment</strong>. What are you climbing toward?`,
-    Aquarius: `The ${hourLabel} vision of Aquarius distributes the light. The ${decan} connects everyone — this is the moment of <strong>contribution</strong>. What are you sharing?`,
-    Pisces: `The ${hourLabel} intuition of Pisces dissolves the light. The ${decan} blurs the boundary — this is the moment of <strong>surrender</strong>. What are you releasing into the flow?`
-  };
-  return readings[sign] || `Apollo stands at the peak of ${sign}. The light is at its fullest. This is the moment of <strong>presence</strong>. Be here.`;
-}
-
-// ── DUSK PROMISE (Future) ──
-function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
-  const sunClosing = {
-    Aries: 'The fire of Aries dims. What you started today now belongs to the night.',
-    Taurus: 'The steadiness of Taurus settles. What you built today will hold through the dark.',
-    Gemini: 'The voices of Gemini quiet. What you said today will be remembered — or forgotten — by dawn.',
-    Cancer: 'The shell of Cancer closes. What you protected today is safe for the night.',
-    Leo: 'The radiance of Leo fades. What you performed today will echo in the dark.',
-    Virgo: 'The precision of Virgo rests. What you refined today is sharp enough to wait.',
-    Libra: 'The scales of Libra still. What you weighed today will be decided by morning.',
-    Scorpio: 'The intensity of Scorpio descends. What you uncovered today will transform overnight.',
-    Sagittarius: 'The arrow of Sagittarius lands. What you aimed at today has been struck — or missed. Either way, the flight is over.',
-    Capricorn: 'The climb of Capricorn pauses. What you ascended today is yours. Rest before the next peak.',
-    Aquarius: 'The vision of Aquarius scatters. What you shared today now belongs to everyone — and no one.',
-    Pisces: 'The boundary of Pisces returns. What you felt today will become a dream tonight.'
-  };
-
-  const moonArrival = isWaning
-    ? `${moonDeity} walks the waning dark in ${moonSign}. She asks: <strong>what are you ready to release?</strong> The day's work is done. The night receives what the day could not hold.`
-    : `${moonDeity} rises in ${moonSign}. She asks: <strong>what will you carry forward from this day?</strong> The hunt continues in the dark.`;
-
-  return `
-    ${sunClosing[sunSign] || `The sun sets on ${sunSign}. The day's work is complete.`}
-    ${moonArrival}
-  `;
-}
-
-  function buildSunElementAdvice(sign) {
-    const e = SIGN_ELEMENTS[sign];
-    if (e === 'Fire')  return 'Fire signs push toward ignition — act on the impulse that has been building';
-    if (e === 'Earth') return 'Earth signs demand material attention — what needs to be built, fixed, or finished today';
-    if (e === 'Air')   return 'Air signs accelerate communication — write, speak, send the message you have been holding';
-    if (e === 'Water') return 'Water signs route energy inward — the important work today is underneath the surface';
-    return '';
-  }
-  function buildMoonElementAdvice(sign) {
-    const e = SIGN_ELEMENTS[sign];
-    if (e === 'Fire')  return 'The night carries Fire Moon intensity — the emotions are visible, even when you try to contain them';
-    if (e === 'Earth') return 'Earth Moon grounds the night — the feelings are slower, deeper, and more reliable than they seem';
-    if (e === 'Air')   return 'Air Moon thinks through the feeling — the night brings clarity, not comfort, and that is better';
-    if (e === 'Water') return 'Water Moon in the night — the deepest tides. What moves in you now is real, even if it has no name yet';
-    return '';
+    document.getElementById('dawnDuskContent').innerHTML = dawnHTML + zenithHTML + duskHTML;
   }
 
-  // ── NARRATIVE VOICES ─────────────────────────────────────────────────────
+  // ── DAWN PROMISE (Past) ──
+  function getDawnPromise(sign, deg) {
+    const promises = {
+      Aries: 'The Ram charged into the day. The promise was <strong>initiation</strong> — whatever you began at dawn carries the raw fire of new beginnings.',
+      Taurus: 'The Bull received the first light. The promise was <strong>patience</strong> — not slowness, but the deep roots that hold when the wind comes.',
+      Gemini: 'The Twins doubled the dawn. The promise was <strong>connection</strong> — two voices, one light. What you said at dawn still echoes.',
+      Cancer: 'The Crab caught the early light in its shell. The promise was <strong>protection</strong> — the soft thing inside you was given permission to exist.',
+      Leo: 'The Lion roared at the sun. The promise was <strong>visibility</strong> — the courage to be seen, fully, without apology.',
+      Virgo: 'The Maiden measured the light precisely. The promise was <strong>discernment</strong> — the clarity to see what needs fixing and the patience to fix it.',
+      Libra: 'The Scales balanced the dawn. The promise was <strong>harmony</strong> — not the absence of conflict, but the presence of justice.',
+      Scorpio: 'The Scorpion received the light in shadow. The promise was <strong>transformation</strong> — something hidden was going to surface.',
+      Sagittarius: 'The Archer aimed at the rising sun. The promise was <strong>direction</strong> — the arrow loosed at dawn flies all day.',
+      Capricorn: 'The Sea-Goat climbed the first light. The promise was <strong>discipline</strong> — the mountain is real, and so is the summit.',
+      Aquarius: 'The Water-Bearer poured the dawn. The promise was <strong>community</strong> — the light belongs to everyone it touches.',
+      Pisces: 'The Fish dissolved in the first rays. The promise was <strong>intuition</strong> — the boundary between you and the world was thinner today.'
+    };
+    return promises[sign] || `The ${sign} held the dawn. The promise was presence — the simple gift of another day.`;
+  }
+
+  // ── ZENITH READING (Present) ──
+  function getZenithReading(sign, deg, isSolar, hour, ascSign) {
+    if (!isSolar) {
+      return `The sun travels below the horizon. The ascendant <strong>${ascSign} ${GLYPHS[ascSign]}</strong> holds the sky. The present moment belongs to the moon — to reflection, not action. What did the day reveal before the light faded?`;
+    }
+    
+    const decan = deg < 10 ? 'first decan' : deg < 20 ? 'second decan' : 'third decan';
+    const hourLabel = hour < 10 ? 'morning' : hour < 14 ? 'midday' : hour < 17 ? 'afternoon' : 'evening';
+    
+    const readings = {
+      Aries: `The ${hourLabel} fire of Aries burns at its peak. The ${decan} pushes hardest — this is the moment of <strong>action</strong>. What are you starting right now?`,
+      Taurus: `The ${hourLabel} steadiness of Taurus holds the light. The ${decan} deepens the roots — this is the moment of <strong>building</strong>. What are you constructing with your time?`,
+      Gemini: `The ${hourLabel} quickness of Gemini doubles the light. The ${decan} amplifies every word — this is the moment of <strong>communication</strong>. What needs to be said?`,
+      Cancer: `The ${hourLabel} softness of Cancer holds the sun. The ${decan} protects what matters — this is the moment of <strong>feeling</strong>. What are you guarding?`,
+      Leo: `The ${hourLabel} radiance of Leo commands the sky. The ${decan} demands presence — this is the moment of <strong>expression</strong>. What are you performing?`,
+      Virgo: `The ${hourLabel} precision of Virgo focuses the light. The ${decan} sharpens discernment — this is the moment of <strong>refinement</strong>. What needs your careful attention?`,
+      Libra: `The ${hourLabel} balance of Libra weighs the light. The ${decan} seeks equilibrium — this is the moment of <strong>choice</strong>. What needs to be decided?`,
+      Scorpio: `The ${hourLabel} intensity of Scorpio deepens the light. The ${decan} reveals what was hidden — this is the moment of <strong>truth</strong>. What are you finally seeing?`,
+      Sagittarius: `The ${hourLabel} reach of Sagittarius extends the light. The ${decan} aims far — this is the moment of <strong>vision</strong>. Where are you pointing?`,
+      Capricorn: `The ${hourLabel} discipline of Capricorn structures the light. The ${decan} builds stone by stone — this is the moment of <strong>commitment</strong>. What are you climbing toward?`,
+      Aquarius: `The ${hourLabel} vision of Aquarius distributes the light. The ${decan} connects everyone — this is the moment of <strong>contribution</strong>. What are you sharing?`,
+      Pisces: `The ${hourLabel} intuition of Pisces dissolves the light. The ${decan} blurs the boundary — this is the moment of <strong>surrender</strong>. What are you releasing into the flow?`
+    };
+    return readings[sign] || `Apollo stands at the peak of ${sign}. The ascendant is ${ascSign}. The light is at its fullest. This is the moment of <strong>presence</strong>. Be here.`;
+  }
+
+  // ── DUSK PROMISE (Future) ──
+  function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg, ascSign) {
+    const sunClosing = {
+      Aries: 'The fire of Aries dims. What you started today now belongs to the night.',
+      Taurus: 'The steadiness of Taurus settles. What you built today will hold through the dark.',
+      Gemini: 'The voices of Gemini quiet. What you said today will be remembered — or forgotten — by dawn.',
+      Cancer: 'The shell of Cancer closes. What you protected today is safe for the night.',
+      Leo: 'The radiance of Leo fades. What you performed today will echo in the dark.',
+      Virgo: 'The precision of Virgo rests. What you refined today is sharp enough to wait.',
+      Libra: 'The scales of Libra still. What you weighed today will be decided by morning.',
+      Scorpio: 'The intensity of Scorpio descends. What you uncovered today will transform overnight.',
+      Sagittarius: 'The arrow of Sagittarius lands. What you aimed at today has been struck — or missed. Either way, the flight is over.',
+      Capricorn: 'The climb of Capricorn pauses. What you ascended today is yours. Rest before the next peak.',
+      Aquarius: 'The vision of Aquarius scatters. What you shared today now belongs to everyone — and no one.',
+      Pisces: 'The boundary of Pisces returns. What you felt today will become a dream tonight.'
+    };
+
+    const moonArrival = isWaning
+      ? `${moonDeity} walks the waning dark in ${moonSign}. She asks: <strong>what are you ready to release?</strong> The day's work is done. The night receives what the day could not hold.`
+      : `${moonDeity} rises in ${moonSign}. She asks: <strong>what will you carry forward from this day?</strong> The hunt continues in the dark.`;
+
+    return `
+      ${sunClosing[sunSign] || `The sun sets on ${sunSign}. The day's work is complete.`}
+      ${moonArrival}
+    `;
+  }
+
+  // ── NARRATIVE VOICES (preserved) ────────────────────────────────────────
   function buildOracleNarrative(planets, raw) {
     const sun       = planets.sun;
     const moon      = planets.moon;
     const active    = activeSigns(planets);
     const crowded   = active.filter(s => countInSign(planets, s) >= 2);
     const empty     = SIGNS.filter(s => !active.includes(s));
-    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
-    const isWaning  = phaseIdx >= 5;
-    const moonDeity = isWaning ? 'Melinoe' : 'Artemis';
+    const moonPhase = raw?.moonPhase || {};
+    const phaseIdx  = phaseIndex(moonPhase.phase);
+    const isWaning  = moonPhase.isWaning || phaseIdx >= 5;
+    const moonDeity = moonPhase.deity || (isWaning ? 'Melinoe' : 'Artemis');
     let parts = [];
 
     if (crowded.length > 0) {
@@ -1095,7 +1094,7 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     }
 
     if (moon) {
-      parts.push(`<p>${moonDeity} walks <span class="sign-addr">${moon.sign} ${GLYPHS[moon.sign]}</span> — ${isWaning ? 'the waning dark, the releasing phase, the invitation to let something finish' : 'the waxing or full light, the building phase, the invitation to grow toward what you intend'}. ${isWaning ? 'What the Moon is taking back from you tonight is not a loss. It is the preparation for the next new thing.' : 'What the Moon is building toward in ' + moon.sign + ' asks: are you ready to receive it?'} <span class="whisper">${Almanac.getWhisper(moonDeity === 'Melinoe' ? 'Melinoe' : 'Artemis', 2)}</span></p>`);
+      parts.push(`<p>${moonDeity} walks <span class="sign-addr">${moon.sign} ${GLYPHS[moon.sign]}</span> — ${isWaning ? 'the waning dark, the releasing phase, the invitation to let something finish' : 'the waxing or full light, the building phase, the invitation to grow toward what you intend'}. <span class="whisper">${Almanac.getWhisper(moonDeity, 2)}</span></p>`);
     }
 
     if (empty.length > 4) {
@@ -1115,23 +1114,17 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     const ordinal = n => { const s = ['th','st','nd','rd'], v = n % 100; return n + (s[(v-20)%10] || s[v] || s[0]); };
     let parts = [];
     parts.push(`<p>The record for this day, the ${ordinal(now.getDate())} of ${now.toLocaleDateString('en-US',{month:'long'})}, ${now.getFullYear()}:</p>`);
-    if (sun) parts.push(`<p><strong>Apollo</strong> at <strong>${degreesStr(sun.degree)} ${sun.sign} ${GLYPHS[sun.sign]}</strong> — the Sun's chariot rides the ${NAMES[sun.sign] || sun.sign}. The solar degree marks the season's ${Math.floor(sun.degree) < 10 ? 'opening movement' : Math.floor(sun.degree) < 20 ? 'central passage' : 'final approach'}.</p>`);
+    if (sun) parts.push(`<p><strong>Apollo</strong> at <strong>${degreesStr(sun.degree)} ${sun.sign} ${GLYPHS[sun.sign]}</strong> — the Sun's chariot rides the ${NAMES[sun.sign] || sun.sign}.</p>`);
     if (moon) {
       const phaseName = raw?.moonPhase?.name || 'unknown phase';
-      parts.push(`<p><strong>Artemis</strong> (or Melinoe, as the phase determines) tracks through <strong>${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</strong> — a <em>${phaseName}</em>${raw?.moonPhase?.illumination ? `, ${raw.moonPhase.illumination}% illuminated` : ''}.</p>`);
+      parts.push(`<p><strong>${raw?.moonPhase?.deity || 'Artemis'}</strong> tracks through <strong>${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</strong> — a <em>${phaseName}</em>${raw?.moonPhase?.illumination ? `, ${raw.moonPhase.illumination}% illuminated` : ''}.</p>`);
     }
     const grouped = active.filter(s => countInSign(planets, s) >= 2);
     grouped.forEach(sign => {
       const gods = godsInSign(planets, sign);
       const last = gods.pop();
-      parts.push(`<p>Notable configuration: ${gods.length ? gods.join(', ') + ' and ' + last : last} share <span class="sign-addr">${sign} ${GLYPHS[sign]}</span>. Configurations of this kind recur on roughly the same calendar axis, though the specific degree conjunction is unique to this date.</p>`);
+      parts.push(`<p>Notable configuration: ${gods.length ? gods.join(', ') + ' and ' + last : last} share <span class="sign-addr">${sign} ${GLYPHS[sign]}</span>.</p>`);
     });
-    const elementCount = {};
-    Object.values(planets).filter(p=>p).forEach(p => {
-      const e = SIGN_ELEMENTS[p.sign]; if (e) elementCount[e] = (elementCount[e]||0) + 1;
-    });
-    const dom = Object.entries(elementCount).sort((a,b)=>b[1]-a[1])[0];
-    if (dom) parts.push(`<p>Elemental distribution: <strong>${dom[0]}</strong> dominates with ${dom[1]} bodies — ${dom[0] === 'Fire' ? 'a day of action and ignition' : dom[0] === 'Earth' ? 'a day of material consequence' : dom[0] === 'Air' ? 'a day of swift thought and message' : 'a day of depth and feeling'}. The chronicle notes this without judgment.</p>`);
     parts.push(`<span class="whisper">${Almanac.getWhisper('Athena', 4)}</span>`);
     return parts.join('');
   }
@@ -1142,23 +1135,24 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     const venus   = planets.venus;
     const mars    = planets.mars;
     const isSolar = isSolarPeriod(raw);
-    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
-    const isWaning  = phaseIdx >= 5;
+    const moonPhase = raw?.moonPhase || {};
+    const phaseIdx  = phaseIndex(moonPhase.phase);
+    const isWaning  = moonPhase.isWaning || phaseIdx >= 5;
+    const moonDeity = moonPhase.deity || (isWaning ? 'Melinoe' : 'Artemis');
     let parts = [];
 
     if (isSolar && sun) {
       parts.push(`<p>The light spills across <span class="sign-addr">${sun.sign} ${GLYPHS[sun.sign]}</span> like honey from a jar — slow, golden, inevitable. Apollo does not hurry. The ${NAMES[sun.sign] || sun.sign} receives what the sun has always given: the insistence that today is real.</p>`);
     } else if (moon) {
-      const deity = isWaning ? 'Melinoe' : 'Artemis';
-      parts.push(`<p>${deity} walks the ${NAMES[moon.sign] || moon.sign} at <span class="sign-addr">${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</span>. ${isWaning ? 'The waning dark has its own beauty — the kind that asks nothing of you except honesty.' : 'The moon hangs like a pearl in the dark, and the dark is not empty. It is full of what cannot be said in daylight.'}</p>`);
+      parts.push(`<p>${moonDeity} walks the ${NAMES[moon.sign] || moon.sign} at <span class="sign-addr">${degreesStr(moon.degree)} ${moon.sign} ${GLYPHS[moon.sign]}</span>. ${isWaning ? 'The waning dark has its own beauty — the kind that asks nothing of you except honesty.' : 'The moon hangs like a pearl in the dark, and the dark is not empty. It is full of what cannot be said in daylight.'}</p>`);
     }
 
     if (mars) {
-      parts.push(`<p>Ares sharpens his spear on the whetstone of <span class="sign-addr">${mars.sign}</span>. Even war pauses to consider its season. The ${SIGN_ELEMENTS[mars.sign]} quality of ${mars.sign} says: ${SIGN_ELEMENTS[mars.sign] === 'Fire' ? 'the battle is now' : SIGN_ELEMENTS[mars.sign] === 'Earth' ? 'the battle is patient' : SIGN_ELEMENTS[mars.sign] === 'Air' ? 'the battle is a conversation' : 'the battle is interior'}. <span class="whisper">${Almanac.getWhisper('Ares', 6)}</span></p>`);
+      parts.push(`<p>Ares sharpens his spear on the whetstone of <span class="sign-addr">${mars.sign}</span>. Even war pauses to consider its season. <span class="whisper">${Almanac.getWhisper('Ares', 6)}</span></p>`);
     }
 
     if (venus) {
-      parts.push(`<p>Aphrodite holds <span class="sign-addr">${venus.sign}</span>. Her mirror shows what you desire — which is always also what you are afraid to become. ${SIGN_ELEMENTS[venus.sign] === 'Water' ? 'The water signs give Aphrodite her most honest power — here, she does not seduce. She simply reveals.' : SIGN_ELEMENTS[venus.sign] === 'Fire' ? 'Fire Aphrodite burns quick and bright — the desire is real, but may not last.' : SIGN_ELEMENTS[venus.sign] === 'Earth' ? 'Earth Aphrodite wants to keep what she loves. Possession and tenderness are the same feeling here.' : 'Air Aphrodite loves the idea of the thing. That is not lesser. Ideas can last longer than the things themselves.'} <span class="whisper">${Almanac.getWhisper('Aphrodite', 5)}</span></p>`);
+      parts.push(`<p>Aphrodite holds <span class="sign-addr">${venus.sign}</span>. Her mirror shows what you desire — which is always also what you are afraid to become. <span class="whisper">${Almanac.getWhisper('Aphrodite', 5)}</span></p>`);
     }
 
     return parts.join('');
@@ -1192,16 +1186,14 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
       Fixed:    'Fixed dominance — persistence and resistance both operate at full strength today.',
       Mutable:  'Mutable dominance — adaptability is required. Rigidity will be tested and broken.'
     };
-    const phaseEffect = ['Seed energy — intention without form.','Early momentum — direction chosen.','Tension productive — adjust course.','Refinement — near completion.','Maximum illumination — full revelation.','Integration — taking stock.','Release — let the old go.','Dissolution — the cycle nearly complete.'];
     let parts = [];
     parts.push(`<p>Elemental distribution across ${total} bodies: <strong>Fire ${elements.Fire} · Earth ${elements.Earth} · Air ${elements.Air} · Water ${elements.Water}</strong>. Dominant element: <strong>${domEl[0]}</strong> (${domEl[1]}/${total}). ${elAdvice[domEl[0]]}</p>`);
     parts.push(`<p>Modal distribution: <strong>Cardinal ${modalities.Cardinal} · Fixed ${modalities.Fixed} · Mutable ${modalities.Mutable}</strong>. ${modAdvice[domMod[0]]}</p>`);
-    parts.push(`<p>Lunar phase index ${phaseIdx}/7 — ${PHASE_ICONS[phaseIdx]} ${raw?.moonPhase?.name || ''}${raw?.moonPhase?.illumination ? ` at ${raw.moonPhase.illumination}% illumination` : ''}. Phase quality: <em>${phaseEffect[phaseIdx]}</em></p>`);
     parts.push(`<span class="whisper">${Almanac.getWhisper('Athena', 7)}</span>`);
     return parts.join('');
   }
 
-  // ── PLANET GRID ──────────────────────────────────────────────────────────
+  // ── PLANET GRID (preserved) ─────────────────────────────────────────────
   function buildPlanetGrid(planets) {
     const primaryBodies = ['mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
     document.getElementById('planetGrid').innerHTML = primaryBodies
@@ -1251,7 +1243,7 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     }
   }
 
-  // ── HOUSES ───────────────────────────────────────────────────────────────
+  // ── HOUSES (preserved) ──────────────────────────────────────────────────
   function buildHouses(planets) {
     document.getElementById('housesList').innerHTML = SIGNS.map(sign => {
       const gods    = godsInSign(planets, sign);
@@ -1268,11 +1260,12 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     }).join('');
   }
 
-  // ── SKY DIAGRAM ──────────────────────────────────────────────────────────
+  // ── SKY DIAGRAM (preserved) ─────────────────────────────────────────────
   function buildDiagram(planets, raw) {
     const isSolar   = isSolarPeriod(raw);
-    const phaseIdx  = phaseIndex(raw?.moonPhase?.phase);
-    const phaseName = raw?.moonPhase?.name || '';
+    const moonPhase = raw?.moonPhase || {};
+    const phaseIdx  = phaseIndex(moonPhase.phase);
+    const phaseName = moonPhase.name || '';
     const solar     = raw?.solar || {};
 
     document.getElementById('zodiacRing').innerHTML = SIGNS.map((sign, i) => {
@@ -1311,25 +1304,27 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     });
   }
 
-  // ── PERIOD BANNER ────────────────────────────────────────────────────────
+  // ── PERIOD BANNER (preserved) ───────────────────────────────────────────
   function buildPeriodBanner(raw) {
     const isSolar = isSolarPeriod(raw);
     const banner  = document.getElementById('periodBanner');
     const solar   = raw?.solar || {};
+    const moonPhase = raw?.moonPhase || {};
+    const phaseIdx  = phaseIndex(moonPhase.phase);
     banner.className = `period-banner ${isSolar ? 'solar' : 'lunar'}`;
     banner.innerHTML  = isSolar
       ? `☀ Solar Period · Apollo Ascendant · Sun sets ${solar.sunset ? fmtTime(solar.sunset) : '—'}`
-      : `☽ Lunar Period · ${phaseIndex(raw?.moonPhase?.phase) >= 5 ? 'Melinoe' : 'Artemis'} Ascendant · Sun rises ${solar.sunrise ? fmtTime(solar.sunrise) : '—'}`;
+      : `☽ Lunar Period · ${moonPhase.deity || (phaseIdx >= 5 ? 'Melinoe' : 'Artemis')} Ascendant · Sun rises ${solar.sunrise ? fmtTime(solar.sunrise) : '—'}`;
   }
 
-  // ── VOICE SWITCHER ───────────────────────────────────────────────────────
+  // ── VOICE SWITCHER (preserved) ──────────────────────────────────────────
   function buildVoiceSwitcher() {
     document.getElementById('voiceSwitcher').innerHTML = VOICES.map((v, i) =>
       `<button class="voice-btn ${i === activeVoice ? 'active' : ''}" onclick="Grimoire.setVoice(${i})">${v.name}</button>`
     ).join('');
   }
 
-  // ── SIGN SELECTOR ────────────────────────────────────────────────────────
+  // ── SIGN SELECTOR (preserved) ───────────────────────────────────────────
   function initSignSelector() {
     const sel = document.getElementById('birthSign');
     sel.innerHTML = '<option value="">— Select your sign —</option>' +
@@ -1349,7 +1344,7 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     };
   }
 
-  // ── PUBLIC ───────────────────────────────────────────────────────────────
+  // ── PUBLIC ──────────────────────────────────────────────────────────────
   async function init() {
     initSignSelector();
     buildVoiceSwitcher();
@@ -1360,13 +1355,21 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
     try {
       const raw = await Observe.getSkyState();
       skyData   = raw;
-      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US',{
-        weekday:'long', year:'numeric', month:'long', day:'numeric'
-      });
+      
+      // 🜏 Location indicator
+      const locInfo = raw.location.located 
+        ? 'Sky anchored to your location' 
+        : 'Sky anchored to Bucksport, Maine — the Witch\'s Foot';
+      
+      document.getElementById('currentDate').textContent = 
+        new Date().toLocaleDateString('en-US', {
+          weekday:'long', year:'numeric', month:'long', day:'numeric'
+        }) + ` · ${locInfo}`;
+      
       buildPeriodBanner(raw);
       buildDiagram(raw.planets, raw);
       buildLuminaries(raw.planets, raw);
-      buildDawnDusk(raw.planets, raw);
+      buildDawnDusk(raw.planets, raw);  // 🜏 Now uses solar moments
       renderNarrative();
       buildPlanetGrid(raw.planets);
       buildHouses(raw.planets);
@@ -1390,7 +1393,7 @@ function getDuskPromise(sunSign, moonSign, moonDeity, isWaning, moonDeg) {
   return { init, refresh, setVoice };
 })();
 
-// ── CARD MOSAIC ──────────────────────────────────────────────────────────
+// ── CARD MOSAIC (preserved) ─────────────────────────────────────────────
 const MOSAIC_CARDS = [
   {image:"data/images/major/sun.png"},{image:"data/images/major/moon.png"},
   {image:"data/images/major/wheel_of_fortune.png"},{image:"data/images/major/temperance.png"},
@@ -1420,7 +1423,6 @@ function buildMosaic() {
 }
 buildMosaic();
 
-// Slow drift — one card changes every 10s, fades gracefully
 setInterval(() => {
   const imgs = document.querySelectorAll('#cardMosaic img');
   if (!imgs.length) return;
@@ -1431,8 +1433,7 @@ setInterval(() => {
 }, 10000);
 
 document.addEventListener('DOMContentLoaded', () => Grimoire.init());
-</script>
-
+  </script>
 <script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
