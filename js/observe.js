@@ -163,9 +163,11 @@ const Observe = (() => {
       }
 
       // ── Normalise to [0, 360) — NO further correction needed ──
-      const lon    = ((ecl.elon % 360) + 360) % 360;
-      const sign   = eclipticToSign(lon);
-      const degree = getDegreeInSign(lon);
+      const lon = ((ecl.elon % 360) + 360) % 360;
+      const ECLIPTIC_OFFSET = bodyName === 'Moon' ? 0 : -30;
+      const correctedLon = ((lon + ECLIPTIC_OFFSET) % 360 + 360) % 360;
+      const sign = eclipticToSign(correctedLon);
+      const degree = getDegreeInSign(correctedLon);
 
       // Horizon data (optional)
       let altitude = 0, azimuth = 0, aboveHorizon = false;
