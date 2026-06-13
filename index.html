@@ -147,7 +147,144 @@ nav{
 .suit-triad{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
 .suit-domain{font-size:13px;font-style:italic;color:var(--text-mid);margin-top:10px;line-height:1.5}
 
-/* ✦ New Social Hub Section — integrated with existing design language ✦ */
+/* ✦ BUILDER'S DESK — Three Commerce Cards ✦ */
+.builders-desk {
+  position: relative;
+  z-index: 2;
+  padding: 80px 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(212,168,64,0.06);
+  border-bottom: 1px solid rgba(212,168,64,0.06);
+  text-align: center;
+}
+
+.desk-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.ornament-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.ornament-diamond {
+  color: var(--gold);
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.desk-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(18px, 3vw, 24px);
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.desk-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 3rem;
+}
+
+.desk-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.desk-card {
+  background: rgba(24,24,56,0.6);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.8rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.desk-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 20px rgba(212,168,64,0.12);
+  background: rgba(30,30,70,0.7);
+}
+
+.desk-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.desk-offering {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.desk-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.desk-desc em {
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+.desk-cta {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 0.25rem;
+  transition: letter-spacing 0.2s;
+}
+
+.desk-card:hover .desk-cta {
+  letter-spacing: 0.25em;
+}
+
+.desk-footer {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #5a4e3a;
+  border-top: 1px solid rgba(212,168,64,0.1);
+  padding-top: 1.8rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .desk-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .builders-desk {
+    padding: 3rem 1rem;
+  }
+}
+
+/* ✦ Social Section (existing, preserved) ✦ */
 .social-section {
   position: relative;
   z-index: 2;
@@ -184,7 +321,7 @@ nav{
 
 .social-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 16px;
   margin-top: 8px;
 }
@@ -193,7 +330,7 @@ nav{
   background: rgba(24,24,56,0.55);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 26px 18px;
+  padding: 22px 14px;
   text-align: center;
   transition: all 0.3s;
   cursor: pointer;
@@ -212,22 +349,22 @@ nav{
 }
 
 .social-icon {
-  font-size: 36px;
-  margin-bottom: 6px;
+  font-size: 32px;
+  margin-bottom: 4px;
   filter: drop-shadow(0 0 10px rgba(212,168,64,0.25));
 }
 
 .social-platform {
   font-family: 'Cinzel Decorative', serif;
-  font-size: 15px;
+  font-size: 13px;
   color: var(--gold-light);
   letter-spacing: 1px;
 }
 
 .social-handle {
   font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: 8px;
+  letter-spacing: 1.5px;
   color: var(--text-dim);
   text-transform: uppercase;
   opacity: 0.8;
@@ -338,6 +475,44 @@ footer{text-align:center;padding:60px 24px;position:relative;z-index:2;border-to
     <div class="suit-card"><div class="suit-symbol">🜃</div><div class="suit-name">Earth</div><div class="suit-triad">Demeter · Hera · Artemis</div><div class="suit-domain">Harvest, covenant, the hunt — the ground that sustains and binds</div></div>
     <div class="suit-card"><div class="suit-symbol">🌊</div><div class="suit-name">Water</div><div class="suit-triad">Poseidon · Dionysus · Aphrodite</div><div class="suit-domain">The sea, ecstasy, desire — the depths that move and drown</div></div>
     <div class="suit-card"><div class="suit-symbol">💨</div><div class="suit-name">Air</div><div class="suit-triad">Zeus · Athena · Hermes</div><div class="suit-domain">Authority, wisdom, messages — the mind that commands and connects</div></div>
+  </div>
+</section>
+
+<!-- ✦ THE BUILDER'S DESK — Three Commerce Cards ✦ -->
+<section class="builders-desk">
+  <div class="desk-ornament">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond">✦</div>
+    <div class="ornament-line"></div>
+  </div>
+  <h2 class="desk-title">The Builder's Desk</h2>
+  <div class="desk-tagline">I can divine your website.</div>
+  
+  <div class="desk-grid">
+    <a href="https://www.amazon.com/dp/B0H538BXYW" target="_blank" rel="noopener noreferrer" class="desk-card">
+      <div class="desk-icon">📖</div>
+      <div class="desk-offering">Read</div>
+      <div class="desk-desc">Volume I: <em>The Major Arcana</em><br>$1.61 · Kindle Unlimited</div>
+      <div class="desk-cta">Begin the descent →</div>
+    </a>
+    
+    <a href="https://ko-fi.com/ealdforn" target="_blank" rel="noopener noreferrer" class="desk-card">
+      <div class="desk-icon">☕</div>
+      <div class="desk-offering">Support</div>
+      <div class="desk-desc">Keep the fire burning<br>One-time tip or monthly membership</div>
+      <div class="desk-cta">Feed the flame →</div>
+    </a>
+    
+    <a href="https://www.fiverr.com/kairos_coding" target="_blank" rel="noopener noreferrer" class="desk-card">
+      <div class="desk-icon">⚒️</div>
+      <div class="desk-offering">Commission</div>
+      <div class="desk-desc">Your deity awaits<br>Custom website · Mythic branding</div>
+      <div class="desk-cta">Build your own →</div>
+    </a>
+  </div>
+  
+  <div class="desk-footer">
+    The same hands that built this temple can build yours.
   </div>
 </section>
 
