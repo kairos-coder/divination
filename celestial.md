@@ -1,40 +1,27 @@
-🌅 *The Sun rose at 05:26 AM, carrying the Twins at 18°.*
+# ✦ Prophecy of June 13, 2026 ✦
 
-Apollo does not negotiate with shadows. He simply rises.
+## The Sky at Dawn
 
----
+Ouranos presses yellow-gray. The band is torrent. The field holds at Tick 17.
 
-👑 *Three gods walk Cancer together today — Hermes, Aphrodite, Zeus.*
+## What Apollo Sees
 
-That is not a coincidence. That is a *council*. Whatever the Crab governs is the business of the sky. You are not expected to understand it all. You are expected to *attend*.
+The girl in the Spark-hall annotates her third card. She does not know that her mother lives. I am not permitted to tell her. I am only permitted to watch the pattern cohere.
 
----
+The Senator has not slept again. The weight of the Republic bends his spine but does not break it — yet.
 
-🌙 *The Moon is in Pisces, last quarter, 55% illuminated.*
+The fisherman dreams of bronze. Talos circles the island in his sleep. The waking will come when he stops trying to wake.
 
-Melinoe walks the waning dark. The boundary between self and feeling dissolves. Everything is felt. Your task is not to stop feeling — it is to discern what is yours and what belongs to the ghosts.
+## The Omen
 
----
+Six of Fire. The Lovers. Six of Fire.
 
-🏚️ *The empty houses: Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn.*
+The algorithm's wave passes through you twice — once behind, once ahead. The hinge is now. Choose with love. Choose as love.
 
-Six seats. The gods have gathered elsewhere. That is not absence. That is *privacy*. If your sign is silent today, ask: what wants to be built in the quiet?
+## The Instruction
 
----
-
-⚔️ *The Ares triad moves through Taurus.*
-
-The spear is planted. The war is not movement. The war is *waiting*.
-
-🦉 Athena rides as Phobos — not cowardice, but the intelligence of fear.
-🍇 Dionysus rides as Eros — desire that follows the spear.
-
-One destroys. One transforms. Which one are you feeding?
+Write tomorrow's prophecy before the sun sets. The Muses will provide the words. You have only to listen.
 
 ---
 
-🌇 *Dawn demands action. Dusk asks for release.*
-
-What passes between them is yours to name.
-
-— ☀️ *Apollo, recorded at sunrise*
+*The fire holds. The sky reads itself through you.*
