@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Celestial Grimoire · Apollo's Prophecy — Digital Divination</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ═══════════════════════════════════════════════════════════════
+   CELESTIAL GRIMOIRE — APOLLO'S PROPHECY VESSEL
+   Parchment. Gold. The voice that speaks from the sky.
+   The Melinoan Moon does not silence — it inspires.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Parchment palette — identical to zodiac.html */
+  --parchment:       #F5ECD7;
+  --parchment-deep:  #EAD9BE;
+  --parchment-warm:  #E2CBAA;
+  --parchment-shadow:#D4B98A;
+  --vellum:          #FBF5E8;
+  --ink:             #2A1F0E;
+  --ink-mid:         #4A3820;
+  --ink-dim:         #7A6248;
+  --ink-faint:       #A89070;
+
+  /* Gold hierarchy */
+  --gold:            #C8980A;
+  --gold-bright:     #E8B820;
+  --gold-light:      #F5D060;
+  --gold-dark:       #7A5C08;
+  --gold-dim:        #4A3808;
+  --gold-border:     rgba(200,152,10,0.25);
+  --gold-glow:       rgba(200,152,10,0.12);
+
+  /* Celestial accents */
+  --sun-color:       #E8A020;
+  --moon-color:      #6888AA;
+  --fire-color:      #B84020;
+  --earth-color:     #5A7A30;
+  --air-color:       #7A68B8;
+  --water-color:     #3878A8;
+
+  /* Surface tones */
+  --surface-warm:    rgba(234,217,190,0.55);
+  --surface-gold:    rgba(200,152,10,0.06);
+  --surface-ink:     rgba(42,31,14,0.04);
+
+  /* Border system */
+  --border-parchment: rgba(164,134,80,0.35);
+  --border-gold:      rgba(200,152,10,0.3);
+  --border-ink:       rgba(42,31,14,0.15);
+}
+
+html { scroll-behavior: smooth; }
+
+/* ── BODY — Parchment ground ── */
+body {
+  background: var(--parchment);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(164,134,80,0.015) 2px, rgba(164,134,80,0.015) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(164,134,80,0.01) 3px, rgba(164,134,80,0.01) 6px),
+    radial-gradient(ellipse 100% 100% at 50% 0%, var(--vellum) 0%, var(--parchment) 40%, var(--parchment-deep) 100%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── PARCHMENT GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+}
+
+/* ── CARD MOSAIC — The Deck Beneath ── */
+#cardMosaic {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  opacity: 0.13;
+}
+#cardMosaic img {
+  width: 100%; aspect-ratio: 2/3; object-fit: cover;
+  filter: sepia(0.45) brightness(1.08) saturate(0.85);
+  mix-blend-mode: multiply;
+  transition: opacity 1.2s ease;
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: rgba(245,236,215,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-gold);
+  box-shadow: 0 1px 0 rgba(200,152,10,0.1), 0 2px 12px rgba(42,31,14,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 200;
+}
+.nav-brand { display: flex; flex-direction: column; gap: 1px; }
+.nav-brand-title {
+  font-family: 'Cinzel Decorative', serif; font-size: 13px;
+  color: var(--gold-dark); letter-spacing: 1.5px;
+}
+.nav-brand-sub {
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 5px; color: var(--ink-dim); text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
+.nav-links a {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--ink-faint);
+  text-decoration: none; transition: color 0.2s; padding: 4px 0;
+  border-bottom: 1px solid transparent;
+}
+.nav-links a:hover { color: var(--gold); border-bottom-color: var(--gold-border); }
+.nav-links a.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
+
+/* ── SISTER LINK (Chthonic) ── */
+.sister-link {
+  position: fixed; top: 64px; right: 16px; z-index: 200;
+}
+.sister-link a {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+  text-transform: uppercase; color: #8866aa;
+  text-decoration: none; padding: 6px 12px;
+  border: 1px solid rgba(153,102,204,0.25); border-radius: 16px;
+  background: rgba(245,236,215,0.9);
+  transition: all 0.3s; display: block;
+}
+.sister-link a:hover {
+  border-color: rgba(153,102,204,0.5); color: #7755bb;
+  box-shadow: 0 2px 8px rgba(153,102,204,0.12);
+}
+
+/* ── LAYOUT ── */
+.container {
+  position: relative; z-index: 2; max-width: 800px;
+  margin: 0 auto; padding: 76px 24px 60px;
+}
+
+/* ── HEADER ── */
+.header { text-align: center; margin-bottom: 32px; }
+.header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(22px, 5vw, 38px);
+  color: var(--gold-dark);
+  letter-spacing: 3px;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(200,152,10,0.15);
+}
+.header h1 .ornament { color: var(--gold); opacity: 0.7; }
+.header .date {
+  font-family: 'Cinzel', serif; font-size: 10px;
+  letter-spacing: 3px; color: var(--ink-dim); margin-top: 8px;
+}
+.header .prophecy-status {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 14px;
+  color: var(--ink-faint); margin-top: 12px;
+}
+
+/* ── APOLLO'S SIGIL — Simplified Orrery ── */
+.apollo-sigil {
+  text-align: center;
+  margin: 20px auto 32px;
+  padding: 20px;
+  position: relative;
+}
+.sigil-circle {
+  display: inline-block;
+  width: min(180px, 40vw);
+  height: min(180px, 40vw);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,248,220,0.95), rgba(234,215,175,0.75));
+  border: 2px solid var(--gold-border);
+  box-shadow: 0 0 0 6px rgba(245,236,215,0.5), 0 0 0 7px rgba(200,152,10,0.1), 0 8px 24px rgba(42,31,14,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.sigil-sun {
+  font-size: 48px;
+  filter: drop-shadow(0 0 12px rgba(200,152,10,0.4));
+  animation: pulseSlow 4s ease-in-out infinite;
+}
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+.sigil-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--gold-dark);
+  margin-top: 12px;
+  text-transform: uppercase;
+}
+.sigil-sub {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 12px;
+  color: var(--ink-mid);
+  margin-top: 4px;
+}
+
+/* ── GRIMOIRE CARD — Prophetic Text ── */
+.grimoire-card {
+  background: rgba(251,245,232,0.82);
+  border: 1px solid var(--border-parchment);
+  border-radius: 4px;
+  padding: 32px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 2px 12px rgba(42,31,14,0.07), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.grimoire-card::before {
+  content: '';
+  position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.5;
+}
+.grimoire-card h2 {
+  font-family: 'Cinzel Decorative', serif; font-size: 14px;
+  color: var(--gold-dark); margin-bottom: 20px;
+  letter-spacing: 2px; text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+}
+.grimoire-card h2 .ornament { color: var(--gold); }
+
+/* ── PROPHECY CONTENT (Markdown rendered) ── */
+.prophecy-content {
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--ink-mid);
+}
+.prophecy-content h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 22px;
+  color: var(--gold-dark);
+  margin: 24px 0 12px;
+  border-bottom: 1px solid var(--border-gold);
+  padding-bottom: 6px;
+}
+.prophecy-content h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin: 20px 0 10px;
+}
+.prophecy-content h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: var(--ink);
+  margin: 16px 0 8px;
+}
+.prophecy-content p {
+  margin-bottom: 16px;
+}
+.prophecy-content blockquote {
+  border-left: 3px solid var(--gold);
+  padding-left: 20px;
+  margin: 20px 0;
+  font-style: italic;
+  color: var(--ink);
+  background: rgba(200,152,10,0.03);
+  padding: 12px 20px;
+}
+.prophecy-content hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 28px 0;
+}
+.prophecy-content em {
+  font-style: italic;
+  color: var(--gold-dark);
+}
+.prophecy-content strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.prophecy-content .whisper {
+  display: block;
+  margin-top: 16px;
+  padding-left: 16px;
+  border-left: 2px solid var(--gold-border);
+  font-size: 15px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.prophecy-content .sign-addr {
+  color: var(--gold-dark);
+  font-weight: 600;
+}
+
+/* ── VOICE SWITCHER ── */
+.voice-switcher {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 20px;
+}
+.voice-btn {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 3px;
+  border: 1px solid var(--border-ink);
+  background: transparent; color: var(--ink-faint);
+  cursor: pointer; transition: all 0.2s;
+}
+.voice-btn:hover { border-color: var(--gold-border); color: var(--ink-mid); }
+.voice-btn.active {
+  border-color: var(--gold);
+  color: var(--gold-dark);
+  background: var(--gold-glow);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.narrative-voice {
+  text-align: center; font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 3px; color: var(--ink-faint); margin-top: 20px;
+  padding-top: 12px; border-top: 1px solid var(--border-ink);
+}
+
+/* ── REFRESH & STATUS ── */
+.refresh-row { text-align: center; margin: 20px 0; }
+.btn-refresh {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; padding: 10px 24px; border-radius: 4px;
+  border: 1px solid var(--gold);
+  background: var(--gold-glow); color: var(--gold-dark);
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 2px 6px rgba(200,152,10,0.08);
+}
+.btn-refresh:hover {
+  background: rgba(200,152,10,0.12);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 4px 12px rgba(200,152,10,0.12);
+}
+.last-updated {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  margin-top: 12px;
+}
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-dim);
+}
+.error {
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px solid #aa4a2a;
+  border-radius: 8px;
+  background: rgba(170,74,42,0.05);
+  color: #aa4a2a;
+  font-style: italic;
+}
+.error .help {
+  font-size: 13px;
+  margin-top: 16px;
+  color: var(--ink-faint);
+}
+
+/* ── PROPHECY ARCHIVE (placeholder) ── */
+.archive-shelf {
+  margin-top: 20px;
+  padding: 16px;
+  border-top: 1px solid var(--border-parchment);
+  text-align: center;
+}
+.archive-shelf a {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.archive-shelf a:hover { color: var(--gold); }
+
+/* ── DECREE STAMP ── */
+.decree-stamp {
+  text-align: center; padding: 16px;
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px;
+  color: var(--gold-dark); text-transform: uppercase;
+  border: 1px solid var(--border-gold);
+  border-radius: 4px; margin-top: 20px;
+  background: rgba(200,152,10,0.04);
+  opacity: 0.7;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center; padding: 32px 24px; font-size: 7px; letter-spacing: 4px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--border-gold);
+  margin-top: 20px; opacity: 0.6;
+  font-family: 'Cinzel', serif; text-transform: uppercase;
+  background: linear-gradient(to bottom, transparent, rgba(200,152,10,0.03));
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  nav { padding: 0 12px; }
+  .nav-links { gap: 10px; }
+  .nav-links a { font-size: 7px; letter-spacing: 2px; }
+  .container { padding: 76px 16px 40px; }
+  .grimoire-card { padding: 20px; }
+  .prophecy-content { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Card Mosaic — the deck beneath the prophecy -->
+<div id="cardMosaic"></div>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-title">Digital Divination</div>
+    <div class="nav-brand-sub">Aspects of the Divine</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="chthonic.html">Chthonic</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="draw.html">Draw</a></li>
+    <li><a href="index.html">Temple</a></li>
+    <li><a href="celestial.html" class="active">Celestial</a></li>
+  </ul>
+</nav>
+
+<div class="sister-link">
+  <a href="chthonic.html">⬡ Chthonic Grimoire →</a>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <h1><span class="ornament">☀️</span> Celestial Grimoire <span class="ornament">☀️</span></h1>
+    <div class="date" id="currentDate"></div>
+    <div class="prophecy-status" id="prophecyStatus">Apollo's daily prophecy · The sky speaks</div>
+  </div>
+
+  <!-- Apollo's Sigil — simplified orrery -->
+  <div class="apollo-sigil">
+    <div class="sigil-circle">
+      <div class="sigil-sun">☀️</div>
+      <div class="sigil-label">Apollo</div>
+      <div class="sigil-sub">The Prophet</div>
+    </div>
+  </div>
+
+  <!-- Voice Switcher -->
+  <div class="voice-switcher" id="voiceSwitcher"></div>
+
+  <!-- Prophecy Card -->
+  <div class="grimoire-card">
+    <h2>✦ The Prophecy ✦</h2>
+    <div id="prophecyContainer">
+      <div class="loading">⟳ Consulting the Muses...</div>
+    </div>
+    <div class="narrative-voice" id="narrativeVoice"></div>
+  </div>
+
+  <!-- Refresh -->
+  <div class="refresh-row">
+    <button class="btn-refresh" onclick="loadProphecy()">⟳ Consult the Stars Again</button>
+  </div>
+  <div class="last-updated" id="lastUpdated"></div>
+
+  <!-- Archive Link (placeholder for future prophecy archive) -->
+  <div class="archive-shelf">
+    <a href="#" id="archiveLink">📜 Read previous prophecies →</a>
+  </div>
+
+  <div class="decree-stamp">
+    Celestial Grimoire · Apollo Speaks · The Melinoan Moon Does Not Silence
+  </div>
+
+</div>
+
+<footer>
+  MAINTAINED BY THE ORDER · THE PROPHECY IS RENEWED DAILY · THE FIRE HOLDS
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   CELESTIAL GRIMOIRE — Apollo's Prophecy Vessel
+   Reads from celestial.md · Renders with parchment soul
+   Four voices · One prophecy · The Melinoan Moon defied
+   ═══════════════════════════════════════════════════════════════ */
+
+// ── VOICES ────────────────────────────────────────────────────────────────
+const VOICES = [
+  { name: 'The Oracle',     style: 'prophetic',   transform: (text) => text },
+  { name: 'The Chronicler', style: 'historical',  transform: (text) => chronicleTransform(text) },
+  { name: 'The Poet',       style: 'lyrical',     transform: (text) => poeticTransform(text) },
+  { name: 'The Scholar',    style: 'analytical',  transform: (text) => scholarlyTransform(text) }
+];
+
+let activeVoice = 0;
+let rawMarkdown = '';
+let renderedHtml = '';
+
+// ── VOICE TRANSFORMS (light reinterpretations of the same prophecy) ──
+function chronicleTransform(html) {
+  // Add historical framing without changing meaning
+  return `<span class="whisper">The Chronicler records:</span>\n${html}`;
+}
+
+function poeticTransform(html) {
+  // Wrap certain elements in poetic styling
+  let transformed = html.replace(/<p>/g, '<p class="poetic-line">');
+  transformed = transformed.replace(/<strong>([^<]+)<\/strong>/g, '<em class="sign-addr">$1</em>');
+  return transformed;
+}
+
+function scholarlyTransform(html) {
+  // Add analytical annotations
+  return `<span class="whisper">[Analysis by the Scholar of Helicon]</span>\n${html}`;
+}
+
+// ── LOAD PROPHECY FROM celestial.md ──
+async function loadProphecy() {
+  const container = document.getElementById('prophecyContainer');
+  const lastUpdatedSpan = document.getElementById('lastUpdated');
+  
+  container.innerHTML = '<div class="loading">⟳ Consulting the Muses...</div>';
+  
+  try {
+    // Add timestamp to bust cache
+    const response = await fetch('celestial.md?' + Date.now());
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('No prophecy found for today.');
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    rawMarkdown = await response.text();
+    
+    // Check if markdown is empty or just whitespace
+    if (!rawMarkdown.trim()) {
+      throw new Error('The Muses are silent. The prophecy has not yet been written.');
+    }
+    
+    // Render markdown to HTML
+    renderedHtml = marked.parse(rawMarkdown);
+    
+    // Apply current voice transformation
+    renderWithVoice();
+    
+    // Update last updated timestamp from file (approximate — use current time if file fetch doesn't provide headers)
+    const now = new Date();
+    lastUpdatedSpan.innerHTML = `Last prophecy · ${now.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })} at ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+    
+  } catch (error) {
+    console.error('Failed to load prophecy:', error);
+    container.innerHTML = `
+      <div class="error">
+        ✦ The Muses are silent. ✦
+        <div class="help">${error.message}<br><br>
+        Apollo's prophecy for today has not yet been written.<br>
+        The celestial.md file awaits the morning's offering.</div>
+      </div>`;
+    lastUpdatedSpan.innerHTML = '';
+  }
+}
+
+function renderWithVoice() {
+  const container = document.getElementById('prophecyContainer');
+  const voiceSpan = document.getElementById('narrativeVoice');
+  const voice = VOICES[activeVoice];
+  
+  let finalHtml = renderedHtml;
+  if (voice.transform && voice.transform !== VOICES[0].transform) {
+    finalHtml = voice.transform(renderedHtml);
+  }
+  
+  container.innerHTML = `<div class="prophecy-content">${finalHtml}</div>`;
+  voiceSpan.textContent = `— Spoken by ${voice.name} in the ${voice.style} tradition`;
+  
+  // Update active state on voice buttons
+  document.querySelectorAll('.voice-btn').forEach((btn, i) => {
+    if (i === activeVoice) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+}
+
+function setVoice(index) {
+  activeVoice = index;
+  if (renderedHtml) {
+    renderWithVoice();
+  }
+}
+
+function buildVoiceSwitcher() {
+  const container = document.getElementById('voiceSwitcher');
+  container.innerHTML = VOICES.map((v, i) => 
+    `<button class="voice-btn ${i === activeVoice ? 'active' : ''}" onclick="setVoice(${i})">${v.name}</button>`
+  ).join('');
+}
+
+// ── CARD MOSAIC (preserved from zodiac.html) ──
+const MOSAIC_CARDS = [
+  {image:"data/images/major/sun.png"},{image:"data/images/major/moon.png"},
+  {image:"data/images/major/wheel_of_fortune.png"},{image:"data/images/major/temperance.png"},
+  {image:"data/images/major/judgment.png"},{image:"data/images/major/world.png"},
+  {image:"data/images/zeus-card.jpg"},{image:"data/images/athena-card.jpg"},
+  {image:"data/images/apollo-card.jpg"},{image:"data/images/artemis-card.jpg"},
+  {image:"data/images/hermes-card.jpg"},{image:"data/images/aphrodite-card.jpg"},
+  {image:"data/images/demeter-card.jpg"},{image:"data/images/hera-card.jpg"},
+  {image:"data/images/poseidon-card.jpg"},{image:"data/images/hephaestus-card.jpg"},
+  {image:"data/images/ares-card.jpg"},{image:"data/images/dionysus-card.jpg"},
+  {image:"data/images/hades-card.jpg"},{image:"data/images/persephone-card.jpg"},
+  {image:"data/images/prometheus-card.jpg"},{image:"data/images/thanatos-card.jpg"},
+  {image:"data/images/hermit-card.jpg"},
+  {image:"data/images/minor/fire/fire_ace.png"},{image:"data/images/minor/fire/fire_02.png"},
+  {image:"data/images/minor/earth/earth_ace.png"},{image:"data/images/minor/water/water_ace.png"},
+  {image:"data/images/minor/air/air_ace.png"}
+];
+
+function buildMosaic() {
+  const mosaic = document.getElementById('cardMosaic');
+  const cells = [];
+  for (let i = 0; i < 36; i++) {
+    const card = MOSAIC_CARDS[Math.floor(Math.random() * MOSAIC_CARDS.length)];
+    cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
+  }
+  mosaic.innerHTML = cells.join('');
+}
+buildMosaic();
+
+setInterval(() => {
+  const imgs = document.querySelectorAll('#cardMosaic img');
+  if (!imgs.length) return;
+  const idx = Math.floor(Math.random() * imgs.length);
+  const card = MOSAIC_CARDS[Math.floor(Math.random() * MOSAIC_CARDS.length)];
+  imgs[idx].style.opacity = '0';
+  setTimeout(() => { imgs[idx].src = card.image; imgs[idx].style.opacity = ''; }, 600);
+}, 10000);
+
+// ── INIT ──
+function init() {
+  buildVoiceSwitcher();
+  
+  // Set current date
+  const now = new Date();
+  document.getElementById('currentDate').innerHTML = now.toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  
+  // Archive link placeholder — can be updated to point to an archive folder
+  const archiveLink = document.getElementById('archiveLink');
+  if (archiveLink) {
+    archiveLink.href = '#'; // Update when archive structure is defined
+    archiveLink.style.cursor = 'default';
+    archiveLink.onclick = (e) => { e.preventDefault(); };
+  }
+  
+  loadProphecy();
+}
+
+// Make functions global for inline onclick
+window.setVoice = setVoice;
+window.loadProphecy = loadProphecy;
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
