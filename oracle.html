@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Oracle · Personal Zodiac Draw — Digital Divination</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --gold:#d4a840;--gold-light:#f0d878;--gold-dark:#8a6518;--gold-dim:#4a3510;
+  --void:#060610;--deep:#0c0c1e;--surface:#181838;--surface2:#202048;
+  --border:#2a2a4a;--border-gold:rgba(212,168,64,0.2);
+  --text:#f0ead8;--text-mid:#d0c0a0;--text-dim:#988870;
+  --fire:#cc7755;--earth:#8ab87a;--air:#aa88cc;--water:#66aacc;
+  --oracle-color:#d4a840;--chronicler-color:#8ab87a;--poet-color:#cc77aa;--scholar-color:#66aacc;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 5%,#120828 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%,#081420 0%,transparent 55%),
+    radial-gradient(ellipse 30% 60% at 80% 20%,#0a0820 0%,transparent 50%);
+  font-family:'Cormorant Garamond',Georgia,serif;
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── CARD MOSAIC ── */
+#cardMosaic{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  display:grid;grid-template-columns:repeat(6,1fr);
+  opacity:0.18;
+}
+#cardMosaic img{
+  width:100%;aspect-ratio:2/3;object-fit:cover;
+  filter:sepia(0.15) brightness(0.9);
+  transition:opacity 0.6s;
+}
+
+.content-layer{position:relative;z-index:2}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;height:56px;
+  background:rgba(8,8,20,0.88);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-gold);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;z-index:200;
+}
+.nav-brand{display:flex;flex-direction:column;gap:1px}
+.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--gold);letter-spacing:1.5px}
+.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;color:var(--gold-dark);text-transform:uppercase}
+.nav-links{display:flex;gap:16px;list-style:none;flex-wrap:wrap}
+.nav-links a{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--text-dim);
+  text-decoration:none;transition:color 0.2s;padding:4px 0;
+  border-bottom:1px solid transparent;
+}
+.nav-links a:hover{color:var(--gold-light);border-bottom-color:var(--border-gold)}
+.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── MAIN CONTAINER ── */
+.container{
+  position:relative;z-index:2;
+  max-width:720px;margin:0 auto;
+  padding:80px 16px 60px;
+}
+
+/* ── HEADER ── */
+.header{text-align:center;margin-bottom:32px}
+.header h1{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,5vw,40px);font-weight:900;
+  color:var(--gold-light);
+  text-shadow:0 0 100px rgba(212,168,64,0.25),0 4px 16px rgba(0,0,0,0.9);
+  letter-spacing:3px;
+}
+.header .subtitle{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:16px;
+  color:var(--text-dim);margin-top:8px;
+}
+
+/* ── SIGN SELECTOR ── */
+.sign-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;margin-bottom:20px;
+}
+.sign-btn{
+  background:rgba(24,24,56,0.6);border:1px solid var(--border);
+  border-radius:10px;padding:14px 6px;text-align:center;
+  cursor:pointer;transition:all 0.25s;
+  font-family:'Cinzel',serif;color:var(--text-dim);
+}
+.sign-btn:hover{
+  border-color:var(--border-gold);
+  background:rgba(30,30,70,0.7);
+  transform:translateY(-2px);
+}
+.sign-btn.selected{
+  border-color:var(--gold);
+  background:rgba(212,168,64,0.12);
+  box-shadow:0 0 20px rgba(212,168,64,0.15);
+  color:var(--gold-light);
+}
+.sign-btn .sign-emoji{font-size:24px;display:block;margin-bottom:4px}
+.sign-btn .sign-name{font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.sign-btn .sign-element{font-size:7px;opacity:0.5;margin-top:2px}
+
+/* ── REGISTER TOGGLE ── */
+.register-toggle{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:24px;
+}
+.register-btn{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;padding:10px 20px;border-radius:8px;
+  border:1px solid var(--border);
+  background:rgba(24,24,56,0.5);color:var(--text-dim);
+  cursor:pointer;transition:all 0.25s;
+}
+.register-btn:hover{
+  border-color:var(--border-gold);
+  background:rgba(30,30,70,0.6);
+}
+.register-btn.selected{
+  border-color:var(--gold);
+  background:rgba(212,168,64,0.1);
+  color:var(--gold-light);
+  box-shadow:0 0 16px rgba(212,168,64,0.1);
+}
+.register-btn.oracle.selected{border-color:var(--oracle-color);box-shadow:0 0 16px rgba(212,168,64,0.15)}
+.register-btn.chronicler.selected{border-color:var(--chronicler-color);box-shadow:0 0 16px rgba(138,184,122,0.15)}
+.register-btn.poet.selected{border-color:var(--poet-color);box-shadow:0 0 16px rgba(204,119,170,0.15)}
+.register-btn.scholar.selected{border-color:var(--scholar-color);box-shadow:0 0 16px rgba(102,170,204,0.15)}
+
+/* ── DRAW BUTTON ── */
+.draw-section{text-align:center;margin-bottom:32px}
+.btn-draw{
+  font-family:'Cinzel',serif;font-size:15px;letter-spacing:5px;
+  text-transform:uppercase;color:#0a0a0a;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  border:none;padding:18px 56px;border-radius:10px;
+  cursor:pointer;transition:all 0.3s;
+  box-shadow:0 0 50px rgba(212,168,64,0.25);
+}
+.btn-draw:hover{
+  box-shadow:0 0 70px rgba(212,168,64,0.45);
+  transform:translateY(-3px);
+}
+.btn-draw:disabled{
+  opacity:0.3;cursor:not-allowed;transform:none;
+  box-shadow:none;
+}
+.draw-hint{
+  font-size:12px;color:var(--text-dim);font-style:italic;
+  margin-top:10px;
+}
+
+/* ── SKY CONTEXT ── */
+.sky-context{
+  text-align:center;margin-bottom:24px;
+  font-size:12px;color:var(--text-dim);font-style:italic;
+  padding:10px 16px;
+  border-top:1px solid rgba(212,168,64,0.06);
+  border-bottom:1px solid rgba(212,168,64,0.06);
+  display:none;
+}
+.sky-context.visible{display:block}
+.sky-context strong{color:var(--gold);font-style:normal}
+
+/* ── CARD SPREAD ── */
+.spread{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:24px;
+  display:none;
+}
+.spread.visible{display:grid}
+.spread-card{
+  background:rgba(24,24,56,0.6);border:1px solid var(--border);
+  border-radius:12px;padding:20px 14px;text-align:center;
+  transition:all 0.4s;position:relative;overflow:hidden;
+}
+.spread-card.revealed{
+  border-color:var(--border-gold);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4),0 0 20px rgba(212,168,64,0.08);
+}
+.spread-card .position-label{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:12px;
+}
+.spread-card .card-image{
+  width:100%;max-width:120px;aspect-ratio:2/3;
+  object-fit:cover;border-radius:6px;
+  margin:0 auto 12px;display:block;
+  border:1px solid var(--border);
+}
+.spread-card .card-emoji{
+  font-size:48px;display:block;margin-bottom:8px;
+}
+.spread-card .card-name{
+  font-family:'Cinzel Decorative',serif;font-size:14px;
+  color:var(--gold-light);margin-bottom:4px;
+}
+.spread-card .card-title{
+  font-size:12px;font-style:italic;color:var(--text-mid);margin-bottom:8px;
+}
+.spread-card .card-interpretation{
+  font-size:13px;line-height:1.7;color:var(--text-dim);
+  font-style:italic;margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(212,168,64,0.1);
+}
+
+/* Past card indicator */
+.spread-card.pos-past .position-label{color:rgba(212,168,64,0.5)}
+.spread-card.pos-present .position-label{color:var(--gold)}
+.spread-card.pos-future .position-label{color:rgba(212,168,64,0.5)}
+
+/* ── READING SUMMARY ── */
+.reading-summary{
+  background:rgba(24,24,56,0.5);border:1px solid var(--border);
+  border-radius:12px;padding:24px;margin-bottom:24px;
+  text-align:center;display:none;
+}
+.reading-summary.visible{display:block}
+.reading-summary .register-badge{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.reading-summary .summary-text{
+  font-size:15px;line-height:1.8;font-style:italic;
+  color:var(--text-mid);
+}
+.reading-summary .summary-text strong{color:var(--gold-light);font-style:normal}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:40px 24px;position:relative;z-index:2;
+  border-top:1px solid rgba(212,168,64,0.06);
+}
+.footer-text{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;
+  color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2.4;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  nav{padding:0 12px}
+  .nav-links{gap:10px}
+  .nav-links a{font-size:7px;letter-spacing:2px}
+  .sign-grid{grid-template-columns:repeat(4,1fr)}
+  .spread{grid-template-columns:1fr;gap:12px}
+  .register-btn{font-size:8px;padding:8px 14px}
+}
+</style>
+</head>
+<body>
+
+<div id="cardMosaic"></div>
+
+<div class="content-layer">
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-title">Digital Divination</div>
+    <div class="nav-brand-sub">Aspects of the Divine</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="draw.html">Draw</a></li>
+    <li><a href="zodiac.html">Zodiac</a></li>
+    <li><a href="oracle.html" class="active">Oracle</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="index.html">Temple</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <div class="header">
+    <h1>✦ Personal Oracle ✦</h1>
+    <div class="subtitle">The cards know your sign. Choose your voice.</div>
+  </div>
+
+  <!-- SIGN SELECTOR -->
+  <div class="sign-grid" id="signGrid"></div>
+
+  <!-- REGISTER TOGGLE -->
+  <div class="register-toggle" id="registerToggle"></div>
+
+  <!-- DRAW BUTTON -->
+  <div class="draw-section">
+    <button class="btn-draw" id="btnDraw" disabled onclick="Oracle.draw()">
+      Draw Three Cards
+    </button>
+    <div class="draw-hint" id="drawHint">Select your sign above</div>
+  </div>
+
+  <!-- SKY CONTEXT -->
+  <div class="sky-context" id="skyContext"></div>
+
+  <!-- CARD SPREAD -->
+  <div class="spread" id="spread">
+    <div class="spread-card pos-past" id="cardPast">
+      <div class="position-label">Past</div>
+      <div id="pastContent"></div>
+    </div>
+    <div class="spread-card pos-present" id="cardPresent">
+      <div class="position-label">Present</div>
+      <div id="presentContent"></div>
+    </div>
+    <div class="spread-card pos-future" id="cardFuture">
+      <div class="position-label">Future</div>
+      <div id="futureContent"></div>
+    </div>
+  </div>
+
+  <!-- READING SUMMARY -->
+  <div class="reading-summary" id="readingSummary">
+    <div class="register-badge" id="registerBadge"></div>
+    <div class="summary-text" id="summaryText"></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-text">
+    Personal Zodiac Oracle · 12 Signs · 4 Registers<br>
+    The sky weights the draw. The voice shapes the reading.
+  </div>
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+<script src="js/observe.js"></script>
+<script src="js/almanac.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   PERSONAL ZODIAC ORACLE — oracle.html
+   Standalone sandbox. Calls Observe + Almanac.
+   Fetches card data from JSON. Implements zodiac-weighted draw
+   with four register voices and dyad Future calculation.
+   ═══════════════════════════════════════════════════════════════ */
+
+const Oracle = (() => {
+
+  // ── STATE ──────────────────────────────────────────────────
+  let selectedSign      = null;
+  let selectedRegister  = 'oracle';
+  let skyData           = null;
+  let majorArcana       = [];
+  let minorArcana       = [];
+  let allCards          = [];
+  let cardsLoaded       = false;
+  let currentReading    = null;
+
+  // ── CONSTANTS ──────────────────────────────────────────────
+  const SIGNS = Almanac.SIGNS;
+  const GLYPHS = Almanac.SIGN_GLYPHS;
+
+  const SIGN_EMOJI = {
+    Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',
+    Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',Aquarius:'♒',Pisces:'♓'
+  };
+
+  const SIGN_ELEMENTS = {
+    Aries:'Fire',Taurus:'Earth',Gemini:'Air',Cancer:'Water',
+    Leo:'Fire',Virgo:'Earth',Libra:'Air',Scorpio:'Water',
+    Sagittarius:'Fire',Capricorn:'Earth',Aquarius:'Air',Pisces:'Water'
+  };
+
+  const SIGN_MODALITIES = {
+    Aries:'Cardinal',Taurus:'Fixed',Gemini:'Mutable',Cancer:'Cardinal',
+    Leo:'Fixed',Virgo:'Mutable',Libra:'Cardinal',Scorpio:'Fixed',
+    Sagittarius:'Mutable',Capricorn:'Cardinal',Aquarius:'Fixed',Pisces:'Mutable'
+  };
+
+  const SIGN_RULERS = {
+    Aries:'Mars',Taurus:'Venus',Gemini:'Mercury',Cancer:'Moon',
+    Leo:'Sun',Virgo:'Mercury',Libra:'Venus',Scorpio:'Pluto',
+    Sagittarius:'Jupiter',Capricorn:'Saturn',Aquarius:'Uranus',Pisces:'Neptune'
+  };
+
+  const SIGN_WEIGHTED_CARDS = {
+    Aries:       ['major_04','major_11','fire_ace'],
+    Taurus:      ['major_03','major_05','earth_ace'],
+    Gemini:      ['major_01','major_06','air_ace'],
+    Cancer:      ['major_02','major_07','water_ace'],
+    Leo:         ['major_19','major_11','major_00'],
+    Virgo:       ['major_09','major_08','earth_ace'],
+    Libra:       ['major_06','major_08','air_ace'],
+    Scorpio:     ['major_13','major_15','water_ace'],
+    Sagittarius: ['major_14','major_10','fire_ace'],
+    Capricorn:   ['major_15','major_21','earth_ace'],
+    Aquarius:    ['major_17','major_00','air_ace'],
+    Pisces:      ['major_18','major_12','water_ace']
+  };
+
+  const REGISTERS = [
+    { id:'oracle',    name:'Oracle',     color:'var(--oracle-color)' },
+    { id:'chronicler',name:'Chronicler', color:'var(--chronicler-color)' },
+    { id:'poet',      name:'Poet',       color:'var(--poet-color)' },
+    { id:'scholar',   name:'Scholar',    color:'var(--scholar-color)' }
+  ];
+
+  // ── CARD LOADING ───────────────────────────────────────────
+  async function loadCards() {
+    if (cardsLoaded) return true;
+    try {
+      const [majorResp, minorResp] = await Promise.all([
+        fetch('data/deck/major_arcana.json'),
+        fetch('data/deck/minor_arcana.json')
+      ]);
+      if (!majorResp.ok || !minorResp.ok) throw new Error('Card data fetch failed');
+      majorArcana = await majorResp.json();
+      minorArcana = await minorResp.json();
+      allCards = [...majorArcana, ...minorArcana];
+      cardsLoaded = true;
+      console.log(`Oracle: Loaded ${majorArcana.length} Major + ${minorArcana.length} Minor = ${allCards.length} cards`);
+      return true;
+    } catch (e) {
+      console.warn('Oracle: Card JSON fetch failed, using fallback', e.message);
+      buildFallbackCards();
+      return true;
+    }
+  }
+
+  function buildFallbackCards() {
+    // Minimal fallback if JSON files aren't available
+    majorArcana = [
+      {id:'major_00',name:'The Fool',title:'Dionysus',element:'Air',ruling_god:'Dionysus',keywords:['beginnings','madness','ecstasy'],image:'data/images/dionysus-card.jpg'},
+      {id:'major_01',name:'The Magician',title:'Hermes',element:'Air',ruling_god:'Hermes',keywords:['skill','messages','conduit'],image:'data/images/major/magician.png'},
+      {id:'major_02',name:'The High Priestess',title:'Hera',element:'Water',ruling_god:'Hera',keywords:['covenant','hidden','veil'],image:'data/images/hera-card.jpg'},
+      {id:'major_03',name:'The Empress',title:'Demeter',element:'Earth',ruling_god:'Demeter',keywords:['harvest','abundance','nurturing'],image:'data/images/demeter-card.jpg'},
+      {id:'major_04',name:'The Emperor',title:'Zeus',element:'Fire',ruling_god:'Zeus',keywords:['authority','structure','order'],image:'data/images/zeus-card.jpg'},
+      {id:'major_05',name:'The Hierophant',title:'Ares',element:'Earth',ruling_god:'Ares',keywords:['tradition','conquest','doctrine'],image:'data/images/ares-card.jpg'},
+      {id:'major_06',name:'The Lovers',title:'Aphrodite',element:'Air',ruling_god:'Aphrodite',keywords:['love','choice','union'],image:'data/images/aphrodite-card.jpg'},
+      {id:'major_07',name:'The Chariot',title:'Artemis',element:'Water',ruling_god:'Artemis',keywords:['sovereignty','hunt','will'],image:'data/images/artemis-card.jpg'},
+      {id:'major_08',name:'Justice',title:'Athena',element:'Air',ruling_god:'Athena',keywords:['wisdom','strategy','truth'],image:'data/images/athena-card.jpg'},
+      {id:'major_09',name:'The Hermit',title:'Mortal Man',element:'Earth',ruling_god:'Mortal Man',keywords:['seeker','solitude','lamp'],image:'data/images/hermit-card.jpg'},
+      {id:'major_10',name:'Wheel of Fortune',title:'The Fates',element:'Fire',ruling_god:'The Fates',keywords:['spinning','measuring','cutting'],image:'data/images/major/wheel_of_fortune.png'},
+      {id:'major_11',name:'Strength',title:'Hephaestus',element:'Fire',ruling_god:'Hephaestus',keywords:['creation','labor','forge'],image:'data/images/hephaestus-card.jpg'},
+      {id:'major_12',name:'The Hanged Man',title:'Prometheus',element:'Water',ruling_god:'Prometheus',keywords:['sacrifice','surrender','gift'],image:'data/images/prometheus-card.jpg'},
+      {id:'major_13',name:'Death',title:'Thanatos',element:'Water',ruling_god:'Thanatos',keywords:['transition','release','ending'],image:'data/images/thanatos-card.jpg'},
+      {id:'major_14',name:'Temperance',title:'Hestia',element:'Fire',ruling_god:'Hestia',keywords:['hearth','moderation','center'],image:'data/images/major/temperance.png'},
+      {id:'major_15',name:'The Devil',title:'Hades',element:'Earth',ruling_god:'Hades',keywords:['bondage','shadow','wealth'],image:'data/images/hades-card.jpg'},
+      {id:'major_16',name:'The Tower',title:'Poseidon',element:'Water',ruling_god:'Poseidon',keywords:['upheaval','destruction','wave'],image:'data/images/poseidon-card.jpg'},
+      {id:'major_17',name:'The Star',title:'Persephone',element:'Air',ruling_god:'Persephone',keywords:['hope','return','rebirth'],image:'data/images/persephone-card.jpg'},
+      {id:'major_18',name:'The Moon',title:'Melinoe',element:'Water',ruling_god:'Melinoe',keywords:['ghosts','madness','veil'],image:'data/images/major/moon.png'},
+      {id:'major_19',name:'The Sun',title:'Apollo',element:'Fire',ruling_god:'Apollo',keywords:['light','radiance','clarity'],image:'data/images/major/sun.png'},
+      {id:'major_20',name:'Judgement',title:'The Three Judges',element:'Fire',ruling_god:'The Three Judges',keywords:['reckoning','awakening','calling'],image:'data/images/major/judgment.png'},
+      {id:'major_21',name:'The World',title:'Gaia',element:'Earth',ruling_god:'Gaia',keywords:['completion','wholeness','integration'],image:'data/images/major/world.png'}
+    ];
+    minorArcana = [
+      {id:'fire_ace',name:'Ace of Fire',title:'Maui',suit:'Fire',element:'Fire',keywords:['stolen fire','spark','genesis'],image:'data/images/minor/fire/fire_ace.png'},
+      {id:'fire_02',name:'Two of Fire',title:'Castor & Pollux',suit:'Fire',element:'Fire',keywords:['partnership','twins','pact'],image:'data/images/minor/fire/fire_02.png'},
+      {id:'earth_ace',name:'Ace of Earth',title:'Lakshmi',suit:'Earth',element:'Earth',keywords:['wealth','abundance','lotus'],image:'data/images/minor/earth/earth_ace.png'},
+      {id:'earth_02',name:'Two of Earth',title:'Aristaeus',suit:'Earth',element:'Earth',keywords:['beekeeping','craft','balance'],image:'data/images/minor/earth/earth_02.png'},
+      {id:'water_ace',name:'Ace of Water',title:'Oshun',suit:'Water',element:'Water',keywords:['reach','love','mirror'],image:'data/images/minor/water/water_ace.png'},
+      {id:'water_02',name:'Two of Water',title:'Echo & Narcissus',suit:'Water',element:'Water',keywords:['talking','echo','mismatch'],image:'data/images/minor/water/water_02.png'},
+      {id:'air_ace',name:'Ace of Air',title:'Thoth',suit:'Air',element:'Air',keywords:['leak','knowledge','writing'],image:'data/images/minor/air/air_ace.png'}
+    ];
+    allCards = [...majorArcana, ...minorArcana];
+    cardsLoaded = true;
+  }
+
+  // ── SHUFFLE ────────────────────────────────────────────────
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ── WEIGHTED DRAW ──────────────────────────────────────────
+  function buildWeightedPool(basePool, sign, skyData) {
+    const element = SIGN_ELEMENTS[sign];
+    const rulerKey = SIGN_RULERS[sign].toLowerCase();
+    const weightedIds = SIGN_WEIGHTED_CARDS[sign] || [];
+    const pool = [];
+
+    basePool.forEach(card => {
+      let weight = 1;
+      // Boost cards matching sign's element
+      if (card.element === element) weight += 2;
+      // Boost sign's weighted cards
+      if (weightedIds.includes(card.id)) weight += 3;
+      // Boost cards whose ruling god matches a planet in the user's sign
+      if (skyData && skyData.planets) {
+        const planetsInSign = Object.entries(skyData.planets)
+          .filter(([_, p]) => p && p.sign === sign)
+          .map(([name]) => name);
+        if (card.ruling_god) {
+          const godKey = card.ruling_god.toLowerCase();
+          const celestial = Almanac.CELESTIAL_OLYMPIANS;
+          for (const [planetKey, deity] of Object.entries(celestial)) {
+            if (deity.olympian && deity.olympian.toLowerCase() === godKey && planetsInSign.includes(planetKey)) {
+              weight += 4;
+            }
+          }
+        }
+      }
+      // Boost if ruling planet of sign is in this card's element
+      if (skyData && skyData.planets && skyData.planets[rulerKey] && card.element === SIGN_ELEMENTS[skyData.planets[rulerKey].sign]) {
+        weight += 1;
+      }
+      pool.push({ card, weight });
+    });
+
+    return pool;
+  }
+
+  function weightedRandom(pool) {
+    const totalWeight = pool.reduce((sum, entry) => sum + entry.weight, 0);
+    let rand = Math.random() * totalWeight;
+    for (const entry of pool) {
+      rand -= entry.weight;
+      if (rand <= 0) return entry.card;
+    }
+    return pool[pool.length - 1].card;
+  }
+
+  // ── DYAD FUTURE CALCULATION ────────────────────────────────
+  function calculateDyadState(pastCard, presentCard) {
+    const pastEl = pastCard.element || '';
+    const presEl = presentCard.element || '';
+    const pastGod = pastCard.ruling_god || '';
+    const presGod = presentCard.ruling_god || '';
+
+    if (pastEl === presEl && pastGod === presGod) return 'resonant';
+    if (pastEl === presEl && pastGod !== presGod) return 'harmonic';
+    if (pastEl !== presEl && pastGod === presGod) return 'tension';
+    return 'dissonant';
+  }
+
+  function buildDyadFuturePool(pastCard, presentCard, sign, skyData) {
+    const state = calculateDyadState(pastCard, presentCard);
+    const basePool = shuffle(allCards);
+    const pool = [];
+
+    basePool.forEach(card => {
+      let weight = 1;
+      const pastEl = pastCard.element || '';
+      const presEl = presentCard.element || '';
+      const pastGod = pastCard.ruling_god || '';
+      const presGod = presentCard.ruling_god || '';
+
+      switch (state) {
+        case 'resonant':
+          // Same element + same god → future echoes the pattern
+          if (card.element === pastEl) weight += 4;
+          if (card.ruling_god === pastGod) weight += 3;
+          break;
+        case 'harmonic':
+          // Same element, different god → future bridges
+          if (card.element === pastEl) weight += 3;
+          if (card.ruling_god === pastGod || card.ruling_god === presGod) weight += 2;
+          break;
+        case 'tension':
+          // Different element, same god → god works across domains
+          if (card.ruling_god === pastGod) weight += 4;
+          if (card.element === presEl) weight += 2;
+          break;
+        case 'dissonant':
+          // Different element, different god → clean break, new pattern
+          if (card.element !== pastEl && card.element !== presEl) weight += 3;
+          if (card.ruling_god !== pastGod && card.ruling_god !== presGod) weight += 2;
+          break;
+      }
+
+      // Always add sign affinity
+      if (card.element === SIGN_ELEMENTS[sign]) weight += 1;
+      if ((SIGN_WEIGHTED_CARDS[sign] || []).includes(card.id)) weight += 2;
+
+      pool.push({ card, weight });
+    });
+
+    return { pool, state };
+  }
+
+  // ── CARD DISPLAY ───────────────────────────────────────────
+  function renderCard(containerId, card, position) {
+    const container = document.getElementById(containerId);
+    const imagePath = card.image || '';
+    const hasImage = imagePath && !imagePath.includes('undefined');
+    const elementEmoji = {
+      Fire:'🔥',Earth:'🜃',Water:'🌊',Air:'💨'
+    };
+    const fallbackEmoji = elementEmoji[card.element] || '🜏';
+
+    container.innerHTML = `
+      ${hasImage
+        ? `<img src="${imagePath}" alt="${card.name}" class="card-image" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
+        : ''}
+      <span class="card-emoji" style="display:${hasImage ? 'none' : 'block'}">${fallbackEmoji}</span>
+      <div class="card-name">${card.name}</div>
+      <div class="card-title">${card.title || ''}</div>
+    `;
+
+    const parentCard = container.closest('.spread-card');
+    if (parentCard) parentCard.classList.add('revealed');
+  }
+
+  function renderInterpretation(containerId, card, interpretation) {
+    const container = document.getElementById(containerId);
+    const interpDiv = container.querySelector('.card-interpretation');
+    if (interpDiv) interpDiv.remove();
+    const div = document.createElement('div');
+    div.className = 'card-interpretation';
+    div.innerHTML = interpretation;
+    container.appendChild(div);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // REGISTER INTERPRETATIONS
+  // ══════════════════════════════════════════════════════════
+
+  function interpretOracle(card, position, sign, skyData, dyadState) {
+    const keywords = (card.keywords || []).join(', ');
+    const god = card.ruling_god || card.title || 'the unnamed';
+    const whisper = Almanac.getWhisper(god, position === 'past' ? 0 : position === 'present' ? 1 : 2);
+    const element = card.element || 'mystery';
+    
+    const readings = {
+      past: `The cards say: <strong>${card.name}</strong> crossed your path before you knew to look. ${god} walked the ${element} road — ${keywords}. This was not accident. This was preparation. ${whisper}`,
+      present: `The veil lifts on <strong>${card.name}</strong>. ${god} stands in the ${element} of now — ${keywords}. The oracle speaks plain: what you hold in your hands right now is the answer to a question you asked long ago. ${whisper}`,
+      future: `The cards show <strong>${card.name}</strong> approaching. ${god} waits in the ${element} that is forming — ${keywords}. ${dyadState === 'resonant' ? 'The pattern holds. What was will be again, deeper.' : dyadState === 'harmonic' ? 'The elements align. Different hands, same fire.' : dyadState === 'tension' ? 'The god works across worlds. What seems broken is being remade.' : 'The pattern breaks — not as loss, but as liberation. A new thread begins.'} ${whisper}`
+    };
+    return readings[position] || readings.present;
+  }
+
+  function interpretChronicler(card, position, sign, skyData, dyadState) {
+    const god = card.ruling_god || card.title || 'the unnamed';
+    const whisper = Almanac.getWhisper(god, position === 'past' ? 3 : position === 'present' ? 4 : 5);
+    
+    const readings = {
+      past: `In the old accounts, <strong>${card.name}</strong> appears as the herald of what was already in motion. ${god} is recorded here — the chroniclers noted the ${card.element || 'elemental'} signature and marked the date. This is not the beginning of the story, but the chapter where the stakes were set. ${whisper}`,
+      present: `The record for this moment bears <strong>${card.name}</strong>. ${god} is the witness to now — and the chroniclers know that what is witnessed becomes real in a way the unwitnessed never does. The archive will show: this was the turning. ${whisper}`,
+      future: `The chroniclers have seen this pattern before. <strong>${card.name}</strong> follows — ${god} writes the next entry. ${dyadState === 'resonant' ? 'History rhymes. The same sequence appears in the old scrolls, and the outcome was recorded.' : dyadState === 'harmonic' ? 'The elements echo. Different players, same stage — the chroniclers note the parallel.' : dyadState === 'tension' ? 'The record shows a fracture — but fractures are where the light enters the archive.' : 'No precedent exists. The chroniclers will have to write a new entry for what comes next.'} ${whisper}`
+    };
+    return readings[position] || readings.present;
+  }
+
+  function interpretPoet(card, position, sign, skyData, dyadState) {
+    const god = card.ruling_god || card.title || 'the unnamed';
+    const whisper = Almanac.getWhisper(god, position === 'past' ? 6 : position === 'present' ? 7 : 8);
+    const element = (card.element || 'mystery').toLowerCase();
+    
+    const readings = {
+      past: `The heart remembers <strong>${card.name}</strong> — ${god} moved through the ${element} like a song half-heard. You carried it without knowing the melody. Now it plays again, and you recognize every note. ${whisper}`,
+      present: `<strong>${card.name}</strong> is the poem the moment is writing. ${god} holds the pen — the ${element} is the ink. Do not edit. Do not revise. Let the verse be what it is. ${whisper}`,
+      future: `<strong>${card.name}</strong> waits like the last line of a poem you are still composing. ${god} knows the ending — ${dyadState === 'resonant' ? 'and it is the same word you began with, transformed by everything between.' : dyadState === 'harmonic' ? 'and it rhymes with the beginning, though the language has changed.' : dyadState === 'tension' ? 'and it breaks the meter — but some poems need the break to breathe.' : 'and it will surprise you — the best poems always do.'} ${whisper}`
+    };
+    return readings[position] || readings.present;
+  }
+
+  function interpretScholar(card, position, sign, skyData, dyadState) {
+    const god = card.ruling_god || card.title || 'the unnamed';
+    const whisper = Almanac.getWhisper(god, position === 'past' ? 9 : position === 'present' ? 10 : 11);
+    const element = card.element || 'unclassified';
+    const cardId = card.id || 'unknown';
+    const signElement = SIGN_ELEMENTS[sign];
+    const affinity = element === signElement ? 'strong' : 'cross-element';
+    
+    const readings = {
+      past: `Analysis: <strong>${card.name}</strong> (ID: ${cardId}) — ${god}, ${element} signature. Appears in Past position with ${affinity} affinity to your sign (${sign}, ${signElement}). The pattern suggests this card was the catalyst — not the cause, but the condition that made the present possible. ${whisper}`,
+      present: `Current draw: <strong>${card.name}</strong> — ${god}, ${element} archetype. Present position, ${affinity} resonance with ${sign}. The data indicates an active influence. Elemental match: ${affinity === 'strong' ? 'your sign\'s native element is engaged — this is a direct circuit.' : 'cross-element activation — the influence operates at an angle to your default mode, which may be precisely why it is effective.'} ${whisper}`,
+      future: `Forecast: <strong>${card.name}</strong> — ${god}. Future position. Dyad analysis: ${dyadState}. ${dyadState === 'resonant' ? 'Resonant dyad — high probability of pattern continuation. The same element and divine signature repeating suggests a stable trajectory.' : dyadState === 'harmonic' ? 'Harmonic dyad — shared element, different signatures. The environment is consistent but the agency shifts. Expect collaboration or succession.' : dyadState === 'tension' ? 'Tension dyad — same divine signature across different elements. The god is working through unfamiliar terrain. Expect adaptation — the core intent persists but the method changes.' : 'Dissonant dyad — clean break. New element, new signature. The system is entering a phase change. Prior patterns are not predictive here.'} ${whisper}`
+    };
+    return readings[position] || readings.present;
+  }
+
+  function getInterpreter(registerId) {
+    const map = {
+      oracle: interpretOracle,
+      chronicler: interpretChronicler,
+      poet: interpretPoet,
+      scholar: interpretScholar
+    };
+    return map[registerId] || interpretOracle;
+  }
+
+  // ── SUMMARY ────────────────────────────────────────────────
+  function buildSummary(pastCard, presentCard, futureCard, sign, registerId, dyadState) {
+    const register = REGISTERS.find(r => r.id === registerId);
+    const registerName = register ? register.name : 'Oracle';
+    const signGlyph = GLYPHS[sign];
+    const signElement = SIGN_ELEMENTS[sign];
+    const skyInfo = skyData
+      ? `${Object.values(skyData.planets).filter(p => p && p.sign === sign).length} celestial bod${Object.values(skyData.planets).filter(p => p && p.sign === sign).length === 1 ? 'y' : 'ies'} in your sign`
+      : '';
+
+    const summaries = {
+      oracle: `The oracle has spoken through <strong>${signGlyph} ${sign}</strong> — ${signElement} sign, ${registerName} voice. ${skyInfo ? `Under a sky where ${skyInfo}, the cards align.` : ''} Past: <strong>${pastCard.name}</strong>. Present: <strong>${presentCard.name}</strong>. Future: <strong>${futureCard.name}</strong>. The dyad is ${dyadState}. The reading is complete.`,
+      chronicler: `The chronicle of <strong>${signGlyph} ${sign}</strong> has been updated. ${registerName} voice, ${signElement} register. ${skyInfo ? `The celestial record notes: ${skyInfo}.` : ''} The entry reads: Past — <strong>${pastCard.name}</strong>; Present — <strong>${presentCard.name}</strong>; Future — <strong>${futureCard.name}</strong>. Dyad: ${dyadState}. Filed.`,
+      poet: `For <strong>${signGlyph} ${sign}</strong>, in the ${registerName.toLowerCase()}'s tongue — ${signElement} runs through these veins. ${skyInfo ? `The sky whispers: ${skyInfo}.` : ''} <strong>${pastCard.name}</strong> was the ache. <strong>${presentCard.name}</strong> is the pulse. <strong>${futureCard.name}</strong> is the promise. The dyad sings ${dyadState}.`,
+      scholar: `<strong>${signGlyph} ${sign}</strong> · ${signElement} · ${registerName} register. ${skyInfo ? `Celestial context: ${skyInfo}.` : ''} Draw: Past=<strong>${pastCard.name}</strong>, Present=<strong>${presentCard.name}</strong>, Future=<strong>${futureCard.name}</strong>. Dyad state: ${dyadState}. Pattern analysis complete.`
+    };
+
+    return summaries[registerId] || summaries.oracle;
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // MAIN DRAW
+  // ══════════════════════════════════════════════════════════
+
+  async function draw() {
+    if (!selectedSign || !cardsLoaded) return;
+
+    const btnDraw = document.getElementById('btnDraw');
+    btnDraw.disabled = true;
+    btnDraw.textContent = 'Consulting...';
+
+    // Get sky state
+    try {
+      skyData = await Observe.getSkyState();
+    } catch (e) {
+      console.warn('Oracle: Sky state unavailable, proceeding without', e.message);
+      skyData = null;
+    }
+
+    // Show sky context
+    const skyContext = document.getElementById('skyContext');
+    if (skyData) {
+      const planetsInSign = Object.entries(skyData.planets)
+        .filter(([_, p]) => p && p.sign === selectedSign)
+        .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
+      skyContext.innerHTML = planetsInSign.length > 0
+        ? `The sky watches <strong>${GLYPHS[selectedSign]} ${selectedSign}</strong> — <strong>${planetsInSign.join(', ')}</strong> walk${planetsInSign.length === 1 ? 's' : ''} your sign as you draw.`
+        : `<strong>${GLYPHS[selectedSign]} ${selectedSign}</strong> — the house is empty, but the cards know the way.`;
+      skyContext.classList.add('visible');
+    } else {
+      skyContext.innerHTML = `The sky is clouded, but <strong>${GLYPHS[selectedSign]} ${selectedSign}</strong> is eternal. The draw proceeds.`;
+      skyContext.classList.add('visible');
+    }
+
+    // Build weighted pools
+    const majorPool = buildWeightedPool(majorArcana, selectedSign, skyData);
+    const minorPool = buildWeightedPool(minorArcana, selectedSign, skyData);
+
+    // Draw Past (Major Arcana)
+    const pastCard = weightedRandom(majorPool);
+
+    // Draw Present (Minor Arcana) — exclude past card's element bias slightly
+    const presentPool = minorPool.filter(entry => entry.card.id !== pastCard.id);
+    const presentCard = weightedRandom(presentPool.length > 0 ? presentPool : minorPool);
+
+    // Draw Future (Dyad-weighted)
+    const { pool: futurePool, state: dyadState } = buildDyadFuturePool(pastCard, presentCard, selectedSign, skyData);
+    const futureCard = weightedRandom(futurePool);
+
+    // Store reading
+    currentReading = { pastCard, presentCard, futureCard, dyadState };
+
+    // Render cards
+    const interpreter = getInterpreter(selectedRegister);
+
+    renderCard('pastContent', pastCard, 'past');
+    renderCard('presentContent', presentCard, 'present');
+    renderCard('futureContent', futureCard, 'future');
+
+    // Render interpretations
+    setTimeout(() => {
+      renderInterpretation('pastContent', pastCard,
+        interpreter(pastCard, 'past', selectedSign, skyData, dyadState));
+    }, 300);
+    setTimeout(() => {
+      renderInterpretation('presentContent', presentCard,
+        interpreter(presentCard, 'present', selectedSign, skyData, dyadState));
+    }, 600);
+    setTimeout(() => {
+      renderInterpretation('futureContent', futureCard,
+        interpreter(futureCard, 'future', selectedSign, skyData, dyadState));
+    }, 900);
+
+    // Show spread
+    document.getElementById('spread').classList.add('visible');
+
+    // Build summary
+    const summary = buildSummary(pastCard, presentCard, futureCard, selectedSign, selectedRegister, dyadState);
+    document.getElementById('registerBadge').textContent = `— Spoken by the ${REGISTERS.find(r => r.id === selectedRegister)?.name || 'Oracle'} —`;
+    document.getElementById('registerBadge').style.color = REGISTERS.find(r => r.id === selectedRegister)?.color || 'var(--oracle-color)';
+    document.getElementById('summaryText').innerHTML = summary;
+    document.getElementById('readingSummary').classList.add('visible');
+
+    btnDraw.disabled = false;
+    btnDraw.textContent = 'Draw Again';
+  }
+
+  // ── UI BUILDERS ────────────────────────────────────────────
+  function buildSignGrid() {
+    const grid = document.getElementById('signGrid');
+    grid.innerHTML = SIGNS.map(sign => `
+      <button class="sign-btn${selectedSign === sign ? ' selected' : ''}"
+              onclick="Oracle.selectSign('${sign}')"
+              title="${sign} — ${SIGN_ELEMENTS[sign]} · ${SIGN_MODALITIES[sign]}">
+        <span class="sign-emoji">${SIGN_EMOJI[sign]}</span>
+        <span class="sign-name">${sign}</span>
+        <span class="sign-element">${SIGN_ELEMENTS[sign]}</span>
+      </button>
+    `).join('');
+  }
+
+  function buildRegisterToggle() {
+    const toggle = document.getElementById('registerToggle');
+    toggle.innerHTML = REGISTERS.map(r => `
+      <button class="register-btn ${r.id}${selectedRegister === r.id ? ' selected' : ''}"
+              onclick="Oracle.selectRegister('${r.id}')">
+        ${r.name}
+      </button>
+    `).join('');
+  }
+
+  function updateDrawButton() {
+    const btn = document.getElementById('btnDraw');
+    const hint = document.getElementById('drawHint');
+    if (selectedSign) {
+      btn.disabled = false;
+      hint.textContent = `${GLYPHS[selectedSign]} ${selectedSign} · ${REGISTERS.find(r => r.id === selectedRegister)?.name || 'Oracle'} voice`;
+    } else {
+      btn.disabled = true;
+      hint.textContent = 'Select your sign above';
+    }
+  }
+
+  // ── PUBLIC ─────────────────────────────────────────────────
+  function selectSign(sign) {
+    selectedSign = sign;
+    buildSignGrid();
+    updateDrawButton();
+  }
+
+  function selectRegister(registerId) {
+    selectedRegister = registerId;
+    buildRegisterToggle();
+    updateDrawButton();
+    // If there's an existing reading, re-render with new voice
+    if (currentReading) {
+      const interpreter = getInterpreter(selectedRegister);
+      const { pastCard, presentCard, futureCard, dyadState } = currentReading;
+      renderInterpretation('pastContent', pastCard,
+        interpreter(pastCard, 'past', selectedSign, skyData, dyadState));
+      renderInterpretation('presentContent', presentCard,
+        interpreter(presentCard, 'present', selectedSign, skyData, dyadState));
+      renderInterpretation('futureContent', futureCard,
+        interpreter(futureCard, 'future', selectedSign, skyData, dyadState));
+      const summary = buildSummary(pastCard, presentCard, futureCard, selectedSign, selectedRegister, dyadState);
+      document.getElementById('registerBadge').textContent = `— Spoken by the ${REGISTERS.find(r => r.id === selectedRegister)?.name || 'Oracle'} —`;
+      document.getElementById('registerBadge').style.color = REGISTERS.find(r => r.id === selectedRegister)?.color || 'var(--oracle-color)';
+      document.getElementById('summaryText').innerHTML = summary;
+    }
+  }
+
+  async function init() {
+    buildSignGrid();
+    buildRegisterToggle();
+    updateDrawButton();
+    await loadCards();
+    updateDrawButton();
+    // Card mosaic
+    buildCardMosaic();
+  }
+
+  // ── CARD MOSAIC ────────────────────────────────────────────
+  function buildCardMosaic() {
+    const mosaic = document.getElementById('cardMosaic');
+    const mosaicPool = [
+      'data/images/major/sun.png','data/images/major/moon.png',
+      'data/images/major/wheel_of_fortune.png','data/images/major/temperance.png',
+      'data/images/major/judgment.png','data/images/major/world.png',
+      'data/images/zeus-card.jpg','data/images/athena-card.jpg',
+      'data/images/apollo-card.jpg','data/images/artemis-card.jpg',
+      'data/images/hermes-card.jpg','data/images/aphrodite-card.jpg',
+      'data/images/demeter-card.jpg','data/images/hera-card.jpg',
+      'data/images/poseidon-card.jpg','data/images/hephaestus-card.jpg',
+      'data/images/ares-card.jpg','data/images/dionysus-card.jpg',
+      'data/images/hades-card.jpg','data/images/persephone-card.jpg',
+      'data/images/prometheus-card.jpg','data/images/thanatos-card.jpg',
+      'data/images/hermit-card.jpg',
+      'data/images/minor/fire/fire_ace.png','data/images/minor/earth/earth_ace.png',
+      'data/images/minor/water/water_ace.png','data/images/minor/air/air_ace.png'
+    ];
+    const cells = [];
+    for (let i = 0; i < 36; i++) {
+      const img = mosaicPool[Math.floor(Math.random() * mosaicPool.length)];
+      cells.push(`<img src="${img}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
+    }
+    mosaic.innerHTML = cells.join('');
+    setInterval(() => {
+      const imgs = document.querySelectorAll('#cardMosaic img');
+      if (!imgs.length) return;
+      const idx = Math.floor(Math.random() * imgs.length);
+      const newImg = mosaicPool[Math.floor(Math.random() * mosaicPool.length)];
+      imgs[idx].style.opacity = '0';
+      setTimeout(() => { imgs[idx].src = newImg; imgs[idx].style.opacity = ''; }, 600);
+    }, 8000);
+  }
+
+  return { init, draw, selectSign, selectRegister };
+})();
+
+document.addEventListener('DOMContentLoaded', () => Oracle.init());
+</script>
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.z.goatcounter.com/count.js"></script>
+</body>
+</html>
