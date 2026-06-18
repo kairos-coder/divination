@@ -2,10 +2,10 @@
   "deck_name": "Minor Arcana — The Global Pantheon",
   "card_count": 56,
   "cultural_origins": [
-    "Greek", "Norse", "Egyptian", "Hindu", "Yoruba", "Aztec", "Chinese",
-    "Japanese", "Polynesian", "Inuit", "Indigenous (Americas)", "Finnish",
-    "Slavic", "Sumerian", "West African", "African Diaspora"
-  ],
+  "Greek", "Norse", "Egyptian", "Hindu", "Yoruba", "Aztec", "Chinese",
+  "Japanese", "Polynesian", "Hawaiian", "Inuit", "Indigenous (Americas)", "Finnish",
+  "Slavic", "Sumerian", "West African", "African Diaspora"
+    ],
   "divine_suits": {
     "fire": {
       "element": "Fire",
@@ -809,16 +809,16 @@
       {
         "id": "air_king",
         "name": "King of Air",
-        "title": "Odysseus",
-        "culture": "Greek",
+        "title": "Perun",
+        "culture": "Slavic",
         "rank": "king",
         "element": "Air",
         "ruling_god": "Zeus",
-        "keywords": ["the architect of the horse", "absolute cunning", "system designer", "the long way home"],
-        "upright": "Odysseus designed the Trojan Horse. He outwitted the Cyclops. He navigated the Sirens. He came home after twenty years and reclaimed his throne. The King of Air is the architect — the one who designs the system and executes the long game. Cunning is a form of patience. The long way home teaches what the short way never could.",
-        "reversed": "Odysseus lost at sea. The cunning that outsmarted itself. The architect whose system became a maze with no exit. Even the wisest king needs the gods to eventually let him come home. Are you lost — or are you avoiding the homecoming?",
+        "keywords": ["the thunder king", "axe of order", "divine authority", "the storm that judges", "sky father"],
+        "upright": "Perun rides the storm-cloud, axe in hand, thunder rolling beneath his chariot wheels. He does not negotiate. He enforces. The King of Air is the authority that comes not from persuasion but from the sky itself — the thunderclap that ends the argument. He chases Veles through the roots of the world tree, and the chase IS the order of things. Lead. The axe is heavier than the word. Sometimes that's what the moment requires.",
+        "reversed": "The axe lowered. Perun pacing the clouds while Veles escapes below. The authority that hesitates, the thunder that rumbles but never strikes. What are you waiting for? Or — are you chasing the wrong serpent?",
         "image": "data/images/minor/air/air_king.png",
-        "prompt": "Odysseus, the cunning Greek king who built the Trojan Horse and took twenty years to find his way home, as tarot card."
+        "prompt": "Perun, Slavic thunder god and king of the sky, axe in hand, riding the storm-cloud above the World Tree, as tarot card."
       }
     ]
   }
