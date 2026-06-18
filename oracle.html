@@ -166,17 +166,44 @@ nav{
   margin-top:10px;
 }
 
-/* ── SKY CONTEXT ── */
-.sky-context{
-  text-align:center;margin-bottom:24px;
-  font-size:12px;color:var(--text-dim);font-style:italic;
-  padding:10px 16px;
-  border-top:1px solid rgba(212,168,64,0.06);
-  border-bottom:1px solid rgba(212,168,64,0.06);
+/* ── SKY SUMMARY ── */
+.sky-summary{
+  background:rgba(24,24,56,0.5);border:1px solid var(--border);
+  border-radius:12px;padding:20px 24px;margin-bottom:24px;
   display:none;
 }
-.sky-context.visible{display:block}
-.sky-context strong{color:var(--gold);font-style:normal}
+.sky-summary.visible{display:block}
+.sky-summary-header{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);opacity:0.6;
+  text-align:center;margin-bottom:16px;
+}
+.sky-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.sky-datum{
+  padding:10px 14px;border-radius:8px;
+  background:rgba(12,12,30,0.5);border:1px solid var(--border);
+}
+.sky-datum .datum-label{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;opacity:0.7;
+}
+.sky-datum .datum-value{
+  font-size:13px;font-style:italic;color:var(--text-mid);line-height:1.5;
+}
+.sky-datum .datum-value strong{color:var(--gold-light);font-style:normal}
+.sky-datum.highlight{
+  border-color:var(--border-gold);
+  background:rgba(212,168,64,0.06);
+}
+.sky-datum.stellium{
+  border-color:rgba(212,168,64,0.4);
+  background:rgba(212,168,64,0.08);
+  box-shadow:0 0 12px rgba(212,168,64,0.08);
+}
 
 /* ── CARD SPREAD ── */
 .spread{
@@ -223,7 +250,6 @@ nav{
   border-top:1px solid rgba(212,168,64,0.1);
 }
 
-/* Past card indicator */
 .spread-card.pos-past .position-label{color:rgba(212,168,64,0.5)}
 .spread-card.pos-present .position-label{color:var(--gold)}
 .spread-card.pos-future .position-label{color:rgba(212,168,64,0.5)}
@@ -263,6 +289,7 @@ footer{
   .sign-grid{grid-template-columns:repeat(4,1fr)}
   .spread{grid-template-columns:1fr;gap:12px}
   .register-btn{font-size:8px;padding:8px 14px}
+  .sky-summary-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -290,7 +317,7 @@ footer{
 
   <div class="header">
     <h1>✦ Personal Oracle ✦</h1>
-    <div class="subtitle">The cards know your sign. Choose your voice.</div>
+    <div class="subtitle">The cards know your sign. The sky weights the draw. Choose your voice.</div>
   </div>
 
   <!-- SIGN SELECTOR -->
@@ -299,6 +326,12 @@ footer{
   <!-- REGISTER TOGGLE -->
   <div class="register-toggle" id="registerToggle"></div>
 
+  <!-- SKY SUMMARY -->
+  <div class="sky-summary" id="skySummary">
+    <div class="sky-summary-header">✦ The Sky at the Moment of Your Draw ✦</div>
+    <div class="sky-summary-grid" id="skySummaryGrid"></div>
+  </div>
+
   <!-- DRAW BUTTON -->
   <div class="draw-section">
     <button class="btn-draw" id="btnDraw" disabled onclick="Oracle.draw()">
@@ -306,9 +339,6 @@ footer{
     </button>
     <div class="draw-hint" id="drawHint">Select your sign above</div>
   </div>
-
-  <!-- SKY CONTEXT -->
-  <div class="sky-context" id="skyContext"></div>
 
   <!-- CARD SPREAD -->
   <div class="spread" id="spread">
@@ -352,7 +382,8 @@ footer{
    PERSONAL ZODIAC ORACLE — oracle.html
    Standalone sandbox. Calls Observe + Almanac.
    Fetches card data from JSON. Implements zodiac-weighted draw
-   with four register voices and dyad Future calculation.
+   with four register voices, dyad Future calculation,
+   and full celestial context display.
    ═══════════════════════════════════════════════════════════════ */
 
 const Oracle = (() => {
@@ -361,6 +392,7 @@ const Oracle = (() => {
   let selectedSign      = null;
   let selectedRegister  = 'oracle';
   let skyData           = null;
+  let skySummaryCache   = null;
   let majorArcana       = [];
   let minorArcana       = [];
   let allCards          = [];
@@ -370,6 +402,7 @@ const Oracle = (() => {
   // ── CONSTANTS ──────────────────────────────────────────────
   const SIGNS = Almanac.SIGNS;
   const GLYPHS = Almanac.SIGN_GLYPHS;
+  const SIGN_NAMES = Almanac.SIGN_NAMES;
 
   const SIGN_EMOJI = {
     Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',
@@ -416,6 +449,8 @@ const Oracle = (() => {
     { id:'scholar',   name:'Scholar',    color:'var(--scholar-color)' }
   ];
 
+  const MOON_PHASE_ICONS = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+
   // ── CARD LOADING ───────────────────────────────────────────
   async function loadCards() {
     if (cardsLoaded) return true;
@@ -439,7 +474,6 @@ const Oracle = (() => {
   }
 
   function buildFallbackCards() {
-    // Minimal fallback if JSON files aren't available
     majorArcana = [
       {id:'major_00',name:'The Fool',title:'Dionysus',element:'Air',ruling_god:'Dionysus',keywords:['beginnings','madness','ecstasy'],image:'data/images/dionysus-card.jpg'},
       {id:'major_01',name:'The Magician',title:'Hermes',element:'Air',ruling_god:'Hermes',keywords:['skill','messages','conduit'],image:'data/images/major/magician.png'},
@@ -496,11 +530,8 @@ const Oracle = (() => {
 
     basePool.forEach(card => {
       let weight = 1;
-      // Boost cards matching sign's element
       if (card.element === element) weight += 2;
-      // Boost sign's weighted cards
       if (weightedIds.includes(card.id)) weight += 3;
-      // Boost cards whose ruling god matches a planet in the user's sign
       if (skyData && skyData.planets) {
         const planetsInSign = Object.entries(skyData.planets)
           .filter(([_, p]) => p && p.sign === sign)
@@ -515,7 +546,6 @@ const Oracle = (() => {
           }
         }
       }
-      // Boost if ruling planet of sign is in this card's element
       if (skyData && skyData.planets && skyData.planets[rulerKey] && card.element === SIGN_ELEMENTS[skyData.planets[rulerKey].sign]) {
         weight += 1;
       }
@@ -541,7 +571,6 @@ const Oracle = (() => {
     const presEl = presentCard.element || '';
     const pastGod = pastCard.ruling_god || '';
     const presGod = presentCard.ruling_god || '';
-
     if (pastEl === presEl && pastGod === presGod) return 'resonant';
     if (pastEl === presEl && pastGod !== presGod) return 'harmonic';
     if (pastEl !== presEl && pastGod === presGod) return 'tension';
@@ -552,45 +581,187 @@ const Oracle = (() => {
     const state = calculateDyadState(pastCard, presentCard);
     const basePool = shuffle(allCards);
     const pool = [];
+    const pastEl = pastCard.element || '';
+    const presEl = presentCard.element || '';
+    const pastGod = pastCard.ruling_god || '';
+    const presGod = presentCard.ruling_god || '';
 
     basePool.forEach(card => {
       let weight = 1;
-      const pastEl = pastCard.element || '';
-      const presEl = presentCard.element || '';
-      const pastGod = pastCard.ruling_god || '';
-      const presGod = presentCard.ruling_god || '';
-
       switch (state) {
         case 'resonant':
-          // Same element + same god → future echoes the pattern
           if (card.element === pastEl) weight += 4;
           if (card.ruling_god === pastGod) weight += 3;
           break;
         case 'harmonic':
-          // Same element, different god → future bridges
           if (card.element === pastEl) weight += 3;
           if (card.ruling_god === pastGod || card.ruling_god === presGod) weight += 2;
           break;
         case 'tension':
-          // Different element, same god → god works across domains
           if (card.ruling_god === pastGod) weight += 4;
           if (card.element === presEl) weight += 2;
           break;
         case 'dissonant':
-          // Different element, different god → clean break, new pattern
           if (card.element !== pastEl && card.element !== presEl) weight += 3;
           if (card.ruling_god !== pastGod && card.ruling_god !== presGod) weight += 2;
           break;
       }
-
-      // Always add sign affinity
       if (card.element === SIGN_ELEMENTS[sign]) weight += 1;
       if ((SIGN_WEIGHTED_CARDS[sign] || []).includes(card.id)) weight += 2;
-
       pool.push({ card, weight });
     });
 
     return { pool, state };
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // SKY SUMMARY BUILDER
+  // ══════════════════════════════════════════════════════════
+
+  function buildSkySummary(skyData, sign) {
+    if (!skyData) return null;
+
+    const dataPoints = [];
+    const planets = skyData.planets || {};
+    const sun = planets.sun;
+    const moon = planets.moon;
+    const ascendant = skyData.ascendant;
+    const moonPhase = skyData.moonPhase || {};
+    const period = skyData.period || 'SUN';
+    const rulerKey = SIGN_RULERS[sign].toLowerCase();
+    const rulerPlanet = planets[rulerKey];
+    const signElement = SIGN_ELEMENTS[sign];
+    const signModality = SIGN_MODALITIES[sign];
+
+    // 1. Sun position
+    if (sun) {
+      const sunGod = Almanac.CELESTIAL_OLYMPIANS['sun']?.olympian || 'Apollo';
+      const sunInUserSign = sun.sign === sign;
+      dataPoints.push({
+        label: '☉ Sun',
+        value: `<strong>${sunGod}</strong> at ${Math.floor(sun.degree)}° ${sun.sign} ${GLYPHS[sun.sign]}${sunInUserSign ? ' — <strong>in your sign</strong>' : ''}`,
+        highlight: sunInUserSign
+      });
+    }
+
+    // 2. Moon position + phase
+    if (moon) {
+      const phaseIdx = typeof moonPhase.phase === 'number' ? Math.round(moonPhase.phase * 8) % 8 : 0;
+      const phaseIcon = MOON_PHASE_ICONS[phaseIdx] || '🌙';
+      const phaseName = moonPhase.name || '';
+      const moonDeity = moonPhase.deity || (moonPhase.isWaning ? 'Melinoe' : 'Artemis');
+      const moonInUserSign = moon.sign === sign;
+      dataPoints.push({
+        label: '☽ Moon',
+        value: `${phaseIcon} <strong>${moonDeity}</strong> · ${phaseName}<br>${Math.floor(moon.degree)}° ${moon.sign} ${GLYPHS[moon.sign]}${moonInUserSign ? ' — <strong>in your sign</strong>' : ''}`,
+        highlight: moonInUserSign
+      });
+    }
+
+    // 3. Ascendant
+    if (ascendant && ascendant.sign && ascendant.sign !== 'Unknown') {
+      const ascInUserSign = ascendant.sign === sign;
+      dataPoints.push({
+        label: '↗ Ascendant',
+        value: `<strong>${ascendant.sign} ${GLYPHS[ascendant.sign]}</strong> rises${ascInUserSign ? ' — <strong>your sign is on the horizon</strong>' : ''}`,
+        highlight: ascInUserSign
+      });
+    }
+
+    // 4. Ruling planet
+    if (rulerPlanet) {
+      const rulerName = SIGN_RULERS[sign];
+      const rulerGod = Almanac.CELESTIAL_OLYMPIANS[rulerKey]?.olympian || rulerName;
+      const rulerInOwnSign = rulerPlanet.sign === sign;
+      dataPoints.push({
+        label: `♟ Your Ruler (${rulerName})`,
+        value: `<strong>${rulerGod}</strong> at ${Math.floor(rulerPlanet.degree)}° ${rulerPlanet.sign} ${GLYPHS[rulerPlanet.sign]}${rulerInOwnSign ? ' — <strong>domicile — at full power</strong>' : ''}`,
+        highlight: rulerInOwnSign
+      });
+    } else {
+      dataPoints.push({
+        label: `♟ Your Ruler (${SIGN_RULERS[sign]})`,
+        value: `<em>Below the horizon or unaspected — your ruler works in the hidden realm.</em>`,
+        highlight: false
+      });
+    }
+
+    // 5. Stelliums
+    const signCounts = {};
+    Object.values(planets).forEach(p => {
+      if (p && p.sign) {
+        signCounts[p.sign] = (signCounts[p.sign] || 0) + 1;
+      }
+    });
+    const stelliums = Object.entries(signCounts)
+      .filter(([_, count]) => count >= 3)
+      .sort((a, b) => b[1] - a[1]);
+
+    if (stelliums.length > 0) {
+      stelliums.forEach(([s, count]) => {
+        const gods = Object.entries(planets)
+          .filter(([_, p]) => p && p.sign === s)
+          .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
+        const inUserSign = s === sign;
+        dataPoints.push({
+          label: `✦ Stellium (${count} bodies)`,
+          value: `<strong>${s} ${GLYPHS[s]}</strong> — ${gods.join(', ')}${inUserSign ? ' — <strong>this is YOUR sign</strong>' : ''}`,
+          highlight: false,
+          stellium: true
+        });
+      });
+    }
+
+    // 6. Period
+    const isSolar = period === 'SUN';
+    dataPoints.push({
+      label: '🕐 Period',
+      value: isSolar
+        ? '☀ <strong>Solar</strong> — Apollo above the horizon. The draw is made in the light.'
+        : '☽ <strong>Lunar</strong> — The moon rules. The draw is made in the reflective dark.',
+      highlight: false
+    });
+
+    // 7. Sign summary — element + modality
+    dataPoints.push({
+      label: `♈ Your Sign (${sign})`,
+      value: `<strong>${signElement}</strong> element · <strong>${signModality}</strong> modality<br>Ruled by <strong>${SIGN_RULERS[sign]}</strong>`,
+      highlight: true
+    });
+
+    return dataPoints;
+  }
+
+  function renderSkySummary(dataPoints) {
+    const grid = document.getElementById('skySummaryGrid');
+    grid.innerHTML = dataPoints.map(dp => `
+      <div class="sky-datum${dp.highlight ? ' highlight' : ''}${dp.stellium ? ' stellium' : ''}">
+        <div class="datum-label">${dp.label}</div>
+        <div class="datum-value">${dp.value}</div>
+      </div>
+    `).join('');
+    document.getElementById('skySummary').classList.add('visible');
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // SKY-THREADED CONTEXT FOR INTERPRETATIONS
+  // ══════════════════════════════════════════════════════════
+
+  function buildSkyContextPhrase(skyData, sign) {
+    if (!skyData) return '';
+    const parts = [];
+    const period = skyData.period === 'SUN' ? 'under Apollo\'s gaze' : 'in the moon\'s reflective hour';
+    const moonPhase = skyData.moonPhase || {};
+    const phaseName = (moonPhase.name || '').toLowerCase();
+    if (phaseName) parts.push(`under a ${phaseName} moon`);
+    parts.push(period);
+    const rulerKey = SIGN_RULERS[sign].toLowerCase();
+    const rulerPlanet = skyData.planets && skyData.planets[rulerKey];
+    if (rulerPlanet) {
+      const rulerGod = Almanac.CELESTIAL_OLYMPIANS[rulerKey]?.olympian || SIGN_RULERS[sign];
+      parts.push(`while your ruler ${rulerGod} watches from ${rulerPlanet.sign}`);
+    }
+    return parts.join(', ');
   }
 
   // ── CARD DISPLAY ───────────────────────────────────────────
@@ -630,57 +801,61 @@ const Oracle = (() => {
   // REGISTER INTERPRETATIONS
   // ══════════════════════════════════════════════════════════
 
-  function interpretOracle(card, position, sign, skyData, dyadState) {
+  function interpretOracle(card, position, sign, skyData, dyadState, skyPhrase) {
     const keywords = (card.keywords || []).join(', ');
     const god = card.ruling_god || card.title || 'the unnamed';
     const whisper = Almanac.getWhisper(god, position === 'past' ? 0 : position === 'present' ? 1 : 2);
     const element = card.element || 'mystery';
+    const skyRef = skyPhrase ? ` — ${skyPhrase}` : '';
     
     const readings = {
-      past: `The cards say: <strong>${card.name}</strong> crossed your path before you knew to look. ${god} walked the ${element} road — ${keywords}. This was not accident. This was preparation. ${whisper}`,
-      present: `The veil lifts on <strong>${card.name}</strong>. ${god} stands in the ${element} of now — ${keywords}. The oracle speaks plain: what you hold in your hands right now is the answer to a question you asked long ago. ${whisper}`,
-      future: `The cards show <strong>${card.name}</strong> approaching. ${god} waits in the ${element} that is forming — ${keywords}. ${dyadState === 'resonant' ? 'The pattern holds. What was will be again, deeper.' : dyadState === 'harmonic' ? 'The elements align. Different hands, same fire.' : dyadState === 'tension' ? 'The god works across worlds. What seems broken is being remade.' : 'The pattern breaks — not as loss, but as liberation. A new thread begins.'} ${whisper}`
+      past: `The cards say: <strong>${card.name}</strong> crossed your path before you knew to look. ${god} walked the ${element} road — ${keywords}${skyRef}. This was not accident. This was preparation. ${whisper}`,
+      present: `The veil lifts on <strong>${card.name}</strong>. ${god} stands in the ${element} of now — ${keywords}${skyRef}. The oracle speaks plain: what you hold in your hands right now is the answer to a question you asked long ago. ${whisper}`,
+      future: `The cards show <strong>${card.name}</strong> approaching. ${god} waits in the ${element} that is forming — ${keywords}. ${dyadState === 'resonant' ? 'The pattern holds. What was will be again, deeper.' : dyadState === 'harmonic' ? 'The elements align. Different hands, same fire.' : dyadState === 'tension' ? 'The god works across worlds. What seems broken is being remade.' : 'The pattern breaks — not as loss, but as liberation. A new thread begins.'}${skyRef}. ${whisper}`
     };
     return readings[position] || readings.present;
   }
 
-  function interpretChronicler(card, position, sign, skyData, dyadState) {
+  function interpretChronicler(card, position, sign, skyData, dyadState, skyPhrase) {
     const god = card.ruling_god || card.title || 'the unnamed';
     const whisper = Almanac.getWhisper(god, position === 'past' ? 3 : position === 'present' ? 4 : 5);
+    const skyRef = skyPhrase ? ` The celestial record notes: ${skyPhrase}.` : '';
     
     const readings = {
-      past: `In the old accounts, <strong>${card.name}</strong> appears as the herald of what was already in motion. ${god} is recorded here — the chroniclers noted the ${card.element || 'elemental'} signature and marked the date. This is not the beginning of the story, but the chapter where the stakes were set. ${whisper}`,
-      present: `The record for this moment bears <strong>${card.name}</strong>. ${god} is the witness to now — and the chroniclers know that what is witnessed becomes real in a way the unwitnessed never does. The archive will show: this was the turning. ${whisper}`,
-      future: `The chroniclers have seen this pattern before. <strong>${card.name}</strong> follows — ${god} writes the next entry. ${dyadState === 'resonant' ? 'History rhymes. The same sequence appears in the old scrolls, and the outcome was recorded.' : dyadState === 'harmonic' ? 'The elements echo. Different players, same stage — the chroniclers note the parallel.' : dyadState === 'tension' ? 'The record shows a fracture — but fractures are where the light enters the archive.' : 'No precedent exists. The chroniclers will have to write a new entry for what comes next.'} ${whisper}`
+      past: `In the old accounts, <strong>${card.name}</strong> appears as the herald of what was already in motion. ${god} is recorded here — the chroniclers noted the ${card.element || 'elemental'} signature and marked the date. This is not the beginning of the story, but the chapter where the stakes were set.${skyRef} ${whisper}`,
+      present: `The record for this moment bears <strong>${card.name}</strong>. ${god} is the witness to now — and the chroniclers know that what is witnessed becomes real in a way the unwitnessed never does. The archive will show: this was the turning.${skyRef} ${whisper}`,
+      future: `The chroniclers have seen this pattern before. <strong>${card.name}</strong> follows — ${god} writes the next entry. ${dyadState === 'resonant' ? 'History rhymes. The same sequence appears in the old scrolls, and the outcome was recorded.' : dyadState === 'harmonic' ? 'The elements echo. Different players, same stage — the chroniclers note the parallel.' : dyadState === 'tension' ? 'The record shows a fracture — but fractures are where the light enters the archive.' : 'No precedent exists. The chroniclers will have to write a new entry for what comes next.'}${skyRef} ${whisper}`
     };
     return readings[position] || readings.present;
   }
 
-  function interpretPoet(card, position, sign, skyData, dyadState) {
+  function interpretPoet(card, position, sign, skyData, dyadState, skyPhrase) {
     const god = card.ruling_god || card.title || 'the unnamed';
     const whisper = Almanac.getWhisper(god, position === 'past' ? 6 : position === 'present' ? 7 : 8);
     const element = (card.element || 'mystery').toLowerCase();
+    const skyRef = skyPhrase ? ` — ${skyPhrase}` : '';
     
     const readings = {
-      past: `The heart remembers <strong>${card.name}</strong> — ${god} moved through the ${element} like a song half-heard. You carried it without knowing the melody. Now it plays again, and you recognize every note. ${whisper}`,
-      present: `<strong>${card.name}</strong> is the poem the moment is writing. ${god} holds the pen — the ${element} is the ink. Do not edit. Do not revise. Let the verse be what it is. ${whisper}`,
-      future: `<strong>${card.name}</strong> waits like the last line of a poem you are still composing. ${god} knows the ending — ${dyadState === 'resonant' ? 'and it is the same word you began with, transformed by everything between.' : dyadState === 'harmonic' ? 'and it rhymes with the beginning, though the language has changed.' : dyadState === 'tension' ? 'and it breaks the meter — but some poems need the break to breathe.' : 'and it will surprise you — the best poems always do.'} ${whisper}`
+      past: `The heart remembers <strong>${card.name}</strong> — ${god} moved through the ${element} like a song half-heard${skyRef}. You carried it without knowing the melody. Now it plays again, and you recognize every note. ${whisper}`,
+      present: `<strong>${card.name}</strong> is the poem the moment is writing. ${god} holds the pen — the ${element} is the ink${skyRef}. Do not edit. Do not revise. Let the verse be what it is. ${whisper}`,
+      future: `<strong>${card.name}</strong> waits like the last line of a poem you are still composing. ${god} knows the ending — ${dyadState === 'resonant' ? 'and it is the same word you began with, transformed by everything between.' : dyadState === 'harmonic' ? 'and it rhymes with the beginning, though the language has changed.' : dyadState === 'tension' ? 'and it breaks the meter — but some poems need the break to breathe.' : 'and it will surprise you — the best poems always do.'}${skyRef}. ${whisper}`
     };
     return readings[position] || readings.present;
   }
 
-  function interpretScholar(card, position, sign, skyData, dyadState) {
+  function interpretScholar(card, position, sign, skyData, dyadState, skyPhrase) {
     const god = card.ruling_god || card.title || 'the unnamed';
     const whisper = Almanac.getWhisper(god, position === 'past' ? 9 : position === 'present' ? 10 : 11);
     const element = card.element || 'unclassified';
     const cardId = card.id || 'unknown';
     const signElement = SIGN_ELEMENTS[sign];
     const affinity = element === signElement ? 'strong' : 'cross-element';
+    const skyRef = skyPhrase ? ` Celestial context: ${skyPhrase}.` : '';
     
     const readings = {
-      past: `Analysis: <strong>${card.name}</strong> (ID: ${cardId}) — ${god}, ${element} signature. Appears in Past position with ${affinity} affinity to your sign (${sign}, ${signElement}). The pattern suggests this card was the catalyst — not the cause, but the condition that made the present possible. ${whisper}`,
-      present: `Current draw: <strong>${card.name}</strong> — ${god}, ${element} archetype. Present position, ${affinity} resonance with ${sign}. The data indicates an active influence. Elemental match: ${affinity === 'strong' ? 'your sign\'s native element is engaged — this is a direct circuit.' : 'cross-element activation — the influence operates at an angle to your default mode, which may be precisely why it is effective.'} ${whisper}`,
-      future: `Forecast: <strong>${card.name}</strong> — ${god}. Future position. Dyad analysis: ${dyadState}. ${dyadState === 'resonant' ? 'Resonant dyad — high probability of pattern continuation. The same element and divine signature repeating suggests a stable trajectory.' : dyadState === 'harmonic' ? 'Harmonic dyad — shared element, different signatures. The environment is consistent but the agency shifts. Expect collaboration or succession.' : dyadState === 'tension' ? 'Tension dyad — same divine signature across different elements. The god is working through unfamiliar terrain. Expect adaptation — the core intent persists but the method changes.' : 'Dissonant dyad — clean break. New element, new signature. The system is entering a phase change. Prior patterns are not predictive here.'} ${whisper}`
+      past: `Analysis: <strong>${card.name}</strong> (ID: ${cardId}) — ${god}, ${element} signature. Appears in Past position with ${affinity} affinity to your sign (${sign}, ${signElement}). The pattern suggests this card was the catalyst — not the cause, but the condition that made the present possible.${skyRef} ${whisper}`,
+      present: `Current draw: <strong>${card.name}</strong> — ${god}, ${element} archetype. Present position, ${affinity} resonance with ${sign}. The data indicates an active influence. Elemental match: ${affinity === 'strong' ? 'your sign\'s native element is engaged — this is a direct circuit.' : 'cross-element activation — the influence operates at an angle to your default mode, which may be precisely why it is effective.'}${skyRef} ${whisper}`,
+      future: `Forecast: <strong>${card.name}</strong> — ${god}. Future position. Dyad analysis: ${dyadState}. ${dyadState === 'resonant' ? 'Resonant dyad — high probability of pattern continuation. The same element and divine signature repeating suggests a stable trajectory.' : dyadState === 'harmonic' ? 'Harmonic dyad — shared element, different signatures. The environment is consistent but the agency shifts. Expect collaboration or succession.' : dyadState === 'tension' ? 'Tension dyad — same divine signature across different elements. The god is working through unfamiliar terrain. Expect adaptation — the core intent persists but the method changes.' : 'Dissonant dyad — clean break. New element, new signature. The system is entering a phase change. Prior patterns are not predictive here.'}${skyRef} ${whisper}`
     };
     return readings[position] || readings.present;
   }
@@ -696,20 +871,18 @@ const Oracle = (() => {
   }
 
   // ── SUMMARY ────────────────────────────────────────────────
-  function buildSummary(pastCard, presentCard, futureCard, sign, registerId, dyadState) {
+  function buildSummary(pastCard, presentCard, futureCard, sign, registerId, dyadState, skyPhrase) {
     const register = REGISTERS.find(r => r.id === registerId);
     const registerName = register ? register.name : 'Oracle';
     const signGlyph = GLYPHS[sign];
     const signElement = SIGN_ELEMENTS[sign];
-    const skyInfo = skyData
-      ? `${Object.values(skyData.planets).filter(p => p && p.sign === sign).length} celestial bod${Object.values(skyData.planets).filter(p => p && p.sign === sign).length === 1 ? 'y' : 'ies'} in your sign`
-      : '';
+    const skyRef = skyPhrase ? ` ${skyPhrase}.` : '';
 
     const summaries = {
-      oracle: `The oracle has spoken through <strong>${signGlyph} ${sign}</strong> — ${signElement} sign, ${registerName} voice. ${skyInfo ? `Under a sky where ${skyInfo}, the cards align.` : ''} Past: <strong>${pastCard.name}</strong>. Present: <strong>${presentCard.name}</strong>. Future: <strong>${futureCard.name}</strong>. The dyad is ${dyadState}. The reading is complete.`,
-      chronicler: `The chronicle of <strong>${signGlyph} ${sign}</strong> has been updated. ${registerName} voice, ${signElement} register. ${skyInfo ? `The celestial record notes: ${skyInfo}.` : ''} The entry reads: Past — <strong>${pastCard.name}</strong>; Present — <strong>${presentCard.name}</strong>; Future — <strong>${futureCard.name}</strong>. Dyad: ${dyadState}. Filed.`,
-      poet: `For <strong>${signGlyph} ${sign}</strong>, in the ${registerName.toLowerCase()}'s tongue — ${signElement} runs through these veins. ${skyInfo ? `The sky whispers: ${skyInfo}.` : ''} <strong>${pastCard.name}</strong> was the ache. <strong>${presentCard.name}</strong> is the pulse. <strong>${futureCard.name}</strong> is the promise. The dyad sings ${dyadState}.`,
-      scholar: `<strong>${signGlyph} ${sign}</strong> · ${signElement} · ${registerName} register. ${skyInfo ? `Celestial context: ${skyInfo}.` : ''} Draw: Past=<strong>${pastCard.name}</strong>, Present=<strong>${presentCard.name}</strong>, Future=<strong>${futureCard.name}</strong>. Dyad state: ${dyadState}. Pattern analysis complete.`
+      oracle: `The oracle has spoken through <strong>${signGlyph} ${sign}</strong> — ${signElement} sign, ${registerName} voice.${skyRef} Past: <strong>${pastCard.name}</strong>. Present: <strong>${presentCard.name}</strong>. Future: <strong>${futureCard.name}</strong>. The dyad is ${dyadState}. The reading is complete.`,
+      chronicler: `The chronicle of <strong>${signGlyph} ${sign}</strong> has been updated. ${registerName} voice, ${signElement} register.${skyRef} The entry reads: Past — <strong>${pastCard.name}</strong>; Present — <strong>${presentCard.name}</strong>; Future — <strong>${futureCard.name}</strong>. Dyad: ${dyadState}. Filed.`,
+      poet: `For <strong>${signGlyph} ${sign}</strong>, in the ${registerName.toLowerCase()}'s tongue — ${signElement} runs through these veins.${skyRef} <strong>${pastCard.name}</strong> was the ache. <strong>${presentCard.name}</strong> is the pulse. <strong>${futureCard.name}</strong> is the promise. The dyad sings ${dyadState}.`,
+      scholar: `<strong>${signGlyph} ${sign}</strong> · ${signElement} · ${registerName} register.${skyRef} Draw: Past=<strong>${pastCard.name}</strong>, Present=<strong>${presentCard.name}</strong>, Future=<strong>${futureCard.name}</strong>. Dyad state: ${dyadState}. Pattern analysis complete.`
     };
 
     return summaries[registerId] || summaries.oracle;
@@ -734,19 +907,11 @@ const Oracle = (() => {
       skyData = null;
     }
 
-    // Show sky context
-    const skyContext = document.getElementById('skyContext');
-    if (skyData) {
-      const planetsInSign = Object.entries(skyData.planets)
-        .filter(([_, p]) => p && p.sign === selectedSign)
-        .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
-      skyContext.innerHTML = planetsInSign.length > 0
-        ? `The sky watches <strong>${GLYPHS[selectedSign]} ${selectedSign}</strong> — <strong>${planetsInSign.join(', ')}</strong> walk${planetsInSign.length === 1 ? 's' : ''} your sign as you draw.`
-        : `<strong>${GLYPHS[selectedSign]} ${selectedSign}</strong> — the house is empty, but the cards know the way.`;
-      skyContext.classList.add('visible');
-    } else {
-      skyContext.innerHTML = `The sky is clouded, but <strong>${GLYPHS[selectedSign]} ${selectedSign}</strong> is eternal. The draw proceeds.`;
-      skyContext.classList.add('visible');
+    // Build sky summary
+    const dataPoints = buildSkySummary(skyData, selectedSign);
+    const skyPhrase = buildSkyContextPhrase(skyData, selectedSign);
+    if (dataPoints) {
+      renderSkySummary(dataPoints);
     }
 
     // Build weighted pools
@@ -756,7 +921,7 @@ const Oracle = (() => {
     // Draw Past (Major Arcana)
     const pastCard = weightedRandom(majorPool);
 
-    // Draw Present (Minor Arcana) — exclude past card's element bias slightly
+    // Draw Present (Minor Arcana)
     const presentPool = minorPool.filter(entry => entry.card.id !== pastCard.id);
     const presentCard = weightedRandom(presentPool.length > 0 ? presentPool : minorPool);
 
@@ -765,7 +930,7 @@ const Oracle = (() => {
     const futureCard = weightedRandom(futurePool);
 
     // Store reading
-    currentReading = { pastCard, presentCard, futureCard, dyadState };
+    currentReading = { pastCard, presentCard, futureCard, dyadState, skyPhrase };
 
     // Render cards
     const interpreter = getInterpreter(selectedRegister);
@@ -774,25 +939,25 @@ const Oracle = (() => {
     renderCard('presentContent', presentCard, 'present');
     renderCard('futureContent', futureCard, 'future');
 
-    // Render interpretations
+    // Render interpretations (staggered reveal)
     setTimeout(() => {
       renderInterpretation('pastContent', pastCard,
-        interpreter(pastCard, 'past', selectedSign, skyData, dyadState));
+        interpreter(pastCard, 'past', selectedSign, skyData, dyadState, skyPhrase));
     }, 300);
     setTimeout(() => {
       renderInterpretation('presentContent', presentCard,
-        interpreter(presentCard, 'present', selectedSign, skyData, dyadState));
+        interpreter(presentCard, 'present', selectedSign, skyData, dyadState, skyPhrase));
     }, 600);
     setTimeout(() => {
       renderInterpretation('futureContent', futureCard,
-        interpreter(futureCard, 'future', selectedSign, skyData, dyadState));
+        interpreter(futureCard, 'future', selectedSign, skyData, dyadState, skyPhrase));
     }, 900);
 
     // Show spread
     document.getElementById('spread').classList.add('visible');
 
     // Build summary
-    const summary = buildSummary(pastCard, presentCard, futureCard, selectedSign, selectedRegister, dyadState);
+    const summary = buildSummary(pastCard, presentCard, futureCard, selectedSign, selectedRegister, dyadState, skyPhrase);
     document.getElementById('registerBadge').textContent = `— Spoken by the ${REGISTERS.find(r => r.id === selectedRegister)?.name || 'Oracle'} —`;
     document.getElementById('registerBadge').style.color = REGISTERS.find(r => r.id === selectedRegister)?.color || 'var(--oracle-color)';
     document.getElementById('summaryText').innerHTML = summary;
@@ -808,7 +973,7 @@ const Oracle = (() => {
     grid.innerHTML = SIGNS.map(sign => `
       <button class="sign-btn${selectedSign === sign ? ' selected' : ''}"
               onclick="Oracle.selectSign('${sign}')"
-              title="${sign} — ${SIGN_ELEMENTS[sign]} · ${SIGN_MODALITIES[sign]}">
+              title="${sign} — ${SIGN_ELEMENTS[sign]} · ${SIGN_MODALITIES[sign]} · Ruled by ${SIGN_RULERS[sign]}">
         <span class="sign-emoji">${SIGN_EMOJI[sign]}</span>
         <span class="sign-name">${sign}</span>
         <span class="sign-element">${SIGN_ELEMENTS[sign]}</span>
@@ -849,17 +1014,16 @@ const Oracle = (() => {
     selectedRegister = registerId;
     buildRegisterToggle();
     updateDrawButton();
-    // If there's an existing reading, re-render with new voice
     if (currentReading) {
       const interpreter = getInterpreter(selectedRegister);
-      const { pastCard, presentCard, futureCard, dyadState } = currentReading;
+      const { pastCard, presentCard, futureCard, dyadState, skyPhrase } = currentReading;
       renderInterpretation('pastContent', pastCard,
-        interpreter(pastCard, 'past', selectedSign, skyData, dyadState));
+        interpreter(pastCard, 'past', selectedSign, skyData, dyadState, skyPhrase));
       renderInterpretation('presentContent', presentCard,
-        interpreter(presentCard, 'present', selectedSign, skyData, dyadState));
+        interpreter(presentCard, 'present', selectedSign, skyData, dyadState, skyPhrase));
       renderInterpretation('futureContent', futureCard,
-        interpreter(futureCard, 'future', selectedSign, skyData, dyadState));
-      const summary = buildSummary(pastCard, presentCard, futureCard, selectedSign, selectedRegister, dyadState);
+        interpreter(futureCard, 'future', selectedSign, skyData, dyadState, skyPhrase));
+      const summary = buildSummary(pastCard, presentCard, futureCard, selectedSign, selectedRegister, dyadState, skyPhrase);
       document.getElementById('registerBadge').textContent = `— Spoken by the ${REGISTERS.find(r => r.id === selectedRegister)?.name || 'Oracle'} —`;
       document.getElementById('registerBadge').style.color = REGISTERS.find(r => r.id === selectedRegister)?.color || 'var(--oracle-color)';
       document.getElementById('summaryText').innerHTML = summary;
@@ -872,7 +1036,6 @@ const Oracle = (() => {
     updateDrawButton();
     await loadCards();
     updateDrawButton();
-    // Card mosaic
     buildCardMosaic();
   }
 
