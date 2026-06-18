@@ -385,16 +385,16 @@
       {
         "id": "earth_knight",
         "name": "Knight of Earth",
-        "title": "Croesus",
-        "culture": "Greek",
+        "title": "Veles",
+        "culture": "Slavic",
         "rank": "knight",
         "element": "Earth",
         "ruling_god": "Demeter",
-        "keywords": ["the richest king", "true believer in wealth", "conviction", "the bet", "gold"],
-        "upright": "Croesus, king of Lydia, so wealthy his name became a word. He believed his gold made him invincible. The Knight of Earth is the true believer in wealth — the gold bug, the one who rides the market with religious conviction. Belief moves money. But gold is heavy.",
-        "reversed": "Croesus on the pyre. The wealth that didn't save him. The coin that couldn't stop the conqueror. Gold will not carry you through the fire.",
+        "keywords": ["the serpent wealth", "cattle and magic", "the trickster below", "living riches", "the one who hides and returns"],
+        "upright": "Veles coils in the roots of the World Tree, keeper of cattle, god of wealth that moves and hides and must be tracked. He is not the miser counting coins — he is the herdsman who knows that wealth is alive, that it wanders, that it must be pursued through the wet earth. The Knight of Earth is the true believer in abundance — not gold hoarded, but gold that breathes. Chase it. But know: Veles is also the one who steals. What you pursue may be pursuing something else.",
+        "reversed": "The serpent vanished into the underworld. Veles escaped through a crack in the earth, and the cattle scattered. The wealth that slipped away while you were watching the sky. Perun chases — but are you chasing what's actually yours, or someone else's herd? The serpent wealth does not belong to the first hand that grabs it.",
         "image": "data/images/minor/earth/earth_knight.png",
-        "prompt": "Croesus, the legendarily wealthy king of Lydia who believed gold made him untouchable, as tarot card."
+        "prompt": "Veles, Slavic god of the underworld, cattle, and magic — horned serpent coiled in the roots of the World Tree, as tarot card."
       },
       {
         "id": "earth_queen",
