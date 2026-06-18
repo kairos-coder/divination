@@ -1,7 +1,3 @@
-Got it. Let me write it clean.
-
----
-
 # ✦ The Celestial Proclamation ✦
 ## Apollo Speaks · Waxing Crescent · June 18, 2026
 ### *The Witch's Foot*
