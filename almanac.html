@@ -2,155 +2,409 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Almanac · Sky Archivist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Almanac · The Celestial Record — Digital Divination</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --gold:#d4a840;--gold-light:#f0d878;--gold-dark:#8a6518;--gold-dim:#4a3510;
+  --void:#060610;--deep:#0c0c1e;--surface:#181838;--surface2:#202048;
+  --border:#2a2a4a;--border-gold:rgba(212,168,64,0.2);
+  --text:#f0ead8;--text-mid:#d0c0a0;--text-dim:#988870;
+  --fire:#cc7755;--earth:#8ab87a;--air:#aa88cc;--water:#66aacc;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 5%,#120828 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%,#081420 0%,transparent 55%),
+    radial-gradient(ellipse 30% 60% at 80% 20%,#0a0820 0%,transparent 50%);
+  font-family:'Cormorant Garamond',Georgia,serif;
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── CARD MOSAIC ── */
+#cardMosaic{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  display:grid;grid-template-columns:repeat(6,1fr);
+  opacity:0.14;
+}
+#cardMosaic img{
+  width:100%;aspect-ratio:2/3;object-fit:cover;
+  filter:sepia(0.15) brightness(0.9);
+  transition:opacity 0.6s;
+}
+
+.content-layer{position:relative;z-index:2}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;height:56px;
+  background:rgba(8,8,20,0.88);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-gold);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;z-index:200;
+}
+.nav-brand{display:flex;flex-direction:column;gap:1px}
+.nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--gold);letter-spacing:1.5px}
+.nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;color:var(--gold-dark);text-transform:uppercase}
+.nav-links{display:flex;gap:14px;list-style:none;flex-wrap:wrap}
+.nav-links a{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--text-dim);
+  text-decoration:none;transition:color 0.2s;padding:4px 0;
+  border-bottom:1px solid transparent;
+}
+.nav-links a:hover{color:var(--gold-light);border-bottom-color:var(--border-gold)}
+.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── MAIN CONTAINER ── */
+.container{
+  position:relative;z-index:2;
+  max-width:820px;margin:0 auto;
+  padding:80px 16px 60px;
+}
+
+/* ── HEADER ── */
+.header{text-align:center;margin-bottom:32px}
+.header h1{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,5vw,40px);font-weight:900;
+  color:var(--gold-light);
+  text-shadow:0 0 100px rgba(212,168,64,0.25),0 4px 16px rgba(0,0,0,0.9);
+  letter-spacing:3px;
+}
+.header .subtitle{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:16px;
+  color:var(--text-dim);margin-top:8px;
+}
+
+/* ── GRIMOIRE CARD ── */
+.grimoire-card{
+  background:rgba(24,24,56,0.55);border:1px solid var(--border);
+  border-radius:12px;padding:24px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.grimoire-card::before{
+  content:'';position:absolute;top:0;left:12px;right:12px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0.4;
+}
+.grimoire-card h2{
+  font-family:'Cinzel Decorative',serif;font-size:16px;
+  color:var(--gold-light);margin-bottom:20px;
+  text-align:center;letter-spacing:2px;
+}
+.grimoire-card h2 .ornament{color:var(--gold);opacity:0.7}
+
+/* ── WATCH INDICATOR ── */
+.watch-indicator{
+  text-align:center;margin-bottom:20px;
+  padding:10px 16px;border-radius:8px;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;
+}
+.watch-indicator.dawn{
+  background:rgba(212,168,64,0.08);border:1px solid rgba(212,168,64,0.25);
+  color:var(--gold);
+}
+.watch-indicator.zenith{
+  background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.25);
+  color:#e8a020;
+}
+.watch-indicator.dusk{
+  background:rgba(104,136,170,0.08);border:1px solid rgba(104,136,170,0.25);
+  color:var(--water);
+}
+.watch-indicator.lunar{
+  background:rgba(104,136,170,0.08);border:1px solid rgba(104,136,170,0.25);
+  color:var(--water);
+}
+.watch-indicator.none{
+  background:rgba(42,42,74,0.3);border:1px solid var(--border);
+  color:var(--text-dim);
+}
+
+/* ── SKY SNAPSHOT ── */
+.sky-snapshot{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:10px;margin-bottom:20px;
+}
+.sky-datum{
+  background:rgba(12,12,30,0.5);border:1px solid var(--border);
+  border-radius:8px;padding:12px 14px;text-align:center;
+}
+.sky-datum.highlight{
+  border-color:var(--border-gold);
+  background:rgba(212,168,64,0.06);
+}
+.sky-datum .datum-label{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;opacity:0.7;
+}
+.sky-datum .datum-value{
+  font-size:14px;color:var(--text-mid);line-height:1.5;
+}
+.sky-datum .datum-value strong{color:var(--gold-light)}
+
+/* ── BUTTONS ── */
+.button-row{
+  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:16px;
+}
+.btn{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;padding:12px 28px;border-radius:8px;
+  cursor:pointer;transition:all 0.3s;border:none;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#0a0a0a;
+  box-shadow:0 0 30px rgba(212,168,64,0.2);
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 40px rgba(212,168,64,0.35);
+}
+.btn-primary:disabled{
+  opacity:0.35;cursor:not-allowed;transform:none;box-shadow:none;
+}
+.btn-secondary{
+  background:transparent;border:1px solid var(--border);
+  color:var(--text-dim);
+}
+.btn-secondary:hover{
+  border-color:var(--border-gold);color:var(--gold-light);
+}
+.btn-small{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;padding:8px 16px;border-radius:6px;
+  cursor:pointer;transition:all 0.25s;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text-dim);
+}
+.btn-small:hover{border-color:var(--border-gold);color:var(--gold-light)}
+.btn-small.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,64,0.08)}
+
+/* ── STATUS ── */
+.status-msg{
+  text-align:center;padding:12px 16px;border-radius:8px;
+  margin:12px 0;font-size:13px;font-style:italic;
+  display:none;
+}
+.status-msg.visible{display:block}
+.status-msg.success{background:rgba(138,184,122,0.1);border:1px solid rgba(138,184,122,0.25);color:var(--earth)}
+.status-msg.error{background:rgba(200,74,42,0.1);border:1px solid rgba(200,74,42,0.25);color:#c94a2a}
+.status-msg.info{background:rgba(212,168,64,0.08);border:1px solid rgba(212,168,64,0.2);color:var(--gold)}
+
+/* ── DATE BROWSER ── */
+.date-browser{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;margin-bottom:20px;
+}
+.date-browser .date-display{
+  font-family:'Cinzel Decorative',serif;font-size:18px;
+  color:var(--gold-light);min-width:200px;text-align:center;
+}
+.date-browser .date-nav{
+  font-size:18px;cursor:pointer;color:var(--text-dim);
+  transition:color 0.2s;background:none;border:none;
+  font-family:'Cinzel',serif;
+}
+.date-browser .date-nav:hover{color:var(--gold-light)}
+
+/* ── WATCHES LIST ── */
+.watches-list{display:flex;flex-direction:column;gap:12px}
+.watch-entry{
+  background:rgba(12,12,30,0.5);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;
+  transition:all 0.25s;
+}
+.watch-entry:hover{border-color:var(--border-gold)}
+.watch-entry .watch-header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;margin-bottom:10px;
+}
+.watch-entry .watch-label{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;
+}
+.watch-entry .watch-label.dawn{color:var(--gold)}
+.watch-entry .watch-label.zenith{color:#e8a020}
+.watch-entry .watch-label.dusk{color:var(--water)}
+.watch-entry .watch-label.lunar{color:var(--water)}
+.watch-entry .watch-time{
+  font-size:11px;color:var(--text-dim);
+}
+.watch-entry .watch-sky{
+  font-size:13px;color:var(--text-mid);line-height:1.6;
+  margin-bottom:8px;
+}
+.watch-entry .watch-narrative{
+  font-size:14px;font-style:italic;color:var(--text-dim);
+  line-height:1.7;padding-top:10px;
+  border-top:1px solid rgba(212,168,64,0.08);
+}
+.watch-entry .watch-empty{
+  font-size:13px;font-style:italic;color:var(--text-dim);
+  opacity:0.5;
+}
+
+/* ── AUTO-REFRESH ── */
+.auto-refresh-row{
+  text-align:center;margin-top:16px;
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--text-dim);
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;
+}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:40px 24px;position:relative;z-index:2;
+  border-top:1px solid rgba(212,168,64,0.06);
+}
+.footer-text{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:4px;
+  color:var(--gold-dark);text-transform:uppercase;opacity:0.4;line-height:2.4;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  nav{padding:0 12px}
+  .nav-links{gap:8px}
+  .nav-links a{font-size:7px;letter-spacing:2px}
+  .sky-snapshot{grid-template-columns:repeat(2,1fr)}
+  .button-row{flex-direction:column;align-items:center}
+  .btn{width:100%;max-width:280px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cardMosaic"></div>
+
+<div class="content-layer">
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-title">Digital Divination</div>
+    <div class="nav-brand-sub">Aspects of the Divine</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="draw.html">Draw</a></li>
+    <li><a href="oracle.html">Oracle</a></li>
+    <li><a href="almanac.html" class="active">Almanac</a></li>
+    <li><a href="celestial.html">Celestial</a></li>
+    <li><a href="chthonic.html">Chthonic</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="index.html">Temple</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <div class="header">
+    <h1>✦ Almanac ✦</h1>
+    <div class="subtitle">The Celestial Record · Four Watches Per Day</div>
+  </div>
+
+  <!-- WATCH INDICATOR -->
+  <div class="watch-indicator none" id="watchIndicator">Loading sky...</div>
+
+  <!-- CURRENT SKY -->
+  <div class="grimoire-card">
+    <h2><span class="ornament">✦</span> Current Sky State <span class="ornament">✦</span></h2>
+    <div class="sky-snapshot" id="skySnapshot"></div>
+    <div class="button-row">
+      <button class="btn btn-primary" id="recordBtn" disabled>⟳ Loading...</button>
+      <button class="btn btn-secondary" id="refreshBtn">⟳ Refresh Sky</button>
+    </div>
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+  <!-- TODAY'S WATCHES -->
+  <div class="grimoire-card">
+    <h2><span class="ornament">✦</span> Today's Watches <span class="ornament">✦</span></h2>
+    <div class="date-browser">
+      <button class="date-nav" id="prevDay">◀</button>
+      <div class="date-display" id="dateDisplay"></div>
+      <button class="date-nav" id="nextDay">▶</button>
+    </div>
+    <div class="watches-list" id="watchesList">
+      <div class="watch-entry"><div class="watch-empty">Loading records from DivineDB...</div></div>
+    </div>
+    <div class="auto-refresh-row">
+      <span id="autoRefreshLabel">⏱ Auto-record: Off</span>
+      <button class="btn-small" id="autoRefreshBtn">Enable</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-text">
+    Almanac · The Celestial Record<br>
+    Dawn · Zenith · Dusk · Lunar · Four Watches Per Day<br>
+    Stored in DivineDB · The Sky Is the Source Code
+  </div>
+</footer>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script src="js/observe.js"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: #060610;
-  font-family: 'Cormorant Garamond', serif;
-  color: #f0ead8;
-  padding: 40px 24px;
-}
-.container { max-width: 1000px; margin: 0 auto; }
-.header { text-align: center; margin-bottom: 40px; }
-.header h1 { font-family: 'Cinzel Decorative', serif; font-size: 48px; color: #f0d878; }
-.header .sub { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 6px; color: #8a6518; }
-.panel {
-  background: rgba(24,24,56,0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid #2a2a4a;
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 24px;
-}
-.panel-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 18px;
-  color: #d4a840;
-  margin-bottom: 16px;
-  border-bottom: 1px solid rgba(212,168,64,0.2);
-  padding-bottom: 8px;
-}
-.sky-preview {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.sky-card {
-  background: rgba(0,0,0,0.3);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-}
-.sky-label { font-size: 10px; color: #988870; text-transform: uppercase; }
-.sky-value { font-size: 24px; font-family: 'Cinzel Decorative', serif; color: #f0d878; }
-.button-row {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin: 24px 0;
-}
-.btn {
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
-  letter-spacing: 3px;
-  padding: 12px 28px;
-  border-radius: 40px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: none;
-}
-.btn-primary {
-  background: linear-gradient(135deg, #d4a840, #f0d878);
-  color: #0a0a0a;
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(212,168,64,0.4); }
-.btn-secondary {
-  background: transparent;
-  border: 1px solid #2a2a4a;
-  color: #988870;
-}
-.btn-secondary:hover { border-color: #d4a840; color: #d4a840; }
-.status {
-  text-align: center;
-  padding: 12px;
-  border-radius: 12px;
-  margin: 16px 0;
-}
-.status-success { background: rgba(106,138,58,0.2); color: #8ab87a; border: 1px solid #6a8a3a; }
-.status-error { background: rgba(201,74,42,0.2); color: #c94a2a; border: 1px solid #c94a2a; }
-.status-info { background: rgba(212,168,64,0.1); color: #d4a840; border: 1px solid #d4a840; }
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-.history-table th, .history-table td {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #2a2a4a;
-}
-.history-table th { color: #d4a840; font-family: 'Cinzel', serif; }
-.auto-refresh { font-size: 11px; color: #988870; text-align: center; margin-top: 16px; }
-footer { text-align: center; margin-top: 40px; font-size: 9px; color: #8a6518; }
-</style>
-</head>
-<body>
-<div class="container">
-  <div class="header">
-    <h1>📜 Almanac</h1>
-    <div class="sub">Sky Archivist · DivineDB Recorder</div>
-  </div>
-
-  <!-- Current Sky Preview -->
-  <div class="panel">
-    <div class="panel-title">☀️ Current Sky State</div>
-    <div class="sky-preview" id="skyPreview">
-      <div class="sky-card">🌙 Period<br><span id="previewPeriod" class="sky-value">—</span></div>
-      <div class="sky-card">☀️ Sun<br><span id="previewSun" class="sky-value">—</span></div>
-      <div class="sky-card">🌙 Moon<br><span id="previewMoon" class="sky-value">—</span></div>
-      <div class="sky-card">📅 Date<br><span id="previewDate" class="sky-value">—</span></div>
-    </div>
-    <div class="button-row">
-      <button class="btn btn-primary" id="recordBtn">📝 Record Sky State</button>
-      <button class="btn btn-secondary" id="refreshBtn">⟳ Refresh Preview</button>
-    </div>
-    <div id="recordStatus"></div>
-  </div>
-
-  <!-- History Panel -->
-  <div class="panel">
-    <div class="panel-title">📚 Recent Sky States</div>
-    <div id="historyContainer">
-      <div style="text-align:center; padding:20px;">Loading history...</div>
-    </div>
-    <div class="auto-refresh" id="autoRefreshStatus">
-      ⏱️ Auto-save: Off
-      <button id="autoRefreshBtn" style="background:none; border:1px solid #2a2a4a; color:#988870; padding:2px 8px; margin-left:8px; border-radius:20px; cursor:pointer;">Enable</button>
-    </div>
-  </div>
-
-  <footer>
-    THE SKY IS THE SOURCE CODE · ARCHIVED TO DIVINEDB
-  </footer>
-</div>
-
+<script src="js/almanac.js"></script>
 <script>
-(function() {
+/* ═══════════════════════════════════════════════════════════════
+   ALMANAC 2.0 — THE CELESTIAL RECORD
+   Digital Divination · Ealdforn Republic
+   
+   Four Watches Per Day:
+   ☀ Dawn  — sunrise to sunrise+2h
+   ☀ Zenith — solar noon ±1h  
+   ☀ Dusk  — sunset-2h to sunset
+   ☽ Lunar — dusk to dawn, moon above horizon
+   
+   Stores to DivineDB sky_states table with watch + narrative columns.
+   ═══════════════════════════════════════════════════════════════ */
+
+const AlmanacPage = (() => {
+
+  // ── STATE ──────────────────────────────────────────────────
+  let skyData        = null;
+  let currentWatch   = null;
+  let browseDate     = new Date();
+  let autoInterval   = null;
+  let supabaseClient = null;
+  let lastRecordedHash = null;
+
   const SUPABASE_URL = 'https://kzcucjcyxybypncbdbws.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6Y3VjamN5eHlieXBuY2JkYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MzIwMTYsImV4cCI6MjA5MjAwODAxNn0.Z8A74B-Rck1POzWkvMXAnfNP6XObJ-MZxLpvOcAC_ig';
 
-  let supabaseClient = null;
-  let autoRefreshInterval = null;
-  let lastSavedHash = null;
+  const GLYPHS = Almanac.SIGN_GLYPHS;
+  const MOON_PHASE_ICONS = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
 
+  const WATCH_WINDOWS = {
+    dawn:   { label:'☀ Dawn Watch',   cssClass:'dawn',   icon:'☀️' },
+    zenith: { label:'☀ Zenith Watch', cssClass:'zenith', icon:'☀️' },
+    dusk:   { label:'☀ Dusk Watch',   cssClass:'dusk',   icon:'☀️' },
+    lunar:  { label:'☽ Lunar Watch',  cssClass:'lunar',  icon:'🌙' }
+  };
+
+  // ── SUPABASE ───────────────────────────────────────────────
   function initSupabase() {
     if (window.supabase && !supabaseClient) {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -158,141 +412,487 @@ footer { text-align: center; margin-top: 40px; font-size: 9px; color: #8a6518; }
     }
   }
 
-  function getSkyHash(sky) {
-    return `${sky.period}_${sky.planets?.sun?.sign}_${sky.planets?.moon?.sign}`;
+  // ── WATCH DETECTION ────────────────────────────────────────
+  function detectWatch(sky) {
+    if (!sky || !sky.solar) return null;
+    const now = new Date();
+    const sunrise = sky.solar.sunrise ? new Date(sky.solar.sunrise) : null;
+    const sunset  = sky.solar.sunset  ? new Date(sky.solar.sunset)  : null;
+    const noon    = sky.solar.solarNoon ? new Date(sky.solar.solarNoon) : null;
+    const moon    = sky.planets?.moon;
+
+    // Dawn: sunrise to sunrise+2h
+    if (sunrise) {
+      const dawnEnd = new Date(sunrise.getTime() + 2 * 60 * 60 * 1000);
+      if (now >= sunrise && now <= dawnEnd) return 'dawn';
+    }
+
+    // Zenith: solar noon ±1h
+    if (noon) {
+      const zenithStart = new Date(noon.getTime() - 1 * 60 * 60 * 1000);
+      const zenithEnd   = new Date(noon.getTime() + 1 * 60 * 60 * 1000);
+      if (now >= zenithStart && now <= zenithEnd) return 'zenith';
+    }
+
+    // Dusk: sunset-2h to sunset
+    if (sunset) {
+      const duskStart = new Date(sunset.getTime() - 2 * 60 * 60 * 1000);
+      if (now >= duskStart && now <= sunset) return 'dusk';
+    }
+
+    // Lunar: dusk to dawn, moon above horizon
+    if (sunset && sunrise) {
+      const isAfterDusk  = now >= sunset;
+      const isBeforeDawn = now <= sunrise;
+      if ((isAfterDusk || isBeforeDawn) && moon && moon.aboveHorizon) {
+        return 'lunar';
+      }
+    }
+
+    return null;
   }
 
-  async function refreshPreview() {
-    if (!window.Observe) {
-      document.getElementById('previewPeriod').innerText = '?';
+  function updateWatchIndicator() {
+    const el = document.getElementById('watchIndicator');
+    if (currentWatch) {
+      const w = WATCH_WINDOWS[currentWatch];
+      el.className = `watch-indicator ${w.cssClass}`;
+      el.textContent = `${w.label} — Active Now`;
+      document.getElementById('recordBtn').textContent = `📝 Record ${w.label}`;
+    } else {
+      el.className = 'watch-indicator none';
+      el.textContent = 'Between Watches — Generic Record Available';
+      document.getElementById('recordBtn').textContent = '📝 Record Sky State';
+    }
+  }
+
+  // ── SKY SNAPSHOT ───────────────────────────────────────────
+  function buildSkySnapshot(sky) {
+    const grid = document.getElementById('skySnapshot');
+    if (!sky) {
+      grid.innerHTML = '<div class="sky-datum"><div class="datum-value"><em>Sky unavailable</em></div></div>';
       return;
     }
-    try {
-      const sky = await Observe.getSkyState();
-      document.getElementById('previewPeriod').innerText = sky.period === 'SUN' ? 'SOLAR' : 'LUNAR';
-      document.getElementById('previewSun').innerText = `${sky.planets?.sun?.sign || '?'} ${sky.planets?.sun?.degree || ''}°`;
-      document.getElementById('previewMoon').innerText = `${sky.planets?.moon?.sign || '?'} ${sky.planets?.moon?.degree || ''}°`;
-      document.getElementById('previewDate').innerText = new Date().toLocaleDateString();
-    } catch(e) {
-      console.error('Preview error:', e);
+
+    const sun = sky.planets?.sun;
+    const moon = sky.planets?.moon;
+    const asc = sky.ascendant;
+    const phase = sky.moonPhase || {};
+    const phaseIdx = typeof phase.phase === 'number' ? Math.round(phase.phase * 8) % 8 : 0;
+    const phaseIcon = MOON_PHASE_ICONS[phaseIdx] || '🌙';
+
+    // Count planets per sign for stellium detection
+    const signCounts = {};
+    if (sky.planets) {
+      Object.values(sky.planets).forEach(p => {
+        if (p && p.sign) signCounts[p.sign] = (signCounts[p.sign] || 0) + 1;
+      });
     }
+    const stelliumSigns = Object.entries(signCounts)
+      .filter(([_, c]) => c >= 3)
+      .map(([s]) => s);
+
+    const items = [];
+
+    if (sun) {
+      items.push(`<div class="sky-datum highlight">
+        <div class="datum-label">☉ Sun</div>
+        <div class="datum-value"><strong>Apollo</strong><br>${Math.floor(sun.degree)}° ${sun.sign} ${GLYPHS[sun.sign]}</div>
+      </div>`);
+    }
+
+    if (moon) {
+      const moonDeity = phase.deity || (phase.isWaning ? 'Melinoe' : 'Artemis');
+      items.push(`<div class="sky-datum">
+        <div class="datum-label">☽ Moon</div>
+        <div class="datum-value">${phaseIcon} <strong>${moonDeity}</strong><br>${Math.floor(moon.degree)}° ${moon.sign} ${GLYPHS[moon.sign]}<br><small>${phase.name || ''} · ${phase.illumination || 0}%</small></div>
+      </div>`);
+    }
+
+    if (asc && asc.sign && asc.sign !== 'Unknown') {
+      items.push(`<div class="sky-datum">
+        <div class="datum-label">↗ Ascendant</div>
+        <div class="datum-value"><strong>${asc.sign} ${GLYPHS[asc.sign]}</strong></div>
+      </div>`);
+    }
+
+    items.push(`<div class="sky-datum">
+      <div class="datum-label">🕐 Period</div>
+      <div class="datum-value"><strong>${sky.period === 'SUN' ? '☀ Solar' : '☽ Lunar'}</strong></div>
+    </div>`);
+
+    if (stelliumSigns.length > 0) {
+      stelliumSigns.forEach(s => {
+        const gods = Object.entries(sky.planets || {})
+          .filter(([_, p]) => p && p.sign === s)
+          .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
+        items.push(`<div class="sky-datum highlight">
+          <div class="datum-label">✦ Stellium</div>
+          <div class="datum-value"><strong>${s} ${GLYPHS[s]}</strong><br>${gods.join(', ')}</div>
+        </div>`);
+      });
+    }
+
+    grid.innerHTML = items.join('');
   }
 
-  async function recordSky() {
-    const statusDiv = document.getElementById('recordStatus');
-    statusDiv.innerHTML = '<div class="status status-info">⏳ Recording sky state...</div>';
-    
+  // ── NARRATIVE GENERATION ───────────────────────────────────
+  function generateWatchNarrative(sky, watch) {
+    if (!sky) return '';
+    const sun = sky.planets?.sun;
+    const moon = sky.planets?.moon;
+    const phase = sky.moonPhase || {};
+    const isSolar = watch !== 'lunar';
+    const period = sky.period === 'SUN' ? 'solar period' : 'lunar period';
+
+    const parts = [];
+
+    if (watch === 'dawn') {
+      parts.push(`Dawn breaks. Apollo rises in ${sun ? `${sun.sign} ${GLYPHS[sun.sign]}` : 'the east'} — the first light of the day.`);
+      if (sky.ascendant && sky.ascendant.sign !== 'Unknown') {
+        parts.push(`The ascendant is ${sky.ascendant.sign} ${GLYPHS[sky.ascendant.sign]} — the sign rising on the horizon as the sun climbs.`);
+      }
+      parts.push(`The promise of the day is written in this moment. What begins now carries the raw energy of initiation.`);
+    } else if (watch === 'zenith') {
+      parts.push(`Solar noon. Apollo burns at the peak${sun ? ` in ${sun.sign} ${GLYPHS[sun.sign]} at ${Math.floor(sun.degree)}°` : ''}.`);
+      parts.push(`This is the moment of greatest clarity — the light is direct, the shadows are shortest. What is illuminated now cannot be unseen.`);
+    } else if (watch === 'dusk') {
+      parts.push(`Dusk descends. Apollo sets${sun ? ` in ${sun.sign} ${GLYPHS[sun.sign]}` : ' in the west'} — the day's work is complete.`);
+      if (moon) {
+        const moonDeity = phase.deity || 'Artemis';
+        parts.push(`${moonDeity} ${moon.aboveHorizon ? 'watches from' : 'prepares to rise in'} ${moon.sign} ${GLYPHS[moon.sign]} under a ${(phase.name || 'night').toLowerCase()}.`);
+      }
+      parts.push(`What the day revealed now belongs to the night. The transition is the teaching.`);
+    } else if (watch === 'lunar') {
+      if (moon) {
+        const moonDeity = phase.deity || (phase.isWaning ? 'Melinoe' : 'Artemis');
+        parts.push(`The Lunar Watch. ${moonDeity} rules the night from ${moon.sign} ${GLYPHS[moon.sign]} at ${Math.floor(moon.degree)}° under a ${(phase.name || 'moon').toLowerCase()} (${phase.illumination || 0}% illuminated).`);
+      }
+      parts.push(`The world sleeps. The moon keeps the record. What moves in the dark is as real as what walks in the light — ${phase.isWaning ? 'this is the time of release, of letting the old story finish.' : 'this is the time of building, of intention growing in the quiet.'}`);
+    }
+
+    // Add stellium note if present
+    if (sky.planets) {
+      const signCounts = {};
+      Object.values(sky.planets).forEach(p => {
+        if (p && p.sign) signCounts[p.sign] = (signCounts[p.sign] || 0) + 1;
+      });
+      const stelliums = Object.entries(signCounts).filter(([_, c]) => c >= 3);
+      if (stelliums.length > 0) {
+        stelliums.forEach(([s, count]) => {
+          const gods = Object.entries(sky.planets)
+            .filter(([_, p]) => p && p.sign === s)
+            .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
+          parts.push(`Notable: ${count} celestial bodies gather in ${s} ${GLYPHS[s]} — ${gods.join(', ')} hold council. The ${s} house is crowded with divine attention.`);
+        });
+      }
+    }
+
+    return parts.join(' ');
+  }
+
+  // ── RECORD ─────────────────────────────────────────────────
+  function getSkyHash(sky) {
+    return `${sky.period}_${sky.planets?.sun?.sign}_${sky.planets?.moon?.sign}_${currentWatch || 'none'}`;
+  }
+
+  async function recordCurrentSky() {
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.className = 'status-msg info visible';
+    statusEl.textContent = '⏳ Reading the sky...';
+
+    if (!supabaseClient) {
+      statusEl.className = 'status-msg error visible';
+      statusEl.textContent = '❌ DivineDB not connected. Check Supabase.';
+      return;
+    }
+
     try {
       const sky = await Observe.getSkyState();
-      const currentHash = getSkyHash(sky);
-      
-      if (lastSavedHash === currentHash) {
-        statusDiv.innerHTML = '<div class="status status-info">📌 Sky unchanged since last record. Skipping.</div>';
+      skyData = sky;
+      currentWatch = detectWatch(sky);
+      const hash = getSkyHash(sky);
+
+      if (lastRecordedHash === hash) {
+        statusEl.className = 'status-msg info visible';
+        statusEl.textContent = '📌 Sky unchanged since last record. Skipping duplicate.';
         return;
       }
-      
+
+      const watch = currentWatch; // can be null — generic record
+      const narrative = generateWatchNarrative(sky, watch);
+
       const record = {
         id: crypto.randomUUID(),
         timestamp: new Date().toISOString(),
         period: sky.period,
-        sun_sign: sky.planets?.sun?.sign,
-        sun_degree: sky.planets?.sun?.degree,
-        moon_sign: sky.planets?.moon?.sign,
-        moon_degree: sky.planets?.moon?.degree,
-        moon_phase: sky.moonPhase?.name,
-        moon_illumination: sky.moonPhase?.illumination,
-        planets: sky.planets,
-        ascendant_sign: sky.ascendant?.sign
+        sun_sign: sky.planets?.sun?.sign || null,
+        sun_degree: sky.planets?.sun?.degree || null,
+        moon_sign: sky.planets?.moon?.sign || null,
+        moon_degree: sky.planets?.moon?.degree || null,
+        moon_phase: sky.moonPhase?.name || null,
+        moon_illumination: sky.moonPhase?.illumination || null,
+        planets: sky.planets || {},
+        ascendant_sign: sky.ascendant?.sign || null,
+        watch: watch,
+        narrative: narrative
       };
-      
+
       const { error } = await supabaseClient.from('sky_states').insert([record]);
-      
+
       if (error) {
-        statusDiv.innerHTML = `<div class="status status-error">❌ Failed: ${error.message}</div>`;
+        statusEl.className = 'status-msg error visible';
+        statusEl.textContent = `❌ Failed to record: ${error.message}`;
       } else {
-        lastSavedHash = currentHash;
-        statusDiv.innerHTML = `<div class="status status-success">✅ Sky state recorded at ${new Date().toLocaleTimeString()}</div>`;
-        loadHistory();
+        lastRecordedHash = hash;
+        const watchLabel = watch ? WATCH_WINDOWS[watch].label : 'Sky State';
+        statusEl.className = 'status-msg success visible';
+        statusEl.textContent = `✅ ${watchLabel} recorded at ${new Date().toLocaleTimeString()}`;
+        buildSkySnapshot(sky);
+        updateWatchIndicator();
+        loadWatches();
       }
-    } catch(e) {
-      statusDiv.innerHTML = `<div class="status status-error">❌ Error: ${e.message}</div>`;
+    } catch (e) {
+      statusEl.className = 'status-msg error visible';
+      statusEl.textContent = `❌ Error: ${e.message}`;
     }
   }
 
-  async function loadHistory() {
-    const container = document.getElementById('historyContainer');
+  async function refreshSky() {
+    const statusEl = document.getElementById('statusMsg');
+    try {
+      const sky = await Observe.getSkyState();
+      skyData = sky;
+      currentWatch = detectWatch(sky);
+      buildSkySnapshot(sky);
+      updateWatchIndicator();
+      document.getElementById('recordBtn').disabled = false;
+      statusEl.className = 'status-msg success visible';
+      statusEl.textContent = '✅ Sky state refreshed.';
+      setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
+    } catch (e) {
+      statusEl.className = 'status-msg error visible';
+      statusEl.textContent = `❌ Failed to refresh: ${e.message}`;
+    }
+  }
+
+  // ── WATCHES LOADER ─────────────────────────────────────────
+  async function loadWatches(dateOverride) {
+    const listEl = document.getElementById('watchesList');
     if (!supabaseClient) {
-      container.innerHTML = '<div style="text-align:center;">Connecting to DivineDB...</div>';
+      listEl.innerHTML = '<div class="watch-entry"><div class="watch-empty">Connecting to DivineDB...</div></div>';
       return;
     }
-    
-    const { data, error } = await supabaseClient
-      .from('sky_states')
-      .select('id, timestamp, period, sun_sign, moon_sign')
-      .order('timestamp', { ascending: false })
-      .limit(20);
-    
-    if (error) {
-      container.innerHTML = `<div style="color:#c94a2a;">Error: ${error.message}</div>`;
-      return;
+
+    const date = dateOverride || browseDate;
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    // Update date display
+    document.getElementById('dateDisplay').textContent = date.toLocaleDateString('en-US', {
+      weekday:'long', year:'numeric', month:'long', day:'numeric'
+    });
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('sky_states')
+        .select('*')
+        .gte('timestamp', start.toISOString())
+        .lte('timestamp', end.toISOString())
+        .order('timestamp', { ascending: true });
+
+      if (error) {
+        listEl.innerHTML = `<div class="watch-entry"><div class="watch-empty">Error: ${error.message}</div></div>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        listEl.innerHTML = `
+          <div class="watch-entry">
+            <div class="watch-empty">
+              No records for this date.<br>
+              The four watches await — Dawn, Zenith, Dusk, Lunar.
+            </div>
+          </div>`;
+        return;
+      }
+
+      // Group by watch type
+      const watches = { dawn:[], zenith:[], dusk:[], lunar:[], other:[] };
+      data.forEach(row => {
+        const w = row.watch || 'other';
+        if (watches[w]) watches[w].push(row);
+        else watches.other.push(row);
+      });
+
+      const watchOrder = ['dawn','zenith','dusk','lunar'];
+      let html = '';
+
+      watchOrder.forEach(w => {
+        const entries = watches[w] || [];
+        if (entries.length > 0) {
+          entries.forEach(entry => {
+            const time = new Date(entry.timestamp).toLocaleTimeString('en-US', {
+              hour:'2-digit', minute:'2-digit'
+            });
+            const wDef = WATCH_WINDOWS[w];
+            const skySummary = [
+              entry.sun_sign ? `☉ ${entry.sun_sign}` : '',
+              entry.moon_sign ? `☽ ${entry.moon_sign}` : '',
+              entry.moon_phase ? `· ${entry.moon_phase}` : '',
+              entry.ascendant_sign ? `· Asc ${entry.ascendant_sign}` : ''
+            ].filter(Boolean).join(' ');
+
+            html += `
+              <div class="watch-entry">
+                <div class="watch-header">
+                  <span class="watch-label ${wDef.cssClass}">${wDef.icon} ${wDef.label}</span>
+                  <span class="watch-time">${time}</span>
+                </div>
+                <div class="watch-sky">${skySummary || 'Sky data recorded'}</div>
+                ${entry.narrative ? `<div class="watch-narrative">${entry.narrative}</div>` : ''}
+              </div>`;
+          });
+        } else {
+          html += `
+            <div class="watch-entry">
+              <div class="watch-header">
+                <span class="watch-label ${WATCH_WINDOWS[w].cssClass}">${WATCH_WINDOWS[w].icon} ${WATCH_WINDOWS[w].label}</span>
+                <span class="watch-time">—</span>
+              </div>
+              <div class="watch-empty">Not yet recorded for this date.</div>
+            </div>`;
+        }
+      });
+
+      // Any non-watch records
+      if (watches.other.length > 0) {
+        html += `<div style="margin-top:16px;opacity:0.5;font-size:11px;text-align:center;font-style:italic;color:var(--text-dim);">
+          + ${watches.other.length} generic record${watches.other.length > 1 ? 's' : ''} (no watch tag)
+        </div>`;
+      }
+
+      listEl.innerHTML = html;
+    } catch (e) {
+      listEl.innerHTML = `<div class="watch-entry"><div class="watch-empty">Failed to load: ${e.message}</div></div>`;
     }
-    
-    if (!data || data.length === 0) {
-      container.innerHTML = '<div style="text-align:center;">No sky states recorded yet. Click "Record Sky State" to begin.</div>';
-      return;
-    }
-    
-    const html = `
-      <table class="history-table">
-        <thead><tr><th>Time</th><th>Period</th><th>Sun</th><th>Moon</th></tr></thead>
-        <tbody>
-          ${data.map(r => `
-            <tr>
-              <td>${new Date(r.timestamp).toLocaleString()}</td>
-              <td>${r.period === 'SUN' ? '☀️ Solar' : '🌙 Lunar'}</td>
-              <td>${r.sun_sign || '—'}</td>
-              <td>${r.moon_sign || '—'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-    container.innerHTML = html;
   }
 
+  function changeDay(delta) {
+    browseDate = new Date(browseDate.getTime() + delta * 86400000);
+    // Don't browse into the future
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    if (browseDate > today) {
+      browseDate = today;
+    }
+    loadWatches();
+  }
+
+  // ── AUTO-REFRESH ───────────────────────────────────────────
   function toggleAutoRefresh() {
-    const statusSpan = document.getElementById('autoRefreshStatus');
-    const toggleBtn = document.getElementById('autoRefreshBtn');
-    if (autoRefreshInterval) {
-      clearInterval(autoRefreshInterval);
-      autoRefreshInterval = null;
-      statusSpan.innerHTML = '⏱️ Auto-save: Off ';
-      toggleBtn.textContent = 'Enable';
-      toggleBtn.style.borderColor = '#2a2a4a';
-      toggleBtn.style.color = '#988870';
+    const label = document.getElementById('autoRefreshLabel');
+    const btn = document.getElementById('autoRefreshBtn');
+    if (autoInterval) {
+      clearInterval(autoInterval);
+      autoInterval = null;
+      label.textContent = '⏱ Auto-record: Off';
+      btn.textContent = 'Enable';
+      btn.classList.remove('active');
     } else {
-      autoRefreshInterval = setInterval(() => {
-        recordSky();
-      }, 60 * 60 * 1000);
-      statusSpan.innerHTML = '⏱️ Auto-save: On (hourly) ';
-      toggleBtn.textContent = 'Disable';
-      toggleBtn.style.borderColor = '#d4a840';
-      toggleBtn.style.color = '#d4a840';
+      // Record immediately
+      recordCurrentSky();
+      // Then every 30 minutes — check if a watch window is active
+      autoInterval = setInterval(async () => {
+        try {
+          const sky = await Observe.getSkyState();
+          const watch = detectWatch(sky);
+          if (watch || currentWatch !== watch) {
+            // Watch window changed or is active — record
+            skyData = sky;
+            currentWatch = watch;
+            buildSkySnapshot(sky);
+            updateWatchIndicator();
+            await recordCurrentSky();
+          }
+        } catch (_) { /* silent */ }
+      }, 30 * 60 * 1000);
+      label.textContent = '⏱ Auto-record: On (every 30m)';
+      btn.textContent = 'Disable';
+      btn.classList.add('active');
     }
   }
 
+  // ── CARD MOSAIC ────────────────────────────────────────────
+  function buildCardMosaic() {
+    const mosaic = document.getElementById('cardMosaic');
+    const mosaicPool = [
+      'data/images/major/sun.png','data/images/major/moon.png',
+      'data/images/major/wheel_of_fortune.png','data/images/major/temperance.png',
+      'data/images/major/judgment.png','data/images/major/world.png',
+      'data/images/zeus-card.jpg','data/images/athena-card.jpg',
+      'data/images/apollo-card.jpg','data/images/artemis-card.jpg',
+      'data/images/hermes-card.jpg','data/images/aphrodite-card.jpg',
+      'data/images/demeter-card.jpg','data/images/hera-card.jpg',
+      'data/images/poseidon-card.jpg','data/images/hephaestus-card.jpg',
+      'data/images/ares-card.jpg','data/images/dionysus-card.jpg',
+      'data/images/hades-card.jpg','data/images/persephone-card.jpg',
+      'data/images/prometheus-card.jpg','data/images/thanatos-card.jpg',
+      'data/images/hermit-card.jpg',
+      'data/images/minor/fire/fire_ace.png','data/images/minor/earth/earth_ace.png',
+      'data/images/minor/water/water_ace.png','data/images/minor/air/air_ace.png'
+    ];
+    const cells = [];
+    for (let i = 0; i < 36; i++) {
+      const img = mosaicPool[Math.floor(Math.random() * mosaicPool.length)];
+      cells.push(`<img src="${img}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
+    }
+    mosaic.innerHTML = cells.join('');
+    setInterval(() => {
+      const imgs = document.querySelectorAll('#cardMosaic img');
+      if (!imgs.length) return;
+      const idx = Math.floor(Math.random() * imgs.length);
+      const newImg = mosaicPool[Math.floor(Math.random() * mosaicPool.length)];
+      imgs[idx].style.opacity = '0';
+      setTimeout(() => { imgs[idx].src = newImg; imgs[idx].style.opacity = ''; }, 600);
+    }, 10000);
+  }
+
+  // ── INIT ───────────────────────────────────────────────────
   async function init() {
     initSupabase();
-    await refreshPreview();
-    await loadHistory();
-    
-    document.getElementById('recordBtn').onclick = recordSky;
-    document.getElementById('refreshBtn').onclick = refreshPreview;
+    buildCardMosaic();
+
+    // Load current sky
+    try {
+      skyData = await Observe.getSkyState();
+      currentWatch = detectWatch(skyData);
+      buildSkySnapshot(skyData);
+      updateWatchIndicator();
+      document.getElementById('recordBtn').disabled = false;
+    } catch (e) {
+      console.warn('Almanac: Initial sky load failed', e);
+    }
+
+    // Load today's watches
+    browseDate = new Date();
+    await loadWatches();
+
+    // Event listeners
+    document.getElementById('recordBtn').onclick = recordCurrentSky;
+    document.getElementById('refreshBtn').onclick = refreshSky;
+    document.getElementById('prevDay').onclick = () => changeDay(-1);
+    document.getElementById('nextDay').onclick = () => changeDay(1);
     document.getElementById('autoRefreshBtn').onclick = toggleAutoRefresh;
   }
-  
-  init();
+
+  return { init };
 })();
+
+document.addEventListener('DOMContentLoaded', () => AlmanacPage.init());
 </script>
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.z.goatcounter.com/count.js"></script>
 </body>
 </html>
