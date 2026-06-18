@@ -1,9 +1,10 @@
-      {
+{
   "deck_name": "Minor Arcana — The Global Pantheon",
   "card_count": 56,
   "cultural_origins": [
     "Greek", "Norse", "Egyptian", "Hindu", "Yoruba", "Aztec", "Chinese",
-    "Japanese", "Polynesian", "Inuit", "Indigenous (Americas)", "Modern"
+    "Japanese", "Polynesian", "Inuit", "Indigenous (Americas)", "Finnish",
+    "Slavic", "Sumerian", "West African", "African Diaspora"
   ],
   "divine_suits": {
     "fire": {
@@ -102,16 +103,16 @@
       {
         "id": "fire_06",
         "name": "Six of Fire",
-        "title": "The Algorithm",
-        "culture": "Modern",
+        "title": "Pele",
+        "culture": "Hawaiian",
         "rank": "six",
         "element": "Fire",
         "ruling_god": "Apollo",
-        "keywords": ["the feed", "the viral spread", "reputation", "the echo", "amplification"],
-        "upright": "The Algorithm amplifies your name until it belongs to everyone but you. It is Pheme reborn in code — intoxicating, uncontrollable, already fading. The Six of Fire is the viral moment. Ride it. Don't believe it. The Algorithm has no loyalty.",
-        "reversed": "The Algorithm turns. The feed that built you now buries you. Fame that becomes infamy. What you posted yesterday is evidence today. The viral moment is a loan, not a gift.",
+        "keywords": ["eruption", "reputation", "the name that reshapes", "volcanic fame", "creation through destruction"],
+        "upright": "Pele erupts and the island grows. Her name reshapes geography — every eruption is reputation made visible. The Six of Fire is the viral moment: the name that spreads like lava, the recognition that creates new land. Ride the flow. The volcano does not ask permission to be known.",
+        "reversed": "The crater quiet. Pele withdrawn into the caldera. The name that was everywhere and is now silent. Reputation is lava — it cools, it hardens, it becomes the ground others walk on while you wait below. What will you build on the cooled stone?",
         "image": "data/images/minor/fire/fire_06.png",
-        "prompt": "Pheme, Greek goddess of fame and rumor, reborn as a digital entity of viral spread, as tarot card."
+        "prompt": "Pele, Hawaiian volcano goddess whose eruptions create new land and whose name reshapes the world, lava flowing from her hands, as tarot card."
       },
       {
         "id": "fire_07",
@@ -121,7 +122,7 @@
         "rank": "seven",
         "element": "Fire",
         "ruling_god": "Hephaestus",
-        "keywords": ["the automaton", "invisible system", "programmed force", "the algorithm", "the bronze guardian"],
+        "keywords": ["the automaton", "invisible system", "programmed force", "the bronze guardian"],
         "upright": "Talos patrols the shores of Crete — a bronze giant, inhuman, unstoppable, doing what it was built to do. The Seven of Fire is the system that shapes you without your consent. It is not evil. It is not good. It is programmed. Learn the code.",
         "reversed": "The automaton broken. The system hacked. Talos felled by a single pin pulled from his heel. Even bronze giants have weaknesses. Find the pin.",
         "image": "data/images/minor/fire/fire_07.png",
@@ -214,16 +215,16 @@
       {
         "id": "fire_king",
         "name": "King of Fire",
-        "title": "The Founder",
-        "culture": "Modern",
+        "title": "Ilmarinen",
+        "culture": "Finnish",
         "rank": "king",
         "element": "Fire",
         "ruling_god": "Hephaestus",
-        "keywords": ["the CEO", "venture capital", "empire builder", "absolute will", "the spark that scaled"],
-        "upright": "The Founder built the system and now rules from within it. Venture capital as divine right. Scale as manifest destiny. The King of Fire is the one who turned a spark into an empire. Absolute authority. The platform is yours. Can you hold it without becoming the monster at the center?",
-        "reversed": "The founder ousted by their own board. The empire that outgrew its builder. The platform that no longer answers to its creator. You built it. You don't own it anymore.",
+        "keywords": ["the eternal smith", "the Sampo", "empire built by craft", "absolute will", "the forge that scales"],
+        "upright": "Ilmarinen forged the Sampo — a device that produced infinite grain, salt, and gold. He did not conquer an empire. He built the machine that made empire inevitable. The King of Fire is the builder whose craft outscales all competition. The forge is older than the throne. The Sampo ground wealth without end. What are you building that will outproduce every rival?",
+        "reversed": "The Sampo shattered. Ilmarinen's wife of gold — cold, lifeless, a masterpiece that could not love him back. The smith who built everything except what he actually wanted. The empire-machine that consumed its maker. What did you forge that you cannot hold?",
         "image": "data/images/minor/fire/fire_king.png",
-        "prompt": "The Founder, modern archetype of the tech empire builder who became king of his own creation, as tarot card."
+        "prompt": "Ilmarinen, the eternal smith of the Kalevala who forged the Sampo — a device of infinite wealth — at his forge in the far north, Finnish mythology, as tarot card."
       }
     ],
     "earth": [
@@ -258,16 +259,16 @@
       {
         "id": "earth_03",
         "name": "Three of Earth",
-        "title": "The Seven Dwarves",
-        "culture": "Norse/Germanic",
+        "title": "Chicomecoatl",
+        "culture": "Aztec",
         "rank": "three",
         "element": "Earth",
         "ruling_god": "Hera",
-        "keywords": ["the crew", "shared labor", "teamwork", "the collab", "each brings a gift"],
-        "upright": "Seven dwarves, each with a skill, each with a flaw, working the mine together. The Three of Earth is the collab — the crew that makes the impossible possible. Who is on your team? What does each one bring that no one else can?",
-        "reversed": "The crew that fractures. The dwarves arguing over the gem. The shared labor that became competition. Vet your collaborators. One bad pick breaks the whole mine.",
+        "keywords": ["the first seed", "maize", "shared harvest", "collaboration with the land", "the crew that plants together"],
+        "upright": "Chicomecoatl holds the first seed of maize — but she does not plant alone. The harvest belongs to the village. The Three of Earth is the shared labor that feeds everyone: the crew that plants together, the collaboration between human hands and the ground that answers. The maize does not grow for one mouth. Plant with your people. Harvest with your people.",
+        "reversed": "The seed hoarded. Chicomecoatl's maize locked in a granary while the village hungers. The collaboration broken — one person claiming what the land and the crew produced together. The harvest is not yours alone. Share it, or watch it rot.",
         "image": "data/images/minor/earth/earth_03.png",
-        "prompt": "The Seven Dwarves of Germanic folklore, master craftsmen working the mine together, as tarot card."
+        "prompt": "Chicomecoatl, Aztec goddess of maize and the sacred first seed, standing in a field with the village planting together, as tarot card."
       },
       {
         "id": "earth_04",
@@ -314,16 +315,16 @@
       {
         "id": "earth_07",
         "name": "Seven of Earth",
-        "title": "Chicomecoatl",
-        "culture": "Aztec",
+        "title": "The Seven Dwarves",
+        "culture": "Norse/Germanic",
         "rank": "seven",
         "element": "Earth",
         "ruling_god": "Demeter",
-        "keywords": ["the first seed", "maize", "the long bet", "investment", "patient growth"],
-        "upright": "Chicomecoatl, goddess of maize, holds the first seed that will feed a civilization. The Seven of Earth is the seed round — the investment that takes seasons to mature. Plant. Wait. The harvest is not tomorrow. The maize does not rush. Neither should you.",
-        "reversed": "The failed crop. The seed that never sprouted. The investment that withered in the field. Was it the seed, or the soil? Or did you stop watering too soon?",
+        "keywords": ["the long bet", "mining the deep", "patience", "investment", "the crew that digs together"],
+        "upright": "Seven dwarves, each with a skill, working the mine together — no guarantee of a vein, just the long bet that the mountain holds something worth finding. The Seven of Earth is the investment that takes seasons to mature, the seed round of labor where nobody gets paid until the strike. The dwarves do not rush. The mountain has been here longer than the mine. Keep digging.",
+        "reversed": "The mine exhausted. The dwarves emerging empty-handed. The long bet that didn't pay. Seven skilled miners and nothing to show — was it the mountain, or did they stop too soon? The vein might be six inches past where you quit.",
         "image": "data/images/minor/earth/earth_07.png",
-        "prompt": "Chicomecoatl, Aztec goddess of maize and the sacred first seed of civilization, as tarot card."
+        "prompt": "The Seven Dwarves of Germanic folklore, master craftsmen working the deep mine together — the long bet, the patient investment, as tarot card."
       },
       {
         "id": "earth_08",
@@ -342,16 +343,16 @@
       {
         "id": "earth_09",
         "name": "Nine of Earth",
-        "title": "The Influencer",
-        "culture": "Modern",
+        "title": "Xochiquetzal",
+        "culture": "Aztec",
         "rank": "nine",
         "element": "Earth",
         "ruling_god": "Artemis",
-        "keywords": ["self-love", "the curated self", "the brand", "beauty", "the mirror"],
-        "upright": "The Influencer gazes into the ring light — Narcissus reborn in the age of the algorithm. The curated self, the brand, the pool that shows only what you want to see. Self-love is power. Self-obsession is a mirror with no back. The reflection is not the person.",
-        "reversed": "The ring light off. The Influencer looking up from the screen. The reflection losing its hold. There is a world beyond the mirror. There is a self beyond the brand.",
+        "keywords": ["beauty", "the curated self", "flowers", "the mirror", "self-love as power"],
+        "upright": "Xochiquetzal, goddess of flowers and beauty, wears the world's most exquisite garments and tends the garden of earthly delight. The Nine of Earth is self-love made visible — the curated self, the brand, the beauty that is cultivated, not accidental. Adorn yourself. The flowers do not apologize for blooming. Neither should you.",
+        "reversed": "The garden overgrown. Xochiquetzal's mirror showing only what she fears. The curated self becoming a cage — beauty maintained for others rather than for the soul. Who are you adorning yourself for?",
         "image": "data/images/minor/earth/earth_09.png",
-        "prompt": "The Influencer, modern archetype of Narcissus reborn under the ring light — the curated self as brand, as tarot card."
+        "prompt": "Xochiquetzal, Aztec goddess of flowers, beauty, and feminine creative power, adorned in the world's most exquisite garments, as tarot card."
       },
       {
         "id": "earth_10",
@@ -390,7 +391,7 @@
         "element": "Earth",
         "ruling_god": "Demeter",
         "keywords": ["the richest king", "true believer in wealth", "conviction", "the bet", "gold"],
-        "upright": "Croesus, king of Lydia, so wealthy his name became a word. He believed his gold made him invincible. The Knight of Earth is the true believer in wealth — the gold bug, the crypto bro, the one who rides the market with religious conviction. Belief moves money. But gold is heavy.",
+        "upright": "Croesus, king of Lydia, so wealthy his name became a word. He believed his gold made him invincible. The Knight of Earth is the true believer in wealth — the gold bug, the one who rides the market with religious conviction. Belief moves money. But gold is heavy.",
         "reversed": "Croesus on the pyre. The wealth that didn't save him. The coin that couldn't stop the conqueror. Gold will not carry you through the fire.",
         "image": "data/images/minor/earth/earth_knight.png",
         "prompt": "Croesus, the legendarily wealthy king of Lydia who believed gold made him untouchable, as tarot card."
@@ -434,7 +435,7 @@
         "element": "Water",
         "ruling_god": "Aphrodite",
         "keywords": ["the reach", "the message of love", "vulnerability", "the first move", "fresh water"],
-        "upright": "Oshun, orisha of love and fresh water, reaches toward you with honey and a mirror. The Ace of Water is the DM slide — the vulnerable reach, the message sent into the void, the heart opened without guarantee. Connection begins with risk. She is the sweet water that sustains life.",
+        "upright": "Oshun, orisha of love and fresh water, reaches toward you with honey and a mirror. The Ace of Water is the vulnerable reach, the message sent into the void, the heart opened without guarantee. Connection begins with risk. She is the sweet water that sustains life.",
         "reversed": "The mirror cracked. The reach that found no one. Oshun's waters muddied. The message that was sent but never received. Try again — but with clearer water.",
         "image": "data/images/minor/water/water_ace.png",
         "prompt": "Oshun, Yoruba orisha of love, fresh water, and beauty who reaches toward you with honey and a mirror, as tarot card."
@@ -518,8 +519,8 @@
         "element": "Water",
         "ruling_god": "Poseidon",
         "keywords": ["the fantasy of enough", "safe harbor", "prosperity", "the marriage that couldn't work", "the dream of home"],
-        "upright": "Njord rules the sea, the ships, the nets that come back full. He is the fantasy of enough — the harbor where everything arrives and nothing is lost. The Seven of Water is the dream of stability: the boat that never sinks, the trade route that never fails, the partner who loves the sea as much as you do. Njord married Skadi. She left for the mountains. The harbor is safe. But is it *home*?",
-        "reversed": "The nets empty. Skadi walking toward the peaks. Njord alone by the water, watching her go. The fantasy of enough becomes the reality of *enough is not enough*. What did you trade for stability? What did the sea cost you that the mountains could have given?",
+        "upright": "Njord rules the sea, the ships, the nets that come back full. He is the fantasy of enough — the harbor where everything arrives and nothing is lost. The Seven of Water is the dream of stability: the boat that never sinks, the trade route that never fails, the partner who loves the sea as much as you do. Njord married Skadi. She left for the mountains. The harbor is safe. But is it home?",
+        "reversed": "The nets empty. Skadi walking toward the peaks. Njord alone by the water, watching her go. The fantasy of enough becomes the reality of enough is not enough. What did you trade for stability? What did the sea cost you that the mountains could have given?",
         "image": "data/images/minor/water/water_07.png",
         "prompt": "Njord, Norse god of the sea, ships, and prosperous harbors — standing at the water's edge, watching Skadi leave for the mountains behind him, as tarot card."
       },
@@ -568,16 +569,16 @@
       {
         "id": "water_page",
         "name": "Page of Water",
-        "title": "The VTuber",
-        "culture": "Modern",
+        "title": "Rusalka",
+        "culture": "Slavic",
         "rank": "page",
         "element": "Water",
         "ruling_god": "Dionysus",
-        "keywords": ["the crush", "the projected fantasy", "avatar love", "young emotion", "the screen"],
-        "upright": "The VTuber streams and the chat falls in love — with the avatar, the voice, the person who may not be the person. The Page of Water is the crush — the flutter, the pursuit, the young emotion that doesn't yet know if it's love or just speed. Enjoy the stream. Respect the person behind the screen.",
-        "reversed": "The stream ended. The avatar retired. The crush that taught you something about projection — and about the difference between a screen and a soul.",
+        "keywords": ["the lure", "the crush", "young emotion", "the water's edge", "beauty that drowns"],
+        "upright": "Rusalka rises from the river at dusk, beautiful and young, a spirit of water who was once a girl who drowned. She lures with song and longing. The Page of Water is the crush — the flutter of feeling that pulls you toward the water's edge, the fantasy that glimmers just below the surface. Enjoy the beauty. But know the river is deeper than it looks.",
+        "reversed": "The river quiet. Rusalka retreating beneath the surface. The crush that taught you something about longing — and about the difference between reaching toward someone and falling in. You surfaced. You're still here.",
         "image": "data/images/minor/water/water_page.png",
-        "prompt": "The VTuber, modern archetype of the anime avatar whose voice the internet falls in love with behind the screen, as tarot card."
+        "prompt": "Rusalka, Slavic water spirit of lakes and rivers — a beautiful young woman who lures from the water's edge, as tarot card."
       },
       {
         "id": "water_knight",
@@ -780,16 +781,16 @@
       {
         "id": "air_knight",
         "name": "Knight of Air",
-        "title": "The Shitposter",
-        "culture": "Modern",
+        "title": "Raijin & Raven",
+        "culture": "Japanese / Pacific Northwest",
         "rank": "knight",
         "element": "Air",
         "ruling_god": "Hermes",
-        "keywords": ["satire", "mockery", "the blade of wit", "exile for speaking truth"],
-        "upright": "The Shitposter is Momus reborn — sharp, swift, dangerous with a keyboard. He criticizes the algorithmic gods until they exile him from the platform. The Knight of Air is the blade of wit — satire that cuts through propaganda. Aim it. Know: even the gods can't take what they can't laugh at. But they can deplatform you.",
-        "reversed": "The post that went too far. The Shitposter exiled from every platform. Momus cast out of Olympus, his mockery too sharp even for the gods. The blade that cut the wielder.",
+        "keywords": ["satire", "mockery", "the blade of wit", "thunder that mocks", "the trickster who stole the sun"],
+        "upright": "Raijin drums thunder across the sky. Raven stole the sun from its hoarder and brought light to the world through irreverence. The Knight of Air is the satirist — the blade of wit that cuts through authority, the mockery that frees what power tried to keep. Thunder laughs. Raven's caw is the first sound after the theft. Mock the gods. They can take it. Sometimes they even deserve it.",
+        "reversed": "The drum silent. Raven cast out. The satirist exiled from every platform, mockery too sharp even for those who claimed they wanted truth. The blade that cut the wielder. Even tricksters need somewhere to land.",
         "image": "data/images/minor/air/air_knight.png",
-        "prompt": "Momus, the Greek god of mockery and criticism cast out of Olympus for speaking truth too sharply, reborn as the shitposter, as tarot card."
+        "prompt": "Raijin, Japanese thunder god who drums storms, and Raven, Pacific Northwest trickster who stole the sun — two faces of divine mockery, as tarot card."
       },
       {
         "id": "air_queen",
