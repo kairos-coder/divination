@@ -3,72 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Chthonic Grimoire · The War for the Sky</title>
+<title>Chthonic Grimoire · Hades' Proclamation — Digital Divination</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
 
 <style>
-/* ═══════════════════════════════════════════
-   CHTHONIC GRIMOIRE — THE WAR FOR THE SKY
-   Five rivers. Twelve signs. One throne beneath.
-   The void does not ask. It consumes.
-   ═══════════════════════════════════════════ */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ═══════════════════════════════════════════
+   CHTHONIC GRIMOIRE — Hybrid Theme
+   Proclamation (markdown) + War Engine (live)
+   ═══════════════════════════════════════════ */
+
 :root {
-  /* Void depths */
   --void:        #020108;
   --deep:        #050314;
   --surface:     #0a061c;
   --surface2:    #100a28;
   --border:      #1e1438;
-  
-  /* Chthonic radiance */
   --chthonic:           #9966cc;
   --chthonic-light:     #c4a0e8;
   --chthonic-dim:       #664488;
   --chthonic-dark:      #332244;
   --chthonic-glow:      rgba(153,102,204,0.3);
-  
-  /* War colors */
-  --war-olympian:       #d4a840;
-  --war-olympian-glow:  rgba(212,168,64,0.25);
-  --war-chthonic:       #b388ff;
-  --war-chthonic-glow:  rgba(179,136,255,0.35);
-  
-  /* River palettes */
-  --phlegethon:   #cc5533;
-  --phlegethon-bg: rgba(180,50,20,0.12);
-  --cocytus:      #6688cc;
-  --cocytus-bg:   rgba(70,90,160,0.1);
-  --acheron:      #aa8855;
-  --acheron-bg:   rgba(150,120,60,0.1);
-  --styx:         #4488aa;
-  --styx-bg:      rgba(40,100,130,0.1);
-  --lethe:        #8855aa;
-  --lethe-bg:     rgba(120,60,160,0.1);
-  
-  /* Text */
+  --chthonic-border:    rgba(120,90,160,0.2);
   --text:         #e8e0f0;
   --text-mid:     #c8b8e0;
   --text-dim:     #8878a8;
   --text-void:    #665588;
-  
-  /* Card glow */
   --card-glow:    #b388ff;
   --card-border:  rgba(179,136,255,0.25);
-  
-  /* Parchment for reading panels */
-  --parchment:    #1a1030;
-  --parchment-light: #241840;
-  --parchment-border: rgba(153,102,204,0.2);
+  --parchment:    #100c24;
+  --parchment-light: #1a1438;
+  --parchment-border: rgba(120,90,160,0.2);
+
+  /* War engine colors */
+  --war-olympian:       #d4a840;
+  --war-olympian-glow:  rgba(212,168,64,0.25);
+  --war-chthonic:       #b388ff;
+  --war-chthonic-glow:  rgba(179,136,255,0.35);
+  --phlegethon:   #cc5533;
+  --cocytus:      #6688cc;
+  --acheron:      #aa8855;
+  --styx:         #4488aa;
+  --lethe:        #8855aa;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
   background: var(--void);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 5%, #0a0420 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 95%, #060420 0%, transparent 55%),
+    radial-gradient(ellipse 30% 60% at 80% 20%, #040218 0%, transparent 50%);
   font-family: 'Cormorant Garamond', Georgia, serif;
   color: var(--text);
   min-height: 100vh;
@@ -76,19 +64,17 @@ body {
   position: relative;
 }
 
-/* ═══════════════════════════════════════════
-   SPACE BACKGROUND — Deep cosmos with nebula
-   ═══════════════════════════════════════════ */
+/* ── SPACE CANVAS ── */
 #spaceCanvas {
   position: fixed; inset: 0; z-index: 0;
   pointer-events: none;
 }
 
-/* ── CARD MOSAIC — The deck beneath the void ── */
+/* ── CARD MOSAIC ── */
 #cardMosaic {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   display: grid; grid-template-columns: repeat(6, 1fr);
-  opacity: 0.09;
+  opacity: 0.08;
 }
 #cardMosaic img {
   width: 100%; aspect-ratio: 2/3; object-fit: cover;
@@ -97,34 +83,32 @@ body {
   transition: opacity 1.5s ease;
 }
 
-/* ═══════════════════════════════════════════
-   NAVIGATION
-   ═══════════════════════════════════════════ */
+/* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; height: 56px;
   background: rgba(2,1,8,0.94); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(120,90,160,0.2);
+  border-bottom: 1px solid var(--chthonic-border);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 24px; z-index: 200;
 }
 .nav-brand { display: flex; flex-direction: column; gap: 1px; }
 .nav-brand-title {
   font-family: 'Cinzel Decorative', serif; font-size: 13px;
-  color: #c4a0e8; letter-spacing: 1.5px;
+  color: var(--chthonic-light); letter-spacing: 1.5px;
 }
 .nav-brand-sub {
   font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 5px;
-  color: #7766aa; text-transform: uppercase;
+  color: var(--chthonic-dim); text-transform: uppercase;
 }
 .nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
 .nav-links a {
   font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
-  text-transform: uppercase; color: #8878a8;
+  text-transform: uppercase; color: var(--text-dim);
   text-decoration: none; transition: color 0.2s; padding: 4px 0;
   border-bottom: 1px solid transparent;
 }
-.nav-links a:hover { color: #c4a0e8; border-bottom-color: rgba(153,102,204,0.3); }
-.nav-links a.nav-active { color: #c4a0e8; border-bottom-color: rgba(153,102,204,0.5); }
+.nav-links a:hover { color: var(--chthonic-light); border-bottom-color: var(--chthonic-border); }
+.nav-links a.active { color: var(--chthonic-light); border-bottom-color: var(--chthonic); }
 
 /* ── SISTER LINK ── */
 .sister-link {
@@ -143,19 +127,21 @@ nav {
   box-shadow: 0 0 12px rgba(212,168,64,0.1);
 }
 
-/* ═══════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════ */
+/* ── MAIN CONTAINER ── */
 .container {
-  position: relative; z-index: 2; max-width: 740px;
-  margin: 0 auto; padding: 76px 16px 60px;
+  position: relative; z-index: 2; max-width: 820px;
+  margin: 0 auto; padding: 76px 24px 60px;
 }
 
-.header { text-align: center; margin-bottom: 8px; }
+/* ═══════════════════════════════════════════
+   PROCLAMATION SECTION (Markdown)
+   ═══════════════════════════════════════════ */
+
+.header { text-align: center; margin-bottom: 32px; }
 .header h1 {
   font-family: 'Cinzel Decorative', serif;
   font-size: clamp(22px, 5vw, 38px);
-  color: #c4a0e8;
+  color: var(--chthonic-light);
   letter-spacing: 2px;
   text-shadow: 0 0 40px rgba(153,102,204,0.35), 0 0 80px rgba(153,102,204,0.12);
 }
@@ -163,15 +149,184 @@ nav {
   font-family: 'Cinzel', serif; font-size: 10px;
   letter-spacing: 3px; color: var(--text-dim); margin-top: 8px;
 }
-.header .subtitle {
-  font-family: 'Cinzel', serif; font-size: 8px;
-  letter-spacing: 4px; color: #665588;
-  text-transform: uppercase; margin-top: 6px;
+
+.hades-sigil {
+  text-align: center; margin: 20px auto 32px;
+}
+.sigil-circle {
+  display: inline-block;
+  width: min(160px, 36vw);
+  height: min(160px, 36vw);
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 40%,
+    rgba(20,10,50,0.9) 0%,
+    rgba(10,5,30,0.92) 55%,
+    rgba(2,1,12,0.98) 100%
+  );
+  border: 2px solid var(--chthonic-border);
+  box-shadow:
+    0 0 0 6px rgba(10,5,30,0.6),
+    0 0 0 7px rgba(120,90,160,0.15),
+    0 0 60px rgba(0,0,0,0.5),
+    0 0 120px rgba(80,40,140,0.1),
+    0 8px 24px rgba(0,0,0,0.5);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.sigil-glyph {
+  font-size: 42px;
+  filter: drop-shadow(0 0 16px rgba(153,102,204,0.5));
+  animation: pulseSlow 4s ease-in-out infinite;
+}
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+.sigil-label {
+  font-family: 'Cinzel', serif; font-size: 9px;
+  letter-spacing: 4px; color: var(--chthonic-light);
+  margin-top: 10px; text-transform: uppercase;
+}
+
+.voice-switcher {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 20px;
+}
+.voice-btn {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 3px;
+  border: 1px solid var(--chthonic-border);
+  background: transparent; color: var(--text-dim);
+  cursor: pointer; transition: all 0.2s;
+}
+.voice-btn:hover { border-color: var(--chthonic); color: var(--text-mid); }
+.voice-btn.active {
+  border-color: var(--chthonic);
+  color: var(--chthonic-light);
+  background: rgba(153,102,204,0.08);
+  box-shadow: 0 0 12px rgba(153,102,204,0.08);
+}
+
+.grimoire-card {
+  background: rgba(10,6,28,0.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--parchment-border);
+  border-radius: 4px;
+  padding: 32px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.03), 0 2px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+  position: relative;
+}
+.grimoire-card::before {
+  content: '';
+  position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--chthonic), transparent);
+  opacity: 0.4;
+}
+.grimoire-card h2 {
+  font-family: 'Cinzel Decorative', serif; font-size: 14px;
+  color: var(--chthonic-light); margin-bottom: 20px;
+  letter-spacing: 2px; text-align: center;
+}
+
+.proclamation-content {
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--text-mid);
+}
+.proclamation-content h1 {
+  font-family: 'Cinzel Decorative', serif; font-size: 22px;
+  color: var(--chthonic-light); margin: 24px 0 12px;
+  border-bottom: 1px solid var(--chthonic-border); padding-bottom: 6px;
+}
+.proclamation-content h2 {
+  font-family: 'Cinzel', serif; font-size: 16px; letter-spacing: 2px;
+  color: var(--chthonic); margin: 20px 0 10px;
+}
+.proclamation-content p { margin-bottom: 16px; }
+.proclamation-content blockquote {
+  border-left: 3px solid var(--chthonic);
+  padding-left: 20px; margin: 20px 0; font-style: italic;
+  background: rgba(153,102,204,0.04); padding: 12px 20px;
+}
+.proclamation-content hr {
+  border: none; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--chthonic), transparent);
+  margin: 28px 0; opacity: 0.5;
+}
+.proclamation-content strong { color: var(--text); }
+.proclamation-content em { color: var(--chthonic-light); }
+
+.narrative-voice {
+  text-align: center; font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 3px; color: var(--text-void); margin-top: 20px;
+  padding-top: 12px; border-top: 1px solid var(--chthonic-border);
+}
+
+.last-updated {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-void);
+  margin-bottom: 20px;
 }
 
 /* ═══════════════════════════════════════════
-   WAR BANNER
+   THRESHOLD DIVIDER
    ═══════════════════════════════════════════ */
+.threshold-divider {
+  text-align: center; margin: 40px 0 32px;
+  position: relative;
+}
+.threshold-divider::before {
+  content: '';
+  position: absolute; top: 50%; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(153,102,204,0.3), transparent);
+}
+.threshold-divider-inner {
+  display: inline-block;
+  background: var(--void);
+  padding: 0 24px;
+  position: relative;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--chthonic-light);
+  text-transform: uppercase;
+}
+.threshold-divider-inner .divider-glyph {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 10px rgba(153,102,204,0.4));
+}
+.threshold-divider-inner .divider-label {
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   WAR ENGINE SECTION (Preserved)
+   ═══════════════════════════════════════════ */
+
+.war-section-header {
+  text-align: center; margin-bottom: 24px;
+}
+.war-section-header h2 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(18px, 4vw, 28px);
+  color: var(--chthonic-light);
+  letter-spacing: 2px;
+  text-shadow: 0 0 30px rgba(153,102,204,0.3);
+}
+.war-section-header .war-subtitle {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 4px; color: var(--text-dim);
+  text-transform: uppercase; margin-top: 6px;
+}
+
 .war-banner {
   text-align: center; padding: 16px 20px; margin-bottom: 20px;
   border-radius: 12px;
@@ -200,47 +355,6 @@ nav {
   font-size: 8px; letter-spacing: 2px; font-style: italic;
 }
 
-/* ═══════════════════════════════════════════
-   DAILY NARRATIVE — The Proclamation
-   ═══════════════════════════════════════════ */
-.daily-narrative {
-  background: rgba(10,6,28,0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(153,102,204,0.2);
-  border-radius: 16px;
-  padding: 22px 24px;
-  margin-bottom: 24px;
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--text-mid);
-  font-style: italic;
-}
-.daily-narrative .proclamation-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 14px; color: #c4a0e8;
-  text-align: center; margin-bottom: 14px;
-  font-style: normal;
-  letter-spacing: 2px;
-}
-.daily-narrative .proclamation-body { }
-.daily-narrative .proclamation-body strong { color: #e0d0f8; font-style: normal; }
-.daily-narrative .proclamation-body .river-name { color: var(--phlegethon); }
-.daily-narrative .proclamation-body .river-name.cocytus { color: var(--cocytus); }
-.daily-narrative .proclamation-body .river-name.acheron { color: var(--acheron); }
-.daily-narrative .proclamation-body .river-name.styx { color: var(--styx); }
-.daily-narrative .proclamation-body .river-name.lethe { color: var(--lethe); }
-.daily-narrative .proclamation-signature {
-  font-family: 'Cinzel', serif; font-size: 8px;
-  letter-spacing: 3px; color: #665588;
-  text-align: right; margin-top: 16px;
-  text-transform: uppercase;
-  border-top: 1px solid rgba(153,102,204,0.1);
-  padding-top: 12px;
-}
-
-/* ═══════════════════════════════════════════
-   SKY DIAGRAM — The War Orrery
-   ═══════════════════════════════════════════ */
 .sky-diagram-wrapper {
   position: relative;
   width: min(400px, 82vw); height: min(400px, 82vw);
@@ -261,14 +375,11 @@ nav {
     inset 0 0 80px rgba(0,0,0,0.6),
     inset 0 0 30px rgba(60,30,100,0.08);
 }
-
-/* Orrery rings */
 .sky-diagram::before {
   content: '';
   position: absolute; inset: 6%;
   border-radius: 50%;
   border: 1px solid rgba(100,60,160,0.15);
-  box-shadow: inset 0 0 20px rgba(60,20,100,0.08);
   pointer-events: none; z-index: 0;
 }
 .sky-diagram::after {
@@ -277,24 +388,6 @@ nav {
   border-radius: 50%;
   border: 1px dashed rgba(100,60,160,0.1);
   pointer-events: none; z-index: 0;
-}
-
-/* ── War tendrils — Chthonic claims reach toward center ── */
-.war-tendril {
-  position: absolute; z-index: 4; pointer-events: none;
-  transform-origin: center center;
-}
-.war-tendril::before {
-  content: '';
-  position: absolute;
-  width: 2px; height: 28px;
-  background: linear-gradient(to bottom, rgba(179,136,255,0.5), transparent);
-  border-radius: 1px;
-  animation: tendril-pulse 3s ease-in-out infinite alternate;
-}
-@keyframes tendril-pulse {
-  0%   { opacity: 0.3; height: 24px; }
-  100% { opacity: 0.7; height: 34px; }
 }
 
 .zodiac-sign {
@@ -335,7 +428,6 @@ nav {
   100% { text-shadow: 0 0 36px rgba(255,68,255,0.9); transform: scale(1.1); }
 }
 
-/* Sign positions — 12-point ring */
 .sign-0  { top:-8px; left:50%; transform:translateX(-50%); }
 .sign-1  { top:12%; right:6%; transform:translate(50%,-50%); }
 .sign-2  { top:50%; right:-8px; transform:translateY(-50%); }
@@ -356,11 +448,6 @@ nav {
 .center-sky .void-glyph {
   font-size: 44px; display: block;
   filter: drop-shadow(0 0 20px rgba(153,102,204,0.4));
-  animation: center-float 5s ease-in-out infinite;
-}
-@keyframes center-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
 }
 .center-sky .void-label {
   font-family: 'Cinzel', serif; font-size: 7px;
@@ -371,9 +458,7 @@ nav {
   font-style: italic; margin-top: 6px; line-height: 1.5;
 }
 
-/* ═══════════════════════════════════════════
-   THRESHOLD CARD
-   ═══════════════════════════════════════════ */
+/* ── Threshold Card ── */
 .threshold-card {
   background: rgba(16,10,36,0.6);
   border: 1px solid rgba(136,102,170,0.3);
@@ -419,74 +504,32 @@ nav {
   border-top: 1px solid rgba(136,102,170,0.1);
 }
 
-/* ═══════════════════════════════════════════
-   RIVERS
-   ═══════════════════════════════════════════ */
+/* ── Rivers ── */
 .river-body {
-  position: relative;
-  height: 44px;
-  margin: 0 0 8px 0;
-  border-radius: 8px;
-  overflow: hidden;
+  position: relative; height: 44px;
+  margin: 0 0 8px 0; border-radius: 8px; overflow: hidden;
 }
-.river-body::before {
-  content: '';
-  position: absolute; inset: 0;
-  opacity: 0.3;
-  animation: river-flow 8s linear infinite;
-}
-@keyframes river-flow {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(100px); }
-}
-
 .river-body.phlegethon {
-  background: linear-gradient(180deg,
-    #cc5533 0%, #3a1a0c 25%, #1a0804 50%, #3a1a0c 75%, #cc5533 100%);
+  background: linear-gradient(180deg, #cc5533 0%, #3a1a0c 25%, #1a0804 50%, #3a1a0c 75%, #cc5533 100%);
   box-shadow: 0 2px 12px rgba(200,80,30,0.15);
 }
-.river-body.phlegethon::before {
-  background: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,150,60,0.12) 40px, rgba(255,150,60,0.12) 44px, transparent 44px, transparent 80px);
-}
-
 .river-body.cocytus {
-  background: linear-gradient(180deg,
-    #6688cc 0%, #1a1a48 25%, #0a0a24 50%, #1a1a48 75%, #6688cc 100%);
+  background: linear-gradient(180deg, #6688cc 0%, #1a1a48 25%, #0a0a24 50%, #1a1a48 75%, #6688cc 100%);
   box-shadow: 0 2px 12px rgba(80,100,180,0.15);
 }
-.river-body.cocytus::before {
-  background: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(140,160,220,0.1) 60px, rgba(140,160,220,0.1) 64px, transparent 64px, transparent 120px);
-}
-
 .river-body.acheron {
   height: 50px;
-  background: linear-gradient(180deg,
-    #aa8855 0%, #342410 25%, #140c04 50%, #342410 75%, #aa8855 100%);
+  background: linear-gradient(180deg, #aa8855 0%, #342410 25%, #140c04 50%, #342410 75%, #aa8855 100%);
   box-shadow: 0 3px 14px rgba(180,150,80,0.14);
 }
-.river-body.acheron::before {
-  background: repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(200,170,100,0.08) 50px, rgba(200,170,100,0.08) 55px, transparent 55px, transparent 100px);
-}
-
 .river-body.styx {
-  background: linear-gradient(180deg,
-    #4488aa 0%, #0c2438 25%, #040e18 50%, #0c2438 75%, #4488aa 100%);
+  background: linear-gradient(180deg, #4488aa 0%, #0c2438 25%, #040e18 50%, #0c2438 75%, #4488aa 100%);
   box-shadow: 0 2px 12px rgba(30,100,130,0.16);
 }
-.river-body.styx::before {
-  background: repeating-linear-gradient(90deg, transparent, transparent 45px, rgba(90,170,190,0.1) 45px, rgba(90,170,190,0.1) 48px, transparent 48px, transparent 90px);
-}
-
 .river-body.lethe {
-  background: linear-gradient(180deg,
-    #8855aa 0%, #241038 25%, #0c0418 50%, #241038 75%, #8855aa 100%);
-  box-shadow: 0 2px 12px rgba(120,60,180,0.14);
-  opacity: 0.7;
+  background: linear-gradient(180deg, #8855aa 0%, #241038 25%, #0c0418 50%, #241038 75%, #8855aa 100%);
+  box-shadow: 0 2px 12px rgba(120,60,180,0.14); opacity: 0.7;
 }
-.river-body.lethe::before {
-  background: repeating-linear-gradient(90deg, transparent, transparent 70px, rgba(180,120,220,0.08) 70px, rgba(180,120,220,0.08) 74px, transparent 74px, transparent 140px);
-}
-
 .river-label {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%,-50%);
@@ -502,24 +545,6 @@ nav {
 .river-body.styx .river-label       { color: #77bbcc; }
 .river-body.lethe .river-label      { color: #bb99dd; }
 
-.river-signs {
-  position: absolute; bottom: 6px; left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Cinzel', serif; font-size: 7px;
-  letter-spacing: 3px; text-transform: uppercase;
-  white-space: nowrap; opacity: 0.5; z-index: 5;
-  pointer-events: none;
-}
-.river-body.phlegethon .river-signs { color: #ee8866; }
-.river-body.cocytus .river-signs    { color: #99aadd; }
-.river-body.acheron .river-signs    { color: #ccaa77; }
-.river-body.styx .river-signs       { color: #77bbcc; }
-.river-body.lethe .river-signs      { color: #bb99dd; }
-
-/* ═══════════════════════════════════════════
-   DOMAIN SECTIONS
-   ═══════════════════════════════════════════ */
-.domain-section { margin-bottom: 4px; }
 .domain-header {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 10px; padding: 0 4px;
@@ -535,76 +560,10 @@ nav {
 .domain-title.styx       { color: var(--styx); }
 .domain-title.lethe      { color: var(--lethe); }
 
-.grimoire-card {
-  background: rgba(16,12,36,0.55);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 16px;
-  margin-bottom: 4px;
-}
 .grimoire-card.chthonic-border {
   border-color: rgba(120,90,160,0.2);
 }
 
-/* ═══════════════════════════════════════════
-   ARCANA CARD IMAGES
-   ═══════════════════════════════════════════ */
-.arcana-card-image {
-  position: relative;
-  width: 90px; height: 142px;
-  border-radius: 7px; overflow: hidden;
-  flex-shrink: 0;
-  border: 2px solid var(--card-border);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.5), 0 0 12px rgba(153,102,204,0.12);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-.arcana-card-image:hover {
-  transform: translateY(-3px) scale(1.04);
-  border-color: rgba(179,136,255,0.5);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.6), 0 0 20px rgba(153,102,204,0.22);
-}
-.arcana-card-image img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-}
-.arcana-card-image .card-rank-overlay {
-  position: absolute; top: 5px; left: 5px;
-  background: rgba(4,1,14,0.85);
-  color: var(--card-glow);
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 13px; font-weight: 700;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(179,136,255,0.3);
-}
-.arcana-card-image .card-name-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: linear-gradient(to top, rgba(4,1,14,0.95), rgba(4,1,14,0.3), transparent);
-  padding: 18px 6px 6px; text-align: center;
-}
-.arcana-card-image .card-name-overlay span {
-  font-family: 'Cinzel', serif;
-  font-size: 7px; letter-spacing: 2px;
-  color: #e0d0f0; text-transform: uppercase;
-}
-.arcana-card-image.primordial-card-image {
-  border-color: rgba(255,68,255,0.4);
-  animation: primordial-card-glow 3s infinite alternate;
-}
-@keyframes primordial-card-glow {
-  0%   { box-shadow: 0 4px 18px rgba(0,0,0,0.5), 0 0 14px rgba(255,68,255,0.14); }
-  100% { box-shadow: 0 4px 18px rgba(0,0,0,0.5), 0 0 28px rgba(255,68,255,0.32); }
-}
-.arcana-card-image.centered {
-  margin: 0 auto 16px;
-  width: 110px; height: 175px;
-}
-
-/* ═══════════════════════════════════════════
-   READING ENTRIES
-   ═══════════════════════════════════════════ */
 .reading-entry {
   display: flex; align-items: flex-start; gap: 16px;
   flex-wrap: wrap; margin-bottom: 18px;
@@ -626,18 +585,24 @@ nav {
   border-left: 2px solid rgba(153,102,204,0.25);
   font-size: 13px; color: var(--text-dim); font-style: italic;
 }
-.reading-quiet {
-  text-align: center; padding: 24px 16px; color: var(--text-dim);
-  font-style: italic; line-height: 1.7;
+
+.arcana-card-image {
+  position: relative;
+  width: 90px; height: 142px;
+  border-radius: 7px; overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--card-border);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.5), 0 0 12px rgba(153,102,204,0.12);
 }
-.reading-quiet .quiet-gods {
-  font-size: 11px; margin-top: 6px; opacity: 0.5;
-  color: #8a6518;
+.arcana-card-image img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.arcana-card-image.centered {
+  margin: 0 auto 16px;
+  width: 110px; height: 175px;
 }
 
-/* ═══════════════════════════════════════════
-   VOID HOUSES GRID
-   ═══════════════════════════════════════════ */
+/* ── Void Houses ── */
 .void-houses {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -659,11 +624,6 @@ nav {
 .void-house.primordial-house {
   border-color: rgba(255,68,255,0.3);
   background: rgba(20,0,20,0.4);
-  animation: primordial-house-glow 3s infinite alternate;
-}
-@keyframes primordial-house-glow {
-  0%   { box-shadow: 0 0 8px rgba(255,68,255,0.1); }
-  100% { box-shadow: 0 0 20px rgba(255,68,255,0.25); }
 }
 .void-house:hover { transform: translateY(-2px); }
 .void-house .vh-glyph { font-size: 20px; margin-bottom: 2px; }
@@ -677,28 +637,13 @@ nav {
   font-family: 'Cinzel', serif; font-size: 8px;
   letter-spacing: 1px; margin-top: 2px;
 }
-.void-house.occupied .vh-sign { color: var(--text-dim); opacity: 0.35; }
 .void-house.void .vh-sign { color: var(--text-dim); }
-.void-house.primordial-house .vh-sign { color: #ff88ff; }
 .void-house .vh-resident {
   font-family: 'Cinzel Decorative', serif; font-size: 11px;
   color: #c4a0e8; margin-top: 4px;
 }
-.void-house .vh-title {
-  font-size: 8px; color: #7766aa; font-style: italic;
-  margin-top: 2px; line-height: 1.3;
-}
-.void-house .vh-arcana {
-  font-family: 'Cinzel', serif; font-size: 7px;
-  letter-spacing: 1px; color: var(--card-glow); margin-top: 4px;
-}
-.void-house .vh-occupied-note {
-  font-size: 8px; color: var(--text-dim); opacity: 0.25; margin-top: 4px;
-}
 
-/* ═══════════════════════════════════════════
-   SIGN SELECTOR
-   ═══════════════════════════════════════════ */
+/* ── Sign Selector ── */
 .sign-selector {
   text-align: center; margin-top: 4px;
   padding-top: 20px;
@@ -720,59 +665,49 @@ nav {
   margin-top: 14px; font-size: 14px; font-style: italic;
   color: var(--text-mid); line-height: 1.7; min-height: 40px;
 }
-.sign-card-display {
-  width: 110px; height: 170px;
-  margin: 10px auto;
-  border-radius: 8px; overflow: hidden;
-  border: 2px solid var(--card-border);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-}
-.sign-card-display img {
-  width: 100%; height: 100%; object-fit: cover;
-}
-.sign-arcana-inline {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(20,15,40,0.5);
-  border: 1px solid rgba(153,102,204,0.2);
-  border-radius: 6px; padding: 4px 10px; margin: 6px 4px;
-  font-family: 'Cinzel', serif; font-size: 9px; color: #c4a0e8;
-}
-.sign-arcana-inline .arc-num {
-  color: var(--card-glow);
-  font-family: 'Cinzel Decorative', serif; font-size: 14px;
-}
 
-/* ═══════════════════════════════════════════
-   REFRESH + FOOTER
-   ═══════════════════════════════════════════ */
+/* ── Refresh ── */
 .refresh-row { text-align: center; margin: 20px 0; }
 .btn-refresh {
   font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
-  text-transform: uppercase; padding: 10px 22px; border-radius: 8px;
-  border: 1px solid #7766aa;
-  background: transparent; color: #9966cc;
-  cursor: pointer; transition: all 0.25s;
+  text-transform: uppercase; padding: 10px 24px; border-radius: 4px;
+  border: 1px solid var(--chthonic-dim);
+  background: rgba(153,102,204,0.06); color: var(--chthonic-light);
+  cursor: pointer; transition: all 0.2s;
 }
 .btn-refresh:hover {
-  background: rgba(153,102,204,0.08);
-  border-color: #9966cc;
-  box-shadow: 0 0 16px rgba(153,102,204,0.12);
+  background: rgba(153,102,204,0.1);
+  border-color: var(--chthonic);
+  box-shadow: 0 0 16px rgba(153,102,204,0.1);
+}
+
+.decree-stamp {
+  text-align: center; padding: 16px;
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px;
+  color: var(--chthonic-light); text-transform: uppercase;
+  border: 1px solid var(--chthonic-border);
+  border-radius: 4px; margin-top: 20px;
+  background: rgba(153,102,204,0.04);
 }
 
 footer {
-  text-align: center; padding: 30px; font-size: 7px; letter-spacing: 3px;
-  color: #665588;
-  border-top: 1px solid rgba(153,102,204,0.05);
-  margin-top: 20px; opacity: 0.45;
+  text-align: center; padding: 32px 24px; font-size: 7px; letter-spacing: 4px;
+  color: var(--text-void);
+  border-top: 1px solid var(--chthonic-border);
+  margin-top: 20px;
+  font-family: 'Cinzel', serif;
 }
 
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════ */
+/* ── RESPONSIVE ── */
 @media (max-width: 600px) {
-  nav { padding: 0 10px; }
+  nav { padding: 0 12px; }
   .nav-links { gap: 8px; }
   .nav-links a { font-size: 7px; letter-spacing: 2px; }
+  .container { padding: 76px 16px 40px; }
+  .grimoire-card { padding: 20px; }
+  .proclamation-content { font-size: 15px; }
+  .sister-link { top: 60px; right: 8px; }
+  .sister-link a { font-size: 6px; padding: 5px 10px; }
   .sky-diagram-wrapper { width: 86vw; height: 86vw; }
   .zodiac-sign { font-size: 12px; }
   .zodiac-sign.chthonic { font-size: 16px; }
@@ -790,31 +725,31 @@ footer {
 </head>
 <body>
 
-<!-- Space Background Canvas -->
+<!-- Space Background -->
 <canvas id="spaceCanvas"></canvas>
 
 <!-- Card Mosaic -->
 <div id="cardMosaic"></div>
 
-<!-- ═══════════════════════════════════════════
-     NAVIGATION
-     ═══════════════════════════════════════════ -->
+<!-- NAV -->
 <nav>
   <div class="nav-brand">
-    <div class="nav-brand-title">Chthonic Grimoire</div>
-    <div class="nav-brand-sub">The Void Devours the Sky</div>
+    <div class="nav-brand-title">Digital Divination</div>
+    <div class="nav-brand-sub">Aspects of the Divine</div>
   </div>
   <ul class="nav-links">
-    <li><a href="index.html">Temple</a></li>
-    <li><a href="zodiac.html">Celestial</a></li>
-    <li><a href="chthonic.html" class="nav-active">Chthonic</a></li>
     <li><a href="draw.html">Draw</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="oracle.html">Oracle</a></li>
+    <li><a href="almanac.html">Almanac</a></li>
+    <li><a href="celestial.html">Celestial</a></li>
+    <li><a href="chthonic.html" class="active">Chthonic</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="index.html">Temple</a></li>
   </ul>
 </nav>
 
 <div class="sister-link">
-  <a href="zodiac.html">☀ Celestial Grimoire →</a>
+  <a href="celestial.html">☀ Celestial Grimoire →</a>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -822,17 +757,54 @@ footer {
      ═══════════════════════════════════════════ -->
 <div class="container">
 
+  <!-- ═══════════════════════════════════════
+       PROCLAMATION SECTION
+       ═══════════════════════════════════════ -->
   <div class="header">
     <h1>⬡ Chthonic Grimoire ⬡</h1>
     <div class="date" id="currentDate"></div>
-    <div class="subtitle">The War for the Sky · Hades Speaks</div>
+  </div>
+
+  <div class="hades-sigil">
+    <div class="sigil-circle">
+      <div class="sigil-glyph">⬡</div>
+      <div class="sigil-label">Hades</div>
+    </div>
+  </div>
+
+  <div class="voice-switcher" id="voiceSwitcher"></div>
+
+  <div class="grimoire-card">
+    <h2>⬡ The Proclamation ⬡</h2>
+    <div id="proclamationContainer">
+      <div style="text-align:center; padding:40px; color:var(--text-dim);">⟳ The gate is opening...</div>
+    </div>
+    <div class="narrative-voice" id="narrativeVoice"></div>
+  </div>
+
+  <div class="last-updated" id="lastUpdated"></div>
+
+  <!-- ═══════════════════════════════════════
+       THRESHOLD DIVIDER
+       ═══════════════════════════════════════ -->
+  <div class="threshold-divider">
+    <div class="threshold-divider-inner">
+      <span class="divider-glyph">⬡</span>
+      THE WAR ENGINE
+      <div class="divider-label">Live Sky · Supporting Evidence</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       WAR ENGINE SECTION
+       ═══════════════════════════════════════ -->
+  <div class="war-section-header">
+    <h2>⬡ The War for the Sky ⬡</h2>
+    <div class="war-subtitle">Current Status · Live from the Threshold</div>
   </div>
 
   <!-- WAR BANNER -->
   <div class="war-banner" id="warBanner"></div>
-
-  <!-- DAILY NARRATIVE — The Proclamation -->
-  <div class="daily-narrative" id="dailyNarrative"></div>
 
   <!-- SKY DIAGRAM -->
   <div class="sky-diagram-wrapper">
@@ -843,87 +815,72 @@ footer {
     </div>
   </div>
 
-  <!-- THRESHOLD — Hades / Pluto -->
+  <!-- THRESHOLD CARD -->
   <div class="threshold-card" id="thresholdCard"></div>
 
-  <!-- PHLEGETHON DOMAIN — Fire -->
-  <div class="domain-section">
-    <div class="domain-header">
-      <span class="domain-icon">🔥</span>
-      <span class="domain-title phlegethon">Phlegethon · The Burning Hunger</span>
-    </div>
-    <div class="grimoire-card chthonic-border" id="phlegethonCard">
-      <div id="phlegethonReading"></div>
-    </div>
+  <!-- PHLEGETHON -->
+  <div class="domain-header">
+    <span class="domain-icon">🔥</span>
+    <span class="domain-title phlegethon">Phlegethon · The Burning Hunger</span>
+  </div>
+  <div class="grimoire-card chthonic-border" id="phlegethonCard">
+    <div id="phlegethonReading"></div>
   </div>
   <div class="river-body phlegethon">
     <div class="river-label">PHLEGETHON</div>
-    <div class="river-signs">Aries · Leo · Sagittarius</div>
   </div>
 
-  <!-- COCYTUS DOMAIN — Air -->
-  <div class="domain-section">
-    <div class="domain-header">
-      <span class="domain-icon">🌫️</span>
-      <span class="domain-title cocytus">Cocytus · The Cold Lament</span>
-    </div>
-    <div class="grimoire-card chthonic-border" id="cocytusCard">
-      <div id="cocytusReading"></div>
-    </div>
+  <!-- COCYTUS -->
+  <div class="domain-header">
+    <span class="domain-icon">🌫️</span>
+    <span class="domain-title cocytus">Cocytus · The Cold Lament</span>
+  </div>
+  <div class="grimoire-card chthonic-border" id="cocytusCard">
+    <div id="cocytusReading"></div>
   </div>
   <div class="river-body cocytus">
     <div class="river-label">COCYTUS</div>
-    <div class="river-signs">Gemini · Libra · Aquarius</div>
   </div>
 
-  <!-- ACHERON DOMAIN — Earth -->
-  <div class="domain-section">
-    <div class="domain-header">
-      <span class="domain-icon">⚖️</span>
-      <span class="domain-title acheron">Acheron · The Heavy Toll</span>
-    </div>
-    <div class="grimoire-card chthonic-border" id="acheronCard">
-      <div id="acheronReading"></div>
-    </div>
+  <!-- ACHERON -->
+  <div class="domain-header">
+    <span class="domain-icon">⚖️</span>
+    <span class="domain-title acheron">Acheron · The Heavy Toll</span>
+  </div>
+  <div class="grimoire-card chthonic-border" id="acheronCard">
+    <div id="acheronReading"></div>
   </div>
   <div class="river-body acheron">
     <div class="river-label">ACHERON</div>
-    <div class="river-signs">Taurus · Virgo · Capricorn</div>
   </div>
 
-  <!-- STYX DOMAIN — Water -->
-  <div class="domain-section">
-    <div class="domain-header">
-      <span class="domain-icon">🌊</span>
-      <span class="domain-title styx">Styx · The Binding Oath</span>
-    </div>
-    <div class="grimoire-card chthonic-border" id="styxCard">
-      <div id="styxReading"></div>
-    </div>
+  <!-- STYX -->
+  <div class="domain-header">
+    <span class="domain-icon">🌊</span>
+    <span class="domain-title styx">Styx · The Binding Oath</span>
+  </div>
+  <div class="grimoire-card chthonic-border" id="styxCard">
+    <div id="styxReading"></div>
   </div>
   <div class="river-body styx">
     <div class="river-label">STYX</div>
-    <div class="river-signs">Cancer · Scorpio · Pisces</div>
   </div>
 
-  <!-- LETHE DOMAIN — Forgetting (hidden until Chaos) -->
+  <!-- LETHE -->
   <div id="letheDomain" style="display:none;">
-    <div class="domain-section">
-      <div class="domain-header">
-        <span class="domain-icon">🌑</span>
-        <span class="domain-title lethe">Lethe · The River of Forgetting Rises</span>
-      </div>
-      <div class="grimoire-card chthonic-border" id="letheCard">
-        <div id="letheReading"></div>
-      </div>
+    <div class="domain-header">
+      <span class="domain-icon">🌑</span>
+      <span class="domain-title lethe">Lethe · The River of Forgetting Rises</span>
+    </div>
+    <div class="grimoire-card chthonic-border" id="letheCard">
+      <div id="letheReading"></div>
     </div>
     <div class="river-body lethe">
       <div class="river-label">LETHE</div>
-      <div class="river-signs">What the Void Erases</div>
     </div>
   </div>
 
-  <!-- THE TWELVE HOUSES -->
+  <!-- VOID HOUSES -->
   <div class="grimoire-card chthonic-border" style="margin-top:20px;">
     <h2 style="font-family:'Cinzel Decorative',serif;font-size:13px;color:#c4a0e8;text-align:center;margin-bottom:16px;letter-spacing:2px;">
       ⬡ The Twelve Houses · Who Holds the Sky ⬡
@@ -944,12 +901,19 @@ footer {
     </div>
   </div>
 
-  <footer>CHTHONIC GRIMOIRE · EALDFORN REPUBLIC · THE VOID REMEMBERS WHAT THE SKY FORGETS</footer>
+  <div class="decree-stamp">
+    Chthonic Grimoire · Hades Speaks · The Void Receives
+  </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<footer>
+  THE PROCLAMATION IS WHISPERED DAILY · THE WAR ENGINE BURNS BELOW · THE VOID RECEIVES
+</footer>
+
+<!-- ═══════════════════════════════════════
      SCRIPTS
-     ═══════════════════════════════════════════ -->
+     ═══════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.8/astronomy.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 <script src="js/observe.js"></script>
@@ -958,503 +922,263 @@ footer {
 <script src="js/arcana.js"></script>
 
 <script>
-/* ═══════════════════════════════════════════
-   SPACE BACKGROUND — Nebula + Stars
-   Deep cosmos with drifting particles
-   ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   SPACE BACKGROUND
+   ═══════════════════════════════════════════════════════════════ */
 (function() {
   const canvas = document.getElementById('spaceCanvas');
   const ctx = canvas.getContext('2d');
-  let stars = [];
-  let nebulae = [];
-  
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  let stars = [], nebulae = [];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  for (let i = 0; i < 250; i++) {
+    stars.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.4+0.2, opacity:Math.random()*0.4+0.08, twinkleSpeed:Math.random()*0.02+0.005, twinkleOffset:Math.random()*Math.PI*2, hue:Math.random()<0.2?280:Math.random()<0.3?200:30 });
   }
-  window.addEventListener('resize', resize);
-  resize();
-  
-  // Generate stars
-  for (let i = 0; i < 300; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.6 + 0.3,
-      opacity: Math.random() * 0.5 + 0.1,
-      twinkleSpeed: Math.random() * 0.02 + 0.005,
-      twinkleOffset: Math.random() * Math.PI * 2,
-      hue: Math.random() < 0.15 ? 280 : Math.random() < 0.25 ? 200 : 30
-    });
+  for (let i = 0; i < 4; i++) {
+    nebulae.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*180+60, hue:[280,260,300,220][i], opacity:Math.random()*0.03+0.015 });
   }
-  
-  // Generate nebula blobs
-  for (let i = 0; i < 5; i++) {
-    nebulae.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 200 + 80,
-      hue: [280, 260, 300, 220, 320][i],
-      opacity: Math.random() * 0.04 + 0.02
-    });
-  }
-  
   let time = 0;
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    time += 0.005;
-    
-    // Draw nebulae
-    nebulae.forEach(n => {
-      const gradient = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
-      gradient.addColorStop(0, `hsla(${n.hue}, 60%, 40%, ${n.opacity * 1.5})`);
-      gradient.addColorStop(0.5, `hsla(${n.hue}, 50%, 25%, ${n.opacity})`);
-      gradient.addColorStop(1, 'transparent');
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    
-    // Draw stars
-    stars.forEach(s => {
-      const twinkle = Math.sin(time * 60 * s.twinkleSpeed + s.twinkleOffset) * 0.5 + 0.5;
-      const alpha = s.opacity * (0.4 + twinkle * 0.6);
-      ctx.fillStyle = `hsla(${s.hue}, 30%, 75%, ${alpha})`;
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r * (0.8 + twinkle * 0.4), 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Glow on brighter stars
-      if (s.r > 1.0 && twinkle > 0.7) {
-        const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
-        glow.addColorStop(0, `hsla(${s.hue}, 40%, 70%, ${alpha * 0.4})`);
-        glow.addColorStop(1, 'transparent');
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    });
-    
+    ctx.clearRect(0,0,canvas.width,canvas.height); time+=0.004;
+    nebulae.forEach(n => { const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r); g.addColorStop(0,`hsla(${n.hue},50%,30%,${n.opacity*1.5})`); g.addColorStop(0.5,`hsla(${n.hue},40%,18%,${n.opacity})`); g.addColorStop(1,'transparent'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill(); });
+    stars.forEach(s => { const tw=Math.sin(time*60*s.twinkleSpeed+s.twinkleOffset)*0.5+0.5, a=s.opacity*(0.4+tw*0.6); ctx.fillStyle=`hsla(${s.hue},25%,70%,${a})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r*(0.8+tw*0.4),0,Math.PI*2); ctx.fill(); });
     requestAnimationFrame(draw);
   }
   draw();
-  
-  // Handle resize for stars
-  window.addEventListener('resize', () => {
-    resize();
-    stars.forEach(s => {
-      s.x = Math.random() * canvas.width;
-      s.y = Math.random() * canvas.height;
-    });
-    nebulae.forEach(n => {
-      n.x = Math.random() * canvas.width;
-      n.y = Math.random() * canvas.height;
-    });
-  });
+  window.addEventListener('resize',()=>{ resize(); stars.forEach(s=>{s.x=Math.random()*canvas.width;s.y=Math.random()*canvas.height;}); nebulae.forEach(n=>{n.x=Math.random()*canvas.width;n.y=Math.random()*canvas.height;}); });
 })();
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    CARD MOSAIC
-   ═══════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════ */
 const MOSAIC_CARDS = [
-  {image:"data/images/hades-card.jpg"},{image:"data/images/persephone-card.jpg"},
-  {image:"data/images/thanatos-card.jpg"},{image:"data/images/prometheus-card.jpg"},
-  {image:"data/images/major/moon.png"},{image:"data/images/major/death.png"},
-  {image:"data/images/major/devil.png"},{image:"data/images/major/tower.png"},
-  {image:"data/images/major/judgment.png"},{image:"data/images/major/world.png"},
-  {image:"data/images/poseidon-card.jpg"},{image:"data/images/dionysus-card.jpg"},
-  {image:"data/images/aphrodite-card.jpg"},{image:"data/images/demeter-card.jpg"},
-  {image:"data/images/hera-card.jpg"},{image:"data/images/hephaestus-card.jpg"},
-  {image:"data/images/ares-card.jpg"},{image:"data/images/artemis-card.jpg"},
-  {image:"data/images/hermes-card.jpg"},{image:"data/images/athena-card.jpg"},
-  {image:"data/images/zeus-card.jpg"},{image:"data/images/hermit-card.jpg"},
-  {image:"data/images/major/wheel_of_fortune.png"},{image:"data/images/major/temperance.png"},
-  {image:"data/images/minor/fire/fire_ace.png"},{image:"data/images/minor/fire/fire_02.png"},
-  {image:"data/images/minor/earth/earth_ace.png"},{image:"data/images/minor/water/water_ace.png"},
-  {image:"data/images/minor/air/air_ace.png"}
+  'data/images/hades-card.jpg','data/images/persephone-card.jpg','data/images/thanatos-card.jpg',
+  'data/images/prometheus-card.jpg','data/images/major/moon.png','data/images/poseidon-card.jpg',
+  'data/images/dionysus-card.jpg','data/images/aphrodite-card.jpg','data/images/demeter-card.jpg',
+  'data/images/hera-card.jpg','data/images/hephaestus-card.jpg','data/images/ares-card.jpg',
+  'data/images/artemis-card.jpg','data/images/hermes-card.jpg','data/images/athena-card.jpg',
+  'data/images/zeus-card.jpg','data/images/hermit-card.jpg','data/images/major/wheel_of_fortune.png',
+  'data/images/major/temperance.png','data/images/major/judgment.png','data/images/major/world.png',
+  'data/images/major/sun.png','data/images/minor/fire/fire_ace.png','data/images/minor/earth/earth_ace.png',
+  'data/images/minor/water/water_ace.png','data/images/minor/air/air_ace.png'
 ];
-
 function buildMosaic() {
-  const mosaic = document.getElementById('cardMosaic');
-  const cells = [];
-  for (let i = 0; i < 36; i++) {
-    const card = MOSAIC_CARDS[Math.floor(Math.random() * MOSAIC_CARDS.length)];
-    cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
-  }
-  mosaic.innerHTML = cells.join('');
+  const m = document.getElementById('cardMosaic');
+  let h = '';
+  for (let i=0;i<36;i++) { const img = MOSAIC_CARDS[Math.floor(Math.random()*MOSAIC_CARDS.length)]; h += `<img src="${img}" alt="" loading="lazy" onerror="this.style.opacity='0'">`; }
+  m.innerHTML = h;
 }
 buildMosaic();
+setInterval(()=>{ const imgs=document.querySelectorAll('#cardMosaic img'); if(!imgs.length)return; const idx=Math.floor(Math.random()*imgs.length); const card=MOSAIC_CARDS[Math.floor(Math.random()*MOSAIC_CARDS.length)]; imgs[idx].style.opacity='0'; setTimeout(()=>{imgs[idx].src=card;imgs[idx].style.opacity='';},800); },12000);
 
-setInterval(() => {
-  const imgs = document.querySelectorAll('#cardMosaic img');
-  if (!imgs.length) return;
-  const idx = Math.floor(Math.random() * imgs.length);
-  const card = MOSAIC_CARDS[Math.floor(Math.random() * MOSAIC_CARDS.length)];
-  imgs[idx].style.opacity = '0';
-  setTimeout(() => { imgs[idx].src = card.image; imgs[idx].style.opacity = ''; }, 800);
-}, 12000);
+/* ═══════════════════════════════════════════════════════════════
+   PROCLAMATION LOADER
+   ═══════════════════════════════════════════════════════════════ */
+const VOICES = [
+  { name:'The Oracle', transform:(html)=>html },
+  { name:'The Chronicler', transform:(html)=>`<div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--text-void);margin-bottom:12px;text-transform:uppercase;">— The Chronicler records from the threshold —</div>${html}` },
+  { name:'The Poet', transform:(html)=>html.replace(/<p>/g,'<p class="poetic-line" style="border-left:2px solid rgba(153,102,204,0.15);padding-left:14px;">') },
+  { name:'The Scholar', transform:(html)=>`<div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--text-void);margin-bottom:12px;text-transform:uppercase;">[Analysis by the Scholar of the Underworld Register]</div>${html}` }
+];
+let activeVoice = 0;
+let rawMarkdown = '';
+let renderedHtml = '';
 
-/* ═══════════════════════════════════════════
-   CHTHONIC GRIMOIRE — Main App
-   ═══════════════════════════════════════════ */
+async function loadProclamation() {
+  const container = document.getElementById('proclamationContainer');
+  const lastSpan = document.getElementById('lastUpdated');
+  container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">⟳ The gate is opening...</div>';
+  try {
+    const response = await fetch('chthonic.md?' + Date.now());
+    if (!response.ok) throw new Error(response.status===404?'No proclamation found.':`HTTP ${response.status}`);
+    rawMarkdown = await response.text();
+    if (!rawMarkdown.trim()) throw new Error('The void is silent.');
+    renderedHtml = marked.parse(rawMarkdown);
+    renderWithVoice();
+    const now = new Date();
+    lastSpan.innerHTML = `Last proclamation · ${now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} at ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
+  } catch(error) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:#aa4a6a;">⬡ The void is silent. ⬡<br><span style="font-size:13px;margin-top:10px;display:block;color:var(--text-dim);">${error.message}<br><br>chthonic.md awaits the descent.</span></div>`;
+    lastSpan.innerHTML = '';
+  }
+}
+
+function renderWithVoice() {
+  const container = document.getElementById('proclamationContainer');
+  const voiceSpan = document.getElementById('narrativeVoice');
+  const voice = VOICES[activeVoice];
+  let finalHtml = renderedHtml;
+  if (voice.transform && voice.transform !== VOICES[0].transform) finalHtml = voice.transform(renderedHtml);
+  container.innerHTML = `<div class="proclamation-content">${finalHtml}</div>`;
+  voiceSpan.textContent = `— Spoken by ${voice.name} from the threshold`;
+  document.querySelectorAll('.voice-btn').forEach((btn,i)=>{ i===activeVoice?btn.classList.add('active'):btn.classList.remove('active'); });
+}
+
+function setVoice(index) { activeVoice = index; if (renderedHtml) renderWithVoice(); }
+
+function buildVoiceSwitcher() {
+  document.getElementById('voiceSwitcher').innerHTML = VOICES.map((v,i)=>`<button class="voice-btn ${i===activeVoice?'active':''}" onclick="setVoice(${i})">${v.name}</button>`).join('');
+}
+
+document.getElementById('currentDate').innerHTML = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+buildVoiceSwitcher();
+loadProclamation();
+window.setVoice = setVoice;
+
+/* ═══════════════════════════════════════════════════════════════
+   WAR ENGINE — Preserved from original chthonic.html
+   ═══════════════════════════════════════════════════════════════ */
 const ChthonicGrimoire = (() => {
-
-  const SIGNS  = Almanac.SIGNS;
+  const SIGNS = Almanac.SIGNS;
   const GLYPHS = Almanac.SIGN_GLYPHS;
   const SIGN_ELEMENTS = Chthonic.SIGN_ELEMENTS;
-
   let skyData = null;
 
   function degreesStr(deg) { return `${Math.floor(deg)}°`; }
 
-  // ── RENDER CARD IMAGE ────────────────────────────────────────────────
-  function renderCardImage(card, sizeClass = '', isPrimordial = false) {
+  function renderCardImage(card, sizeClass='', isPrimordial=false) {
     if (!card) return '';
     const imgPath = Arcana.getCardImage(card);
     const primordialClass = isPrimordial ? ' primordial-card-image' : '';
-    return `
-      <div class="arcana-card-image ${sizeClass}${primordialClass}" title="${card.name}: ${card.title}">
-        <img src="${imgPath}" alt="${card.name} — ${card.title}" loading="lazy" onerror="this.style.opacity='0.3';">
-        <div class="card-rank-overlay">${card.rank}</div>
-        <div class="card-name-overlay"><span>${card.name}</span></div>
-      </div>`;
+    return `<div class="arcana-card-image ${sizeClass}${primordialClass}" title="${card.name}: ${card.title}"><img src="${imgPath}" alt="${card.name} — ${card.title}" loading="lazy" onerror="this.style.opacity='0.3';"></div>`;
   }
 
-  // ── DAILY NARRATIVE — Hades' Proclamation ─────────────────────────────
-  function buildDailyNarrative(report, planets) {
-    const chthonicCount = report.chthonicHouses;
-    const olympianCount = report.olympianHouses;
-    const claimedSigns = report.claims.filter(c => c.chthonic).map(c => c.sign);
-    const voidSigns = report.claims.filter(c => !c.chthonic && c.olympianCount === 0).map(c => c.sign);
-    const threshold = report.threshold;
-    
-    let narrative = '';
-    
-    // Opening proclamation
-    if (chthonicCount > olympianCount) {
-      narrative += `<p><strong>The Underworld speaks with authority tonight.</strong> Hades holds the gate at <strong>${threshold ? threshold.sign + ' ' + GLYPHS[threshold.sign] : 'the threshold'}</strong>, and from that dark seat, the rivers rise. ${chthonicCount} houses belong to the Chthonic gods — more than Olympus can claim.</p>`;
-    } else if (chthonicCount === olympianCount) {
-      narrative += `<p><strong>The war stands in balance.</strong> ${chthonicCount} houses for the Underworld, ${olympianCount} for Olympus. Hades watches from <strong>${threshold ? threshold.sign + ' ' + GLYPHS[threshold.sign] : 'the gate'}</strong>, neither advancing nor retreating. The stalemate is a kind of hunger.</p>`;
-    } else {
-      narrative += `<p><strong>Olympus holds the majority — but the void is patient.</strong> Only ${chthonicCount} houses answer to the Chthonic gods tonight. Hades keeps the gate at <strong>${threshold ? threshold.sign + ' ' + GLYPHS[threshold.sign] : 'the threshold'}</strong>. What Olympus holds, the void remembers. It always remembers.</p>`;
-    }
-    
-    // Claimed signs — the devouring
-    if (claimedSigns.length > 0) {
-      const claimedList = claimedSigns.map(s => {
-        const claim = report.claims.find(c => c.sign === s);
-        const c = claim.chthonic;
-        return `<strong>${s} ${GLYPHS[s]}</strong> (<span class="river-name ${c.river.toLowerCase()}">${c.name}</span>)`;
-      });
-      narrative += `<p>The Chthonic gods have <strong>devoured</strong> these constellations tonight: ${claimedList.join(', ')}. `;
-      
-      // Add specific feeding details
-      const byRiver = {};
-      claimedSigns.forEach(s => {
-        const claim = report.claims.find(c => c.sign === s);
-        const river = claim.chthonic.river;
-        if (!byRiver[river]) byRiver[river] = [];
-        byRiver[river].push(s);
-      });
-      
-      const riverDetails = Object.entries(byRiver).map(([river, signs]) => {
-        const signNames = signs.map(s => `${s} ${GLYPHS[s]}`).join(' and ');
-        if (river === 'Phlegethon') return `Through <span class="river-name">Phlegethon</span>, the fire of desire burns through ${signNames} — these signs now hunger for what they cannot have`;
-        if (river === 'Cocytus') return `Through <span class="river-name cocytus">Cocytus</span>, cold lament drifts across ${signNames} — their sorrow feeds the river`;
-        if (river === 'Acheron') return `Through <span class="river-name acheron">Acheron</span>, the heavy toll weighs on ${signNames} — patience becomes burden`;
-        if (river === 'Styx') return `Through <span class="river-name styx">Styx</span>, the binding oath holds ${signNames} — what was promised cannot be un-promised`;
-        return '';
-      }).filter(Boolean);
-      
-      if (riverDetails.length > 0) {
-        narrative += riverDetails.join('. ') + '.</p>';
-      } else {
-        narrative += '</p>';
-      }
-    }
-    
-    // Void signs — the silent hunger
-    if (voidSigns.length > 0) {
-      const voidList = voidSigns.map(s => `${s} ${GLYPHS[s]}`).join(', ');
-      narrative += `<p>The void gazes upon <strong>${voidList}</strong> — untouched, unclaimed, but not unwatched. These empty houses are the <strong>hungriest</strong> places in the sky tonight. Neither Olympus nor the Underworld holds them. They are the battlefield yet to be fought.</p>`;
-    }
-    
-    // Chaos emergence
-    const hasChaos = Object.values(report.byElement).some(e => e.isFullyVoid);
-    if (hasChaos) {
-      const voidElements = Object.entries(report.byElement).filter(([_, d]) => d.isFullyVoid).map(([el]) => el);
-      narrative += `<p><strong style="color:#ff44ff;">⛧ Chaos stirs.</strong> All ${voidElements.join(' and ')} signs are void. The river <span class="river-name lethe">Lethe</span> rises from beneath — the forgotten returns. When an entire element falls silent, the primordial answers. The gods emerged from Chaos once. They have not forgotten what waits there.</p>`;
-    }
-    
-    // Closing
-    narrative += `<p style="margin-top:12px;">The war is not a battle of swords. It is a war of <strong>presence and absence</strong>. Every empty sign is a mouth. Every Chthonic claim is a feeding. Olympus holds what it can. The void takes what it wants.</p>`;
-    
-    document.getElementById('dailyNarrative').innerHTML = `
-      <div class="proclamation-title">⬡ The Proclamation of Hades ⬡</div>
-      <div class="proclamation-body">${narrative}</div>
-      <div class="proclamation-signature">— Spoken from the Gate at ${threshold ? threshold.sign + ' ' + GLYPHS[threshold.sign] : 'the Threshold'} · ${new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}</div>`;
-  }
-
-  // ── WAR BANNER ───────────────────────────────────────────────────────
   function buildWarBanner(report) {
     const banner = document.getElementById('warBanner');
     const chthonic = report.chthonicHouses;
     const olympian = report.olympianHouses;
     let verdict, verdictColor;
-    if (chthonic > olympian) {
-      verdict = '⬡ THE UNDERWORLD ADVANCES — ' + chthonic + ' houses devoured, ' + olympian + ' held by Olympus ⬡';
-      verdictColor = 'var(--war-chthonic)';
-      banner.style.borderColor = 'rgba(179,136,255,0.35)';
-    } else if (chthonic === olympian) {
-      verdict = '⚖ THE WAR HANGS IN BALANCE — ' + chthonic + ' houses for each side ⚖';
-      verdictColor = '#aa88cc';
-      banner.style.borderColor = 'rgba(170,136,204,0.25)';
-    } else {
-      verdict = '☀ OLYMPUS HOLDS — but ' + chthonic + ' houses belong to the dark, and the void is patient ☀';
-      verdictColor = 'var(--war-olympian)';
-      banner.style.borderColor = 'rgba(212,168,64,0.2)';
-    }
-    banner.innerHTML = `
-      <div class="side olympian-side">
-        <span class="side-icon">☀</span><span class="side-count">${olympian}</span><span class="side-label">Olympus</span>
-      </div>
-      <div class="war-divider">⚔</div>
-      <div class="side chthonic-side">
-        <span class="side-icon">⬡</span><span class="side-count">${chthonic}</span><span class="side-label">Underworld</span>
-      </div>
-      <div class="war-verdict" style="color:${verdictColor}">${verdict}</div>`;
+    if (chthonic > olympian) { verdict = '⬡ THE UNDERWORLD ADVANCES — '+chthonic+' houses devoured, '+olympian+' held by Olympus ⬡'; verdictColor = 'var(--war-chthonic)'; banner.style.borderColor = 'rgba(179,136,255,0.35)'; }
+    else if (chthonic === olympian) { verdict = '⚖ THE WAR HANGS IN BALANCE — '+chthonic+' houses for each side ⚖'; verdictColor = '#aa88cc'; banner.style.borderColor = 'rgba(170,136,204,0.25)'; }
+    else { verdict = '☀ OLYMPUS HOLDS — but '+chthonic+' houses belong to the dark, and the void is patient ☀'; verdictColor = 'var(--war-olympian)'; banner.style.borderColor = 'rgba(212,168,64,0.2)'; }
+    banner.innerHTML = `<div class="side olympian-side"><span class="side-icon">☀</span><span class="side-count">${olympian}</span><span class="side-label">Olympus</span></div><div class="war-divider">⚔</div><div class="side chthonic-side"><span class="side-icon">⬡</span><span class="side-count">${chthonic}</span><span class="side-label">Underworld</span></div><div class="war-verdict" style="color:${verdictColor}">${verdict}</div>`;
   }
 
-  // ── SKY DIAGRAM ──────────────────────────────────────────────────────
   function buildDiagram(report) {
-    // Zodiac ring
-    document.getElementById('zodiacRing').innerHTML = report.claims.map(({ sign, olympianCount, chthonic }, i) => {
+    document.getElementById('zodiacRing').innerHTML = report.claims.map(({sign,olympianCount,chthonic},i)=>{
       let classes = 'zodiac-sign';
       if (chthonic && chthonic.isPrimordial) classes += ' primordial';
       else if (chthonic) classes += ' chthonic';
       else if (olympianCount > 0) classes += ' olympian';
       else classes += ' void';
       const glyph = chthonic ? (chthonic.glyph || '⬡') : GLYPHS[sign];
-      const title = chthonic ? `${sign}: Devoured by ${chthonic.name} — ${chthonic.title}` : olympianCount > 0 ? `${sign}: Olympian occupied` : `${sign}: Empty — the void hungers`;
-      return `<div class="zodiac-sign sign-${i} ${classes}" title="${title}">${glyph}<span class="sign-name">${sign.substring(0,3).toUpperCase()}</span></div>`;
+      return `<div class="zodiac-sign sign-${i} ${classes}">${glyph}<span class="sign-name">${sign.substring(0,3).toUpperCase()}</span></div>`;
     }).join('');
-    
-    // War tendrils — lines from Chthonic-claimed signs toward center
     const tendrilsEl = document.getElementById('warTendrils');
     tendrilsEl.innerHTML = '';
-    report.claims.forEach(({ sign, chthonic }, i) => {
+    report.claims.forEach(({sign,chthonic},i)=>{
       if (!chthonic) return;
-      // Calculate angle for this sign position
-      const angle = (i * 30) - 90; // -90 to start at top
-      const rad = (angle * Math.PI) / 180;
-      const cx = 50; // center %
-      const cy = 50;
-      const startR = 38; // % from center where sign sits
-      const endR = 12;   // % toward center
-      const x1 = cx + startR * Math.cos(rad);
-      const y1 = cy + startR * Math.sin(rad);
-      const x2 = cx + endR * Math.cos(rad);
-      const y2 = cy + endR * Math.sin(rad);
-      const length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
-      const midAngle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
-      
-      const tendril = document.createElement('div');
-      tendril.className = 'war-tendril';
-      tendril.style.cssText = `
-        left: ${x1}%; top: ${y1}%;
-        width: 2px; height: ${length}%;
-        transform: rotate(${midAngle + 90}deg);
-        transform-origin: top center;
-      `;
-      tendril.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(to bottom,rgba(179,136,255,0.4),transparent);border-radius:1px;"></div>';
+      const angle = (i*30)-90, rad = (angle*Math.PI)/180, cx=50, cy=50, startR=38, endR=12;
+      const x1=cx+startR*Math.cos(rad), y1=cy+startR*Math.sin(rad), x2=cx+endR*Math.cos(rad), y2=cy+endR*Math.sin(rad);
+      const length=Math.sqrt((x2-x1)**2+(y2-y1)**2), midAngle=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+      const tendril=document.createElement('div'); tendril.className='war-tendril';
+      tendril.style.cssText=`left:${x1}%;top:${y1}%;width:2px;height:${length}%;transform:rotate(${midAngle+90}deg);transform-origin:top center;`;
+      tendril.innerHTML='<div style="width:100%;height:100%;background:linear-gradient(to bottom,rgba(179,136,255,0.4),transparent);border-radius:1px;"></div>';
       tendrilsEl.appendChild(tendril);
     });
-    
-    // Center
     const threshold = report.threshold;
-    document.getElementById('centerSky').innerHTML = `
-      <span class="void-glyph">${threshold ? Chthonic.HADES.glyph : '⬡'}</span>
-      <div class="void-label">VOID THRONE</div>
-      ${threshold ? `<div class="threshold-note">Hades guards the gate<br>at ${threshold.sign} ${GLYPHS[threshold.sign]}<br>${degreesStr(threshold.degree)}</div>` : ''}`;
+    document.getElementById('centerSky').innerHTML = `<span class="void-glyph">${threshold?Chthonic.HADES.glyph:'⬡'}</span><div class="void-label">VOID THRONE</div>${threshold?`<div class="threshold-note">Hades guards the gate<br>at ${threshold.sign} ${GLYPHS[threshold.sign]}<br>${degreesStr(threshold.degree)}</div>`:''}`;
   }
 
-  // ── THRESHOLD ────────────────────────────────────────────────────────
   function buildThreshold(report) {
     const threshold = report.threshold;
     const hadesCard = Arcana.getCard('major_15');
     const imgPath = Arcana.getCardImage(hadesCard);
-    
     if (!threshold) {
-      document.getElementById('thresholdCard').innerHTML = `
-        <div class="threshold-card-image"><img src="${imgPath}" alt="${hadesCard.name}" loading="lazy"></div>
-        <div class="threshold-glyph">👑</div>
-        <div class="threshold-title">The Gate is Unreadable</div>
-        <div class="threshold-arcana"><span class="ta-num">${hadesCard.rank}</span><span class="ta-name">${hadesCard.name} · ${hadesCard.title}</span></div>
-        <div class="threshold-whisper">Pluto cannot be found. The threshold is everywhere and nowhere.<br><br><em>"${hadesCard.upright}"</em></div>`;
+      document.getElementById('thresholdCard').innerHTML = `<div class="threshold-card-image"><img src="${imgPath}" alt="${hadesCard.name}" loading="lazy"></div><div class="threshold-glyph">👑</div><div class="threshold-title">The Gate is Unreadable</div><div class="threshold-arcana"><span class="ta-num">${hadesCard.rank}</span><span class="ta-name">${hadesCard.name} · ${hadesCard.title}</span></div><div class="threshold-whisper">Pluto cannot be found. The threshold is everywhere and nowhere.<br><br><em>"${hadesCard.upright}"</em></div>`;
       return;
     }
-    document.getElementById('thresholdCard').innerHTML = `
-      <div class="threshold-card-image"><img src="${imgPath}" alt="${hadesCard.name}" loading="lazy"></div>
-      <div class="threshold-glyph">${Chthonic.HADES.glyph}</div>
-      <div class="threshold-title">${Chthonic.HADES.name} · ${Chthonic.HADES.title}</div>
-      <div class="threshold-position">${threshold.sign} ${GLYPHS[threshold.sign]} · ${degreesStr(threshold.degree)} · Gate of ${Chthonic.HADES.river}</div>
-      <div class="threshold-arcana"><span class="ta-num">${hadesCard.rank}</span><span class="ta-name">${hadesCard.name} · ${hadesCard.title}</span></div>
-      <div class="threshold-whisper"><em>"${hadesCard.upright}"</em><br><br>Hades walks <strong>${threshold.sign} ${GLYPHS[threshold.sign]}</strong> — from this gate, all rivers flow. The war is measured from here.<br><span style="font-size:12px;color:var(--text-dim);margin-top:6px;display:inline-block;">${hadesCard.keywords.join(' · ')}</span></div>`;
+    document.getElementById('thresholdCard').innerHTML = `<div class="threshold-card-image"><img src="${imgPath}" alt="${hadesCard.name}" loading="lazy"></div><div class="threshold-glyph">${Chthonic.HADES.glyph}</div><div class="threshold-title">${Chthonic.HADES.name} · ${Chthonic.HADES.title}</div><div class="threshold-position">${threshold.sign} ${GLYPHS[threshold.sign]} · ${degreesStr(threshold.degree)} · Gate of ${Chthonic.HADES.river}</div><div class="threshold-arcana"><span class="ta-num">${hadesCard.rank}</span><span class="ta-name">${hadesCard.name} · ${hadesCard.title}</span></div><div class="threshold-whisper"><em>"${hadesCard.upright}"</em><br><br>Hades walks <strong>${threshold.sign} ${GLYPHS[threshold.sign]}</strong> — from this gate, all rivers flow.</div>`;
   }
 
-  // ── DOMAIN READINGS ──────────────────────────────────────────────────
   function buildDomainReading(report, element, containerId) {
     const container = document.getElementById(containerId);
     const data = report.byElement[element];
-    
     if (data.count === 0) {
-      const triadGods = Arcana.getTriadGods(element);
-      container.innerHTML = `
-        <div class="reading-quiet">
-          <p>No void houses in ${element}. The river flows quiet — for now.</p>
-          <p class="quiet-gods">${triadGods.join(', ')} hold all ${element} signs tonight. The Underworld watches from beneath the current, but does not surface. The hunger is patient.</p>
-        </div>`;
+      container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-dim);font-style:italic;">No void houses in ${element}. The river flows quiet — for now.</div>`;
       return;
     }
-    
     const claimedSigns = report.claims.filter(c => c.chthonic && c.chthonic.element === element);
-    
     if (data.isFullyVoid) {
       const chaosCard = Arcana.getCard('major_00');
-      container.innerHTML = `
-        <div style="text-align:center;">${renderCardImage(chaosCard, 'centered', true)}</div>
-        <div style="text-align:center;font-size:16px;font-style:italic;color:#ff88ff;line-height:1.8;margin-top:16px;">${chaosCard.upright}</div>
-        <div style="text-align:center;margin-top:14px;"><span class="reading-whisper" style="border-left-color:rgba(255,68,255,0.4);">All ${element} signs are void. The river runs black. Chaos does not threaten — Chaos simply <strong>is</strong>, and always was. The gods emerged from here. They have not forgotten the way back.</span></div>`;
+      container.innerHTML = `<div style="text-align:center;">${renderCardImage(chaosCard,'centered',true)}</div><div style="text-align:center;font-size:16px;font-style:italic;color:#ff88ff;line-height:1.8;margin-top:16px;">${chaosCard.upright}</div>`;
       return;
     }
-    
     let html = '';
-    claimedSigns.forEach(({ sign, chthonic }) => {
+    claimedSigns.forEach(({sign,chthonic})=>{
       const card = Arcana.getChthonicCard(chthonic.name);
       if (!card) return;
-      html += `
-        <div class="reading-entry">
-          ${renderCardImage(card)}
-          <div class="reading-text">
-            <div class="reading-sign-header">${sign} ${GLYPHS[sign]} · ${chthonic.title} · ${chthonic.river}</div>
-            <div class="reading-card-text">${card.upright}</div>
-            <span class="reading-whisper">"${chthonic.whisper}"</span>
-          </div>
-        </div>`;
+      html += `<div class="reading-entry">${renderCardImage(card)}<div class="reading-text"><div class="reading-sign-header">${sign} ${GLYPHS[sign]} · ${chthonic.title} · ${chthonic.river}</div><div class="reading-card-text">${card.upright}</div><span class="reading-whisper">"${chthonic.whisper}"</span></div></div>`;
     });
     container.innerHTML = html;
   }
 
-  // ── LETHE ────────────────────────────────────────────────────────────
-  function buildLetheReading(report) {
-    const hasChaos = Object.values(report.byElement).some(e => e.isFullyVoid);
-    const letheDomain = document.getElementById('letheDomain');
-    if (hasChaos) {
-      letheDomain.style.display = 'block';
-      const voidElements = Object.entries(report.byElement).filter(([_, d]) => d.isFullyVoid).map(([el]) => el);
-      const chaosCard = Arcana.getCard('major_00');
-      document.getElementById('letheReading').innerHTML = `
-        <div style="text-align:center;">${renderCardImage(chaosCard, 'centered', true)}</div>
-        <div style="text-align:center;font-size:15px;font-style:italic;color:var(--text-mid);line-height:1.8;margin-top:16px;">
-          <strong style="color:#ff88ff;">${voidElements.join(' and ')}</strong> — all signs of these elements are void. The river Lethe rises from beneath the underworld itself. What was forgotten returns to ask why it was abandoned. The primordial does not forgive. It simply <strong>is</strong> — and it is hungry.
-        </div>
-        <div style="text-align:center;margin-top:14px;">
-          <span class="reading-whisper" style="border-left-color:rgba(255,68,255,0.4);">"${chaosCard.upright}"</span>
-        </div>`;
-    } else {
-      letheDomain.style.display = 'none';
-    }
-  }
-
-  // ── VOID HOUSES ──────────────────────────────────────────────────────
   function buildVoidHouses(report) {
-    document.getElementById('voidHouses').innerHTML = report.claims.map(({ sign, olympianCount, chthonic }) => {
+    document.getElementById('voidHouses').innerHTML = report.claims.map(({sign,olympianCount,chthonic})=>{
       if (olympianCount > 0) {
-        const olympians = Object.entries(skyData.planets)
-          .filter(([_, p]) => p && p.sign === sign)
-          .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
-        return `<div class="void-house occupied"><div class="vh-glyph">${GLYPHS[sign]}</div><div class="vh-sign">${sign}</div><div class="vh-occupied-note">${olympians.join(', ')}</div></div>`;
+        const olympians = Object.entries(skyData.planets).filter(([_,p])=>p&&p.sign===sign).map(([name])=>Almanac.CELESTIAL_OLYMPIANS[name]?.olympian||name);
+        return `<div class="void-house occupied"><div class="vh-glyph">${GLYPHS[sign]}</div><div class="vh-sign">${sign}</div><div style="font-size:8px;color:var(--text-dim);opacity:0.35;margin-top:4px;">${olympians.join(', ')}</div></div>`;
       }
       if (chthonic) {
-        const card = Arcana.getChthonicCard(chthonic.name);
-        const classes = chthonic.isPrimordial ? 'void primordial-house' : 'void';
-        return `<div class="void-house ${classes}"><div class="vh-glyph">${chthonic.glyph || '⬡'}</div><div class="vh-sign">${sign}</div><div class="vh-resident">${chthonic.name}</div><div class="vh-title">${chthonic.title}</div>${card ? `<div class="vh-arcana">${card.name} ${card.rank}</div>` : ''}</div>`;
+        const classes = chthonic.isPrimordial?'void primordial-house':'void';
+        return `<div class="void-house ${classes}"><div class="vh-glyph">${chthonic.glyph||'⬡'}</div><div class="vh-sign">${sign}</div><div class="vh-resident">${chthonic.name}</div></div>`;
       }
-      return `<div class="void-house void"><div class="vh-glyph">⬡</div><div class="vh-sign">${sign}</div><div class="vh-resident">—</div><div class="vh-title">The void hungers</div></div>`;
+      return `<div class="void-house void"><div class="vh-glyph">⬡</div><div class="vh-sign">${sign}</div><div class="vh-resident">—</div></div>`;
     }).join('');
   }
 
-  // ── SIGN SELECTOR ────────────────────────────────────────────────────
   function initSignSelector() {
     const sel = document.getElementById('birthSign');
-    sel.innerHTML = '<option value="">— Select your sign —</option>' + SIGNS.map(s => `<option value="${s}">${GLYPHS[s]} ${s}</option>`).join('');
+    sel.innerHTML = '<option value="">— Select your sign —</option>' + SIGNS.map(s=>`<option value="${s}">${GLYPHS[s]} ${s}</option>`).join('');
     sel.onchange = () => {
       const sign = sel.value;
       const msg = document.getElementById('signMessage');
-      if (!sign || !skyData) { msg.innerHTML = ''; return; }
+      if (!sign||!skyData) { msg.innerHTML=''; return; }
       const report = Chthonic.getWarReport(skyData.planets);
-      const claim = report.claims.find(c => c.sign === sign);
-      if (!claim) { msg.innerHTML = 'The sign cannot be read.'; return; }
-      if (claim.olympianCount > 0) {
-        const olympians = Object.entries(skyData.planets)
-          .filter(([_, p]) => p && p.sign === sign)
-          .map(([name]) => Almanac.CELESTIAL_OLYMPIANS[name]?.olympian || name);
-        msg.innerHTML = `<div style="margin-bottom:10px;opacity:0.65;">${GLYPHS[sign]} ${sign}</div><div style="color:var(--war-olympian);font-family:'Cinzel Decorative',serif;font-size:13px;">☀ Olympus holds this house</div><div style="font-size:10px;color:#8a6518;margin-top:4px;">${olympians.join(', ')}</div><em style="display:block;margin-top:12px;color:var(--chthonic-dim);font-size:12px;">The void watches from beneath. It does not enter occupied ground — but it remembers this sign was once empty, and will be again. The hunger never sleeps.</em>`;
+      const claim = report.claims.find(c=>c.sign===sign);
+      if (!claim) { msg.innerHTML='The sign cannot be read.'; return; }
+      if (claim.olympianCount>0) {
+        const olympians = Object.entries(skyData.planets).filter(([_,p])=>p&&p.sign===sign).map(([name])=>Almanac.CELESTIAL_OLYMPIANS[name]?.olympian||name);
+        msg.innerHTML = `<div style="color:var(--war-olympian);">☀ Olympus holds ${sign} ${GLYPHS[sign]} — ${olympians.join(', ')}</div><em style="color:var(--text-dim);">The void watches from beneath.</em>`;
       } else if (claim.chthonic) {
         const c = claim.chthonic;
-        const card = Arcana.getChthonicCard(c.name);
-        const imgPath = card ? Arcana.getCardImage(card) : '';
-        msg.innerHTML = `
-          ${card ? `<div class="sign-card-display"><img src="${imgPath}" alt="${card.name}" loading="lazy"></div>` : ''}
-          <div style="margin-bottom:10px;">${GLYPHS[sign]} ${sign}</div>
-          <div style="color:var(--war-chthonic);font-family:'Cinzel Decorative',serif;font-size:14px;">${c.glyph || '⬡'} ${c.name}</div>
-          <div style="font-size:10px;color:var(--chthonic-dim);font-style:italic;">${c.title}</div>
-          <div style="font-size:10px;color:#775599;">River: ${c.river}</div>
-          ${card ? `<div class="sign-arcana-inline" style="margin-top:8px;"><span class="arc-num">${card.rank}</span> ${card.name}</div>` : ''}
-          <em style="display:block;margin-top:10px;color:var(--text-mid);line-height:1.6;">"${c.whisper}"</em>
-          ${c.isPrimordial ? '<div style="margin-top:8px;color:#ff44ff;font-size:11px;">⛧ All signs of this element are void — Chaos answers the call</div>' : ''}`;
+        msg.innerHTML = `<div style="color:var(--war-chthonic);">⬡ ${c.name} claims ${sign} ${GLYPHS[sign]}</div><div style="color:var(--text-dim);font-style:italic;">${c.title} · ${c.river}</div><em style="color:var(--text-mid);">"${c.whisper}"</em>`;
       } else {
-        msg.innerHTML = `${GLYPHS[sign]} ${sign} — <strong>True silence.</strong> Neither Olympus nor the Underworld claims this ground. It is the hungriest place in the sky.`;
+        msg.innerHTML = `${GLYPHS[sign]} ${sign} — <strong>True silence.</strong> Neither Olympus nor the Underworld claims this ground.`;
       }
     };
-  }
-
-  // ── PUBLIC ───────────────────────────────────────────────────────────
-  async function init() {
-    initSignSelector();
-    await refresh();
   }
 
   async function refresh() {
     try {
       const raw = await Observe.getSkyState();
       skyData = raw;
-      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
       const report = Chthonic.getWarReport(raw.planets);
       buildWarBanner(report);
-      buildDailyNarrative(report, raw.planets);
       buildDiagram(report);
       buildThreshold(report);
-      buildDomainReading(report, 'Fire', 'phlegethonReading');
-      buildDomainReading(report, 'Air', 'cocytusReading');
-      buildDomainReading(report, 'Earth', 'acheronReading');
-      buildDomainReading(report, 'Water', 'styxReading');
-      buildLetheReading(report);
+      buildDomainReading(report,'Fire','phlegethonReading');
+      buildDomainReading(report,'Air','cocytusReading');
+      buildDomainReading(report,'Earth','acheronReading');
+      buildDomainReading(report,'Water','styxReading');
+      const hasChaos = Object.values(report.byElement).some(e=>e.isFullyVoid);
+      document.getElementById('letheDomain').style.display = hasChaos?'block':'none';
+      if (hasChaos) {
+        const chaosCard = Arcana.getCard('major_00');
+        document.getElementById('letheReading').innerHTML = `<div style="text-align:center;">${renderCardImage(chaosCard,'centered',true)}</div><div style="text-align:center;font-size:15px;font-style:italic;color:#ff88ff;line-height:1.8;margin-top:16px;">${chaosCard.upright}</div>`;
+      }
       buildVoidHouses(report);
     } catch(err) {
-      console.error('Chthonic Grimoire failed:', err);
-      document.getElementById('dailyNarrative').innerHTML = '<div class="proclamation-title">⬡ The Void is Silent ⬡</div><div class="proclamation-body"><p><em>The darkness cannot speak right now. Even the void must rest. Try again at dusk or dawn, when the threshold opens.</em></p></div>';
+      console.error('Chthonic War Engine:', err);
     }
   }
 
+  async function init() { initSignSelector(); await refresh(); }
   return { init, refresh };
 })();
 
 document.addEventListener('DOMContentLoaded', () => ChthonicGrimoire.init());
 </script>
-
-<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.z.goatcounter.com/count.js"></script>
 </body>
 </html>
