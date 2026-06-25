@@ -1,0 +1,170 @@
+{
+  "Aries": {
+    "name": "Aries",
+    "nameLong": "the Ram",
+    "glyph": "♈",
+    "element": "Fire",
+    "modality": "Cardinal",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Mars",
+    "keywords": ["initiation", "courage", "impulse", "the ram", "new beginnings"]
+  },
+  "Taurus": {
+    "name": "Taurus",
+    "nameLong": "the Bull",
+    "glyph": "♉",
+    "element": "Earth",
+    "modality": "Fixed",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Venus",
+    "keywords": ["stability", "patience", "sensuality", "the bull", "endurance"]
+  },
+  "Gemini": {
+    "name": "Gemini",
+    "nameLong": "the Twins",
+    "glyph": "♊",
+    "element": "Air",
+    "modality": "Mutable",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Mercury",
+    "keywords": ["communication", "duality", "curiosity", "the twins", "connection"]
+  },
+  "Cancer": {
+    "name": "Cancer",
+    "nameLong": "the Crab",
+    "glyph": "♋",
+    "element": "Water",
+    "modality": "Cardinal",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Moon",
+    "keywords": ["protection", "nurturing", "emotion", "the crab", "home"]
+  },
+  "Leo": {
+    "name": "Leo",
+    "nameLong": "the Lion",
+    "glyph": "♌",
+    "element": "Fire",
+    "modality": "Fixed",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Sun",
+    "keywords": ["expression", "radiance", "sovereignty", "the lion", "creativity"]
+  },
+  "Virgo": {
+    "name": "Virgo",
+    "nameLong": "the Maiden",
+    "glyph": "♍",
+    "element": "Earth",
+    "modality": "Mutable",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Mercury",
+    "keywords": ["discernment", "precision", "service", "the maiden", "refinement"]
+  },
+  "Libra": {
+    "name": "Libra",
+    "nameLong": "the Scales",
+    "glyph": "♎",
+    "element": "Air",
+    "modality": "Cardinal",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Venus",
+    "keywords": ["balance", "justice", "harmony", "the scales", "partnership"]
+  },
+  "Scorpio": {
+    "name": "Scorpio",
+    "nameLong": "the Scorpion",
+    "glyph": "♏",
+    "element": "Water",
+    "modality": "Fixed",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Pluto",
+    "keywords": ["transformation", "depth", "intensity", "the scorpion", "truth"]
+  },
+  "Sagittarius": {
+    "name": "Sagittarius",
+    "nameLong": "the Archer",
+    "glyph": "♐",
+    "element": "Fire",
+    "modality": "Mutable",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Jupiter",
+    "keywords": ["vision", "exploration", "freedom", "the archer", "quest"]
+  },
+  "Capricorn": {
+    "name": "Capricorn",
+    "nameLong": "the Sea-Goat",
+    "glyph": "♑",
+    "element": "Earth",
+    "modality": "Cardinal",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Saturn",
+    "keywords": ["discipline", "ambition", "structure", "the sea-goat", "mastery"]
+  },
+  "Aquarius": {
+    "name": "Aquarius",
+    "nameLong": "the Water-Bearer",
+    "glyph": "♒",
+    "element": "Air",
+    "modality": "Fixed",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Uranus",
+    "keywords": ["innovation", "community", "rebellion", "the water-bearer", "vision"]
+  },
+  "Pisces": {
+    "name": "Pisces",
+    "nameLong": "the Fish",
+    "glyph": "♓",
+    "element": "Water",
+    "modality": "Mutable",
+    "decans": [
+      { "name": "First Decan", "start": 0, "end": 10 },
+      { "name": "Second Decan", "start": 10, "end": 20 },
+      { "name": "Third Decan", "start": 20, "end": 30 }
+    ],
+    "rulerVenus": "Neptune",
+    "keywords": ["intuition", "surrender", "mysticism", "the fish", "dissolution"]
+  }
+}
