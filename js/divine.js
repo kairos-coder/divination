@@ -163,27 +163,20 @@ const Divine = (() => {
   // ─── WEIGHTED DRAW ──────────────────────
   function weightedDraw(pool, count, weights) {
     if (!weights || Object.keys(weights).length === 0) {
-      // Fallback to uniform random
       const shuffled = shuffle(pool);
       return shuffled.slice(0, count);
     }
 
-    // Build weighted pool
     const entries = [];
     pool.forEach(card => {
       const w = weights[card.id] || 1.0;
-      if (w > 0) {
-        entries.push({ card, weight: w });
-      }
+      if (w > 0) entries.push({ card, weight: w });
     });
 
-    // Sort by weight descending for weighted selection
-    const totalWeight = entries.reduce((sum, e) => sum + e.weight, 0);
     const drawn = [];
     const used = new Set();
 
     for (let i = 0; i < count && entries.length > 0; i++) {
-      // Filter out used cards
       const available = entries.filter(e => !used.has(e.card.id));
       if (available.length === 0) break;
 
@@ -193,10 +186,7 @@ const Divine = (() => {
       for (const entry of available) {
         rand -= entry.weight;
         if (rand <= 0) {
-          drawn.push({
-            ...entry.card,
-            isReversed: Math.random() < 0.3
-          });
+          drawn.push({ ...entry.card, isReversed: Math.random() < 0.3 });
           used.add(entry.card.id);
           break;
         }
@@ -215,10 +205,7 @@ const Divine = (() => {
     for (const card of shuffled) {
       if (drawn.length >= count) break;
       if (!used.has(card.id)) {
-        drawn.push({
-          ...card,
-          isReversed: Math.random() < 0.3
-        });
+        drawn.push({ ...card, isReversed: Math.random() < 0.3 });
         used.add(card.id);
       }
     }
@@ -234,22 +221,18 @@ const Divine = (() => {
     if (mode === 'major') {
       pool = getMajorDeck();
     } else if (['fire', 'water', 'earth', 'air'].includes(mode)) {
-      pool = minorDeck.filter(card => 
+      pool = minorDeck.filter(card =>
         card.element && card.element.toLowerCase() === mode
       );
     } else {
       pool = getFullDeck();
     }
 
-    if (pool.length === 0) {
-      throw new Error(`No cards available for mode: ${mode}`);
-    }
+    if (pool.length === 0) throw new Error(`No cards available for mode: ${mode}`);
 
-    if (weights && Object.keys(weights).length > 0) {
-      return weightedDraw(pool, count, weights);
-    }
-
-    return uniformDraw(pool, count);
+    return (weights && Object.keys(weights).length > 0)
+      ? weightedDraw(pool, count, weights)
+      : uniformDraw(pool, count);
   }
 
   // ─── GET IMAGE ──────────────────────────
@@ -261,10 +244,9 @@ const Divine = (() => {
 
   // ─── GET MEANING ────────────────────────
   function getMeaning(card) {
-    if (card.isReversed) {
-      return card.reversed || card.upright || '';
-    }
-    return card.upright || '';
+    return card.isReversed
+      ? (card.reversed || card.upright || '')
+      : (card.upright || '');
   }
 
   // ─── ESCAPE HTML ────────────────────────
@@ -284,14 +266,11 @@ const Divine = (() => {
     const reversedMark = card.isReversed ? ' ⥮ Reversed' : '';
     const positionLabel = POSITION_LABELS[position] || position;
     
-    let imgHTML;
-    if (imgPath) {
-      imgHTML = `<img src="${imgPath}" alt="${escapeHTML(card.name)}" 
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="img-placeholder" style="display:none;">${elementEmoji}</div>`;
-    } else {
-      imgHTML = `<div class="img-placeholder">${elementEmoji}</div>`;
-    }
+    const imgHTML = imgPath
+      ? `<img src="${imgPath}" alt="${escapeHTML(card.name)}" 
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="img-placeholder" style="display:none;">${elementEmoji}</div>`
+      : `<div class="img-placeholder">${elementEmoji}</div>`;
     
     return `
       ${imgHTML}
@@ -304,69 +283,73 @@ const Divine = (() => {
     `;
   }
 
-  // ─── RENDER READING ─────────────────────
-  function renderReading(reading) {
-    const past = reading.cards?.past || reading.past;
-    const present = reading.cards?.present || reading.present;
-    const future = reading.cards?.future || reading.future;
-    const question = reading.question || 'The unspoken question';
-    const skyContext = reading.skyContext || {};
-
-    // Sky context line
-    let skyLine = '';
-    if (skyContext.sunIn || skyContext.moonIn) {
-      skyLine = `<div style="text-align:center;font-style:italic;color:var(--text-dim);margin-bottom:8px;font-size:13px;">
-        ${skyContext.sunIn ? `☀️ Sun in ${skyContext.sunIn}` : ''}
-        ${skyContext.sunIn && skyContext.moonIn ? ' · ' : ''}
-        ${skyContext.moonIn ? `🌙 Moon in ${skyContext.moonIn} (${skyContext.moonPhase || ''})` : ''}
-      </div>`;
-    }
-
-    // Synthesis
+  // ─── BUILD SYNTHESIS ────────────────────
+  function buildSynthesis(past, present, future) {
     const elements = [past.element, present.element, future.element].filter(Boolean);
     const uniqueElements = [...new Set(elements)];
     let synthesis = '';
 
     if (uniqueElements.length === 1) {
-      synthesis = `${uniqueElements[0]} rules all three positions. The question is singular in nature.`;
+      synthesis = `${uniqueElements[0]} holds all three positions. Past, present, and future speak in one voice. The path is not hidden — the question is whether you are ready to walk it.`;
     } else if (uniqueElements.length === 3) {
-      synthesis = `Three elements cross the spread — ${elements.join(', ')}. The question touches multiple domains. Integration is the work ahead.`;
+      synthesis = `${elements[0]}, ${elements[1]}, ${elements[2]} — three elements cross the spread. Nothing here is simple. The work is not to resolve the tension — but to let it carry you through.`;
     } else if (uniqueElements.length === 2) {
-      synthesis = `${elements[0]} and ${elements[1]} weave through the spread. Two forces in dialogue.`;
+      synthesis = `${elements[0]} opens the spread. ${elements[1]} answers it. Two forces — not opposed, but in conversation. Listen for what they are negotiating — and what they are asking you to negotiate.`;
     }
 
     if (future.isReversed) {
-      synthesis += ' The future card reversed suggests resistance to what comes.';
+      synthesis += ' The future arrives reversed — not blocked, but asking to be met on its own terms, not yours.';
     }
 
     const pastDomain = past.domain || past.title || '';
     const futureDomain = future.domain || future.title || '';
     if (pastDomain && pastDomain === futureDomain) {
-      synthesis += ` The domain of ${pastDomain} appears at both ends — a cycle completes.`;
+      synthesis += ` ${pastDomain} appears at both ends. What began here returns. The cycle is not finished with you yet — and that is not a failure. It is an invitation.`;
     }
+
+    return synthesis;
+  }
+
+  // ─── BUILD SKY LINE ─────────────────────
+  function buildSkyLine(skyContext) {
+    if (!skyContext.sunIn && !skyContext.moonIn) return '';
+    const sun = skyContext.sunIn ? `☀️ Sun in ${skyContext.sunIn}` : '';
+    const moon = skyContext.moonIn ? `🌙 Moon in ${skyContext.moonIn}${skyContext.moonPhase ? ` (${skyContext.moonPhase})` : ''}` : '';
+    const joined = [sun, moon].filter(Boolean).join(' · ');
+    return `<div class="sky-line">${joined}</div>`;
+  }
+
+  // ─── RENDER READING ─────────────────────
+  function renderReading(reading) {
+    const past    = reading.cards?.past    || reading.past;
+    const present = reading.cards?.present || reading.present;
+    const future  = reading.cards?.future  || reading.future;
+    const question   = reading.question   || 'The unspoken question';
+    const skyContext = reading.skyContext  || {};
+
+    const skyLine   = buildSkyLine(skyContext);
+    const synthesis = buildSynthesis(past, present, future);
 
     return `
       <div class="reading-header">✦ The Reading ✦</div>
       ${skyLine}
-      <div style="text-align:center;font-style:italic;color:var(--text-dim);margin-bottom:24px;font-size:14px;">
-        Asked: "${escapeHTML(question)}"
-      </div>
-      
+      <div class="reading-question">Asked: "${escapeHTML(question)}"</div>
+
       <div class="reading-block">
         <div class="reading-position">Past · ${escapeHTML(past.name)}</div>
         <div class="reading-text">${escapeHTML(past.meaning || past.upright || '')}</div>
       </div>
-      
+
       <div class="reading-block">
         <div class="reading-position">Present · ${escapeHTML(present.name)}</div>
         <div class="reading-text">${escapeHTML(present.meaning || present.upright || '')}</div>
       </div>
-      
+
       <div class="reading-block">
         <div class="reading-position">Future · ${escapeHTML(future.name)}</div>
         <div class="reading-text">${escapeHTML(future.meaning || future.upright || '')}</div>
       </div>
-      
+
       <div class="reading-synthesis">${synthesis}</div>
     `;
   }
@@ -379,18 +362,18 @@ const Divine = (() => {
     getMinorDeck,
     getFullDeck,
     isLoaded,
-    
+
     // Drawing
     draw,
     uniformDraw,
     weightedDraw,
-    
+
     // Rendering
     renderCard,
     renderReading,
     getImage,
     getMeaning,
-    
+
     // Utility
     IMAGE_MAP,
     ELEMENT_EMOJI,
