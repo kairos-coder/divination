@@ -4,6 +4,7 @@
  *
  * Location: User's browser geolocation
  * Fallback: Bucksport, Maine (44.57° N, 68.80° W) — the Witch's Foot
+ *           Jonathan Buck's grave, marked by the witch's curse
  *
  * CORRECTED: 2026-06-08
  * - Ecliptic observer uses actual location (not null point 0,0)
@@ -18,10 +19,15 @@
  *   astronomy-engine's Equator() is called with ofdate=true, which means
  *   the returned vector is already precessed to the current epoch.
  *   Ecliptic(eq) therefore returns a correctly precessed ecliptic longitude.
- *   Adding a second manual precession term on top produces a ~30° phantom
- *   offset that grows slowly with time. Stripped entirely.
- * - Confirmed: ecl.elon is geocentric ecliptic longitude, not elongation.
- *   No field swap needed. Normalisation to [0, 360) is sufficient.
+ *
+ * REFACTOR: 2026-06-24 — Ariadne the Younger
+ * - REMOVED inline ECLIPTIC_OFFSET from getPlanetPosition()
+ *   Planetary positions now returned as pure tropical longitudes.
+ *   Constellation offset is a rendering concern, not a data concern.
+ * - ADDED CONSTELLATION_OFFSET constant (-30°) for sidereal mapping
+ * - EXPORTED eclipticToSign() and getDegreeInSign() helpers
+ * - REMOVED duplicate SIGNS/SIGN_GLYPHS — will live in constellations.json
+ * - All planetary bodies treated uniformly (Moon offset removed)
  */
 
 const Observe = (() => {
@@ -31,7 +37,7 @@ const Observe = (() => {
   // ══════════════════════════════════════════
   const CONFIG = {
     latitude:  44.57,     // Bucksport, Maine — the Witch's Foot
-    longitude: -68.80,    // The axis mundi of the Ealdforn Republic
+    longitude: -68.80,    // Jonathan Buck's grave
     elevation: 50,        // Metres above sea level
     located:   false      // True when user location acquired
   };
@@ -39,6 +45,32 @@ const Observe = (() => {
   // ══════════════════════════════════════════
   // CONSTANTS
   // ══════════════════════════════════════════
+
+  /**
+   * CONSTELLATION OFFSET (degrees)
+   * 
+   * Converts tropical zodiac longitudes to the traditional 12-constellation
+   * sidereal frame.  The tropical zodiac is anchored to the vernal equinox;
+   * the constellations have drifted by roughly 30° over 2,000 years due to
+   * precession of the equinoxes.
+   *
+   * A value of -30° maps tropical Aries (0°–30°) roughly onto sidereal Pisces,
+   * tropical Taurus onto sidereal Aries, etc.  This is a blunt instrument —
+   * ayanamsa values vary by tradition (Lahiri ~24°, Fagan-Bradley ~25°).
+   * For the purposes of this grimoire, -30° keeps the mapping simple and
+   * the poetry intact.
+   *
+   * Apply this offset at the RENDERING layer, not the data layer.
+   * getPlanetPosition() returns pure tropical positions.
+   */
+  const CONSTELLATION_OFFSET = -30;
+
+  /**
+   * Zodiac signs in tropical order (0° = vernal equinox = Aries).
+   * These are the 12 equal 30° divisions of the ecliptic, NOT the
+   * physical constellations.  For constellation positions, apply
+   * CONSTELLATION_OFFSET to the tropical longitude before mapping.
+   */
   const SIGNS = [
     'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
     'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
@@ -108,29 +140,51 @@ const Observe = (() => {
     return bodyMap[bodyName] || null;
   }
 
-  /** Normalise any longitude to [0, 360) and return the zodiac sign. */
+  /**
+   * Normalise any ecliptic longitude to [0, 360) and return the
+   * TROPICAL zodiac sign.  For constellation (sidereal) mapping,
+   * add CONSTELLATION_OFFSET to the longitude before calling.
+   */
   function eclipticToSign(lonDeg) {
     const lon = ((lonDeg % 360) + 360) % 360;
     return SIGNS[Math.floor(lon / 30)];
   }
 
-  /** Degrees within the sign (0–30). */
+  /**
+   * Degrees within the sign (0–30).
+   * Returns the position inside the 30° sign boundary.
+   */
   function getDegreeInSign(lonDeg) {
     const lon = ((lonDeg % 360) + 360) % 360;
     return lon % 30;
+  }
+
+  /**
+   * Map a tropical longitude to its constellation (sidereal) position.
+   * Applies CONSTELLATION_OFFSET and returns both the constellation name
+   * and the degree within that constellation.
+   */
+  function toConstellation(tropicalLon) {
+    const siderealLon = ((tropicalLon + CONSTELLATION_OFFSET) % 360 + 360) % 360;
+    return {
+      constellation: SIGNS[Math.floor(siderealLon / 30)],
+      degree: siderealLon % 30,
+      longitude: siderealLon
+    };
   }
 
   // ══════════════════════════════════════════
   // PLANET POSITION
   // ══════════════════════════════════════════
   //
-  // KEY FIX: The old code added a manual precession correction AFTER calling
-  // Astronomy.Equator(..., true, true).  The fifth argument (ofdate = true)
-  // already precesses the equatorial vector to the epoch of the date, so
-  // Ecliptic(eq) returns a longitude that is already in the tropical zodiac
-  // frame.  Adding ~1.3° (year 2026) per call is harmless in isolation but
-  // was compounded by a sign-boundary accident that produced exactly 30°
-  // displacement.  The correction block is gone.  Normalisation only.
+  // Returns PURE TROPICAL positions.  No offset applied.
+  // The constellation offset is a rendering concern — use toConstellation()
+  // or apply CONSTELLATION_OFFSET manually at the display layer.
+  //
+  // FIX (Ariadne II, 2026-06-24):
+  // The old code applied a -30° ECLIPTIC_OFFSET to all bodies except the Moon,
+  // shifting planetary signs by one full house.  This has been removed.
+  // All bodies are now treated uniformly in the tropical frame.
 
   function getPlanetPosition(bodyName, date) {
     const body = getAstronomyBody(bodyName);
@@ -162,12 +216,13 @@ const Observe = (() => {
         return null;
       }
 
-      // ── Normalise to [0, 360) — NO further correction needed ──
+      // ── Normalise to [0, 360) — pure tropical longitude ──
       const lon = ((ecl.elon % 360) + 360) % 360;
-      const ECLIPTIC_OFFSET = bodyName === 'Moon' ? 0 : -30;
-      const correctedLon = ((lon + ECLIPTIC_OFFSET) % 360 + 360) % 360;
-      const sign = eclipticToSign(correctedLon);
-      const degree = getDegreeInSign(correctedLon);
+      const sign = eclipticToSign(lon);
+      const degree = getDegreeInSign(lon);
+      
+      // Constellation position (for convenience)
+      const constellation = toConstellation(lon);
 
       // Horizon data (optional)
       let altitude = 0, azimuth = 0, aboveHorizon = false;
@@ -181,10 +236,19 @@ const Observe = (() => {
       } catch (_) { /* optional — swallow */ }
 
       return {
+        // Tropical position
         sign,
         glyph:        SIGN_GLYPHS[sign],
         degree:       Math.round(degree  * 100) / 100,
         longitude:    Math.round(lon     * 100) / 100,
+        
+        // Constellation (sidereal) position
+        constellation: constellation.constellation,
+        constGlyph:    SIGN_GLYPHS[constellation.constellation],
+        constDegree:   Math.round(constellation.degree * 100) / 100,
+        constLongitude:Math.round(constellation.longitude * 100) / 100,
+        
+        // Horizon
         altitude:     Math.round(altitude  * 100) / 100,
         azimuth:      Math.round(azimuth   * 100) / 100,
         aboveHorizon
@@ -202,6 +266,7 @@ const Observe = (() => {
   /**
    * Calculate the tropical ascendant (rising sign) for a given time.
    * Uses LMST → ecliptic → sign.  Changes roughly every 2 hours.
+   * Returns BOTH tropical and constellation positions.
    */
   function getAscendant(date = new Date()) {
     try {
@@ -222,17 +287,25 @@ const Observe = (() => {
       let ascLon = Math.atan2(y, x) * 180 / Math.PI;
       ascLon = ((ascLon % 360) + 360) % 360;
 
-      const sign   = eclipticToSign(ascLon);
-      const degree = getDegreeInSign(ascLon);
+      const sign       = eclipticToSign(ascLon);
+      const degree     = getDegreeInSign(ascLon);
+      const constData  = toConstellation(ascLon);
 
       return {
+        // Tropical
         sign,
         glyph:     SIGN_GLYPHS[sign],
         degree:    Math.round(degree  * 100) / 100,
-        longitude: Math.round(ascLon  * 100) / 100
+        longitude: Math.round(ascLon  * 100) / 100,
+        
+        // Constellation
+        constellation: constData.constellation,
+        constGlyph:    SIGN_GLYPHS[constData.constellation],
+        constDegree:   Math.round(constData.degree * 100) / 100
       };
     } catch (e) {
-      return { sign: 'Unknown', glyph: '?', degree: 0, longitude: 0 };
+      return { sign: 'Unknown', glyph: '?', degree: 0, longitude: 0,
+               constellation: 'Unknown', constGlyph: '?', constDegree: 0 };
     }
   }
 
@@ -264,7 +337,6 @@ const Observe = (() => {
   function getZenithSun(date = new Date()) {
     try {
       const times = SunCalc.getTimes(date, CONFIG.latitude, CONFIG.longitude);
-      // Prefer solarNoon; fall back to midpoint between rise and set
       let noon = times.solarNoon;
       if (!noon && times.sunrise && times.sunset) {
         noon = new Date((times.sunrise.getTime() + times.sunset.getTime()) / 2);
@@ -550,6 +622,7 @@ const Observe = (() => {
     } catch (e) { console.warn('Observe: SunCalc data failed:', e.message || e); }
 
     // Planet positions via astronomy-engine
+    // Now returns BOTH tropical and constellation positions
     PLANETS.forEach(planet => {
       const position = getPlanetPosition(planet, now);
       if (position) skyState.planets[planet.toLowerCase()] = position;
@@ -610,6 +683,11 @@ const Observe = (() => {
     getAscendant,
     getAscendantAtTime,
 
+    // Constellation mapping
+    toConstellation,
+    eclipticToSign,
+    getDegreeInSign,
+
     // Detailed
     getDailyTracking,
     getSignTransits,
@@ -622,6 +700,7 @@ const Observe = (() => {
 
     // Constants (read-only)
     CONFIG,
+    CONSTELLATION_OFFSET,
     SIGNS,
     SIGN_GLYPHS,
     MOON_PHASES
