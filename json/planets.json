@@ -1,0 +1,121 @@
+{
+  "sun": {
+    "name": "Sun",
+    "olympian": "Apollo",
+    "arcana": "The Sun (XIX)",
+    "rune": "☀️",
+    "runeClass": "rune-sun",
+    "image": "data/images/major/sun.png",
+    "element": "Fire",
+    "color": "#E8A020"
+  },
+  "moon": {
+    "name": "Moon",
+    "olympian": "Artemis",
+    "olympianShadow": "Melinoe",
+    "arcana": "The Chariot (VII)",
+    "arcanaShadow": "The Moon (XVIII)",
+    "rune": "🌙",
+    "runeClass": "rune-moon",
+    "image": "data/images/artemis-card.jpg",
+    "imageShadow": "data/images/major/moon.png",
+    "element": "Water",
+    "color": "#6888AA"
+  },
+  "mercury": {
+    "name": "Mercury",
+    "olympian": "Hermes",
+    "arcana": "The Magician (I)",
+    "rune": "☿",
+    "runeClass": "rune-mercury",
+    "image": "data/images/major/magician.png",
+    "element": "Air",
+    "color": "#A088C8"
+  },
+  "venus": {
+    "name": "Venus",
+    "olympian": "Aphrodite",
+    "arcana": "The Lovers (VI)",
+    "rune": "♀",
+    "runeClass": "rune-venus",
+    "image": "data/images/aphrodite-card.jpg",
+    "element": "Water",
+    "color": "#DC966E"
+  },
+  "mars": {
+    "name": "Mars",
+    "olympian": "Ares",
+    "arcana": "The Hierophant (V)",
+    "rune": "♂",
+    "runeClass": "rune-mars",
+    "image": "data/images/ares-card.jpg",
+    "element": "Fire",
+    "color": "#B9402A",
+    "attendants": {
+      "eros": {
+        "name": "Eros",
+        "olympian": "Dionysus",
+        "arcana": "The Fool (0)",
+        "icon": "🍇",
+        "role": "Desire follows the spear — where Ares strikes, Dionysus pours. One destroys. One transforms."
+      },
+      "phobos": {
+        "name": "Phobos",
+        "olympian": "Athena",
+        "arcana": "Justice (VIII)",
+        "icon": "🦉",
+        "role": "Strategic fear — Athena rides with Ares so the war god remembers what victory costs."
+      }
+    }
+  },
+  "jupiter": {
+    "name": "Jupiter",
+    "olympian": "Zeus",
+    "arcana": "The Emperor (IV)",
+    "rune": "♃",
+    "runeClass": "rune-jupiter",
+    "image": "data/images/zeus-card.jpg",
+    "element": "Air",
+    "color": "#64A064"
+  },
+  "saturn": {
+    "name": "Saturn",
+    "olympian": "Hera",
+    "arcana": "The High Priestess (II)",
+    "rune": "♄",
+    "runeClass": "rune-saturn",
+    "image": "data/images/hera-card.jpg",
+    "element": "Earth",
+    "color": "#78788C"
+  },
+  "uranus": {
+    "name": "Uranus",
+    "olympian": "Hephaestus",
+    "arcana": "Strength (XI)",
+    "rune": "⛢",
+    "runeClass": "rune-mercury",
+    "image": "data/images/hephaestus-card.jpg",
+    "element": "Air",
+    "color": "#A088C8"
+  },
+  "neptune": {
+    "name": "Neptune",
+    "olympian": "Poseidon",
+    "arcana": "The Tower (XVI)",
+    "rune": "♆",
+    "runeClass": "rune-moon",
+    "image": "data/images/poseidon-card.jpg",
+    "element": "Water",
+    "color": "#3878A8"
+  },
+  "pluto": {
+    "name": "Pluto",
+    "olympian": "Hades",
+    "arcana": "Death (XIII)",
+    "rune": "♇",
+    "runeClass": "rune-saturn",
+    "image": "data/images/hades-card.jpg",
+    "element": "Earth",
+    "color": "#78788C"
+  }
+}
