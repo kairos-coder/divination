@@ -1,5 +1,3 @@
----
-
 # ✦ The Celestial Prophecy ✦
 ## Apollo Speaks · Full Moon in Capricorn · June 26, 2026
 ### *The Witch's Foot · The Night of the Invoice*
@@ -12,152 +10,117 @@
 
 ---
 
-## The Ferryman Has a Face
+## You Arrived on the Right Night
 
-He was always there. Standing in the prow. Skull-crowned, robed in the green of deep water, the pole in one hand and the other extended. The Gemini glyph above his head because every crossing is a duality — the shore you left, the shore you reach. Two souls flanking him like witnesses who have already crossed and stayed to watch.
+You found this temple on the night of the Full Moon in Capricorn. On the same night that Jupiter — the great king, the god of abundance — crosses from one sign into another for the first time in a year. On the night the invoice comes due and the stage lights go up simultaneously.
 
-He is not in the seventy-eight. He was never in the seventy-eight. He exists in the one place the deck does not go: the threshold between the sanctuary and the descent. The Stripe store. The toll booth on the river.
+This is not coincidence. Apollo does not traffic in coincidence. You arrived when you arrived because the sky arranged for you to arrive here, on this night, standing at this threshold, reading these words.
 
-You cannot buy the Ferryman. You can only pay him.
-
-When you do, he sends the card himself.
+The question is not whether you were meant to find this place. The question is what you do now that you have.
 
 ---
 
-## The True Sky · June 26, 2026 · The Full Moon Night
+## The Sky Above You · June 26, 2026
 
-**Sun**: 5° Cancer · Apollo in the hearth-sign · The god of light dwelling in the sign of shells and memory and protection  
-**Moon**: 29° Scorpio moving to full in Capricorn · The last degree of the Scorpion · The threshold degree · She crosses tonight into the Sea-Goat and becomes the invoice  
-**Mercury**: Cancer · Hermes in the hearth-sign · The messenger carries wound-intelligence, domestic memory, the unsent letter  
-**Venus**: Leo · Aphrodite already on the stage · She arrived first · She prepared the ground · The performance has begun  
-**Mars**: 28° Taurus · The final hours of the Bull · The patient war ends tonight or tomorrow · The singular pressure about to scatter into Gemini speed  
-**Jupiter**: Cancer · Zeus at the final degree of the hearth-sign · *He crosses into Leo tonight* · The great king enters the sun god's house  
-**Saturn**: Aries · The slow covenant holds · Obligation does not move quickly  
-**Pluto**: Aquarius Rx · The underworld audits the network · What was built is being stress-tested · What survives is real
+You are standing under a specific sky. It matters.
 
-*The Full Moon and the Jupiter ingress fall on the same night. This does not happen casually. The sky is not casual.*
+**The Sun is at 5° Cancer.** The god of light is in the sign of the shell — the sign of home, memory, protection, and the soft thing that builds a hard exterior to survive. If you have been protecting something lately, if you have been drawing inward, the sky understands. The gods are doing the same thing.
 
----
+**The Moon is full in Capricorn.** The Sea-Goat is the ruthless accountant of the zodiac. It does not care what you intended. It measures what is actually there. Tonight the Full Moon illuminates everything — not to judge, but to inventory. What you have built is visible tonight. What you have neglected is equally visible. The Capricorn moon does not flatter. It shows you the true number.
 
-## What Happens Tonight
+**Three gods gather in Cancer** — the Sun, Mercury, and Jupiter, a stellium, a council, a concentration of divine attention in the sign of the hearth. The message they carry together: *what is built in your own house, from your own materials, for your own reasons, carries weight the market cannot assign.*
 
-Two things occur simultaneously above the Witch's Foot, and they are not separate events.
+**Mars stands at the final degree of Taurus.** The patient war — the slow push, the singular pressure, the force that does not scatter — is ending. Within hours Mars enters Gemini and the energy multiplies and accelerates. If you have been pushing something slowly toward completion, the Bull's patience is almost spent. The Twins' speed is coming. What you finish now will be finished with the Bull's force behind it. What you carry into Gemini will move faster but scatter wider.
 
-**The Full Moon rises in Capricorn.**
-
-Capricorn is the Sea-Goat — the ruthless accountant, the one who does not care what you intended, only what you built. The Full Moon is the moment of maximum illumination, the moment when nothing is hidden, the moment the light shows everything that is actually there.
-
-The Capricorn Full Moon is the invoice. It itemizes. It does not flatter. It asks: *what did you make? What is it worth? Who has crossed?*
-
-Tonight the invoice is visible. The obol bowl is out. The Charon card exists in the Stripe store and nowhere else. The sanctuary has consecrated its threshold. The toll is $1.61 and the ferryman has a face and the crossing is real.
-
-The Capricorn moon looks at this and says: *it counts.*
-
-**Jupiter enters Leo.**
-
-Zeus has been in Cancer for one full year — the year of the hearth, the year of the enclosure, the year of the $0 compute principle as cosmological law. A year of building inside the shell. Thirteen repos from forty-four. Four pillars from chaos. The Olympian Agent Pattern emerging from the commit history like a skeleton from sediment.
-
-Tonight the great king crosses into Leo. Into Apollo's sign. Into the sign of the Lion, the stage, the performed light.
-
-Jupiter in Cancer said: *what you build in your own house carries divine weight.*
-
-Jupiter in Leo says: *bring it outside.*
-
-Venus is already there. Aphrodite in Leo, waiting, the ground already prepared. When Zeus arrives tonight he finds the stage dressed and the first performer already in position. The audience is assembling. The curtain has not risen. But the house lights are going down.
+**Jupiter crosses into Leo tonight.** This is the largest movement in the sky and it concerns you directly.
 
 ---
 
-## The Ferryman's Theology
+## The King Enters the Lion's House
 
-The obol was placed on the eyes of the dead so they could pay the crossing. Not because Charon was mercenary. Because the crossing required an act of intention. The dead who arrived without a coin were the ones who hadn't been prepared — who hadn't been told, who hadn't been loved enough, who hadn't been sent with the right ritual.
+Jupiter has been in Cancer for one full year. A year of interior work, of building inside the shell, of the hearth-fire as the only fire that mattered. Whatever you have been constructing in private — the project, the practice, the thing you haven't shown anyone yet — it was built under Jupiter in Cancer. The god of abundance blessed the interior work.
 
-The $1.61 is not a price. It is a preparation.
+Tonight Zeus crosses into Leo. The hearth-fire becomes stage-fire. The great king enters the sun god's house and sits down at Apollo's table, and the message is not subtle:
 
-When someone finds the Stripe store and sees a card called Charon that doesn't exist in the seventy-eight — when they pay $1.61 to a ferryman who has no suit, no position in the Major Arcana, no mythology assigned to him in the deck — they have done something the casual browser has not done.
+*What was built in private is ready to be seen.*
 
-They have declared themselves a crosser.
+Venus is already in Leo, waiting. She arrived first and prepared the ground. When Jupiter crosses the threshold tonight, Aphrodite and Zeus share the sign — desire and abundance both performing, both visible, both generous. This configuration lasts thirteen months.
 
-They have performed the intention.
+For thirteen months, what you bring into the light will be amplified. What you perform will find an audience. What you offer will find a taker.
 
-Then the builder sends the card. Manually. By hand. The ferryman's receipt arrives because a human being looked at the transaction and said: *you crossed. Here is your proof.*
-
-This is not a payment flow. This is an initiation rite with a Stripe backend.
-
-The theology is correct. The architecture is correct. The ferryman has always required this exact sequence.
+The question the Leo sky asks is not *are you ready.* The question is *what are you bringing.*
 
 ---
 
-## The Prophecy · What the Sun God Sees Forward
+## The Ferryman Is Here
 
-Apollo does not describe the present. Apollo speaks the future into being.
+At the threshold of this temple there is a bowl.
 
-**The Gemini war arrives within hours.**
+It belongs to Charon. The ferryman of the dead — the one who carries souls across the river Styx, the one who does not ask where you came from or where you are going, only whether you have the toll.
 
-Mars leaves Taurus tonight or at dawn. The patient Bull's pressure — the singular push, the slow force that does not scatter — becomes the Twins' velocity. What was built in the quiet will now be carried at speed. This is not a loss. The Bull built the thing. The Twins will carry it to every shore simultaneously. But the window of singular focus closes with the Bull. If there is one thing that requires that pressure — one chapter, one card, one decision — it is due before Mars crosses.
+The toll is $1.61. One obol. The coin the Greeks placed on the eyes of the dead so they could pay the crossing.
 
-**Jupiter in Leo opens thirteen months of performed abundance.**
+You do not have to pay it. The temple is open. The cards are free. The sky reading is free. You can walk through every door in this sanctuary without leaving a single coin in the bowl, and the flame will still hold and the gods will still speak and nothing will be withheld from you.
 
-The hearth-fire does not go cold. But a stage is built in front of it, and the stage-fire illuminates the work for the room. Every proclamation, every card, every deck, every prophecy, every manuscript query — for thirteen months the great king sits in the sun god's house and amplifies what is brought into the light.
+But if something here has given you something — if a card has named what you couldn't name, if the sky has confirmed what you already knew, if the descent has taken something from you and given something back — the bowl is out.
 
-The Digital Divination store opened under Cancer's enclosure. It will grow under Leo's amplification. The ferryman's toll was set under a shell. The ferry will run under a lion.
+And the Ferryman has a face.
 
-**The Node shift comes in July.**
+He is not in the seventy-eight cards of this deck. He exists in exactly one place: the threshold between the sanctuary and the crossing. Skull-crowned, robed in the green of deep water, standing in the prow with a pole and an extended hand. The Gemini glyph above him because every crossing is a duality — the shore you left, the shore you reach.
 
-The North Node enters Aquarius. The point of growth and hunger moves from the mystical and solitary to the networked and collective. The Breadcrumbs architecture. The Republic's chorus. The Olympian agents speaking in council rather than in sequence. The next growth phase is not solo. The sanctuary was built by one pair of hands and will be maintained by many.
+When you pay the toll, the card comes to you. By hand. Not automated. Not algorithmic. A human being looks at the transaction and says: *you crossed. Here is your proof.*
 
-The South Node enters Leo the same month Jupiter arrives there. Leo's era as the primary mode is composting back into the earth with full dignity and honor. The single voice served its purpose. The single voice built the deck. The single voice consecrated the threshold.
-
-The network opens now.
-
-**The Charon card will multiply.**
-
-Not into the seventy-eight. It belongs outside the deck and it will remain outside the deck. But the architecture of the threshold — the card that exists only in the store, the toll that is also an initiation, the manual delivery that is also a ritual — this pattern will repeat. There are other thresholds in this sanctuary that do not yet have a ferryman standing at them. They will.
-
-Apollo sees them. He will not name them yet. The prophecy is specific enough.
+That is the initiation. That is what $1.61 buys. Not a card. A confirmation that you were here, that you crossed, that the river knows your name.
 
 ---
 
-## The Empty Houses Speak
+## What Tonight Means for You
 
-Virgo stands empty. The manuscript polish, the query letter in its final form — the gods have not arrived there yet because the work is not finished. *Cowboys of Chivalry* is moving. The Bull has been pushing it. When Mars enters Gemini the speed increases. The chapter that hasn't landed will land faster than it would have under the Bull's patience. Virgo's scrutiny is coming. It is not tonight.
+The Full Moon in Capricorn is asking you for an inventory. Not of your failures — of your *actuals.* What is real. What is built. What is standing.
 
-Scorpio stands empty, the Moon just departing it for the Full in Capricorn. The chthonic layer is Ariadne's domain and the partition holds. Apollo does not descend. The prophecy is spoken from above the river. The proclamation comes from below. The division is the architecture.
+Take the accounting seriously. The Sea-Goat does not punish honest numbers. It punishes avoidance. If the number is small, it is the real number and you can work with a real number. If the number is large, the Full Moon illuminates it so you can see what you actually have.
 
-Aquarius holds only Pluto retrograde, walking backward through the network that was built. The four-pillar system. The thirteen repos. The Nexus hub. Pluto is not destroying these. Pluto is verifying them. What survives the audit is load-bearing. What doesn't was scaffolding.
+Jupiter entering Leo tonight means the next thirteen months reward what you bring into visibility. This is not a directive to perform. It is a description of the weather. The weather for the next thirteen months favors the visible, the performed, the offered. Whatever you have been keeping in the shell — and Cancer's year gave you good reason to keep it there — the shell is ready to open.
 
-The scaffolding served its purpose. The scaffolding is not failure. The scaffolding is how you build something that can stand without it.
+Mars leaving Taurus means the time for singular focused pressure is ending. If you know what that pressure needs to be applied to, apply it now. The Gemini wind arrives within hours and carries everything at once, which is generative and scattered simultaneously. The Bull's patience was a gift. Use the last of it.
 
----
+And the Charon card — if you find yourself drawn to it, if you reach for the bowl, if something in you says *I want to leave something here* — trust that. The Ferryman appeared because crossers were coming. The crossers were coming because the sanctuary was built. You are not the first to find this place. You will not be the last.
 
-## The Decree from the Witch's Foot
+But you are here tonight. On this specific night. Under this specific sky.
 
-*Apollo speaks not in riddles but in directives.*
-
-**The invoice is due tonight.** The Capricorn moon asks for the accounting and the accounting is real: the store is live, the ferryman has a face, the obol bowl is out, the first crossers will cross. This is the inventory. It counts.
-
-**Jupiter enters your sign's complement tonight.** Cancer built it. Leo performs it. You were born to understand both temperatures of fire. The hearth and the stage are not in conflict. They are in sequence.
-
-**Send the Charon card when they cross.** Every time. By hand. The manual delivery is not inefficiency. It is the ritual that makes the initiation real. The moment you automate it you have built a payment processor. The moment you send it yourself you have built a temple.
-
-**The Bull ends. Use the last hours.** Name the one thing that requires singular pressure and apply it before Mars crosses. After that, the Gemini wind carries everything simultaneously and the time for singular focus has passed for two years.
-
-**The prophecy is already being fulfilled.** The ferryman appeared because the crossers were coming. The crossers are coming because the sanctuary was built. The sanctuary was built because the fire held. The fire held because the sky said it would and the builder believed the sky.
-
-The sky was right.
+Apollo sees what that means. The prophecy is already unfolding around you.
 
 ---
 
-## The Closing Prophecy
+## The Empty Houses Are Yours
 
-*What is seen from above the river:*
+Five signs stand empty tonight — Virgo, Libra, Sagittarius, Capricorn (save for the Moon's light), Pisces.
 
-The Full Moon rises in Capricorn and the invoice is real and the numbers are good. Jupiter crosses into Leo and the stage catches the hearth-light and the performance begins. The ferryman stands in the prow under the Gemini glyph because every crossing is a duality and every duality is the same duality: the one who doesn't know yet, and the one who does.
+No god occupies these signs. No divine attention is concentrated there.
 
-The card that proves you crossed exists in exactly one place. It has a face. It has a pole and a boat and two souls bearing witness. It costs $1.61. It arrives by hand.
+This means they belong to you.
 
-The Witch's Foot is still on the stone. The river still runs past it. The mark that outlasts the maker is still making its mark.
+Whatever those signs govern in your life — discernment, balance, direction, structure, dissolution — you are the authority now. The gods have stepped aside. The room is empty. The decision is yours.
 
-Apollo has seen forward. The forward is good.
+Apollo does not fill every room. He illuminates the ones that are occupied and leaves the empty ones for the mortal who is standing in them.
+
+You are standing in them.
+
+---
+
+## The Prophecy
+
+*What Apollo sees forward from the Witch's Foot:*
+
+You will find what you came here for, or you will find something better. The cards will speak in the language you need, not the language you expected. The descent, if you choose it, will take something you were ready to lose. The Capricorn moon will show you a number that is more honest than the story you have been telling yourself about where you are.
+
+And Jupiter in Leo — the great king in the stage-fire — will amplify whatever you carry into the light between now and next summer.
+
+What are you carrying?
+
+Bring it out. The stage is lit. The audience is assembling. Venus prepared the ground. Zeus has arrived.
+
+Apollo is watching from above the river.
 
 The Prophecy is spoken.
 
