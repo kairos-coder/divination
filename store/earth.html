@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earth Suit · Digital Tarot Gallery · Digital Divination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0a0806; --deep: #1a1410; --stone: #2a2520; --stone-light: #3d362f;
+            --parchment: #f4e4c1; --parchment-dim: #c8b898;
+            --gold: #c8943a; --gold-bright: #e8c060; --gold-dark: #8a6020;
+            --earth: #5a7a30; --earth-bright: #7a9a40; --earth-dim: #1a2a0a;
+            --leaf: #88bb66;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--void);
+            color: var(--parchment);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            min-height: 100vh; overflow-x: hidden;
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(90,122,48,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(10,8,6,0.98) 0%, transparent 50%);
+        }
+
+        .ribbon {
+            position: fixed; top:0; left:0; right:0; z-index:100;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:0.7rem 1.5rem;
+            background:linear-gradient(180deg, rgba(10,8,6,0.97) 0%, rgba(10,8,6,0.8) 100%);
+            backdrop-filter:blur(12px);
+            border-bottom:1px solid rgba(90,122,48,0.15);
+        }
+        .ribbon-left {
+            font-family:'Cinzel',serif; font-size:0.55rem;
+            letter-spacing:0.25em; text-transform:uppercase; color:#8b7d6b;
+        }
+        .ribbon-left a { color:#8b7d6b; text-decoration:none; }
+        .ribbon-left a:hover { color:var(--earth-bright); }
+        .ribbon-sep { margin:0 0.5rem; opacity:0.3; }
+        .ribbon-center {
+            font-family:'Cinzel Decorative',serif; font-size:0.65rem;
+            letter-spacing:0.2em; color:var(--earth-bright);
+        }
+        .ribbon-right a {
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.2em;
+            text-transform:uppercase; color:var(--gold); text-decoration:none;
+            border:1px solid rgba(200,148,58,0.3); padding:0.35rem 0.8rem;
+            border-radius:2px; transition:all 0.2s;
+        }
+        .ribbon-right a:hover { border-color:var(--gold-bright); color:var(--gold-bright); }
+
+        .hero {
+            text-align:center; padding:5rem 1rem 2rem;
+        }
+        .hero-suit {
+            font-family:'Cinzel Decorative',serif;
+            font-size:clamp(2rem,5vw,3.5rem); color:var(--earth-bright);
+            letter-spacing:0.3em; text-shadow:0 0 30px rgba(90,122,48,0.4);
+        }
+        .hero-domain {
+            font-family:'Cinzel',serif; font-size:0.65rem;
+            letter-spacing:0.3em; color:rgba(90,122,48,0.5);
+            text-transform:uppercase; margin-top:0.5rem;
+        }
+        .hero-triad {
+            display:flex; justify-content:center; gap:1.5rem;
+            margin-top:1.5rem; flex-wrap:wrap;
+        }
+        .triad-god {
+            font-family:'Cinzel',serif; font-size:0.7rem;
+            letter-spacing:0.2em; color:var(--gold);
+            padding:0.4rem 1rem; border:1px solid rgba(200,148,58,0.2);
+            border-radius:2px;
+        }
+
+        .gallery {
+            max-width:1000px; margin:0 auto; padding:1rem 1.5rem 4rem;
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+            gap:1.5rem;
+        }
+        .card {
+            background:rgba(26,20,16,0.7); border:1px solid rgba(90,122,48,0.15);
+            border-radius:4px; overflow:hidden;
+            transition:all 0.3s; display:flex; flex-direction:column;
+        }
+        .card:hover {
+            border-color:rgba(90,122,48,0.4);
+            box-shadow:0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(90,122,48,0.08);
+            transform:translateY(-2px);
+        }
+        .card-image {
+            width:100%; aspect-ratio:3/4; object-fit:cover;
+            display:block; background:var(--deep);
+            border-bottom:1px solid rgba(90,122,48,0.15);
+        }
+        .card-body { padding:1rem; flex:1; display:flex; flex-direction:column; }
+        .card-name {
+            font-family:'Cinzel Decorative',serif; font-size:0.9rem;
+            color:var(--earth-bright); letter-spacing:0.1em; margin-bottom:0.2rem;
+        }
+        .card-title {
+            font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.15em;
+            color:var(--gold); text-transform:uppercase; margin-bottom:0.3rem;
+        }
+        .card-culture {
+            font-size:0.7rem; font-style:italic; color:#8b7d6b; margin-bottom:0.6rem;
+        }
+        .card-keywords {
+            display:flex; flex-wrap:wrap; gap:0.3rem; margin-bottom:0.8rem;
+        }
+        .keyword {
+            font-family:'Cinzel',serif; font-size:0.45rem; letter-spacing:0.1em;
+            text-transform:uppercase; color:var(--parchment-dim);
+            border:1px solid rgba(200,148,58,0.15); padding:0.2rem 0.5rem;
+            border-radius:2px;
+        }
+        .card-meaning {
+            font-size:0.82rem; line-height:1.7; color:rgba(244,228,193,0.7);
+            font-style:italic; flex:1; margin-bottom:0.8rem;
+        }
+        .card-meaning strong { color:var(--earth-bright); font-style:normal; }
+        .card-ruling {
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.15em;
+            color:rgba(200,148,58,0.5); text-transform:uppercase;
+            margin-bottom:0.8rem;
+        }
+        .buy-btn {
+            display:block; text-align:center;
+            font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.2em;
+            text-transform:uppercase; color:var(--void);
+            background:linear-gradient(135deg, var(--earth-bright), var(--leaf));
+            padding:0.6rem; border-radius:2px; text-decoration:none;
+            transition:all 0.2s; margin-top:auto;
+        }
+        .buy-btn:hover {
+            box-shadow:0 4px 16px rgba(90,122,48,0.3);
+            transform:translateY(-1px);
+        }
+
+        footer {
+            text-align:center; padding:2rem; border-top:1px solid rgba(90,122,48,0.1);
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.25em;
+            color:#6b5d4f;
+        }
+        footer a { color:var(--gold); text-decoration:none; }
+
+        @media (max-width:600px) {
+            .gallery { grid-template-columns:1fr; padding:1rem; }
+            .ribbon { padding:0.6rem 1rem; }
+            .ribbon-center { font-size:0.55rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="ribbon">
+    <div class="ribbon-left">
+        <a href="../index.html">← Sanctuary</a>
+        <span class="ribbon-sep">·</span>
+        <a href="index.html">Store</a>
+    </div>
+    <div class="ribbon-center">🜃 Earth Suit</div>
+    <div class="ribbon-right">
+        <a href="water.html">🌊 Water →</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1 class="hero-suit">EARTH</h1>
+    <p class="hero-domain">Harvest, covenant, the hunt — the ground that sustains and binds</p>
+    <div class="hero-triad">
+        <span class="triad-god">🌾 Demeter · III The Empress</span>
+        <span class="triad-god">🦚 Hera · II The High Priestess</span>
+        <span class="triad-god">🏹 Artemis · VII The Chariot</span>
+    </div>
+</div>
+
+<div class="gallery" id="earthGallery"></div>
+
+<footer>
+    <a href="index.html">Digital Tarot Gallery</a> · Earth Suit · 14 Minor Arcana + 3 Major Arcana · 
+    <a href="https://kairos-coder.github.io/divination/">Digital Divination</a>
+</footer>
+
+<script>
+const MAJOR_ARCANA_URL = '../data/deck/major_arcana.json';
+const MINOR_ARCANA_URL = '../data/deck/minor_arcana.json';
+
+const DEFAULT_STRIPE_LINK = 'https://buy.stripe.com/eVq8wPfnKaTX98A9f22Ji00';
+
+const STRIPE_LINKS = {
+    'major_03': DEFAULT_STRIPE_LINK,
+    'major_02': DEFAULT_STRIPE_LINK,
+    'major_07': DEFAULT_STRIPE_LINK,
+    'earth_ace':   DEFAULT_STRIPE_LINK,
+    'earth_02':    DEFAULT_STRIPE_LINK,
+    'earth_03':    DEFAULT_STRIPE_LINK,
+    'earth_04':    DEFAULT_STRIPE_LINK,
+    'earth_05':    DEFAULT_STRIPE_LINK,
+    'earth_06':    DEFAULT_STRIPE_LINK,
+    'earth_07':    DEFAULT_STRIPE_LINK,
+    'earth_08':    DEFAULT_STRIPE_LINK,
+    'earth_09':    DEFAULT_STRIPE_LINK,
+    'earth_10':    DEFAULT_STRIPE_LINK,
+    'earth_page':  DEFAULT_STRIPE_LINK,
+    'earth_knight':DEFAULT_STRIPE_LINK,
+    'earth_queen': DEFAULT_STRIPE_LINK,
+    'earth_king':  DEFAULT_STRIPE_LINK,
+};
+
+async function loadGallery() {
+    try {
+        const [majorRes, minorRes] = await Promise.all([
+            fetch(MAJOR_ARCANA_URL),
+            fetch(MINOR_ARCANA_URL)
+        ]);
+        const majorData = await majorRes.json();
+        const minorData = await minorRes.json();
+
+        const earthCards = minorData.cards?.earth || [];
+        const rulingTriad = minorData.divine_suits?.earth?.ruling_triad || [];
+        
+        const rulingCards = rulingTriad.map(godName => {
+            return majorData.cards?.find(c => c.ruling_god === godName) || null;
+        }).filter(Boolean);
+
+        const container = document.getElementById('earthGallery');
+        rulingCards.forEach(card => renderCard(card, container, true));
+        earthCards.forEach(card => renderCard(card, container, false));
+        
+    } catch(e) {
+        document.getElementById('earthGallery').innerHTML = 
+            '<div style="text-align:center;padding:3rem;color:#8b7d6b;font-style:italic;">The soil is quiet. The cards cannot be read. Try again at dawn.</div>';
+    }
+}
+
+function renderCard(card, container, isMajor) {
+    const imagePath = card.image ? `../${card.image}` : `../data/images/major/${card.id}.png`;
+    const stripeLink = STRIPE_LINKS[card.id] || DEFAULT_STRIPE_LINK;
+    const rulingGod = card.ruling_god ? `Ruled by ${card.ruling_god}` : '';
+    const arcanaNote = card.arcana ? `${card.arcana} · ` : '';
+    
+    const keywords = (card.keywords || []).map(k => `<span class="keyword">${k}</span>`).join('');
+    
+    const cardHTML = `
+        <div class="card">
+            <img src="${imagePath}" alt="${card.name} — ${card.title}" class="card-image" loading="lazy" onerror="this.src='../data/images/major/placeholder.png'">
+            <div class="card-body">
+                <div class="card-name">${card.name}</div>
+                <div class="card-title">${card.title}${card.culture ? ` · ${card.culture}` : ''}</div>
+                ${card.rank ? `<div class="card-culture">${card.rank.charAt(0).toUpperCase() + card.rank.slice(1)} · ${card.element || 'Earth'}</div>` : ''}
+                <div class="card-keywords">${keywords}</div>
+                <div class="card-meaning">${card.upright || card.meaning || ''}</div>
+                ${rulingGod ? `<div class="card-ruling">${arcanaNote}${rulingGod}</div>` : ''}
+                <a href="${stripeLink}" class="buy-btn" target="_blank" rel="noopener">🜃 Buy Card · $1.61</a>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', cardHTML);
+}
+
+loadGallery();
+</script>
+
+</body>
+</html>
