@@ -251,7 +251,7 @@ async function loadGallery() {
 }
 
 function renderCard(card, container, isMajor) {
-    const imagePath = card.image || `../data/images/major/${card.id}.png`;
+    const imagePath = card.image ? `../${card.image}` : `../data/images/major/${card.id}.png`;
     const stripeLink = STRIPE_LINKS[card.id] || 'https://buy.stripe.com/PLACEHOLDER';
     const rulingGod = card.ruling_god ? `Ruled by ${card.ruling_god}` : '';
     const arcanaNote = card.arcana ? `${card.arcana} · ` : '';
