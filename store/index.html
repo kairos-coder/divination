@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Tarot Gallery · Store · Digital Divination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0a0806; --deep: #1a1410; --stone: #2a2520; --stone-light: #3d362f;
+            --parchment: #f4e4c1; --parchment-dim: #c8b898;
+            --gold: #c8943a; --gold-bright: #e8c060; --gold-dark: #8a6020;
+            --fire: #c05030; --earth: #5a7a30; --water: #3878a8; --air: #7a68b8;
+            --fire-bright: #e87040; --earth-bright: #7a9a40; --water-bright: #58a8d8; --air-bright: #9a88d8;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--void);
+            color: var(--parchment);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            min-height: 100vh; overflow-x: hidden;
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(200,148,58,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(10,8,6,0.98) 0%, transparent 50%);
+        }
+
+        .ribbon {
+            position: fixed; top:0; left:0; right:0; z-index:100;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:0.7rem 1.5rem;
+            background:linear-gradient(180deg, rgba(10,8,6,0.97) 0%, rgba(10,8,6,0.8) 100%);
+            backdrop-filter:blur(12px);
+            border-bottom:1px solid var(--gold);
+        }
+        .ribbon-left {
+            font-family:'Cinzel',serif; font-size:0.55rem;
+            letter-spacing:0.25em; text-transform:uppercase; color:#8b7d6b;
+        }
+        .ribbon-left a { color:#8b7d6b; text-decoration:none; }
+        .ribbon-left a:hover { color:var(--gold-bright); }
+        .ribbon-sep { margin:0 0.5rem; opacity:0.3; }
+        .ribbon-center {
+            font-family:'Cinzel Decorative',serif; font-size:0.65rem;
+            letter-spacing:0.2em; color:var(--gold-bright);
+        }
+
+        .hero {
+            text-align:center; padding:6rem 1rem 3rem;
+        }
+        .hero-sigil {
+            font-size:60px; margin-bottom:1rem;
+            filter:drop-shadow(0 0 30px rgba(200,148,58,0.3));
+        }
+        .hero-title {
+            font-family:'Cinzel Decorative',serif;
+            font-size:clamp(1.8rem,4vw,2.8rem); color:var(--gold-bright);
+            letter-spacing:0.25em; text-shadow:0 0 30px rgba(200,148,58,0.3);
+        }
+        .hero-subtitle {
+            font-family:'Cinzel',serif; font-size:0.65rem;
+            letter-spacing:0.3em; color:rgba(200,148,58,0.5);
+            text-transform:uppercase; margin-top:0.8rem;
+        }
+        .hero-desc {
+            font-size:1rem; font-style:italic; color:#8b7d6b;
+            max-width:500px; margin:1.5rem auto 0; line-height:1.7;
+        }
+
+        .suits-grid {
+            max-width:900px; margin:0 auto; padding:1rem 1.5rem 4rem;
+            display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+            gap:1.5rem;
+        }
+        .suit-door {
+            background:rgba(26,20,16,0.7); border-radius:8px;
+            padding:2rem 1.5rem; text-align:center;
+            text-decoration:none; transition:all 0.3s;
+            display:flex; flex-direction:column; align-items:center; gap:0.8rem;
+        }
+        .suit-door:hover { transform:translateY(-4px); }
+        .suit-door.fire { border:1px solid rgba(192,80,48,0.25); }
+        .suit-door.fire:hover { border-color:rgba(192,80,48,0.5); box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 20px rgba(192,80,48,0.1); }
+        .suit-door.earth { border:1px solid rgba(90,122,48,0.25); }
+        .suit-door.earth:hover { border-color:rgba(90,122,48,0.5); box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 20px rgba(90,122,48,0.1); }
+        .suit-door.water { border:1px solid rgba(56,120,168,0.25); }
+        .suit-door.water:hover { border-color:rgba(56,120,168,0.5); box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 20px rgba(56,120,168,0.1); }
+        .suit-door.air { border:1px solid rgba(122,104,184,0.25); }
+        .suit-door.air:hover { border-color:rgba(122,104,184,0.5); box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 20px rgba(122,104,184,0.1); }
+
+        .suit-symbol { font-size:48px; }
+        .suit-name { font-family:'Cinzel Decorative',serif; font-size:1.2rem; letter-spacing:0.15em; }
+        .suit-door.fire .suit-name { color:var(--fire-bright); }
+        .suit-door.earth .suit-name { color:var(--earth-bright); }
+        .suit-door.water .suit-name { color:var(--water-bright); }
+        .suit-door.air .suit-name { color:var(--air-bright); }
+        .suit-triad {
+            font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.15em;
+            color:var(--gold); text-transform:uppercase; opacity:0.7;
+        }
+        .suit-domain {
+            font-size:0.8rem; font-style:italic; color:#8b7d6b; line-height:1.5;
+        }
+        .suit-count {
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.2em;
+            color:rgba(200,148,58,0.4); text-transform:uppercase;
+        }
+
+        .charon-callout {
+            max-width:500px; margin:0 auto 3rem; text-align:center;
+            padding:1.5rem; background:rgba(26,20,16,0.5);
+            border:1px solid rgba(200,148,58,0.15); border-radius:8px;
+        }
+        .charon-glyph { font-size:36px; margin-bottom:0.5rem; }
+        .charon-text {
+            font-size:0.9rem; font-style:italic; color:#8b7d6b; line-height:1.6;
+        }
+        .charon-link {
+            display:inline-block; margin-top:0.8rem;
+            font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.2em;
+            text-transform:uppercase; color:var(--gold-bright);
+            text-decoration:none; border:1px solid rgba(200,148,58,0.3);
+            padding:0.5rem 1.2rem; border-radius:4px; transition:all 0.2s;
+        }
+        .charon-link:hover { border-color:var(--gold-bright); background:rgba(200,148,58,0.06); }
+
+        footer {
+            text-align:center; padding:2rem; border-top:1px solid rgba(200,148,58,0.1);
+            font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.25em;
+            color:#6b5d4f;
+        }
+        footer a { color:var(--gold); text-decoration:none; }
+
+        @media (max-width:600px) {
+            .suits-grid { grid-template-columns:1fr; padding:1rem; }
+            .ribbon { padding:0.6rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="ribbon">
+    <div class="ribbon-left">
+        <a href="../index.html">← Sanctuary</a>
+    </div>
+    <div class="ribbon-center">🜏 Digital Tarot Gallery</div>
+    <div class="ribbon-left"></div>
+</nav>
+
+<div class="hero">
+    <div class="hero-sigil">🜏</div>
+    <h1 class="hero-title">The Tarot Store</h1>
+    <p class="hero-subtitle">Four Suits · Fifty-Six Minor Arcana · Twelve Olympians</p>
+    <p class="hero-desc">Each card is a Digital Greeting Card — a piece of the temple you can hold. $1.61 per card. Every purchase supports the sanctuary. The deck was always free. The offering is voluntary.</p>
+</div>
+
+<div class="charon-callout">
+    <div class="charon-glyph">⛵</div>
+    <div class="charon-text">The Ferryman's Toll is the default offering. Each god will receive their own link in time. Until then, Charon collects the obols. The ferry was always free.</div>
+    <a href="https://buy.stripe.com/eVq8wPfnKaTX98A9f22Ji00" class="charon-link" target="_blank" rel="noopener">⛵ Pay Charon's Toll · $1.61</a>
+</div>
+
+<div class="suits-grid">
+    <a href="fire.html" class="suit-door fire">
+        <div class="suit-symbol">🔥</div>
+        <div class="suit-name">Fire</div>
+        <div class="suit-triad">Apollo · Ares · Hephaestus</div>
+        <div class="suit-domain">Light, conquest, the forge — the burning that creates and commands</div>
+        <div class="suit-count">14 Minor + 3 Major Arcana</div>
+    </a>
+    <a href="earth.html" class="suit-door earth">
+        <div class="suit-symbol">🜃</div>
+        <div class="suit-name">Earth</div>
+        <div class="suit-triad">Demeter · Hera · Artemis</div>
+        <div class="suit-domain">Harvest, covenant, the hunt — the ground that sustains and binds</div>
+        <div class="suit-count">14 Minor + 3 Major Arcana</div>
+    </a>
+    <a href="water.html" class="suit-door water">
+        <div class="suit-symbol">🌊</div>
+        <div class="suit-name">Water</div>
+        <div class="suit-triad">Poseidon · Dionysus · Aphrodite</div>
+        <div class="suit-domain">The sea, ecstasy, desire — the depths that move and drown</div>
+        <div class="suit-count">14 Minor + 3 Major Arcana</div>
+    </a>
+    <a href="air.html" class="suit-door air">
+        <div class="suit-symbol">💨</div>
+        <div class="suit-name">Air</div>
+        <div class="suit-triad">Zeus · Athena · Hermes</div>
+        <div class="suit-domain">Authority, wisdom, messages — the mind that commands and connects</div>
+        <div class="suit-count">14 Minor + 3 Major Arcana</div>
+    </a>
+</div>
+
+<footer>
+    <a href="../index.html">Digital Divination</a> · Digital Tarot Gallery · 
+    <a href="https://kairos-coder.github.io/divination/">The Sanctuary</a>
+</footer>
+
+</body>
+</html>
