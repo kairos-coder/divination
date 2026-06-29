@@ -3,25 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Divination · The Altar</title>
+  <title>Digital Divination — The Altar</title>
   <style>
-    body { margin: 0; }
-    #altar-root {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 2rem 1rem;
+    #cardMosaic {
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      display:grid; grid-template-columns:repeat(6,1fr);
+      opacity:0.18;
+    }
+    #cardMosaic img {
+      width:100%; aspect-ratio:2/3; object-fit:cover;
+      filter:sepia(0.15) brightness(0.9);
+      transition:opacity 0.6s;
     }
   </style>
 </head>
 <body>
+  <div id="cardMosaic"></div>
   <div id="altar-root"></div>
+
+  <script>
+    const MAJOR_ARCANA = [
+      {id:"major_00",image:"data/images/dionysus-card.jpg"},
+      {id:"major_01",image:"data/images/major/magician.png"},
+      {id:"major_02",image:"data/images/hera-card.jpg"},
+      {id:"major_03",image:"data/images/demeter-card.jpg"},
+      {id:"major_04",image:"data/images/zeus-card.jpg"},
+      {id:"major_05",image:"data/images/ares-card.jpg"},
+      {id:"major_06",image:"data/images/aphrodite-card.jpg"},
+      {id:"major_07",image:"data/images/artemis-card.jpg"},
+      {id:"major_08",image:"data/images/athena-card.jpg"},
+      {id:"major_09",image:"data/images/hermit-card.jpg"},
+      {id:"major_10",image:"data/images/major/wheel_of_fortune.png"},
+      {id:"major_11",image:"data/images/hephaestus-card.jpg"},
+      {id:"major_12",image:"data/images/prometheus-card.jpg"},
+      {id:"major_13",image:"data/images/thanatos-card.jpg"},
+      {id:"major_14",image:"data/images/major/temperance.png"},
+      {id:"major_15",image:"data/images/hades-card.jpg"},
+      {id:"major_16",image:"data/images/poseidon-card.jpg"},
+      {id:"major_17",image:"data/images/persephone-card.jpg"},
+      {id:"major_18",image:"data/images/major/moon.png"},
+      {id:"major_19",image:"data/images/major/sun.png"},
+      {id:"major_20",image:"data/images/major/judgment.png"},
+      {id:"major_21",image:"data/images/major/world.png"}
+    ];
+    const MINOR_CARDS = [
+      {id:"fire_ace",image:"data/images/minor/fire/fire_ace.png"},
+      {id:"fire_02", image:"data/images/minor/fire/fire_02.png"},
+      {id:"fire_03", image:"data/images/minor/fire/fire_03.png"},
+      {id:"fire_04", image:"data/images/minor/fire/fire_04.png"},
+      {id:"fire_05", image:"data/images/minor/fire/fire_05.png"},
+      {id:"fire_06", image:"data/images/minor/fire/fire_06.png"},
+      {id:"earth_ace",image:"data/images/minor/earth/earth_ace.png"},
+      {id:"earth_02",image:"data/images/minor/earth/earth_02.png"},
+      {id:"earth_03",image:"data/images/minor/earth/earth_03.png"},
+      {id:"earth_04",image:"data/images/minor/earth/earth_04.png"},
+      {id:"water_ace",image:"data/images/minor/water/water_ace.png"},
+      {id:"water_02",image:"data/images/minor/water/water_02.png"},
+      {id:"air_ace",  image:"data/images/minor/air/air_ace.png"}
+    ];
+
+    const MOSAIC_POOL = [...MAJOR_ARCANA,...MAJOR_ARCANA,...MAJOR_ARCANA,...MINOR_CARDS];
+
+    function buildMosaic() {
+      const mosaic = document.getElementById('cardMosaic');
+      const cells = [];
+      for (let i = 0; i < 36; i++) {
+        const card = MOSAIC_POOL[Math.floor(Math.random() * MOSAIC_POOL.length)];
+        cells.push(`<img src="${card.image}" alt="" loading="lazy" onerror="this.style.opacity='0'">`);
+      }
+      mosaic.innerHTML = cells.join('');
+    }
+    buildMosaic();
+
+    setInterval(() => {
+      const imgs = document.querySelectorAll('#cardMosaic img');
+      if (!imgs.length) return;
+      const idx = Math.floor(Math.random() * imgs.length);
+      imgs[idx].style.opacity = '0';
+      setTimeout(() => {
+        imgs[idx].src = MOSAIC_POOL[Math.floor(Math.random() * MOSAIC_POOL.length)].image;
+        imgs[idx].style.opacity = '';
+      }, 600);
+    }, 8000);
+  </script>
+
   <script src="js/altar-mason.js"></script>
   <script>
     const mason = new AltarMason('#altar-root', 'json/first-altar.json');
     mason.build();
   </script>
+  <script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
