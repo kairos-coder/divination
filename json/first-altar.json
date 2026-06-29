@@ -1,0 +1,329 @@
+{
+  "scene": "first-altar",
+  "title": "Digital Divination · The Altar",
+  "inscription": {
+    "line1": "All things pass into shadow.",
+    "line2": "What remains is what was true."
+  },
+  "cta": {
+    "text": "Draw Your Cards",
+    "href": "#"
+  },
+  "palette": {
+    "void":  "#0a0806",
+    "bone":  "#d4c9a8",
+    "tallow":"#e8d87a",
+    "umber": "#3d2b1f",
+    "ash":   "#7a7060",
+    "gold":  "#c9a84c",
+    "smoke": "#1a1410"
+  },
+  "animations": {
+    "flicker": {
+      "keyframes": [
+        { "pct": 0,   "transform": "scaleX(1) rotate(-1deg)",   "opacity": 1 },
+        { "pct": 33,  "transform": "scaleX(0.85) rotate(2deg)", "opacity": 0.85 },
+        { "pct": 66,  "transform": "scaleX(1.1) rotate(-2deg)", "opacity": 1 },
+        { "pct": 100, "transform": "scaleX(0.95) rotate(1deg)", "opacity": 0.9 }
+      ],
+      "duration": "1.8s",
+      "easing": "ease-in-out",
+      "iteration": "infinite",
+      "direction": "alternate"
+    },
+    "rise": {
+      "keyframes": [
+        { "pct": 0,   "transform": "translateY(0) translateX(0) scale(1)",    "opacity": 0.4 },
+        { "pct": 50,  "transform": "translateY(-30px) translateX(6px) scale(2)", "opacity": 0.15 },
+        { "pct": 100, "transform": "translateY(-70px) translateX(-4px) scale(3)","opacity": 0 }
+      ],
+      "duration": "3s",
+      "easing": "ease-out",
+      "iteration": "infinite"
+    },
+    "drain": {
+      "keyframes": [
+        { "pct": 0,   "height": "65%" },
+        { "pct": 100, "height": "5%" }
+      ],
+      "duration": "8s",
+      "easing": "linear",
+      "iteration": "infinite"
+    },
+    "fill": {
+      "keyframes": [
+        { "pct": 0,   "height": "5%" },
+        { "pct": 100, "height": "65%" }
+      ],
+      "duration": "8s",
+      "easing": "linear",
+      "iteration": "infinite"
+    },
+    "drip": {
+      "keyframes": [
+        { "pct": 0,   "opacity": 1, "transform": "translateX(-50%) translateY(0)" },
+        { "pct": 100, "opacity": 0, "transform": "translateX(-50%) translateY(10px)" }
+      ],
+      "duration": "0.4s",
+      "easing": "linear",
+      "iteration": "infinite"
+    },
+    "glow": {
+      "keyframes": [
+        { "pct": 0,   "opacity": 0.5, "transform": "translateX(-50%) scale(0.9)" },
+        { "pct": 100, "opacity": 1,   "transform": "translateX(-50%) scale(1.3)" }
+      ],
+      "duration": "1.8s",
+      "easing": "ease-in-out",
+      "iteration": "infinite",
+      "direction": "alternate"
+    }
+  },
+  "objects": [
+    {
+      "id": "table",
+      "name": "Altar Table",
+      "role": "surface",
+      "order": 0,
+      "layers": [
+        {
+          "id": "top-rail",
+          "chars": "╔══════════════════════════════════════════╗",
+          "style": { "color": "umber", "font-size": "1rem", "letter-spacing": "0" }
+        },
+        {
+          "id": "cloth-1",
+          "chars": "║  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ║",
+          "style": { "color": "ash", "font-size": "1rem" }
+        },
+        {
+          "id": "cloth-2",
+          "chars": "║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║",
+          "style": { "color": "umber", "font-size": "1rem", "opacity": "0.6" }
+        },
+        {
+          "id": "legs",
+          "chars": "╚═══╝                                ╚═══╝",
+          "style": { "color": "umber", "font-size": "1rem" }
+        }
+      ]
+    },
+    {
+      "id": "candle-left",
+      "name": "Left Candle",
+      "role": "object",
+      "order": 1,
+      "position": "left",
+      "layers": [
+        {
+          "id": "glow",
+          "chars": "◉",
+          "style": { "color": "tallow", "font-size": "2.8rem", "opacity": "0.12", "position": "absolute", "top": "-0.5rem" },
+          "animate": "glow"
+        },
+        {
+          "id": "flame",
+          "chars": "🜂",
+          "style": { "color": "tallow", "font-size": "1.3rem" },
+          "animate": "flicker"
+        },
+        {
+          "id": "wick",
+          "chars": "╎",
+          "style": { "color": "ash", "font-size": "0.55rem" }
+        },
+        {
+          "id": "body",
+          "chars": "▐█▌\n▐█▌\n▐█▌\n▐█▌",
+          "style": { "color": "bone", "font-size": "1rem", "line-height": "1.1" }
+        },
+        {
+          "id": "wax",
+          "chars": "▗▄▖",
+          "style": { "color": "bone", "font-size": "0.6rem", "opacity": "0.7" }
+        },
+        {
+          "id": "base",
+          "chars": "▔▔▔",
+          "style": { "color": "umber", "font-size": "1rem" }
+        },
+        {
+          "id": "smoke",
+          "chars": "░",
+          "style": { "color": "ash", "font-size": "0.7rem", "position": "absolute", "top": "-1.5rem", "opacity": "0.3" },
+          "animate": "rise"
+        }
+      ]
+    },
+    {
+      "id": "skull",
+      "name": "Skull",
+      "role": "object",
+      "order": 2,
+      "position": "center",
+      "layers": [
+        {
+          "id": "cranium",
+          "chars": "⌒⌒⌒⌒⌒",
+          "style": { "color": "bone", "font-size": "1.6rem", "letter-spacing": "-0.1em" }
+        },
+        {
+          "id": "brow",
+          "chars": "▔▔▔▔▔▔▔",
+          "style": { "color": "bone", "font-size": "0.9rem" }
+        },
+        {
+          "id": "eyes",
+          "chars": "◉  ◉",
+          "style": { "color": "void", "font-size": "1.1rem", "background": "bone", "padding": "0 0.3rem", "letter-spacing": "0.4em" }
+        },
+        {
+          "id": "nose",
+          "chars": "△",
+          "style": { "color": "void", "font-size": "0.65rem", "background": "bone", "padding": "0 0.8rem" }
+        },
+        {
+          "id": "cheeks",
+          "chars": "▏  ▕",
+          "style": { "color": "bone", "font-size": "1rem", "letter-spacing": "1.6em" }
+        },
+        {
+          "id": "teeth",
+          "chars": "▎▎▎▎▎▎",
+          "style": { "color": "bone", "font-size": "0.75rem", "letter-spacing": "0.15em", "border-top": "1px solid #7a7060" }
+        },
+        {
+          "id": "jaw",
+          "chars": "╰─────╯",
+          "style": { "color": "ash", "font-size": "0.9rem" }
+        }
+      ]
+    },
+    {
+      "id": "hourglass",
+      "name": "Hourglass",
+      "role": "object",
+      "order": 3,
+      "position": "right-center",
+      "layers": [
+        {
+          "id": "cap-top",
+          "chars": "╒═══╕",
+          "style": { "color": "gold", "font-size": "0.9rem" }
+        },
+        {
+          "id": "sand-upper",
+          "chars": "│░░░│\n│▒▒▒│\n│▒░▒│",
+          "style": { "color": "gold", "font-size": "0.85rem", "line-height": "1.1", "opacity": "0.8" },
+          "animate": "drain"
+        },
+        {
+          "id": "waist",
+          "chars": "╲═╱",
+          "style": { "color": "gold", "font-size": "0.9rem" }
+        },
+        {
+          "id": "drip",
+          "chars": "·",
+          "style": { "color": "tallow", "font-size": "0.6rem" },
+          "animate": "drip"
+        },
+        {
+          "id": "waist-bottom",
+          "chars": "╱═╲",
+          "style": { "color": "gold", "font-size": "0.9rem" }
+        },
+        {
+          "id": "sand-lower",
+          "chars": "│░▒░│\n│▒▒▒│\n│░░░│",
+          "style": { "color": "gold", "font-size": "0.85rem", "line-height": "1.1", "opacity": "0.8" },
+          "animate": "fill"
+        },
+        {
+          "id": "cap-bottom",
+          "chars": "╘═══╛",
+          "style": { "color": "gold", "font-size": "0.9rem" }
+        },
+        {
+          "id": "stand",
+          "chars": "▔▔▔▔▔",
+          "style": { "color": "umber", "font-size": "0.8rem" }
+        }
+      ]
+    },
+    {
+      "id": "candle-right",
+      "name": "Right Candle",
+      "role": "object",
+      "order": 4,
+      "position": "right",
+      "mirror": "candle-left",
+      "layers": [
+        {
+          "id": "glow",
+          "chars": "◉",
+          "style": { "color": "tallow", "font-size": "2.8rem", "opacity": "0.12", "position": "absolute", "top": "-0.5rem" },
+          "animate": "glow",
+          "animate-delay": "0.7s"
+        },
+        {
+          "id": "flame",
+          "chars": "🜂",
+          "style": { "color": "tallow", "font-size": "1.3rem" },
+          "animate": "flicker",
+          "animate-delay": "0.6s"
+        },
+        {
+          "id": "wick",
+          "chars": "╎",
+          "style": { "color": "ash", "font-size": "0.55rem" }
+        },
+        {
+          "id": "body",
+          "chars": "▐█▌\n▐█▌\n▐█▌\n▐█▌",
+          "style": { "color": "bone", "font-size": "1rem", "line-height": "1.1" }
+        },
+        {
+          "id": "wax",
+          "chars": "▗▄▖",
+          "style": { "color": "bone", "font-size": "0.6rem", "opacity": "0.7" }
+        },
+        {
+          "id": "base",
+          "chars": "▔▔▔",
+          "style": { "color": "umber", "font-size": "1rem" }
+        },
+        {
+          "id": "smoke",
+          "chars": "░",
+          "style": { "color": "ash", "font-size": "0.7rem", "position": "absolute", "top": "-1.5rem", "opacity": "0.3" },
+          "animate": "rise",
+          "animate-delay": "1.2s"
+        }
+      ]
+    },
+    {
+      "id": "atmosphere",
+      "name": "Atmosphere",
+      "role": "atmosphere",
+      "order": 5,
+      "layers": [
+        {
+          "id": "stars-top",
+          "chars": "✦        ✧              ✦        ✧",
+          "style": { "color": "gold", "font-size": "0.5rem", "opacity": "0.25", "letter-spacing": "0.3em" }
+        },
+        {
+          "id": "sigil-left",
+          "chars": "☽",
+          "style": { "color": "ash", "font-size": "0.9rem", "opacity": "0.3" }
+        },
+        {
+          "id": "sigil-right",
+          "chars": "☾",
+          "style": { "color": "ash", "font-size": "0.9rem", "opacity": "0.3" }
+        }
+      ]
+    }
+  ]
+}
