@@ -1,224 +1,279 @@
 /**
- * altar-mason.js
+ * altar-mason.js · Digital Divination
  * Renders an altar scene from a JSON definition.
  * No dependencies. Pure DOM + CSS.
  *
  * Usage:
- *   const mason = new AltarMason('#altar-root', 'first-altar.json');
+ *   const mason = new AltarMason('#altar-root', 'json/first-altar.json');
  *   mason.build();
  */
 
 class AltarMason {
   constructor(selector, jsonPath) {
-    this.root = document.querySelector(selector);
+    this.root     = document.querySelector(selector);
     this.jsonPath = jsonPath;
-    this.scene = null;
-    this.palette = {};
-    this.animations = {};
-    this._injectedKeyframes = new Set();
+    this.scene    = null;
+    this.palette  = {};
+    this.anims    = {};
+    this._kfDone  = new Set();
   }
 
-  // ─── ENTRY POINT ────────────────────────────────────────────────────────────
+  // ── ENTRY ──────────────────────────────────────────────────────────────────
 
   async build() {
     try {
-      const res = await fetch(this.jsonPath);
+      const res  = await fetch(this.jsonPath);
       this.scene = await res.json();
     } catch (e) {
       console.error('[AltarMason] Failed to load scene JSON:', e);
       return;
     }
-
-    this.palette    = this.scene.palette    || {};
-    this.animations = this.scene.animations || {};
-
-    this._applyBodyStyles();
-    this._injectBaseCSS();
-    this._renderScene();
+    this.palette = this.scene.palette    || {};
+    this.anims   = this.scene.animations || {};
+    this._injectFonts();
+    this._injectBase();
+    this._render();
   }
 
-  // ─── BODY + BASE STYLES ─────────────────────────────────────────────────────
+  // ── FONTS & BASE CSS ───────────────────────────────────────────────────────
 
-  _applyBodyStyles() {
+  _injectFonts() {
+    if (document.querySelector('#am-fonts')) return;
+    const link = document.createElement('link');
+    link.id   = 'am-fonts';
+    link.rel  = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap';
+    document.head.appendChild(link);
+  }
+
+  _injectBase() {
+    if (document.querySelector('#am-base')) return;
     const p = this.palette;
-    document.body.style.background   = p.void  || '#0a0806';
-    document.body.style.color        = p.bone  || '#d4c9a8';
-    document.body.style.fontFamily   = "'IM Fell English', serif";
-    document.body.style.minHeight    = '100vh';
-    document.body.style.display      = 'flex';
-    document.body.style.flexDirection = 'column';
-    document.body.style.alignItems   = 'center';
-    document.body.style.justifyContent = 'center';
-    document.body.style.overflow     = 'hidden';
-  }
+    const s = document.createElement('style');
+    s.id = 'am-base';
+    s.textContent = `
+      *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
-  _injectBaseCSS() {
-    const style = document.createElement('style');
-    style.textContent = `
-      @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap');
-
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-
-      body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background: radial-gradient(ellipse at center, transparent 40%, #000 100%);
-        pointer-events: none;
-        z-index: 100;
+      body {
+        background: ${p.void || '#060610'};
+        background-image:
+          radial-gradient(ellipse 70% 50% at 10% 5%,  #120828 0%, transparent 55%),
+          radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%),
+          radial-gradient(ellipse 30% 60% at 80% 20%, #0a0820 0%, transparent 50%);
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        color: ${p.text || '#f0ead8'};
+        min-height: 100vh;
+        overflow-x: hidden;
       }
 
+      body::after {
+        content:'';
+        position:fixed; inset:0;
+        background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.75) 100%);
+        pointer-events:none; z-index:0;
+      }
+
+      #altar-root {
+        position: relative; z-index: 2;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+      }
+
+      /* ── nav match ── */
+      .am-nav {
+        position:fixed; top:0; left:0; right:0; height:56px;
+        background: rgba(8,8,20,0.88); backdrop-filter:blur(20px);
+        border-bottom: 1px solid ${p['border-gold'] || 'rgba(212,168,64,0.2)'};
+        display:flex; align-items:center; justify-content:space-between;
+        padding: 0 48px; z-index:200;
+      }
+      .am-nav-brand-title {
+        font-family:'Cinzel Decorative',serif; font-size:13px;
+        color:${p.gold}; letter-spacing:1.5px;
+      }
+      .am-nav-brand-sub {
+        font-family:'Cinzel',serif; font-size:7px;
+        letter-spacing:5px; color:${p['gold-dark']}; text-transform:uppercase;
+      }
+      .am-nav-links { display:flex; gap:24px; list-style:none; }
+      .am-nav-links a {
+        font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px;
+        text-transform:uppercase; color:${p['text-dim']};
+        text-decoration:none; transition:color 0.2s;
+      }
+      .am-nav-links a:hover { color:${p['gold-light']}; }
+
+      /* ── eyebrow / title ── */
+      .am-eyebrow {
+        font-family:'Cinzel',serif; font-size:9px;
+        letter-spacing:8px; text-transform:uppercase;
+        color:${p.gold}; opacity:0.5; margin-bottom:10px;
+        text-align:center;
+      }
       .am-scene-title {
-        font-family: 'Cinzel', serif;
-        color: ${this.palette.gold || '#c9a84c'};
-        font-size: clamp(0.6rem, 1.4vw, 0.8rem);
-        letter-spacing: 0.4em;
-        text-transform: uppercase;
-        margin-bottom: 2rem;
-        opacity: 0.65;
+        font-family:'Cinzel Decorative',serif;
+        font-size: clamp(28px,5vw,52px); font-weight:900;
+        color:${p['gold-light']};
+        text-shadow: 0 0 80px rgba(212,168,64,0.2), 0 4px 16px rgba(0,0,0,0.9);
+        letter-spacing:3px; text-align:center;
+        margin-bottom:2.5rem;
       }
 
-      .am-surface-row {
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        gap: 2.5rem;
-        position: relative;
-        padding-bottom: 0.5rem;
-      }
-
+      /* ── atmosphere row ── */
       .am-atmosphere-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 480px;
-        margin-bottom: 0.5rem;
-        opacity: 0.4;
+        display:flex; align-items:center; justify-content:space-between;
+        width:100%; max-width:480px;
+        margin-bottom:0.75rem;
+        font-family:'Courier New', monospace;
       }
 
+      /* ── surface row ── */
+      .am-surface-row {
+        display:flex; align-items:flex-end; justify-content:center;
+        gap:2.8rem; position:relative; padding-bottom:0.25rem;
+      }
+
+      /* ── objects ── */
       .am-object {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        line-height: 1.15;
+        display:flex; flex-direction:column; align-items:center;
+        position:relative; line-height:1.15;
       }
-
       .am-layer {
-        display: block;
-        text-align: center;
-        white-space: pre;
-        position: relative;
+        display:block; text-align:center; white-space:pre;
+        font-family:'Courier New', monospace;
       }
 
+      /* ── surface / table ── */
       .am-surface {
-        font-family: 'Courier New', monospace;
-        white-space: pre;
-        line-height: 1.1;
-        text-align: center;
+        font-family:'Courier New', monospace;
+        white-space:pre; line-height:1.1; text-align:center;
+        margin-top:-1px;
       }
 
+      /* ── rule ── */
       .am-rule {
-        width: 120px;
-        height: 1px;
-        background: linear-gradient(to right, transparent, ${this.palette.gold || '#c9a84c'}, transparent);
-        margin: 1.5rem auto;
-        opacity: 0.3;
+        width:420px; max-width:80vw; height:1px;
+        background:linear-gradient(90deg,transparent,${p.gold},transparent);
+        margin:2rem auto; opacity:0.2;
       }
 
+      /* ── inscription ── */
       .am-inscription {
-        text-align: center;
-        color: ${this.palette.ash || '#7a7060'};
-        font-family: 'IM Fell English', serif;
-        font-style: italic;
-        font-size: clamp(0.75rem, 1.8vw, 0.95rem);
-        letter-spacing: 0.06em;
-        line-height: 1.8;
+        text-align:center; font-family:'Cormorant Garamond',serif;
+        font-style:italic; font-size:clamp(16px,2.5vw,22px);
+        color:${p['text-dim']}; letter-spacing:0.04em; line-height:1.9;
+        margin-bottom:0.5rem;
       }
-
       .am-inscription em {
-        color: ${this.palette.gold || '#c9a84c'};
-        font-style: normal;
+        color:${p.gold}; font-style:normal;
+        text-shadow:0 0 20px rgba(212,168,64,0.2);
       }
 
+      /* ── CTA ── */
       .am-cta {
-        display: block;
-        margin-top: 1.8rem;
-        font-family: 'Cinzel', serif;
-        font-size: 0.7rem;
-        letter-spacing: 0.35em;
-        text-transform: uppercase;
-        color: ${this.palette.ash || '#7a7060'};
-        text-decoration: none;
-        opacity: 0.5;
-        transition: opacity 0.4s, color 0.4s;
+        display:inline-block; margin-top:2rem;
+        font-family:'Cinzel',serif; font-size:13px;
+        letter-spacing:5px; text-transform:uppercase;
+        color:#0a0a0a;
+        background:linear-gradient(135deg,${p.gold},${p['gold-light']});
+        border:none; padding:16px 52px; border-radius:10px;
+        cursor:pointer; text-decoration:none; transition:all 0.3s;
+        box-shadow:0 0 50px rgba(212,168,64,0.2);
       }
       .am-cta:hover {
-        opacity: 1;
-        color: ${this.palette.gold || '#c9a84c'};
+        box-shadow:0 0 70px rgba(212,168,64,0.4);
+        transform:translateY(-3px);
+      }
+
+      .am-secondary-links {
+        display:flex; gap:12px; margin-top:1rem; flex-wrap:wrap;
+        justify-content:center;
+      }
+      .am-btn-outline {
+        font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px;
+        text-transform:uppercase; color:${p['text-dim']};
+        background:transparent; border:1px solid ${p['border-gold'] || 'rgba(212,168,64,0.2)'};
+        padding:10px 28px; border-radius:10px;
+        cursor:pointer; text-decoration:none; transition:all 0.3s;
+      }
+      .am-btn-outline:hover {
+        color:${p['gold-light']};
+        border-color:${p.gold};
+        box-shadow:0 0 20px rgba(212,168,64,0.1);
+      }
+
+      /* ── scroll cue ── */
+      .am-scroll-cue {
+        margin-top:2.5rem;
+        font-family:'Cinzel',serif; font-size:7px;
+        letter-spacing:5px; text-transform:uppercase;
+        color:${p['text-dim']}; opacity:0.4;
       }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(s);
   }
 
-  // ─── SCENE RENDERER ─────────────────────────────────────────────────────────
+  // ── RENDER ─────────────────────────────────────────────────────────────────
 
-  _renderScene() {
+  _render() {
     if (!this.root) return;
     this.root.innerHTML = '';
 
+    // Nav
+    this.root.appendChild(this._buildNav());
+
+    // Spacer for fixed nav
+    const sp = document.createElement('div');
+    sp.style.height = '56px';
+    this.root.appendChild(sp);
+
+    // Eyebrow
+    if (this.scene.eyebrow) {
+      const ey = document.createElement('p');
+      ey.className   = 'am-eyebrow';
+      ey.textContent = this.scene.eyebrow;
+      this.root.appendChild(ey);
+    }
+
     // Title
     if (this.scene.title) {
-      const title = document.createElement('p');
-      title.className = 'am-scene-title';
-      title.textContent = this.scene.title;
-      this.root.appendChild(title);
+      const tt = document.createElement('h1');
+      tt.className   = 'am-scene-title';
+      tt.textContent = this.scene.title;
+      this.root.appendChild(tt);
     }
 
-    // Sort objects by order
     const objects = [...(this.scene.objects || [])].sort((a, b) => a.order - b.order);
 
-    // Atmosphere row (role: atmosphere)
+    // Atmosphere
     const atmoObjs = objects.filter(o => o.role === 'atmosphere');
     if (atmoObjs.length) {
-      const atmoRow = document.createElement('div');
-      atmoRow.className = 'am-atmosphere-row';
+      const row = document.createElement('div');
+      row.className = 'am-atmosphere-row';
       atmoObjs.forEach(obj => {
-        obj.layers.forEach(layer => {
-          const el = this._buildLayer(layer);
-          atmoRow.appendChild(el);
-        });
+        obj.layers.forEach(layer => row.appendChild(this._buildLayer(layer)));
       });
-      this.root.appendChild(atmoRow);
+      this.root.appendChild(row);
     }
 
-    // Surface row (role: surface + objects)
-    const surfaceObjs = objects.filter(o => o.role === 'surface');
-    const sceneObjs   = objects.filter(o => o.role === 'object');
+    // Scene wrap
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;position:relative;';
 
-    const surfaceWrap = document.createElement('div');
-    surfaceWrap.style.position = 'relative';
-    surfaceWrap.style.display  = 'flex';
-    surfaceWrap.style.flexDirection = 'column';
-    surfaceWrap.style.alignItems    = 'center';
+    // Object row
+    const objRow = document.createElement('div');
+    objRow.className = 'am-surface-row';
+    const sceneObjs = objects.filter(o => o.role === 'object');
+    sceneObjs.forEach(obj => objRow.appendChild(this._buildObject(obj)));
+    wrap.appendChild(objRow);
 
-    // Object row sits above surface
-    const objectRow = document.createElement('div');
-    objectRow.className = 'am-surface-row';
-    sceneObjs.forEach(obj => {
-      const el = this._buildObject(obj);
-      objectRow.appendChild(el);
-    });
-    surfaceWrap.appendChild(objectRow);
+    // Surface row
+    const surfObjs = objects.filter(o => o.role === 'surface');
+    surfObjs.forEach(obj => wrap.appendChild(this._buildSurface(obj)));
 
-    // Surface (table) renders below objects
-    surfaceObjs.forEach(obj => {
-      const el = this._buildSurface(obj);
-      surfaceWrap.appendChild(el);
-    });
-
-    this.root.appendChild(surfaceWrap);
+    this.root.appendChild(wrap);
 
     // Rule
     const rule = document.createElement('div');
@@ -236,71 +291,92 @@ class AltarMason {
     // CTA
     if (this.scene.cta) {
       const cta = document.createElement('a');
-      cta.className = 'am-cta';
-      cta.href = this.scene.cta.href || '#';
+      cta.className   = 'am-cta';
+      cta.href        = this.scene.cta.href || '#';
       cta.textContent = this.scene.cta.text || 'Enter';
       this.root.appendChild(cta);
+
+      const secondary = document.createElement('div');
+      secondary.className = 'am-secondary-links';
+      secondary.innerHTML = `
+        <a href="celestial.html" class="am-btn-outline">☀ Celestial Grimoire</a>
+        <a href="chthonic.html"  class="am-btn-outline">⬡ Chthonic Grimoire</a>
+      `;
+      this.root.appendChild(secondary);
     }
+
+    // Scroll cue
+    const cue = document.createElement('p');
+    cue.className   = 'am-scroll-cue';
+    cue.textContent = 'Past · Present · Future';
+    this.root.appendChild(cue);
   }
 
-  // ─── OBJECT BUILDER ─────────────────────────────────────────────────────────
+  // ── NAV ────────────────────────────────────────────────────────────────────
+
+  _buildNav() {
+    const nav = document.createElement('nav');
+    nav.className = 'am-nav';
+    nav.innerHTML = `
+      <div>
+        <div class="am-nav-brand-title">Digital Divination</div>
+        <div class="am-nav-brand-sub">Aspects of the Divine</div>
+      </div>
+      <ul class="am-nav-links">
+        <li><a href="draw.html">Draw</a></li>
+        <li><a href="oracle.html">Oracle</a></li>
+        <li><a href="almanac.html">Almanac</a></li>
+        <li><a href="celestial.html">☀ Celestial</a></li>
+        <li><a href="chthonic.html">⬡ Chthonic</a></li>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    `;
+    return nav;
+  }
+
+  // ── OBJECT / SURFACE BUILDERS ──────────────────────────────────────────────
 
   _buildObject(obj) {
     const wrap = document.createElement('div');
-    wrap.className = 'am-object';
+    wrap.className       = 'am-object';
     wrap.dataset.objectId = obj.id;
 
-    (obj.layers || []).forEach(layer => {
-      const el = this._buildLayer(layer);
-      wrap.appendChild(el);
-    });
+    // Object-level float animation (e.g. skull)
+    if (obj.animate) {
+      this._applyAnimation(wrap, obj.animate, '0s');
+    }
 
+    (obj.layers || []).forEach(layer => wrap.appendChild(this._buildLayer(layer)));
     return wrap;
   }
 
   _buildSurface(obj) {
     const wrap = document.createElement('div');
-    wrap.className = 'am-surface';
+    wrap.className       = 'am-surface';
     wrap.dataset.objectId = obj.id;
-
-    const lines = [];
-    (obj.layers || []).forEach(layer => {
-      lines.push(this._resolveColor(layer.chars || '', layer.style || {}));
-    });
-
-    // Render each surface layer as a line
     (obj.layers || []).forEach(layer => {
       const el = this._buildLayer(layer);
       el.style.display = 'block';
       wrap.appendChild(el);
     });
-
     return wrap;
   }
 
-  // ─── LAYER BUILDER ──────────────────────────────────────────────────────────
+  // ── LAYER BUILDER ──────────────────────────────────────────────────────────
 
   _buildLayer(layer) {
     const el = document.createElement('span');
-    el.className = 'am-layer';
+    el.className       = 'am-layer';
     el.dataset.layerId = layer.id || '';
-    el.textContent = layer.chars || '';
+    el.textContent     = layer.chars || '';
 
-    // Apply styles, resolving palette references
     const style = layer.style || {};
     Object.entries(style).forEach(([prop, val]) => {
-      const resolved = this._resolveValue(val);
-      // Convert kebab-case to camelCase for el.style
-      const camel = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+      const resolved = this._resolve(val);
+      const camel    = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
       el.style[camel] = resolved;
     });
 
-    // Font default for glyph layers
-    if (!style['font-family']) {
-      el.style.fontFamily = "'Courier New', monospace";
-    }
-
-    // Apply animation
     if (layer.animate) {
       this._applyAnimation(el, layer.animate, layer['animate-delay'] || '0s');
     }
@@ -308,27 +384,23 @@ class AltarMason {
     return el;
   }
 
-  // ─── ANIMATION ──────────────────────────────────────────────────────────────
+  // ── ANIMATION ──────────────────────────────────────────────────────────────
 
-  _applyAnimation(el, animName, delay) {
-    const def = this.animations[animName];
+  _applyAnimation(el, name, delay) {
+    const def = this.anims[name];
     if (!def) return;
-
-    // Inject keyframe if not already done
-    if (!this._injectedKeyframes.has(animName)) {
-      this._injectKeyframe(animName, def);
-      this._injectedKeyframes.add(animName);
+    if (!this._kfDone.has(name)) {
+      this._injectKeyframe(name, def);
+      this._kfDone.add(name);
     }
-
     el.style.animation = [
-      `${animName}`,
-      def.duration      || '1s',
-      def.easing        || 'ease',
+      name,
+      def.duration  || '1s',
+      def.easing    || 'ease',
       delay,
-      def.iteration     || '1',
-      def.direction     || 'normal'
+      def.iteration || '1',
+      def.direction || 'normal'
     ].join(' ');
-
     el.style.transformOrigin = 'bottom center';
   }
 
@@ -336,28 +408,20 @@ class AltarMason {
     const frames = (def.keyframes || []).map(f => {
       const props = Object.entries(f)
         .filter(([k]) => k !== 'pct')
-        .map(([k, v]) => `${k}: ${v}`)
-        .join('; ');
-      return `${f.pct}% { ${props} }`;
+        .map(([k, v]) => `${k}:${v}`)
+        .join(';');
+      return `${f.pct}%{${props}}`;
     }).join('\n');
-
-    const style = document.createElement('style');
-    style.textContent = `@keyframes ${name} {\n${frames}\n}`;
-    document.head.appendChild(style);
+    const s = document.createElement('style');
+    s.textContent = `@keyframes ${name}{${frames}}`;
+    document.head.appendChild(s);
   }
 
-  // ─── UTILITIES ──────────────────────────────────────────────────────────────
+  // ── UTILITIES ──────────────────────────────────────────────────────────────
 
-  // Resolve palette token or pass through raw value
-  _resolveValue(val) {
-    if (typeof val === 'string' && this.palette[val]) {
-      return this.palette[val];
-    }
+  _resolve(val) {
+    if (typeof val === 'string' && this.palette[val]) return this.palette[val];
     return val;
-  }
-
-  _resolveColor(chars, style) {
-    return chars; // placeholder for future colored spans
   }
 
   _esc(str) {
@@ -365,6 +429,5 @@ class AltarMason {
   }
 }
 
-// Auto-export for module or global use
 if (typeof module !== 'undefined') module.exports = AltarMason;
 else window.AltarMason = AltarMason;
