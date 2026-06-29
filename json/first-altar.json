@@ -1,30 +1,40 @@
 {
   "scene": "first-altar",
-  "title": "Digital Divination · The Altar",
+  "title": "Digital Divination",
+  "eyebrow": "The Altar",
   "inscription": {
     "line1": "All things pass into shadow.",
     "line2": "What remains is what was true."
   },
   "cta": {
     "text": "Draw Your Cards",
-    "href": "#"
+    "href": "draw.html"
   },
   "palette": {
-    "void":  "#0a0806",
-    "bone":  "#d4c9a8",
-    "tallow":"#e8d87a",
-    "umber": "#3d2b1f",
-    "ash":   "#7a7060",
-    "gold":  "#c9a84c",
-    "smoke": "#1a1410"
+    "void":        "#060610",
+    "deep":        "#0c0c1e",
+    "surface":     "#181838",
+    "border":      "#2a2a4a",
+    "border-gold": "rgba(212,168,64,0.2)",
+    "gold":        "#d4a840",
+    "gold-light":  "#f0d878",
+    "gold-dark":   "#8a6518",
+    "gold-dim":    "#4a3510",
+    "text":        "#f0ead8",
+    "text-mid":    "#d0c0a0",
+    "text-dim":    "#988870",
+    "bone":        "#d4c9a8",
+    "ash":         "#7a7060",
+    "tallow":      "#f0d878",
+    "umber":       "#3d2b1f"
   },
   "animations": {
     "flicker": {
       "keyframes": [
-        { "pct": 0,   "transform": "scaleX(1) rotate(-1deg)",   "opacity": 1 },
-        { "pct": 33,  "transform": "scaleX(0.85) rotate(2deg)", "opacity": 0.85 },
-        { "pct": 66,  "transform": "scaleX(1.1) rotate(-2deg)", "opacity": 1 },
-        { "pct": 100, "transform": "scaleX(0.95) rotate(1deg)", "opacity": 0.9 }
+        { "pct": 0,   "transform": "scaleX(1) rotate(-1deg)",    "opacity": "1" },
+        { "pct": 33,  "transform": "scaleX(0.85) rotate(2deg)",  "opacity": "0.85" },
+        { "pct": 66,  "transform": "scaleX(1.1) rotate(-2deg)",  "opacity": "1" },
+        { "pct": 100, "transform": "scaleX(0.95) rotate(1deg)",  "opacity": "0.9" }
       ],
       "duration": "1.8s",
       "easing": "ease-in-out",
@@ -33,18 +43,18 @@
     },
     "rise": {
       "keyframes": [
-        { "pct": 0,   "transform": "translateY(0) translateX(0) scale(1)",    "opacity": 0.4 },
-        { "pct": 50,  "transform": "translateY(-30px) translateX(6px) scale(2)", "opacity": 0.15 },
-        { "pct": 100, "transform": "translateY(-70px) translateX(-4px) scale(3)","opacity": 0 }
+        { "pct": 0,   "transform": "translateY(0) translateX(0) scale(1)",      "opacity": "0.35" },
+        { "pct": 50,  "transform": "translateY(-28px) translateX(5px) scale(2)","opacity": "0.12" },
+        { "pct": 100, "transform": "translateY(-60px) translateX(-4px) scale(3)","opacity": "0" }
       ],
-      "duration": "3s",
+      "duration": "3.2s",
       "easing": "ease-out",
       "iteration": "infinite"
     },
     "drain": {
       "keyframes": [
         { "pct": 0,   "height": "65%" },
-        { "pct": 100, "height": "5%" }
+        { "pct": 100, "height": "4%" }
       ],
       "duration": "8s",
       "easing": "linear",
@@ -52,7 +62,7 @@
     },
     "fill": {
       "keyframes": [
-        { "pct": 0,   "height": "5%" },
+        { "pct": 0,   "height": "4%" },
         { "pct": 100, "height": "65%" }
       ],
       "duration": "8s",
@@ -61,50 +71,55 @@
     },
     "drip": {
       "keyframes": [
-        { "pct": 0,   "opacity": 1, "transform": "translateX(-50%) translateY(0)" },
-        { "pct": 100, "opacity": 0, "transform": "translateX(-50%) translateY(10px)" }
+        { "pct": 0,   "opacity": "1", "transform": "translateX(-50%) translateY(0)" },
+        { "pct": 100, "opacity": "0", "transform": "translateX(-50%) translateY(10px)" }
       ],
-      "duration": "0.4s",
+      "duration": "0.45s",
       "easing": "linear",
       "iteration": "infinite"
     },
-    "glow": {
+    "glow-pulse": {
       "keyframes": [
-        { "pct": 0,   "opacity": 0.5, "transform": "translateX(-50%) scale(0.9)" },
-        { "pct": 100, "opacity": 1,   "transform": "translateX(-50%) scale(1.3)" }
+        { "pct": 0,   "opacity": "0.35", "transform": "scale(0.9)" },
+        { "pct": 100, "opacity": "0.7",  "transform": "scale(1.25)" }
       ],
       "duration": "1.8s",
       "easing": "ease-in-out",
       "iteration": "infinite",
       "direction": "alternate"
+    },
+    "float": {
+      "keyframes": [
+        { "pct": 0,   "transform": "translateY(0)" },
+        { "pct": 50,  "transform": "translateY(-6px)" },
+        { "pct": 100, "transform": "translateY(0)" }
+      ],
+      "duration": "5s",
+      "easing": "ease-in-out",
+      "iteration": "infinite"
     }
   },
   "objects": [
     {
-      "id": "table",
-      "name": "Altar Table",
-      "role": "surface",
+      "id": "atmosphere",
+      "name": "Atmosphere",
+      "role": "atmosphere",
       "order": 0,
       "layers": [
         {
-          "id": "top-rail",
-          "chars": "╔══════════════════════════════════════════╗",
-          "style": { "color": "umber", "font-size": "1rem", "letter-spacing": "0" }
+          "id": "sigil-left",
+          "chars": "☽",
+          "style": { "color": "text-dim", "font-size": "1.1rem", "opacity": "0.3" }
         },
         {
-          "id": "cloth-1",
-          "chars": "║  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ║",
-          "style": { "color": "ash", "font-size": "1rem" }
+          "id": "stars",
+          "chars": "✦  ✧  ✦  ✧  ✦",
+          "style": { "color": "gold-dark", "font-size": "0.45rem", "opacity": "0.4", "letter-spacing": "0.5em" }
         },
         {
-          "id": "cloth-2",
-          "chars": "║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║",
-          "style": { "color": "umber", "font-size": "1rem", "opacity": "0.6" }
-        },
-        {
-          "id": "legs",
-          "chars": "╚═══╝                                ╚═══╝",
-          "style": { "color": "umber", "font-size": "1rem" }
+          "id": "sigil-right",
+          "chars": "☾",
+          "style": { "color": "text-dim", "font-size": "1.1rem", "opacity": "0.3" }
         }
       ]
     },
@@ -116,42 +131,42 @@
       "position": "left",
       "layers": [
         {
+          "id": "smoke",
+          "chars": "░",
+          "style": { "color": "text-dim", "font-size": "0.65rem", "opacity": "0.25" },
+          "animate": "rise"
+        },
+        {
           "id": "glow",
           "chars": "◉",
-          "style": { "color": "tallow", "font-size": "2.8rem", "opacity": "0.12", "position": "absolute", "top": "-0.5rem" },
-          "animate": "glow"
+          "style": { "color": "gold", "font-size": "3rem", "opacity": "0.08" },
+          "animate": "glow-pulse"
         },
         {
           "id": "flame",
           "chars": "🜂",
-          "style": { "color": "tallow", "font-size": "1.3rem" },
+          "style": { "color": "gold-light", "font-size": "1.2rem", "filter": "drop-shadow(0 0 8px rgba(212,168,64,0.6))" },
           "animate": "flicker"
         },
         {
           "id": "wick",
           "chars": "╎",
-          "style": { "color": "ash", "font-size": "0.55rem" }
+          "style": { "color": "text-dim", "font-size": "0.5rem" }
         },
         {
           "id": "body",
           "chars": "▐█▌\n▐█▌\n▐█▌\n▐█▌",
-          "style": { "color": "bone", "font-size": "1rem", "line-height": "1.1" }
+          "style": { "color": "bone", "font-size": "0.95rem", "line-height": "1.1" }
         },
         {
           "id": "wax",
           "chars": "▗▄▖",
-          "style": { "color": "bone", "font-size": "0.6rem", "opacity": "0.7" }
+          "style": { "color": "text-mid", "font-size": "0.55rem", "opacity": "0.65" }
         },
         {
           "id": "base",
           "chars": "▔▔▔",
-          "style": { "color": "umber", "font-size": "1rem" }
-        },
-        {
-          "id": "smoke",
-          "chars": "░",
-          "style": { "color": "ash", "font-size": "0.7rem", "position": "absolute", "top": "-1.5rem", "opacity": "0.3" },
-          "animate": "rise"
+          "style": { "color": "gold-dark", "font-size": "0.95rem" }
         }
       ]
     },
@@ -163,41 +178,42 @@
       "position": "center",
       "layers": [
         {
-          "id": "cranium",
+          "id": "cranium-top",
           "chars": "⌒⌒⌒⌒⌒",
-          "style": { "color": "bone", "font-size": "1.6rem", "letter-spacing": "-0.1em" }
+          "style": { "color": "bone", "font-size": "1.5rem", "letter-spacing": "-0.1em" }
         },
         {
           "id": "brow",
           "chars": "▔▔▔▔▔▔▔",
-          "style": { "color": "bone", "font-size": "0.9rem" }
+          "style": { "color": "bone", "font-size": "0.85rem" }
         },
         {
           "id": "eyes",
           "chars": "◉  ◉",
-          "style": { "color": "void", "font-size": "1.1rem", "background": "bone", "padding": "0 0.3rem", "letter-spacing": "0.4em" }
+          "style": { "color": "void", "font-size": "1rem", "background": "#d4c9a8", "padding": "0 0.35rem", "letter-spacing": "0.45em" }
         },
         {
           "id": "nose",
           "chars": "△",
-          "style": { "color": "void", "font-size": "0.65rem", "background": "bone", "padding": "0 0.8rem" }
+          "style": { "color": "void", "font-size": "0.6rem", "background": "#d4c9a8", "padding": "0 0.9rem" }
         },
         {
           "id": "cheeks",
-          "chars": "▏  ▕",
-          "style": { "color": "bone", "font-size": "1rem", "letter-spacing": "1.6em" }
+          "chars": "▏    ▕",
+          "style": { "color": "bone", "font-size": "0.9rem" }
         },
         {
           "id": "teeth",
           "chars": "▎▎▎▎▎▎",
-          "style": { "color": "bone", "font-size": "0.75rem", "letter-spacing": "0.15em", "border-top": "1px solid #7a7060" }
+          "style": { "color": "bone", "font-size": "0.7rem", "letter-spacing": "0.18em", "border-top": "1px solid #7a7060" }
         },
         {
           "id": "jaw",
           "chars": "╰─────╯",
-          "style": { "color": "ash", "font-size": "0.9rem" }
+          "style": { "color": "ash", "font-size": "0.85rem" }
         }
-      ]
+      ],
+      "animate": "float"
     },
     {
       "id": "hourglass",
@@ -209,45 +225,45 @@
         {
           "id": "cap-top",
           "chars": "╒═══╕",
-          "style": { "color": "gold", "font-size": "0.9rem" }
+          "style": { "color": "gold", "font-size": "0.85rem" }
         },
         {
           "id": "sand-upper",
           "chars": "│░░░│\n│▒▒▒│\n│▒░▒│",
-          "style": { "color": "gold", "font-size": "0.85rem", "line-height": "1.1", "opacity": "0.8" },
+          "style": { "color": "gold", "font-size": "0.8rem", "line-height": "1.1", "opacity": "0.75" },
           "animate": "drain"
         },
         {
-          "id": "waist",
+          "id": "waist-top",
           "chars": "╲═╱",
-          "style": { "color": "gold", "font-size": "0.9rem" }
+          "style": { "color": "gold", "font-size": "0.85rem" }
         },
         {
           "id": "drip",
           "chars": "·",
-          "style": { "color": "tallow", "font-size": "0.6rem" },
+          "style": { "color": "gold-light", "font-size": "0.55rem" },
           "animate": "drip"
         },
         {
           "id": "waist-bottom",
           "chars": "╱═╲",
-          "style": { "color": "gold", "font-size": "0.9rem" }
+          "style": { "color": "gold", "font-size": "0.85rem" }
         },
         {
           "id": "sand-lower",
           "chars": "│░▒░│\n│▒▒▒│\n│░░░│",
-          "style": { "color": "gold", "font-size": "0.85rem", "line-height": "1.1", "opacity": "0.8" },
+          "style": { "color": "gold", "font-size": "0.8rem", "line-height": "1.1", "opacity": "0.75" },
           "animate": "fill"
         },
         {
           "id": "cap-bottom",
           "chars": "╘═══╛",
-          "style": { "color": "gold", "font-size": "0.9rem" }
+          "style": { "color": "gold", "font-size": "0.85rem" }
         },
         {
           "id": "stand",
           "chars": "▔▔▔▔▔",
-          "style": { "color": "umber", "font-size": "0.8rem" }
+          "style": { "color": "gold-dark", "font-size": "0.75rem" }
         }
       ]
     },
@@ -257,71 +273,75 @@
       "role": "object",
       "order": 4,
       "position": "right",
-      "mirror": "candle-left",
       "layers": [
+        {
+          "id": "smoke",
+          "chars": "░",
+          "style": { "color": "text-dim", "font-size": "0.65rem", "opacity": "0.25" },
+          "animate": "rise",
+          "animate-delay": "1.1s"
+        },
         {
           "id": "glow",
           "chars": "◉",
-          "style": { "color": "tallow", "font-size": "2.8rem", "opacity": "0.12", "position": "absolute", "top": "-0.5rem" },
-          "animate": "glow",
+          "style": { "color": "gold", "font-size": "3rem", "opacity": "0.08" },
+          "animate": "glow-pulse",
           "animate-delay": "0.7s"
         },
         {
           "id": "flame",
           "chars": "🜂",
-          "style": { "color": "tallow", "font-size": "1.3rem" },
+          "style": { "color": "gold-light", "font-size": "1.2rem", "filter": "drop-shadow(0 0 8px rgba(212,168,64,0.6))" },
           "animate": "flicker",
-          "animate-delay": "0.6s"
+          "animate-delay": "0.55s"
         },
         {
           "id": "wick",
           "chars": "╎",
-          "style": { "color": "ash", "font-size": "0.55rem" }
+          "style": { "color": "text-dim", "font-size": "0.5rem" }
         },
         {
           "id": "body",
           "chars": "▐█▌\n▐█▌\n▐█▌\n▐█▌",
-          "style": { "color": "bone", "font-size": "1rem", "line-height": "1.1" }
+          "style": { "color": "bone", "font-size": "0.95rem", "line-height": "1.1" }
         },
         {
           "id": "wax",
           "chars": "▗▄▖",
-          "style": { "color": "bone", "font-size": "0.6rem", "opacity": "0.7" }
+          "style": { "color": "text-mid", "font-size": "0.55rem", "opacity": "0.65" }
         },
         {
           "id": "base",
           "chars": "▔▔▔",
-          "style": { "color": "umber", "font-size": "1rem" }
-        },
-        {
-          "id": "smoke",
-          "chars": "░",
-          "style": { "color": "ash", "font-size": "0.7rem", "position": "absolute", "top": "-1.5rem", "opacity": "0.3" },
-          "animate": "rise",
-          "animate-delay": "1.2s"
+          "style": { "color": "gold-dark", "font-size": "0.95rem" }
         }
       ]
     },
     {
-      "id": "atmosphere",
-      "name": "Atmosphere",
-      "role": "atmosphere",
+      "id": "table",
+      "name": "Altar Table",
+      "role": "surface",
       "order": 5,
       "layers": [
         {
-          "id": "stars-top",
-          "chars": "✦        ✧              ✦        ✧",
-          "style": { "color": "gold", "font-size": "0.5rem", "opacity": "0.25", "letter-spacing": "0.3em" }
+          "id": "top-rail",
+          "chars": "╔══════════════════════════════════════════╗",
+          "style": { "color": "gold-dark", "font-size": "0.9rem", "opacity": "0.7" }
         },
         {
-          "id": "sigil-left",
-          "chars": "☽",
-          "style": { "color": "ash", "font-size": "0.9rem", "opacity": "0.3" }
+          "id": "cloth-1",
+          "chars": "║  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ║",
+          "style": { "color": "text-dim", "font-size": "0.9rem", "opacity": "0.35" }
         },
         {
-          "id": "sigil-right",
-          "chars": "☾",
-          "style": { "color": "ash", "font-size": "0.9rem", "opacity": "0.3" }
+          "id": "cloth-2",
+          "chars": "║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║",
+          "style": { "color": "gold-dim", "font-size": "0.9rem", "opacity": "0.4" }
+        },
+        {
+          "id": "legs",
+          "chars": "╚═══╝                                ╚═══╝",
+          "style": { "color": "gold-dark", "font-size": "0.9rem", "opacity": "0.7" }
         }
       ]
     }
