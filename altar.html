@@ -27,28 +27,25 @@
     }
     body::after {
       content:''; position:fixed; inset:0;
-      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.65) 100%);
       pointer-events:none; z-index:1;
     }
 
-    /* ── MOSAIC ── */
     #cardMosaic {
       position:fixed; inset:0; z-index:0; pointer-events:none;
-      display:grid; grid-template-columns:repeat(6,1fr); opacity:0.15;
+      display:grid; grid-template-columns:repeat(6,1fr); opacity:0.12;
     }
     #cardMosaic img {
       width:100%; aspect-ratio:2/3; object-fit:cover;
       filter:sepia(0.15) brightness(0.85);
-      transition:filter 0.8s;
     }
     #cardMosaic::after {
       content:''; position:fixed; inset:0;
       background: var(--god-color, transparent);
-      opacity:0.1; mix-blend-mode:color;
-      pointer-events:none; z-index:1;
-      transition:background 0.8s, opacity 0.8s;
+      opacity:0.08; mix-blend-mode:color;
+      pointer-events:none; z-index:1; transition:background 0.8s, opacity 0.8s;
     }
-    @media(max-width:600px){ #cardMosaic{grid-template-columns:repeat(3,1fr);opacity:0.1} }
+    @media(max-width:600px){ #cardMosaic{grid-template-columns:repeat(3,1fr);opacity:0.08} }
 
     #altar-root {
       position:relative; z-index:3;
@@ -72,54 +69,84 @@
     @media(max-width:600px){.am-nav{padding:0 20px}.am-nav-links{gap:12px}}
 
     /* ── HEADER ── */
-    .am-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:8px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:10px;text-align:center;margin-top:56px}
-    .am-title{font-family:'Cinzel Decorative',serif;font-size:clamp(26px,5vw,48px);font-weight:900;color:var(--gold-light);text-shadow:0 0 80px rgba(212,168,64,0.2),0 4px 16px rgba(0,0,0,0.9);letter-spacing:3px;text-align:center;margin-bottom:1.2rem}
+    .am-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:8px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:8px;text-align:center;margin-top:56px}
+    .am-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,5vw,44px);font-weight:900;color:var(--gold-light);text-shadow:0 0 80px rgba(212,168,64,0.2),0 4px 16px rgba(0,0,0,0.9);letter-spacing:3px;text-align:center;margin-bottom:1rem}
 
-    /* ── CARD NICHE ── */
-    .card-niche-wrap{position:relative;display:flex;align-items:center;margin-bottom:0.3rem}
-    .card-niche{
-      position:relative;width:220px;height:330px;margin:0 auto;
+    /* ── ALTAR COMPOSITION ── */
+    .altar-composition{
+      position:relative; width:100%; max-width:700px;
+      display:flex; flex-direction:column; align-items:center;
+    }
+
+    /* ── WIZARD ── */
+    .wizard-container{
+      position:absolute; top:-20px; right:20px; z-index:10;
+      width:100px; height:140px;
+      border:2px solid rgba(212,168,64,0.25); border-radius:4px; overflow:hidden;
+      box-shadow:0 0 30px rgba(0,0,0,0.4);
+      transition:border-color 0.6s;
+      animation: floatWizard 4s ease-in-out infinite;
+    }
+    .wizard-container img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.8) sepia(0.15)}
+    @keyframes floatWizard{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-8px)}
+    }
+
+    /* ── SHRINE CARD ── */
+    .shrine-card-wrap{position:relative;display:flex;align-items:center;margin-bottom:0.5rem;z-index:5}
+    .shrine-card{
+      position:relative;width:240px;height:360px;margin:0 auto;
       border:3px solid var(--card-border);border-radius:6px;overflow:hidden;
       box-shadow:0 0 60px rgba(0,0,0,0.5),0 0 0 1px rgba(212,168,64,0.1);
       cursor:pointer;transition:border-color 0.6s,box-shadow 0.6s;
     }
-    .card-niche:hover{border-color:var(--gold);box-shadow:0 0 60px rgba(0,0,0,0.6),0 0 30px rgba(212,168,64,0.15)}
-    .card-niche img{width:100%;height:100%;object-fit:cover;display:block}
-    .card-nav{
+    .shrine-card:hover{border-color:var(--gold);box-shadow:0 0 70px rgba(0,0,0,0.6),0 0 30px rgba(212,168,64,0.15)}
+    .shrine-card img{width:100%;height:100%;object-fit:cover;display:block}
+    .shrine-nav{
       position:absolute;top:50%;transform:translateY(-50%);font-size:1.4rem;
       color:var(--gold);cursor:pointer;z-index:5;opacity:0.5;transition:opacity 0.2s;
       background:rgba(0,0,0,0.5);width:32px;height:48px;
       display:flex;align-items:center;justify-content:center;
     }
-    .card-nav:hover{opacity:1}
-    .card-nav.prev{left:-40px;border-radius:4px 0 0 4px}
-    .card-nav.next{right:-40px;border-radius:0 4px 4px 0}
-    .card-name-label{text-align:center;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:1.2rem;text-transform:uppercase;transition:color 0.6s}
+    .shrine-nav:hover{opacity:1}
+    .shrine-nav.prev{left:-40px;border-radius:4px 0 0 4px}
+    .shrine-nav.next{right:-40px;border-radius:0 4px 4px 0}
+    .card-name-label{text-align:center;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:0.8rem;text-transform:uppercase;transition:color 0.6s}
 
-    /* ── ALTAR IMAGES ── */
-    .altar-images{
-      display:flex; align-items:center; justify-content:center;
-      gap:1.5rem; margin-bottom:1rem; flex-wrap:wrap;
+    /* ── VANITAS ── */
+    .vanitas-container{
+      width:100%; max-width:500px; margin-bottom:0.8rem; z-index:3;
+      border:2px solid rgba(212,168,64,0.15); border-radius:4px; overflow:hidden;
+      box-shadow:0 0 40px rgba(0,0,0,0.4);
     }
-    .altar-img-wrap{
-      width:120px; height:160px; border-radius:6px; overflow:hidden;
-      border:2px solid rgba(212,168,64,0.2);
-      box-shadow:0 0 30px rgba(0,0,0,0.4);
-      transition:border-color 0.6s, box-shadow 0.6s;
-    }
-    .altar-img-wrap img{
-      width:100%; height:100%; object-fit:cover; display:block;
-      filter:brightness(0.75) sepia(0.2);
+    .vanitas-container img{
+      width:100%; height:auto; max-height:200px; object-fit:cover; display:block;
+      filter:sepia(0.2) brightness(0.6);
       transition:filter 0.6s;
     }
-    .altar-img-wrap:hover{
-      border-color:var(--gold);
-      box-shadow:0 0 40px rgba(0,0,0,0.5),0 0 20px rgba(212,168,64,0.1);
+
+    /* ── ATTENDANTS ── */
+    .attendants-row{
+      display:flex; gap:1rem; justify-content:center; margin-bottom:0.8rem;
+      flex-wrap:wrap; z-index:3;
+    }
+    .attendant-card{
+      width:100px; height:150px;
+      border:2px solid rgba(212,168,64,0.2); border-radius:4px; overflow:hidden;
+      box-shadow:0 0 25px rgba(0,0,0,0.35);
+      cursor:pointer; transition:border-color 0.6s,transform 0.2s;
+    }
+    .attendant-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+    .attendant-card img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.8)}
+    .attendant-name{
+      text-align:center; font-family:'Cinzel',serif; font-size:0.4rem;
+      letter-spacing:0.1em; color:var(--text-dim); margin-top:0.2rem;
     }
 
     /* ── INSCRIPTION ── */
-    .altar-rule{width:420px;max-width:80vw;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1rem auto;opacity:0.2}
-    .altar-inscription{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,2.5vw,20px);color:var(--inscription-color);letter-spacing:0.04em;line-height:1.8;margin-bottom:0.3rem;transition:color 0.6s}
+    .altar-rule{width:420px;max-width:80vw;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0.8rem auto;opacity:0.2}
+    .altar-inscription{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,2.5vw,18px);color:var(--inscription-color);letter-spacing:0.04em;line-height:1.8;margin-bottom:0.3rem;transition:color 0.6s}
     .altar-inscription em{color:var(--inscription-em);font-style:normal;text-shadow:0 0 20px rgba(212,168,64,0.2);transition:color 0.6s,text-shadow 0.6s}
     .altar-keywords{text-align:center;font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.15em;color:var(--inscription-em);text-transform:uppercase;margin-bottom:0.8rem;transition:color 0.6s}
 
@@ -132,10 +159,12 @@
     .anim-fade{animation:fadeIn 0.6s ease}
 
     @media(max-width:600px){
-      .card-niche{width:170px;height:255px}
-      .card-nav.prev{left:-20px}.card-nav.next{right:-20px}
-      .altar-img-wrap{width:90px;height:120px}
-      .altar-images{gap:0.8rem}
+      .shrine-card{width:180px;height:270px}
+      .shrine-nav.prev{left:-20px}.shrine-nav.next{right:-20px}
+      .wizard-container{width:70px;height:100px;top:-10px;right:5px}
+      .attendant-card{width:75px;height:112px}
+      .attendants-row{gap:0.5rem}
+      .vanitas-container img{max-height:140px}
     }
   </style>
 </head>
@@ -173,21 +202,18 @@
   setInterval(()=>{const imgs=document.querySelectorAll('#cardMosaic img');if(!imgs.length)return;const idx=Math.floor(Math.random()*imgs.length);imgs[idx].style.opacity='0';setTimeout(()=>{imgs[idx].src=MOSAIC_IMAGES[Math.floor(Math.random()*MOSAIC_IMAGES.length)];imgs[idx].style.opacity=''},600)},8000);
 
   // ═══════════════════════════════════
-  // ALTAR IMAGES POOL
+  // VANITAS POOL
   // ═══════════════════════════════════
 
-  const ALTAR_IMAGES = [
+  const VANITAS_POOL = [
     'data/images/vanitas0.png',
     'data/images/vanitas1.png',
     'data/images/vanitas2.png',
-    'data/images/vanitas-poppy.png',
-    'data/images/skull.png',
-    'data/images/wizard.png'
+    'data/images/vanitas-poppy.png'
   ];
 
-  function getRandomAltarImages(count) {
-    const shuffled = [...ALTAR_IMAGES].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
+  function getRandomVanitas() {
+    return VANITAS_POOL[Math.floor(Math.random() * VANITAS_POOL.length)];
   }
 
   // ═══════════════════════════════════
@@ -216,8 +242,9 @@
     applyPalette(result.palette);
 
     const root = document.getElementById('altar-root');
-    const altarImgs = getRandomAltarImages(3);
+    const vanitasSrc = getRandomVanitas();
     const cardImage = result.card.image;
+    const attendants = result.attendants || [];
 
     root.innerHTML = `
       <nav class="am-nav">
@@ -238,21 +265,42 @@
       <p class="am-eyebrow">The Altar</p>
       <h1 class="am-title">Digital Divination</h1>
 
-      <div class="card-niche-wrap anim-fade">
-        <span class="card-nav prev" onclick="cycleCard(-1)">◂</span>
-        <div class="card-niche" onclick="cycleCard(1)">
-          <img src="${cardImage}" alt="${result.card.name}" onerror="this.style.opacity='0.3';this.style.background='radial-gradient(circle,var(--bg-deep),var(--bg-void))';">
-        </div>
-        <span class="card-nav next" onclick="cycleCard(1)">▸</span>
-      </div>
-      <p class="card-name-label">${result.displayName}</p>
+      <div class="altar-composition anim-fade">
 
-      <div class="altar-images anim-fade">
-        ${altarImgs.map(src => `
-          <div class="altar-img-wrap">
-            <img src="${src}" alt="" loading="lazy" onerror="this.style.opacity='0.2';this.style.background='var(--bg-deep)';">
+        <!-- WIZARD — upper right -->
+        <div class="wizard-container">
+          <img src="data/images/wizard.png" alt="The Wizard" loading="lazy" onerror="this.style.opacity='0.2';this.style.background='var(--bg-deep)';">
+        </div>
+
+        <!-- SHRINE CARD -->
+        <div class="shrine-card-wrap">
+          <span class="shrine-nav prev" onclick="cycleCard(-1)">◂</span>
+          <div class="shrine-card" onclick="cycleCard(1)">
+            <img src="${cardImage}" alt="${result.card.name}" onerror="this.style.opacity='0.3';this.style.background='radial-gradient(circle,var(--bg-deep),var(--bg-void))';">
           </div>
-        `).join('')}
+          <span class="shrine-nav next" onclick="cycleCard(1)">▸</span>
+        </div>
+        <p class="card-name-label">${result.displayName}</p>
+
+        <!-- VANITAS -->
+        <div class="vanitas-container">
+          <img src="${vanitasSrc}" alt="" loading="lazy" onerror="this.style.opacity='0.15';this.style.background='var(--bg-deep)';">
+        </div>
+
+        <!-- ATTENDANTS -->
+        ${attendants.length > 0 ? `
+        <div class="attendants-row">
+          ${attendants.map(a => `
+            <div>
+              <div class="attendant-card" title="${a.name}${a.title ? ' · ' + a.title : ''}">
+                <img src="${a.image}" alt="${a.name}" loading="lazy" onerror="this.style.opacity='0.3';this.style.background='var(--bg-deep)';">
+              </div>
+              <div class="attendant-name">${a.name}</div>
+            </div>
+          `).join('')}
+        </div>
+        ` : ''}
+
       </div>
 
       <div class="altar-rule"></div>
