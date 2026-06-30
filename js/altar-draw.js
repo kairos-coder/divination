@@ -1,12 +1,12 @@
 /**
  * altar-draw.js · Digital Divination
  * Single-card draw engine for the Altar.
- * Pulls one Major Arcana card, computes its palette,
- * and returns everything needed to transform the shrine.
+ * Pulls one Major Arcana card, its elemental attendants,
+ * and computes the full palette.
  *
  * Usage:
  *   const result = await AltarDraw.draw();
- *   // { card, palette, reading }
+ *   // { card, palette, reading, attendants, keywords, ... }
  */
 
 const AltarDraw = (() => {
@@ -70,38 +70,59 @@ const AltarDraw = (() => {
   // CARD DATA CACHE
   // ═══════════════════════════════════
 
-  let deckCache = null;
+  let majorDeck = null;
+  let minorDeck = null;
 
-  async function loadDeck() {
-    if (deckCache) return deckCache;
+  async function loadMajorDeck() {
+    if (majorDeck) return majorDeck;
     try {
       const res = await fetch('data/deck/major_arcana.json');
       const data = await res.json();
-      deckCache = data.cards || [];
-      return deckCache;
+      majorDeck = data.cards || [];
+      return majorDeck;
     } catch(e) {
-      console.error('[AltarDraw] Failed to load Major Arcana deck:', e);
-      // Fallback to the inline MAJOR_ARCANA array if JSON fails
-      if (typeof MAJOR_ARCANA !== 'undefined') {
-        deckCache = MAJOR_ARCANA;
-        return deckCache;
-      }
+      console.error('[AltarDraw] Failed to load Major Arcana:', e);
+      return [];
+    }
+  }
+
+  async function loadMinorDeck() {
+    if (minorDeck) return minorDeck;
+    try {
+      const res = await fetch('data/deck/minor_arcana.json');
+      const data = await res.json();
+      // minor_arcana.json has cards organized by suit: { cards: { fire: [...], water: [...], ... } }
+      const cards = data.cards || {};
+      // Flatten into a single array with suit info
+      minorDeck = [];
+      Object.entries(cards).forEach(([suit, suitCards]) => {
+        suitCards.forEach(card => {
+          minorDeck.push({ ...card, suit: suit });
+        });
+      });
+      return minorDeck;
+    } catch(e) {
+      console.error('[AltarDraw] Failed to load Minor Arcana:', e);
       return [];
     }
   }
 
   // ═══════════════════════════════════
-  // DRAW A SINGLE CARD
+  // DRAW A SINGLE MAJOR ARCANA CARD
   // ═══════════════════════════════════
 
   async function draw() {
-    const deck = await loadDeck();
+    const deck = await loadMajorDeck();
     if (!deck.length) return null;
 
     const index = Math.floor(Math.random() * deck.length);
     const card = deck[index];
 
-    return buildResult(card);
+    // Get attendants from the matching elemental suit
+    const element = card.element || 'Fire';
+    const attendants = await getAttendants(element, 3);
+
+    return buildResult(card, attendants);
   }
 
   // ═══════════════════════════════════
@@ -109,13 +130,51 @@ const AltarDraw = (() => {
   // ═══════════════════════════════════
 
   async function getCard(index) {
-    const deck = await loadDeck();
+    const deck = await loadMajorDeck();
     if (!deck.length) return null;
 
     const safeIndex = ((index % deck.length) + deck.length) % deck.length;
     const card = deck[safeIndex];
 
-    return buildResult(card);
+    const element = card.element || 'Fire';
+    const attendants = await getAttendants(element, 3);
+
+    return buildResult(card, attendants);
+  }
+
+  // ═══════════════════════════════════
+  // GET ATTENDANTS FROM MATCHING SUIT
+  // ═══════════════════════════════════
+
+  async function getAttendants(element, count) {
+    const deck = await loadMinorDeck();
+    if (!deck.length) return [];
+
+    // Map Major Arcana element to Minor Arcana suit name
+    const suitMap = {
+      'Fire': 'fire',
+      'Water': 'water',
+      'Earth': 'earth',
+      'Air': 'air'
+    };
+    const suitName = suitMap[element] || 'fire';
+
+    // Filter cards by suit
+    const suitCards = deck.filter(c => c.suit === suitName);
+    if (!suitCards.length) return [];
+
+    // Shuffle and pick
+    const shuffled = [...suitCards].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count).map(card => ({
+      id: card.id,
+      name: card.name,
+      title: card.title,
+      culture: card.culture,
+      image: card.image || `data/images/minor/${suitName}/${card.id}.png`,
+      keywords: card.keywords || [],
+      upright: card.upright || '',
+      element: element
+    }));
   }
 
   // ═══════════════════════════════════
@@ -123,7 +182,7 @@ const AltarDraw = (() => {
   // ═══════════════════════════════════
 
   async function getDeckSize() {
-    const deck = await loadDeck();
+    const deck = await loadMajorDeck();
     return deck.length;
   }
 
@@ -131,21 +190,17 @@ const AltarDraw = (() => {
   // BUILD RESULT OBJECT
   // ═══════════════════════════════════
 
-  function buildResult(card) {
+  function buildResult(card, attendants) {
     const element = card.element || 'Fire';
     const basePalette = ELEMENT_PALETTES[element] || ELEMENT_PALETTES.Fire;
     const godOverrides = GOD_PALETTES[card.ruling_god] || {};
 
-    // Merge: base element palette + god-specific overrides
     const palette = { ...basePalette, ...godOverrides };
 
-    // Build the reading text from the card's upright meaning
     const reading = card.upright || '';
     const keywords = card.keywords || [];
     const title = card.title || '';
-    const culture = card.culture || '';
 
-    // Image path — handle both full paths and ID-based paths
     const imagePath = card.image || `data/images/major/${card.id}.png`;
 
     return {
@@ -153,7 +208,6 @@ const AltarDraw = (() => {
         id: card.id,
         name: card.name,
         title: title,
-        culture: culture,
         element: element,
         ruling_god: card.ruling_god || '',
         keywords: keywords,
@@ -163,9 +217,9 @@ const AltarDraw = (() => {
       palette: palette,
       reading: reading,
       keywords: keywords,
-      // Computed display strings
+      attendants: attendants,
       displayName: `${card.name}${title ? ' · ' + title : ''}`,
-      displaySubtitle: `${element}${card.ruling_god ? ' · Ruled by ' + card.ruling_god : ''}`,
+      displaySubtitle: `${element}${card.ruling_god ? ' · ' + card.ruling_god : ''}`,
       keywordString: keywords.slice(0, 4).join(' · ')
     };
   }
@@ -178,7 +232,9 @@ const AltarDraw = (() => {
     draw,
     getCard,
     getDeckSize,
-    loadDeck,
+    getAttendants,
+    loadDeck: loadMajorDeck,
+    loadMinorDeck,
     ELEMENT_PALETTES,
     GOD_PALETTES
   };
