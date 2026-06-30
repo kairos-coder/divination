@@ -9,23 +9,15 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     :root {
-      --bg-void: #060610;
-      --bg-deep: #0c0c1e;
-      --gold: #d4a840;
-      --gold-light: #f0d878;
-      --gold-dark: #8a6518;
-      --text: #f0ead8;
-      --text-dim: #988870;
-      --bone: #d4c9a8;
-      --ash: #7a7060;
-      --candle-flame: #f0d878;
-      --candle-glow: rgba(212,168,64,0.6);
-      --cloth-color: #4a3510;
-      --cloth-opacity: 0.4;
-      --sand-color: #d4a840;
-      --card-border: rgba(212,168,64,0.3);
-      --inscription-color: #988870;
-      --inscription-em: #d4a840;
+      --bg-void: #060610; --bg-deep: #0c0c1e;
+      --gold: #d4a840; --gold-light: #f0d878; --gold-dark: #8a6518;
+      --text: #f0ead8; --text-dim: #988870;
+      --bone: #d4c9a8; --ash: #7a7060;
+      --candle-flame: #f0d878; --candle-glow: rgba(212,168,64,0.6);
+      --cloth-color: #4a3510; --cloth-opacity: 0.4;
+      --sand-color: #d4a840; --card-border: rgba(212,168,64,0.3);
+      --inscription-color: #988870; --inscription-em: #d4a840;
+      --ambient-glow: rgba(212,168,64,0.06);
     }
 
     body {
@@ -34,254 +26,122 @@
         radial-gradient(ellipse 70% 50% at 10% 5%, #120828 0%, transparent 55%),
         radial-gradient(ellipse 50% 40% at 90% 95%, #081420 0%, transparent 55%);
       font-family: 'Cormorant Garamond', Georgia, serif;
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
+      color: var(--text); min-height: 100vh; overflow-x: hidden;
     }
-
     body::after {
-      content:'';
-      position:fixed; inset:0;
+      content:''; position:fixed; inset:0;
       background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.75) 100%);
       pointer-events:none; z-index:0;
     }
 
     #cardMosaic {
       position:fixed; inset:0; z-index:0; pointer-events:none;
-      display:grid; grid-template-columns:repeat(6,1fr);
-      opacity:0.15;
+      display:grid; grid-template-columns:repeat(6,1fr); opacity:0.15;
     }
     #cardMosaic img {
       width:100%; aspect-ratio:2/3; object-fit:cover;
-      filter:sepia(0.15) brightness(0.85);
-      transition:opacity 0.6s;
+      filter:sepia(0.15) brightness(0.85); transition:opacity 0.6s;
     }
+    @media (max-width:600px){ #cardMosaic{grid-template-columns:repeat(3,1fr);opacity:0.1} }
 
     #altar-root {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      min-height: 100vh;
-      padding: 2rem 1rem;
+      position:relative; z-index:2;
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; min-height:100vh; padding:2rem 1rem;
     }
 
     /* ── NAV ── */
     .am-nav {
       position:fixed; top:0; left:0; right:0; height:56px;
-      background: rgba(8,8,20,0.88); backdrop-filter:blur(20px);
-      border-bottom: 1px solid rgba(212,168,64,0.2);
+      background:rgba(8,8,20,0.88); backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(212,168,64,0.2);
       display:flex; align-items:center; justify-content:space-between;
-      padding: 0 48px; z-index:200;
+      padding:0 48px; z-index:200;
     }
-    .am-nav-brand-title {
-      font-family:'Cinzel Decorative',serif; font-size:13px;
-      color:var(--gold); letter-spacing:1.5px;
-    }
-    .am-nav-brand-sub {
-      font-family:'Cinzel',serif; font-size:7px;
-      letter-spacing:5px; color:var(--gold-dark); text-transform:uppercase;
-    }
-    .am-nav-links { display:flex; gap:24px; list-style:none; }
-    .am-nav-links a {
-      font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px;
-      text-transform:uppercase; color:var(--text-dim);
-      text-decoration:none; transition:color 0.2s;
-    }
-    .am-nav-links a:hover { color:var(--gold-light); }
+    .am-nav-brand-title{font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--gold);letter-spacing:1.5px}
+    .am-nav-brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;color:var(--gold-dark);text-transform:uppercase}
+    .am-nav-links{display:flex;gap:24px;list-style:none}
+    .am-nav-links a{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+    .am-nav-links a:hover{color:var(--gold-light)}
+    @media(max-width:600px){.am-nav{padding:0 20px}.am-nav-links{gap:12px}}
 
     /* ── EYEBROW / TITLE ── */
-    .am-eyebrow {
-      font-family:'Cinzel',serif; font-size:9px;
-      letter-spacing:8px; text-transform:uppercase;
-      color:var(--gold); opacity:0.5; margin-bottom:10px;
-      text-align:center; margin-top: 56px;
-    }
-    .am-title {
-      font-family:'Cinzel Decorative',serif;
-      font-size: clamp(28px,5vw,52px); font-weight:900;
-      color:var(--gold-light);
-      text-shadow: 0 0 80px rgba(212,168,64,0.2), 0 4px 16px rgba(0,0,0,0.9);
-      letter-spacing:3px; text-align:center;
-      margin-bottom:1.5rem;
-    }
+    .am-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:8px;text-transform:uppercase;color:var(--gold);opacity:0.5;margin-bottom:10px;text-align:center;margin-top:56px}
+    .am-title{font-family:'Cinzel Decorative',serif;font-size:clamp(28px,5vw,52px);font-weight:900;color:var(--gold-light);text-shadow:0 0 80px rgba(212,168,64,0.2),0 4px 16px rgba(0,0,0,0.9);letter-spacing:3px;text-align:center;margin-bottom:1.5rem}
 
     /* ── CARD NICHE ── */
-    .card-niche {
-      position: relative;
-      width: 160px; height: 240px;
-      margin: 0 auto 1.5rem;
-      border: 3px solid var(--card-border);
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 0 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,168,64,0.1);
-      cursor: pointer;
-      transition: border-color 0.5s, box-shadow 0.5s;
+    .card-niche-wrap{position:relative;display:flex;align-items:center;margin-bottom:0.5rem}
+    .card-niche{
+      position:relative;width:160px;height:240px;margin:0 auto;
+      border:3px solid var(--card-border);border-radius:4px;overflow:hidden;
+      box-shadow:0 0 40px rgba(0,0,0,0.5),0 0 0 1px rgba(212,168,64,0.1);
+      cursor:pointer;transition:border-color 0.6s,box-shadow 0.6s;
     }
-    .card-niche:hover {
-      border-color: var(--gold);
-      box-shadow: 0 0 50px rgba(0,0,0,0.6), 0 0 20px rgba(212,168,64,0.15);
+    .card-niche:hover{border-color:var(--gold);box-shadow:0 0 50px rgba(0,0,0,0.6),0 0 20px rgba(212,168,64,0.15)}
+    .card-niche img{width:100%;height:100%;object-fit:cover;display:block;transition:filter 0.6s}
+    .card-nav{
+      position:absolute;top:50%;transform:translateY(-50%);font-size:1.2rem;
+      color:var(--gold);cursor:pointer;z-index:5;opacity:0.5;transition:opacity 0.2s;
+      background:rgba(0,0,0,0.5);width:28px;height:40px;
+      display:flex;align-items:center;justify-content:center;
     }
-    .card-niche img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
-      transition: filter 0.5s;
-    }
-    .card-nav {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      font-size: 1.2rem; color: var(--gold);
-      cursor: pointer; z-index: 5;
-      opacity: 0.5; transition: opacity 0.2s;
-      background: rgba(0,0,0,0.5);
-      width: 28px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .card-nav:hover { opacity: 1; }
-    .card-nav.prev { left: -34px; border-radius: 3px 0 0 3px; }
-    .card-nav.next { right: -34px; border-radius: 0 3px 3px 0; }
-    .card-name {
-      text-align: center;
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-    }
+    .card-nav:hover{opacity:1}
+    .card-nav.prev{left:-34px;border-radius:3px 0 0 3px}
+    .card-nav.next{right:-34px;border-radius:0 3px 3px 0}
+    .card-name-label{text-align:center;font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:1.5rem;text-transform:uppercase;transition:color 0.6s}
 
     /* ── ALTAR SCENE ── */
-    .altar-scene {
-      display: flex; flex-direction: column;
-      align-items: center; position: relative;
-    }
-    .altar-objects {
-      display: flex; align-items: flex-end;
-      justify-content: center; gap: 2.5rem;
-      position: relative; padding-bottom: 0.25rem;
-    }
-    .altar-object {
-      display: flex; flex-direction: column;
-      align-items: center; position: relative;
-      line-height: 1.15;
-    }
-    .altar-layer {
-      display: block; text-align: center;
-      white-space: pre; font-family: 'Courier New', monospace;
-      transition: color 0.8s, text-shadow 0.8s;
-    }
-    .altar-surface {
-      font-family: 'Courier New', monospace;
-      white-space: pre; line-height: 1.1;
-      text-align: center; margin-top: -1px;
-      transition: color 0.8s;
-    }
-    .altar-atmosphere {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      width: 100%; max-width: 480px;
-      margin-bottom: 0.75rem;
-      font-family: 'Courier New', monospace;
-    }
+    .altar-scene{display:flex;flex-direction:column;align-items:center;position:relative}
+    .altar-atmosphere{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:480px;margin-bottom:0.75rem;font-family:'Courier New',monospace}
+    .altar-objects{display:flex;align-items:flex-end;justify-content:center;gap:2.5rem;position:relative;padding-bottom:0.25rem}
+    .altar-object{display:flex;flex-direction:column;align-items:center;position:relative;line-height:1.15}
+    .altar-layer{display:block;text-align:center;white-space:pre;font-family:'Courier New',monospace;transition:color 0.8s,text-shadow 0.8s}
+    .altar-surface{font-family:'Courier New',monospace;white-space:pre;line-height:1.1;text-align:center;margin-top:-1px;transition:color 0.8s}
+
+    /* ── VANITAS IMAGE LAYER ── */
+    .vanitas-layer{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;opacity:0.3;transition:opacity 0.8s}
+    .vanitas-layer img{width:280px;height:auto;filter:sepia(0.3) brightness(0.5);border-radius:6px;box-shadow:0 0 60px rgba(0,0,0,0.5)}
 
     /* ── INSCRIPTION ── */
-    .altar-inscription {
-      text-align: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: clamp(16px,2.5vw,22px);
-      color: var(--inscription-color);
-      letter-spacing: 0.04em; line-height: 1.9;
-      margin-top: 1.5rem; margin-bottom: 0.5rem;
-      transition: color 0.8s;
-    }
-    .altar-inscription em {
-      color: var(--inscription-em);
-      font-style: normal;
-      text-shadow: 0 0 20px rgba(212,168,64,0.2);
-      transition: color 0.8s, text-shadow 0.8s;
-    }
-    .altar-rule {
-      width: 420px; max-width: 80vw; height: 1px;
-      background: linear-gradient(90deg,transparent,var(--gold),transparent);
-      margin: 1.5rem auto; opacity: 0.2;
-    }
+    .altar-inscription{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,2.5vw,22px);color:var(--inscription-color);letter-spacing:0.04em;line-height:1.9;margin-top:1.5rem;margin-bottom:0.5rem;transition:color 0.8s}
+    .altar-inscription em{color:var(--inscription-em);font-style:normal;text-shadow:0 0 20px rgba(212,168,64,0.2);transition:color 0.8s,text-shadow 0.8s}
+    .altar-rule{width:420px;max-width:80vw;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1.5rem auto;opacity:0.2}
+    .altar-keywords{text-align:center;font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.15em;color:var(--inscription-em);text-transform:uppercase;margin-bottom:1rem;transition:color 0.8s}
 
-    /* ── CTA ── */
-    .altar-cta {
-      display: inline-block; margin-top: 1rem;
-      font-family: 'Cinzel',serif; font-size: 13px;
-      letter-spacing: 5px; text-transform: uppercase;
-      color: #0a0a0a;
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      border: none; padding: 16px 52px; border-radius: 10px;
-      cursor: pointer; text-decoration: none;
-      transition: all 0.3s;
-      box-shadow: 0 0 50px rgba(212,168,64,0.2);
-    }
-    .altar-cta:hover {
-      box-shadow: 0 0 70px rgba(212,168,64,0.4);
-      transform: translateY(-3px);
-    }
-    .altar-scroll-cue {
-      margin-top: 2rem;
-      font-family: 'Cinzel',serif; font-size: 7px;
-      letter-spacing: 5px; text-transform: uppercase;
-      color: var(--text-dim); opacity: 0.4;
-    }
+    /* ── BUTTONS ── */
+    .altar-cta{display:inline-block;margin-top:0.5rem;font-family:'Cinzel',serif;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:#0a0a0a;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:16px 52px;border-radius:10px;cursor:pointer;text-decoration:none;transition:all 0.3s;box-shadow:0 0 50px rgba(212,168,64,0.2)}
+    .altar-cta:hover{box-shadow:0 0 70px rgba(212,168,64,0.4);transform:translateY(-3px)}
+    .altar-scroll-cue{margin-top:1.5rem;font-family:'Cinzel',serif;font-size:7px;letter-spacing:5px;text-transform:uppercase;color:var(--text-dim);opacity:0.4}
 
     /* ── ANIMATIONS ── */
-    @keyframes flicker {
-      0%   { transform: scaleX(1) rotate(-1deg); opacity: 1; }
-      33%  { transform: scaleX(0.85) rotate(2deg); opacity: 0.85; }
-      66%  { transform: scaleX(1.1) rotate(-2deg); opacity: 1; }
-      100% { transform: scaleX(0.95) rotate(1deg); opacity: 0.9; }
-    }
-    @keyframes rise {
-      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0.35; }
-      50%  { transform: translateY(-28px) translateX(5px) scale(2); opacity: 0.12; }
-      100% { transform: translateY(-60px) translateX(-4px) scale(3); opacity: 0; }
-    }
-    @keyframes drain {
-      0%   { height: 65%; }
-      100% { height: 4%; }
-    }
-    @keyframes fill {
-      0%   { height: 4%; }
-      100% { height: 65%; }
-    }
-    @keyframes drip {
-      0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
-      100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
-    }
-    @keyframes glowPulse {
-      0%   { opacity: 0.35; transform: scale(0.9); }
-      100% { opacity: 0.7;  transform: scale(1.25); }
-    }
-    @keyframes float {
-      0%   { transform: translateY(0); }
-      50%  { transform: translateY(-6px); }
-      100% { transform: translateY(0); }
-    }
-    .anim-flicker { animation: flicker 1.8s ease-in-out infinite alternate; }
-    .anim-rise { animation: rise 3.2s ease-out infinite; }
-    .anim-glow { animation: glowPulse 1.8s ease-in-out infinite alternate; }
-    .anim-float { animation: float 5s ease-in-out infinite; }
-    .anim-drip { animation: drip 0.45s linear infinite; }
+    @keyframes flicker{0%,100%{transform:scaleX(1) rotate(-1deg);opacity:1}33%{transform:scaleX(0.85) rotate(2deg);opacity:0.85}66%{transform:scaleX(1.1) rotate(-2deg);opacity:1}}
+    @keyframes rise{0%{transform:translateY(0) translateX(0) scale(1);opacity:0.35}50%{transform:translateY(-28px) translateX(5px) scale(2);opacity:0.12}100%{transform:translateY(-60px) translateX(-4px) scale(3);opacity:0}}
+    @keyframes drain{0%{height:65%}100%{height:4%}}
+    @keyframes fill{0%{height:4%}100%{height:65%}}
+    @keyframes drip{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(10px)}}
+    @keyframes glowPulse{0%{opacity:0.35;transform:scale(0.9)}100%{opacity:0.7;transform:scale(1.25)}}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .anim-flicker{animation:flicker 1.8s ease-in-out infinite alternate}
+    .anim-rise{animation:rise 3.2s ease-out infinite}
+    .anim-glow{animation:glowPulse 1.8s ease-in-out infinite alternate}
+    .anim-float{animation:float 5s ease-in-out infinite}
+    .anim-drip{animation:drip 0.45s linear infinite}
+    .anim-fade{animation:fadeIn 0.8s ease}
 
-    @media (max-width: 600px) {
-      .am-nav { padding: 0 20px; }
-      .am-nav-links { gap: 12px; }
-      .altar-objects { gap: 1.5rem; }
-      .card-niche { width: 130px; height: 195px; }
+    @media(max-width:600px){
+      .altar-objects{gap:1.5rem}
+      .card-niche{width:130px;height:195px}
+      .vanitas-layer img{width:200px}
     }
   </style>
 </head>
 <body>
 
   <div id="cardMosaic"></div>
-
   <div id="altar-root"></div>
 
-  <script src="js/altar-mason.js"></script>
+  <script src="js/altar-draw.js"></script>
   <script>
   // ═══════════════════════════════════
   // CARD MOSAIC BACKGROUND
@@ -301,80 +161,34 @@
     "data/images/major/judgment.png","data/images/major/world.png",
     "data/images/anubis-card.jpg","data/images/isis-card.jpg",
     "data/images/ra-card.jpg","data/images/thoth-card.jpg",
-    "data/images/minor/fire/fire_ace.png","data/images/minor/fire/fire_02.png",
-    "data/images/minor/earth/earth_ace.png","data/images/minor/water/water_ace.png",
-    "data/images/minor/air/air_ace.png"
+    "data/images/minor/fire/fire_ace.png","data/images/minor/earth/earth_ace.png",
+    "data/images/minor/water/water_ace.png","data/images/minor/air/air_ace.png"
   ];
 
-  function buildMosaic() {
-    const mosaic = document.getElementById('cardMosaic');
-    let html = '';
-    for (let i = 0; i < 36; i++) {
-      const img = MOSAIC_IMAGES[Math.floor(Math.random() * MOSAIC_IMAGES.length)];
-      html += `<img src="${img}" alt="" loading="lazy" onerror="this.style.opacity='0'">`;
-    }
-    mosaic.innerHTML = html;
-  }
+  function buildMosaic(){const m=document.getElementById('cardMosaic');let h='';for(let i=0;i<36;i++){const img=MOSAIC_IMAGES[Math.floor(Math.random()*MOSAIC_IMAGES.length)];h+=`<img src="${img}" alt="" loading="lazy" onerror="this.style.opacity='0'">`}m.innerHTML=h}
   buildMosaic();
-  setInterval(() => {
-    const imgs = document.querySelectorAll('#cardMosaic img');
-    if (!imgs.length) return;
-    const idx = Math.floor(Math.random() * imgs.length);
-    imgs[idx].style.opacity = '0';
-    setTimeout(() => {
-      imgs[idx].src = MOSAIC_IMAGES[Math.floor(Math.random() * MOSAIC_IMAGES.length)];
-      imgs[idx].style.opacity = '';
-    }, 600);
-  }, 8000);
+  setInterval(()=>{const imgs=document.querySelectorAll('#cardMosaic img');if(!imgs.length)return;const idx=Math.floor(Math.random()*imgs.length);imgs[idx].style.opacity='0';setTimeout(()=>{imgs[idx].src=MOSAIC_IMAGES[Math.floor(Math.random()*MOSAIC_IMAGES.length)];imgs[idx].style.opacity=''},600)},8000);
 
   // ═══════════════════════════════════
-  // THE ALTAR
+  // VANITAS IMAGE ROTATION
   // ═══════════════════════════════════
 
-  const ELEMENT_PALETTES = {
-    Fire:   { candle: '#ffaa44', glow: 'rgba(255,170,68,0.6)', cloth: '#3a1a10', clothOpacity: '0.45', sand: '#e8a840', cardBorder: 'rgba(255,140,40,0.35)', inscription: '#c8a080', inscriptionEm: '#ffaa44' },
-    Water:  { candle: '#88bbff', glow: 'rgba(136,187,255,0.5)', cloth: '#0a1a2a', clothOpacity: '0.4', sand: '#5599cc', cardBorder: 'rgba(100,160,220,0.3)', inscription: '#8899bb', inscriptionEm: '#88bbff' },
-    Earth:  { candle: '#aacc88', glow: 'rgba(170,204,136,0.5)', cloth: '#1a2a0a', clothOpacity: '0.4', sand: '#88aa66', cardBorder: 'rgba(130,170,100,0.3)', inscription: '#99aa88', inscriptionEm: '#aacc88' },
-    Air:    { candle: '#ccbbff', glow: 'rgba(204,187,255,0.5)', cloth: '#1a0a2a', clothOpacity: '0.4', sand: '#9977cc', cardBorder: 'rgba(160,140,220,0.3)', inscription: '#9988aa', inscriptionEm: '#ccbbff' },
-  };
+  const VANITAS_IMAGES = [
+    'data/images/vanitas0.png',
+    'data/images/vanitas1.png',
+    'data/images/vanitas2.png',
+    'data/images/vanitas-poppy.png',
+    'data/images/skull.png',
+    'data/images/wizard.png'
+  ];
 
-  const GOD_PALETTES = {
-    Apollo:     { candle: '#ffcc44', glow: 'rgba(255,204,68,0.7)', cardBorder: 'rgba(255,180,60,0.4)', inscriptionEm: '#ffcc44' },
-    Aphrodite:  { candle: '#ff88aa', glow: 'rgba(255,136,170,0.5)', cardBorder: 'rgba(255,130,150,0.35)', inscriptionEm: '#ff88aa' },
-    Ares:       { candle: '#ff4422', glow: 'rgba(255,68,34,0.6)', cardBorder: 'rgba(220,60,30,0.35)', inscriptionEm: '#ff6644' },
-    Artemis:    { candle: '#aaddaa', glow: 'rgba(170,221,170,0.5)', cardBorder: 'rgba(150,200,150,0.3)', inscriptionEm: '#aaddaa' },
-    Athena:     { candle: '#aa88ee', glow: 'rgba(170,136,238,0.5)', cardBorder: 'rgba(160,120,220,0.3)', inscriptionEm: '#aa88ee' },
-    Demeter:    { candle: '#88bb66', glow: 'rgba(136,187,102,0.5)', cardBorder: 'rgba(130,170,90,0.3)', inscriptionEm: '#88bb66' },
-    Dionysus:   { candle: '#cc88cc', glow: 'rgba(204,136,204,0.5)', cardBorder: 'rgba(190,120,190,0.3)', inscriptionEm: '#cc88cc' },
-    Hephaestus: { candle: '#ff8833', glow: 'rgba(255,136,51,0.6)', cardBorder: 'rgba(240,120,40,0.35)', inscriptionEm: '#ff8833' },
-    Hera:       { candle: '#55aabb', glow: 'rgba(85,170,187,0.5)', cardBorder: 'rgba(80,150,170,0.3)', inscriptionEm: '#55aabb' },
-    Hermes:     { candle: '#ccb888', glow: 'rgba(204,184,136,0.5)', cardBorder: 'rgba(190,170,120,0.3)', inscriptionEm: '#ccb888' },
-    Poseidon:   { candle: '#44aaaa', glow: 'rgba(68,170,170,0.5)', cardBorder: 'rgba(60,150,150,0.3)', inscriptionEm: '#44aaaa' },
-    Zeus:       { candle: '#ddcc88', glow: 'rgba(221,204,136,0.6)', cardBorder: 'rgba(210,190,120,0.35)', inscriptionEm: '#ddcc88' },
-    Hades:      { candle: '#9966cc', glow: 'rgba(153,102,204,0.5)', cardBorder: 'rgba(140,90,190,0.3)', inscriptionEm: '#9966cc' },
-  };
-
-  let currentCardIndex = 0;
-  let deck = [];
-
-  async function loadDeck() {
-    try {
-      const res = await fetch('data/deck/major_arcana.json');
-      const data = await res.json();
-      deck = data.cards || [];
-      currentCardIndex = Math.floor(Math.random() * deck.length);
-      renderAltar();
-    } catch(e) {
-      console.error('Failed to load deck:', e);
-    }
+  function getRandomVanitas() {
+    return VANITAS_IMAGES[Math.floor(Math.random() * VANITAS_IMAGES.length)];
   }
 
-  function getCardPalette(card) {
-    const element = card.element || 'Fire';
-    const base = ELEMENT_PALETTES[element] || ELEMENT_PALETTES.Fire;
-    const god = GOD_PALETTES[card.ruling_god] || {};
-    return { ...base, ...god };
-  }
+  // ═══════════════════════════════════
+  // PALETTE APPLICATION
+  // ═══════════════════════════════════
 
   function applyPalette(palette) {
     const root = document.documentElement.style;
@@ -386,26 +200,25 @@
     root.setProperty('--card-border', palette.cardBorder);
     root.setProperty('--inscription-color', palette.inscription);
     root.setProperty('--inscription-em', palette.inscriptionEm);
+    root.setProperty('--ambient-glow', palette.ambient);
   }
 
-  function nextCard() {
-    currentCardIndex = (currentCardIndex + 1) % deck.length;
-    renderAltar();
-  }
+  // ═══════════════════════════════════
+  // RENDER THE ALTAR
+  // ═══════════════════════════════════
 
-  function prevCard() {
-    currentCardIndex = (currentCardIndex - 1 + deck.length) % deck.length;
-    renderAltar();
-  }
+  let currentIndex = 0;
 
-  function renderAltar() {
-    if (!deck.length) return;
-    const card = deck[currentCardIndex];
-    const palette = getCardPalette(card);
-    applyPalette(palette);
+  async function renderAltar(index) {
+    const result = await AltarDraw.getCard(index);
+    if (!result) return;
+
+    currentIndex = index;
+    applyPalette(result.palette);
 
     const root = document.getElementById('altar-root');
-    const imagePath = card.image || `data/images/major/${card.id}.png`;
+    const vanitasSrc = getRandomVanitas();
+    const cardImage = result.card.image;
 
     root.innerHTML = `
       <nav class="am-nav">
@@ -426,23 +239,28 @@
       <p class="am-eyebrow">The Altar</p>
       <h1 class="am-title">Digital Divination</h1>
 
-      <div style="position:relative;display:flex;align-items:center;margin-bottom:0.5rem;">
-        <span class="card-nav prev" onclick="prevCard()">◂</span>
-        <div class="card-niche" onclick="nextCard()">
-          <img src="${imagePath}" alt="${card.name}" onerror="this.style.opacity='0.3';this.style.background='radial-gradient(circle,var(--bg-deep),var(--bg-void))';">
+      <div class="card-niche-wrap anim-fade">
+        <span class="card-nav prev" onclick="cycleCard(-1)">◂</span>
+        <div class="card-niche" onclick="cycleCard(1)">
+          <img src="${cardImage}" alt="${result.card.name}" onerror="this.style.opacity='0.3';this.style.background='radial-gradient(circle,var(--bg-deep),var(--bg-void))';">
         </div>
-        <span class="card-nav next" onclick="nextCard()">▸</span>
+        <span class="card-nav next" onclick="cycleCard(1)">▸</span>
       </div>
-      <p class="card-name">${card.name} · ${card.title || ''}</p>
+      <p class="card-name-label">${result.displayName}</p>
 
-      <div class="altar-scene">
-        <div class="altar-atmosphere">
+      <div class="altar-scene" style="position:relative;">
+        <!-- Vanitas backdrop -->
+        <div class="vanitas-layer">
+          <img src="${vanitasSrc}" alt="" loading="lazy">
+        </div>
+
+        <div class="altar-atmosphere" style="position:relative;z-index:2;">
           <span class="altar-layer" style="color:var(--text-dim);font-size:1.1rem;opacity:0.3;">☽</span>
           <span class="altar-layer" style="color:var(--gold-dark);font-size:0.45rem;opacity:0.4;letter-spacing:0.5em;">✦  ✧  ✦  ✧  ✦</span>
           <span class="altar-layer" style="color:var(--text-dim);font-size:1.1rem;opacity:0.3;">☾</span>
         </div>
 
-        <div class="altar-objects">
+        <div class="altar-objects" style="position:relative;z-index:2;">
           <!-- LEFT CANDLE -->
           <div class="altar-object anim-float" style="animation-delay:0s;">
             <span class="altar-layer anim-rise" style="color:var(--text-dim);font-size:0.65rem;opacity:0.25;">░</span>
@@ -490,7 +308,7 @@
         </div>
 
         <!-- ALTAR TABLE -->
-        <div class="altar-surface">
+        <div class="altar-surface" style="position:relative;z-index:2;">
           <span style="color:var(--gold-dark);font-size:0.9rem;opacity:0.7;">╔══════════════════════════════════════════╗</span><br>
           <span style="color:var(--text-dim);font-size:0.9rem;opacity:0.35;">║  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ░  ║</span><br>
           <span style="color:var(--cloth-color);font-size:0.9rem;opacity:var(--cloth-opacity);">║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║</span><br>
@@ -500,25 +318,62 @@
 
       <div class="altar-rule"></div>
 
-      <p class="altar-inscription">
-        ${card.upright || 'All things pass into shadow.'}<br>
-        <em>${card.keywords ? card.keywords.slice(0,3).join(' · ') : 'What remains is what was true.'}</em>
+      <p class="altar-inscription anim-fade">
+        ${result.reading.split('.')[0]}.<br>
+        <em>${result.keywordString}</em>
       </p>
+      <p class="altar-keywords">${result.displaySubtitle}</p>
 
-      <a class="altar-cta" href="draw.html">Draw Your Cards</a>
-
-      <p class="altar-scroll-cue">Past · Present · Future</p>
+      <button class="altar-cta" onclick="drawNewCard()">🜏 Draw Again</button>
+      <p class="altar-scroll-cue">The altar speaks · The shrine transforms</p>
     `;
+  }
+
+  // ═══════════════════════════════════
+  // ACTIONS
+  // ═══════════════════════════════════
+
+  async function drawNewCard() {
+    const result = await AltarDraw.draw();
+    if (!result) return;
+    const deck = await AltarDraw.loadDeck();
+    currentIndex = deck.findIndex(c => c.id === result.card.id);
+    if (currentIndex < 0) currentIndex = 0;
+    renderAltar(currentIndex);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function cycleCard(direction) {
+    const size = await AltarDraw.getDeckSize();
+    currentIndex = ((currentIndex + direction) % size + size) % size;
+    renderAltar(currentIndex);
   }
 
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') nextCard();
-    if (e.key === 'ArrowLeft') prevCard();
+    if (e.key === 'ArrowRight') cycleCard(1);
+    if (e.key === 'ArrowLeft') cycleCard(-1);
+    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); drawNewCard(); }
   });
 
-  // Init
-  loadDeck();
+  // ═══════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════
+
+  async function init() {
+    const result = await AltarDraw.draw();
+    if (!result) return;
+    const deck = await AltarDraw.loadDeck();
+    currentIndex = deck.findIndex(c => c.id === result.card.id);
+    if (currentIndex < 0) currentIndex = 0;
+    renderAltar(currentIndex);
+  }
+
+  // Expose functions globally for onclick handlers
+  window.drawNewCard = drawNewCard;
+  window.cycleCard = cycleCard;
+
+  init();
   </script>
   <script data-goatcounter="https://kairos-coder.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
