@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matthew Hogan — Books</title>
+<meta name="description" content="The collected works of Matthew Hogan. Fantasy, western, and the Ealdforn mythos.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --stone:      #0B0908;
+    --panel:      #16120E;
+    --panel-lit:  #1D1712;
+    --gold:       #C9A227;
+    --gold-dim:   #7A661D;
+    --ember:      #8B3A1F;
+    --ember-lit:  #C45A32;
+    --bone:       #EDE6D6;
+    --bone-dim:   #8C8272;
+    --line:       #2A241C;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--stone);
+    color: var(--bone);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── Header ── */
+  header.hero{
+    padding: 80px 0 56px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sigil{ font-size: 24px; color: var(--gold); margin-bottom: 12px; letter-spacing: 0.15em; }
+
+  h1{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(36px, 6vw, 60px);
+    margin: 0 0 8px;
+    color: var(--bone);
+  }
+
+  .tagline{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+    margin: 0 0 20px;
+  }
+
+  .lede{
+    max-width: 480px;
+    margin: 0 auto;
+    color: var(--bone-dim);
+    font-size: 17px;
+    font-style: italic;
+  }
+
+  /* ── Catalog ── */
+  .catalog{
+    padding: 64px 0 80px;
+  }
+
+  .shelf-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+    margin: 0 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .shelf-label::after{
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .books-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  /* ── Book Card ── */
+  .book-card{
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .book-cover{
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    background: var(--panel-lit);
+    display: block;
+  }
+
+  .book-cover.placeholder{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bone-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .book-info{
+    padding: 22px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .book-series{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 6px;
+  }
+
+  .book-title{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--bone);
+    margin: 0 0 8px;
+  }
+
+  .book-desc{
+    font-size: 15px;
+    color: var(--bone-dim);
+    margin: 0 0 16px;
+    flex: 1;
+  }
+
+  .book-links{
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .book-links a{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  .book-links .btn-amazon{
+    color: var(--ember-lit);
+    border-bottom-color: var(--ember-lit);
+  }
+  .book-links .btn-amazon:hover{ color: var(--ember-lit); border-bottom-color: transparent; }
+
+  .book-links .btn-excerpt{
+    color: var(--gold-dim);
+    cursor: pointer;
+    border-bottom-color: transparent;
+  }
+  .book-links .btn-excerpt:hover{ color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── Excerpt Panel ── */
+  .excerpt-panel{
+    display: none;
+    background: var(--panel-lit);
+    border-top: 1px solid var(--line);
+    padding: 24px 20px;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--bone-dim);
+    line-height: 1.7;
+  }
+  .excerpt-panel.open{ display: block; }
+  .excerpt-panel .loading{ color: var(--gold-dim); font-style: normal; }
+
+  /* ── Footer ── */
+  footer{
+    text-align: center;
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--line);
+  }
+  footer .links{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--bone-dim);
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  footer .links a:hover{ color: var(--gold); }
+  footer .closing{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--bone-dim);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="sigil">🜏</div>
+    <h1>Matthew Hogan</h1>
+    <p class="tagline">Fantasy · Western · Mythos</p>
+    <p class="lede">Stories from Ealdforn and beyond. Collected here.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="catalog">
+    <p class="shelf-label">The Shelf</p>
+    <div class="books-grid" id="books-grid">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://kairos-coder.github.io/divination">Digital Divination</a>
+      <a href="https://kairos-coder.github.io/ealdforn">Ealdforn</a>
+      <a href="https://fiverr.com/kairos_coding">Fiverr</a>
+    </div>
+    <p class="closing">Not a company. Not a platform. One person, one build, the fire holds.</p>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════
+// BOOK DATA
+// Replace these ASINs with real ones
+// ═══════════════════════════════════
+
+const BOOKS = [
+  {
+    id: 'sagas',
+    title: 'The Ealdforn Sagas',
+    series: 'The Ealdforn Scriptures · Paperback',
+    description: 'The founding myths of the Ealdforn world. Gods, wars, and the fire that holds.',
+    asin: 'B0H52WJS5B',
+    excerptFile: 'sagas.md',
+    format: 'Paperback',
+    price: '$16.18',
+  },
+  {
+    id: 'gaia',
+    title: 'Gaia: The Songs That Came Before',
+    series: 'The Olympian Fables',
+    description: 'The songs that preceded the gods. The cosmology before the pantheon.',
+    asin: 'B0H1YZNGGN',
+    excerptFile: 'gaia.md',
+    format: 'Kindle eBook',
+    price: '$3.14',
+  },
+  {
+    id: 'major-arcana',
+    title: 'The Major Arcana',
+    series: 'Digital Divination · Volume 1',
+    description: 'The 22 Major Arcana of the Digital Divination deck. Each card a god, each god a door.',
+    asin: 'B0H538BXYW',
+    excerptFile: 'major-arcana.md',
+    format: 'Kindle eBook',
+    price: '$1.61',
+  },
+  {
+    id: 'chthonic',
+    title: 'The Chthonic Arcana: The Star Returns',
+    series: 'Digital Divination · Volume 2',
+    description: 'The underworld speaks. The descent, the return, the thread Ariadne holds.',
+    asin: 'B0H56CYD8T',
+    excerptFile: 'chthonic.md',
+    format: 'Kindle eBook',
+    price: '$3.14',
+  },
+  {
+    id: 'fire-deck',
+    title: 'Fire Deck',
+    series: 'Digital Divination · Volume 3',
+    description: 'The suit of makers, builders, forgers. Fourteen cards of fire.',
+    asin: 'B0H5G6CFZ7',
+    excerptFile: 'fire-deck.md',
+    format: 'Kindle eBook',
+    price: '$3.14',
+  },
+];
+
+// ═══════════════════════════════════
+// RENDER CATALOG
+// ═══════════════════════════════════
+
+function renderBooks() {
+  const grid = document.getElementById('books-grid');
+  
+  BOOKS.forEach(book => {
+    const card = document.createElement('div');
+    card.className = 'book-card';
+    card.id = `book-${book.id}`;
+    
+    // Cover image — Amazon URL pattern
+    const coverUrl = book.asin.startsWith('B0')
+      ? `https://m.media-amazon.com/images/I/${book.asin}.jpg` // placeholder pattern
+      : null;
+    
+    card.innerHTML = `
+      ${coverUrl 
+        ? `<img class="book-cover" src="${coverUrl}" alt="${book.title}" loading="lazy" onerror="this.classList.add('placeholder');this.textContent='Cover Coming';">`
+        : `<div class="book-cover placeholder">Cover Coming</div>`
+      }
+      <div class="book-info">
+        <div class="book-series">${book.series}</div>
+        <h3 class="book-title">${book.title}</h3>
+        <p class="book-desc">${book.description}</p>
+        <div class="book-links">
+          <a class="btn-amazon" href="https://www.amazon.com/dp/${book.asin}" target="_blank" rel="noopener">Amazon →</a>
+          <span class="btn-excerpt" onclick="toggleExcerpt('${book.id}')">Read Excerpt ↓</span>
+        </div>
+      </div>
+      <div class="excerpt-panel" id="excerpt-${book.id}">
+        <span class="loading">Loading excerpt…</span>
+      </div>
+    `;
+    
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════
+// EXCERPTS
+// ═══════════════════════════════════
+
+const excerptCache = {};
+
+async function toggleExcerpt(bookId) {
+  const panel = document.getElementById(`excerpt-${bookId}`);
+  const book = BOOKS.find(b => b.id === bookId);
+  if (!book) return;
+  
+  // If already open, close it
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    return;
+  }
+  
+  // Open and load
+  panel.classList.add('open');
+  
+  // Check cache
+  if (excerptCache[bookId]) {
+    panel.innerHTML = excerptCache[bookId];
+    return;
+  }
+  
+  // Fetch markdown
+  try {
+    const response = await fetch(`books/${book.excerptFile}`);
+    if (!response.ok) throw new Error('Not found');
+    
+    let md = await response.text();
+    
+    // Simple markdown-to-HTML
+    md = md
+      .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(.+)$/gm, (match) => {
+        if (match.startsWith('<')) return match;
+        return match;
+      });
+    
+    md = '<p>' + md + '</p>';
+    
+    excerptCache[bookId] = md;
+    panel.innerHTML = md;
+    
+  } catch(e) {
+    panel.innerHTML = '<span class="loading">Excerpt coming soon.</span>';
+  }
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+
+renderBooks();
+</script>
+
+</body>
+</html>
