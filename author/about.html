@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Matthew Hogan</title>
+<meta name="description" content="Matthew Hogan writes fantasy, westerns, and mythos from the coast of Maine. Former train-hopper, electrician, builder of temples and templates.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --stone:      #0F0C0A;
+    --panel:      #1A1510;
+    --panel-lit:  #221C15;
+    --gold:       #D4A832;
+    --gold-dim:   #8A7020;
+    --ember:      #9B4522;
+    --ember-lit:  #D46A3A;
+    --bone:       #F0E8D8;
+    --bone-dim:   #9B907C;
+    --line:       #2E261C;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--stone);
+    color: var(--bone);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .wrap{ max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── NAV ── */
+  nav{
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+  }
+  nav .wrap{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  nav .site-name{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  nav .nav-links{
+    display: flex;
+    gap: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  nav .nav-links a{
+    color: var(--bone-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  nav .nav-links a:hover, nav .nav-links a.active{ color: var(--gold); }
+  nav .nav-links a.active{ border-bottom: 1px solid var(--gold); }
+
+  /* ── PAGE HEADER ── */
+  .page-header{
+    padding: 64px 0 40px;
+    text-align: center;
+  }
+  .page-header h1{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(32px, 5vw, 48px);
+    margin: 0 0 8px;
+    color: var(--bone);
+  }
+  .page-header .subtitle{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+  }
+
+  /* ── BIO LAYOUT ── */
+  .bio-section{
+    padding: 0 0 80px;
+  }
+  .bio-grid{
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 600px){
+    .bio-grid{
+      grid-template-columns: 1fr;
+    }
+    .bio-photo{
+      max-width: 180px;
+      margin: 0 auto;
+    }
+  }
+
+  .bio-photo img{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    display: block;
+    background: var(--panel);
+  }
+  .bio-photo .photo-placeholder{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bone-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .bio-text h2{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--bone);
+    margin: 0 0 20px;
+  }
+  .bio-text p{
+    margin: 0 0 18px;
+    color: var(--bone-dim);
+    font-size: 17px;
+  }
+  .bio-text p strong{ color: var(--bone); font-weight: 500; }
+  .bio-text p em{ color: var(--gold); }
+
+  /* ── LINKS SECTION ── */
+  .links-section{
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--line);
+  }
+  .links-section h3{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin: 0 0 20px;
+  }
+  .links-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .links-grid a{
+    display: block;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--bone-dim);
+    text-decoration: none;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
+  }
+  .links-grid a:hover{
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--panel-lit);
+  }
+  .links-grid a strong{ color: var(--bone); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  footer{
+    text-align: center;
+    padding: 30px 0 50px;
+    border-top: 1px solid var(--line);
+  }
+  footer .closing{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--bone-dim);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="site-name">Matthew Hogan</a>
+    <div class="nav-links">
+      <a href="index.html">Books</a>
+      <a href="about.html" class="active">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://ealdforn.substack.com" target="_blank" rel="noopener">Substack →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1>About</h1>
+    <p class="subtitle">The person behind the books</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="bio-section">
+    <div class="bio-grid">
+      
+      <div class="bio-photo" id="bio-photo">
+        <!-- Replace the src with your actual photo URL -->
+        <img src="images/matthew-hogan.jpg" alt="Matthew Hogan" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'photo-placeholder\'>Photo Coming</div>';">
+      </div>
+      
+      <div class="bio-text">
+        <h2>The rails, the trade, the writing</h2>
+        
+        <p>Matthew Hogan was sixteen when he left home and learned to hop trains. For eight years he hitchhiked and rode freight across America—<strong>46 states, five Canadian provinces, one accidental border crossing into Canada</strong> that taught him more about momentum than geography ever did. The rails were his first education: how to read a schedule, how to read a stranger, how to trust the thin edge between risk and reward.</p>
+        
+        <p>His mother, <strong>Michelle Kennedy</strong>, wrote <em>Without A Net</em>—a memoir about raising him and his siblings while living out of a van. Storytelling wasn't a career choice in his family. It was how you made sense of things.</p>
+        
+        <p>When the traveling ended, he enrolled at <strong>Eastern Maine Community College</strong> and spent eight years in the electrical trade—wiring, troubleshooting, building systems that had to work because people's lights depended on them. The same instinct now runs through his code: simple tools, no waste, nothing between the maker and the thing made.</p>
+        
+        <p>Today he writes from the <strong>Witch's Foot</strong>—a thin stretch of Maine coast where the Atlantic chews the shore and the sky doesn't bother with subtlety. He builds websites by hand on $0 compute. He publishes his books through KDP. He answers his own emails. The rails taught him how to travel light, and he never stopped.</p>
+        
+        <p>His work includes <em>The Ealdforn Sagas</em>, <em>Cowboys of Chivalry</em>, <em>The Lost Tales of Telume</em>, and the <em>Digital Divination</em> series. Fantasy, western, mythos—different worlds, same voice.</p>
+      </div>
+      
+    </div>
+  </section>
+  
+  <section class="links-section">
+    <h3>Find Matthew Online</h3>
+    <div class="links-grid">
+      <a href="https://ealdforn.substack.com" target="_blank" rel="noopener"><strong>Substack</strong><br>ealdforn.substack.com</a>
+      <a href="https://fiverr.com/kairos_coding" target="_blank" rel="noopener"><strong>Fiverr</strong><br>@kairos_coding</a>
+      <a href="https://ko-fi.com/ealdforn" target="_blank" rel="noopener"><strong>Ko-fi</strong><br>ealdforn</a>
+      <a href="https://github.com/kairos-coder" target="_blank" rel="noopener"><strong>GitHub</strong><br>kairos-coder</a>
+      <a href="https://www.amazon.com/author/matthewhogan" target="_blank" rel="noopener"><strong>Amazon Author</strong><br>Matthew Hogan</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="closing">Not a company. Not a platform. One person, one build, the fire holds.</p>
+  </div>
+</footer>
+
+</body>
+</html>
