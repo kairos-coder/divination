@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Matthew Hogan — Books</title>
-<meta name="description" content="The collected works of Matthew Hogan. Fantasy, western, and the Ealdforn mythos.">
+<meta name="description" content="The collected works of Matthew Hogan. Fantasy, western, mythos, and the Digital Divination series.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,9 +113,10 @@
   .book-cover{
     width: 100%;
     aspect-ratio: 2 / 3;
-    object-fit: cover;
+    object-fit: contain;
     background: var(--panel-lit);
     display: block;
+    padding: 20px;
   }
 
   .book-cover.placeholder{
@@ -126,6 +127,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.08em;
+    padding: 40px 20px;
   }
 
   .book-info{
@@ -149,7 +151,15 @@
     font-weight: 600;
     font-size: 24px;
     color: var(--bone);
-    margin: 0 0 8px;
+    margin: 0 0 6px;
+  }
+
+  .book-format{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--bone-dim);
+    margin-bottom: 10px;
   }
 
   .book-desc{
@@ -163,9 +173,10 @@
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    align-items: center;
   }
 
-  .book-links a{
+  .book-links a, .book-links span{
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.06em;
@@ -188,6 +199,13 @@
   }
   .book-links .btn-excerpt:hover{ color: var(--gold); border-bottom-color: var(--gold); }
 
+  .book-price{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+  }
+
   /* ── Excerpt Panel ── */
   .excerpt-panel{
     display: none;
@@ -201,6 +219,16 @@
   }
   .excerpt-panel.open{ display: block; }
   .excerpt-panel .loading{ color: var(--gold-dim); font-style: normal; }
+  .excerpt-panel p{ margin: 0 0 14px; }
+  .excerpt-panel p:last-child{ margin: 0; }
+  .excerpt-panel h3, .excerpt-panel h4{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: normal;
+    color: var(--bone);
+    margin: 20px 0 8px;
+  }
+  .excerpt-panel h3:first-child, .excerpt-panel h4:first-child{ margin-top: 0; }
+  .excerpt-panel em{ color: var(--gold); }
 
   /* ── Footer ── */
   footer{
@@ -233,7 +261,7 @@
   <div class="wrap">
     <div class="sigil">🜏</div>
     <h1>Matthew Hogan</h1>
-    <p class="tagline">Fantasy · Western · Mythos</p>
+    <p class="tagline">Fantasy · Western · Mythos · Divination</p>
     <p class="lede">Stories from Ealdforn and beyond. Collected here.</p>
   </div>
 </header>
@@ -254,6 +282,7 @@
     <div class="links">
       <a href="https://kairos-coder.github.io/divination">Digital Divination</a>
       <a href="https://kairos-coder.github.io/ealdforn">Ealdforn</a>
+      <a href="https://kairos-coder.github.io/templates">Templates</a>
       <a href="https://fiverr.com/kairos_coding">Fiverr</a>
     </div>
     <p class="closing">Not a company. Not a platform. One person, one build, the fire holds.</p>
@@ -263,16 +292,16 @@
 <script>
 // ═══════════════════════════════════
 // BOOK DATA
-// Replace these ASINs with real ones
 // ═══════════════════════════════════
 
 const BOOKS = [
   {
     id: 'sagas',
     title: 'The Ealdforn Sagas',
-    series: 'The Ealdforn Scriptures · Paperback',
+    series: 'The Ealdforn Scriptures',
     description: 'The founding myths of the Ealdforn world. Gods, wars, and the fire that holds.',
     asin: 'B0H52WJS5B',
+    cover: 'https://m.media-amazon.com/images/I/5118r9AeuCL._SY445_SX342_QL70_FMwebp_.jpg',
     excerptFile: 'sagas.md',
     format: 'Paperback',
     price: '$16.18',
@@ -281,8 +310,9 @@ const BOOKS = [
     id: 'gaia',
     title: 'Gaia: The Songs That Came Before',
     series: 'The Olympian Fables',
-    description: 'The songs that preceded the gods. The cosmology before the pantheon.',
+    description: 'The songs that preceded the gods. The cosmology before the pantheon. The first breath of the sanctuary.',
     asin: 'B0H1YZNGGN',
+    cover: 'https://m.media-amazon.com/images/I/414RFGGYbfL._SY445_SX342_FMwebp_.jpg',
     excerptFile: 'gaia.md',
     format: 'Kindle eBook',
     price: '$3.14',
@@ -291,18 +321,20 @@ const BOOKS = [
     id: 'major-arcana',
     title: 'The Major Arcana',
     series: 'Digital Divination · Volume 1',
-    description: 'The 22 Major Arcana of the Digital Divination deck. Each card a god, each god a door.',
+    description: 'The 22 Major Arcana of the Digital Divination deck. Each card a god, each god a door. The foundation of the oracle.',
     asin: 'B0H538BXYW',
+    cover: 'https://m.media-amazon.com/images/I/51LxJtwMxXL._SY445_SX342_QL70_FMwebp_.jpg',
     excerptFile: 'major-arcana.md',
     format: 'Kindle eBook',
     price: '$1.61',
   },
   {
     id: 'chthonic',
-    title: 'The Chthonic Arcana: The Star Returns',
+    title: 'The Chthonic Arcana',
     series: 'Digital Divination · Volume 2',
-    description: 'The underworld speaks. The descent, the return, the thread Ariadne holds.',
+    description: 'The underworld speaks. The descent, the return, the thread Ariadne holds. The Star Returns.',
     asin: 'B0H56CYD8T',
+    cover: 'https://m.media-amazon.com/images/I/51PYvillerL._SY445_SX342_QL70_FMwebp_.jpg',
     excerptFile: 'chthonic.md',
     format: 'Kindle eBook',
     price: '$3.14',
@@ -311,8 +343,9 @@ const BOOKS = [
     id: 'fire-deck',
     title: 'Fire Deck',
     series: 'Digital Divination · Volume 3',
-    description: 'The suit of makers, builders, forgers. Fourteen cards of fire.',
+    description: 'The suit of makers, builders, forgers. Fourteen cards of fire. The forge is lit.',
     asin: 'B0H5G6CFZ7',
+    cover: 'https://m.media-amazon.com/images/I/5169Hy+Z1RL._SY445_SX342_QL70_FMwebp_.jpg',
     excerptFile: 'fire-deck.md',
     format: 'Kindle eBook',
     price: '$3.14',
@@ -331,19 +364,16 @@ function renderBooks() {
     card.className = 'book-card';
     card.id = `book-${book.id}`;
     
-    // Cover image — Amazon URL pattern
-    const coverUrl = book.asin.startsWith('B0')
-      ? `https://m.media-amazon.com/images/I/${book.asin}.jpg` // placeholder pattern
-      : null;
-    
     card.innerHTML = `
-      ${coverUrl 
-        ? `<img class="book-cover" src="${coverUrl}" alt="${book.title}" loading="lazy" onerror="this.classList.add('placeholder');this.textContent='Cover Coming';">`
-        : `<div class="book-cover placeholder">Cover Coming</div>`
-      }
+      <img class="book-cover" 
+           src="${book.cover}" 
+           alt="${book.title}" 
+           loading="lazy" 
+           onerror="this.classList.add('placeholder'); this.textContent='Cover';">
       <div class="book-info">
         <div class="book-series">${book.series}</div>
         <h3 class="book-title">${book.title}</h3>
+        <div class="book-format">${book.format} · <span class="book-price">${book.price}</span></div>
         <p class="book-desc">${book.description}</p>
         <div class="book-links">
           <a class="btn-amazon" href="https://www.amazon.com/dp/${book.asin}" target="_blank" rel="noopener">Amazon →</a>
@@ -370,11 +400,14 @@ async function toggleExcerpt(bookId) {
   const book = BOOKS.find(b => b.id === bookId);
   if (!book) return;
   
-  // If already open, close it
+  // Close if already open
   if (panel.classList.contains('open')) {
     panel.classList.remove('open');
     return;
   }
+  
+  // Close all other panels
+  document.querySelectorAll('.excerpt-panel.open').forEach(p => p.classList.remove('open'));
   
   // Open and load
   panel.classList.add('open');
